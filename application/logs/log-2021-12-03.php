@@ -1,0 +1,58 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+[MySchool] - 2021-12-03 23:46:46 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:46:46 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:46:46 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:46:46 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:46:46 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:46:46 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:46:46 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:46:46 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:46:46 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:46:46 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:46:46 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:46:46 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:46:46 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:46:46 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:46:46 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:46:46 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:46:51 --> Severity: Warning --> Invalid argument supplied for foreach() /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/marks_print_view.php 67
+[MySchool] - 2021-12-03 23:46:51 --> Severity: Warning --> Invalid argument supplied for foreach() /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/marks_print_view.php 67
+[MySchool] - 2021-12-03 23:47:00 --> 404 Page Not Found: Public/uploads
+[MySchool] - 2021-12-03 23:47:05 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:47:05 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:47:05 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:47:05 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:47:05 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:47:05 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:47:05 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:47:05 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:47:05 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:47:05 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:47:05 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:47:05 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:47:05 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:47:05 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:47:05 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:47:05 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:48:32 --> 404 Page Not Found: Public/uploads
+[MySchool] - 2021-12-03 23:48:43 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:48:43 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:48:43 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:48:43 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:48:43 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:48:43 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:48:43 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:48:43 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:48:43 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:48:43 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:48:43 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:48:43 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:48:43 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:48:43 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:48:43 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:48:43 --> Severity: Warning --> array_sum() expects parameter 1 to be array, object given /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/admin/student_daily_marks.php 128
+[MySchool] - 2021-12-03 23:50:14 --> 404 Page Not Found: Public/uploads
+[MySchool] - 2021-12-03 23:51:51 --> Severity: Warning --> include(admin/subject_daily_marks.php): failed to open stream: No such file or directory /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/index.php 25
+[MySchool] - 2021-12-03 23:51:51 --> Severity: Warning --> include(admin/subject_daily_marks.php): failed to open stream: No such file or directory /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/index.php 25
+[MySchool] - 2021-12-03 23:51:51 --> Severity: Warning --> include(): Failed opening 'admin/subject_daily_marks.php' for inclusion (include_path='/home4/dhcoder9/myschool.dhcoder.com/public/src:.:/opt/cpanel/ea-php74/root/usr/share/pear') /home4/dhcoder9/myschool.dhcoder.com/application/views/backend/index.php 25
