@@ -20,9 +20,9 @@
     <div class="form-body without-side">
         <div class="row">
             <div class="form-holder">
-                <div class="form-content" style="background-image: url(<?php echo base_url();?>public/uploads/bglogin.jpg); background-size:cover;">
+                <div class="form-content" style="background-image: url(<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('bglogin');?>); background-size:cover;">
                     <div class="form-items">
-                        <center><img class="logo-size" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('logo');?>" alt="" style="width:120px;"></center>
+                        <center><img class="logo-size" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('logo');?>" alt="" class="w120"></center>
                         <br><h5><?php echo getPhrase('login_to_your_account');?></h5><br>
                          <?php if($this->session->userdata('error') == '1'):?>    
                             <div class="form-login-error">
@@ -30,13 +30,13 @@
                             </div>
                         <?php endif;?>
                         <?php if($this->session->userdata('failed') == '1'):?>
-                            <div class="alert alert-danger" style="text-align: center; font-weight: bold;"><?php echo getPhrase('social_error');?></div>
+                            <div class="alert alert-danger text-center text-bold"><?php echo getPhrase('social_error');?></div>
                         <?php endif;?>
                         <?php if($this->session->userdata('success_recovery') == '1'):?>
-                            <div class="alert alert-success" style="text-align: center; font-weight: bold;"><?php echo getPhrase('password_reset');?></div>
+                            <div class="alert alert-success text-center text-bold"><?php echo getPhrase('password_reset');?></div>
                         <?php endif;?>
                         <?php if($this->session->userdata('failedf') == '1'):?>
-                            <div class="alert alert-danger" style="text-align: center; font-weight: bold;"><?php echo getPhrase('social_error');?></div>
+                            <div class="alert alert-danger text-center text-bold"><?php echo getPhrase('social_error');?></div>
                         <?php endif;?>
                         <form method="post" action="<?php echo base_url();?>login/auth/">
                             <input class="form-control" type="text" name="username" placeholder="<?php echo getPhrase('username');?>" required>
@@ -46,7 +46,7 @@
                             </div>
                         </form>
                         <?php if($this->crud->getInfo('social_login') == 1):?>
-                            <div class="other-links" style="text-align:center">
+                            <div class="other-links text-center">
                                 <div class="text"><?php echo getPhrase('or');?></div>
                                 <a href="<?php echo $this->crud->getFacebookURL();?>"><i class="fab fa-facebook-f"></i>Facebook</a><a href="<?php echo $this->crud->getGoogleURL();?>"><i class="fab fa-google"></i>Google</a>
                             </div>

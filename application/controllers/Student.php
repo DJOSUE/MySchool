@@ -997,6 +997,22 @@
             $this->load->view('backend/student/test_print', $page_data);
             
         }
+
+        function class_books()
+        {
+            $this->isStudent();            
+            $student_id = $this->session->userdata('login_user_id');
+
+            // Get the book 
+            $class = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id'=> $this->runningSemester))->row();
+
+            $class_id = $class->class_id;
+            $class_name = $class->name;
+            
+            $page_data['class_id']    = $class_id;
+            $page_data['student_id']  = $student_id;
+            $this->load->view('backend/student/book_'.$class_name, $page_data);
+        }
         
         //End of Student.php
     }
