@@ -1,17 +1,13 @@
 <?php 
-    // $student_id.'-'.$class_id.'-'.$section_id.'-'.$subject_id.'-'.$year.'-'.$semester
     $ex = explode('-', base64_decode($data));
-    $student_id         = $ex[0];
-    $class_id           = $ex[1];
-    $section_id         = $ex[2];
-    $year               = $ex[3];
-    $semester_id           = $ex[4];
-
+    $unit_id            =   $ex[1];
     $roundPrecision     =   $this->crud->getInfo('round_precision');
-	$class_name		 	= 	$this->db->get_where('class' , array('class_id' => $class_id))->row()->name;
-    $section_name       =   $this->db->get_where('section' , array('section_id' => $section_id))->row()->name;
-    $semester_name      =   $this->db->get_where('semesters' , array('semester_id' => $semester_id))->row()->name;
+    $running_year       =   $this->crud->getInfo('running_year');
+    $running_semester   =   $this->crud->getInfo('running_semester'); 
 
+	$class_name		 	= 	$this->db->get_where('class' , array('class_id' => $class_id))->row()->name;
+    $section_id         =   $this->db->get_where('enroll' , array('student_id' => $student_id, 'class_id' => $class_id, 'year' => $running_year, 'semester_id' => $running_semester))->row()->section_id;
+	$exam_name  		= 	$this->db->get_where('units' , array('unit_id' => $unit_id))->row()->name;
 	$system_name        =	$this->crud->getInfo('system_name');
     $system_email       =   $this->crud->getInfo('system_email');
     $phone              =   $this->crud->getInfo('phone');
@@ -63,32 +59,31 @@
                                 <div class="company-address">
                                     <?php echo getPhrase('roll');?>:
                                     <?php echo $this->db->get_where('enroll', array('student_id' => $student_id))->row()->roll;?><br />
+                                    <?php echo $class_name;?><br />
+                                    <?php echo $this->db->get_where('section' , array('class_id' => $section_id))->row()->name;?>
                                 </div>
                             </div>
                         </div>
                         <div class="rcard-heading">
-                            <h5><?php echo $class_name;?></h5>
-                            <div class="rcard-date"><?php echo $year.'-'.$semester_name.'-'.$section_name;?></div>
-                        </div>                        
-                        <div class="row" style="padding-left: 20px;">
-                            <?php                              
-                            $attendance = $this->db->query("SELECT ROUND((SUM(labuno)/COUNT(IF(labuno = '-' or labuno is null,null,'1'))), $roundPrecision) AS 'labuno'
-                                                              FROM mark_daily 
-                                                             WHERE student_id = '$student_id'
-                                                               AND class_id = '$class_id'
-                                                               AND section_id = '$section_id'
-                                                               AND year = '$year'
-                                                               AND semester_id = '$semester_id'
-                                                           ")->first_row();
-                                                                                       
-                            echo getPhrase('attendance').': ';
-                            if($attendance->labuno != '')
-                                echo $attendance->labuno;
-                            else 
-                                echo '0';
-                            ?>
-
                         </div>
+                        <div class="row" style="padding-left: 20px;">
+                                <?php                              
+                                $attendance = $this->db->query("SELECT ROUND((SUM(labuno)/COUNT(IF(labuno = '-' or labuno is null,null,'1'))), $roundPrecision) AS 'labuno'
+                                                                FROM mark_daily 
+                                                                WHERE student_id = '$student_id'
+                                                                AND class_id = '$class_id'
+                                                                AND section_id = '$section_id'
+                                                                AND year = '$running_year'
+                                                                AND semester_id = '$running_semester'
+                                                            ")->first_row();
+                                                                                        
+                                echo getPhrase('attendance').': ';
+                                if($attendance->labuno != '')
+                                    echo $attendance->labuno;
+                                else 
+                                    echo '0';
+                                ?>
+                            </div>
                         <br/>
                         <div class="rcard-table table-responsive">
                             <table class="table">
@@ -102,7 +97,7 @@
                                 <tbody>
                                     <?php 
                                         $exams = $this->crud->get_exams();
-                                        $subjects = $this->db->get_where('v_enroll' , array('class_id' => $class_id, 'section_id' => $section_id, 'student_id' => $student_id,'year' => $year, 'semester_id' => $semester_id))->result_array();
+                                        $subjects = $this->db->get_where('v_enroll' , array('class_id' => $class_id, 'section_id' => $section_id, 'student_id' => $student_id,'year' => $running_year, 'semester_id' => $running_semester))->result_array();
                                         
                                         foreach ($subjects as $row3):
                                             $subject_id = $row3['subject_id'];
@@ -121,8 +116,8 @@
                                                                             AND class_id = '$class_id'
                                                                             AND section_id = '$section_id'
                                                                             AND subject_id = '$subject_id'
-                                                                            AND year = '$year'
-                                                                            AND semester_id = '$semester_id' 
+                                                                            AND year = '$running_year'
+                                                                            AND semester_id = '$running_semester' 
                                                                             ")->result_array();
                                             // Math to get Average
                                             $Total_Sum = array_sum($average[0]);

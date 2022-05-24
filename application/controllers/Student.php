@@ -120,6 +120,27 @@
         }
 
         //Marks print view function.
+        function marks_print_all_view($data) 
+        {
+            $this->isStudent();
+            
+            $student_id = $this->session->userdata('login_user_id');
+            $class_id = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id'=> $this->runningSemester))->row()->class_id;
+
+            if($this->useDailyMarks){
+                $page_data['data']       =   $data;
+                $page_data['class_id']   =   $class_id;
+                $page_data['student_id'] =   $student_id;
+                $this->load->view('backend/student/daily_marks_all_print_view', $page_data);
+            } else {
+                $page_data['data']       =   $data;
+                $page_data['class_id']   =   $class_id;
+                $page_data['student_id'] =   $student_id;
+                $this->load->view('backend/student/marks_print_all_view', $page_data);
+            }
+        }
+
+        //Marks print view function.
         function past_marks_print_view($data) 
         {
             $this->isStudent();

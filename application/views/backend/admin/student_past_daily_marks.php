@@ -199,7 +199,7 @@
                                             </table>
                                             <div class="form-buttons-w text-right">
                                                 <a target="_blank"
-                                                    href="<?php echo base_url();?>admin/daily_marks_print_view_all/<?php echo base64_encode($student_id.'-'.$class_id.'-'.$section_id.'-'.$year.'-'.$semester_id);?>"><button
+                                                    href="<?php echo base_url();?>admin/marks_old_print_view/<?php echo base64_encode($student_id.'-'.$class_id.'-'.$section_id.'-'.$year.'-'.$semester_id);?>"><button
                                                         class="btn btn-rounded btn-success" type="submit"><i
                                                             class="picons-thin-icon-thin-0333_printer"></i>
                                                         <?php echo getPhrase('print');?></button></a>

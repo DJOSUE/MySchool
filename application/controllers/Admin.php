@@ -3060,6 +3060,56 @@
             }
         }
 
+        //Marks print view function.
+        function marks_all_print_view($student_id  = '', $unit_id = '') 
+        {
+            $this->isAdmin();
+
+            if($this->useDailyMarks){
+                $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
+                $class_name   = $this->db->get_where('class' , array('class_id' => $class_id))->row()->name;
+                $page_data['student_id'] =   $student_id;
+                $page_data['class_id']   =   $class_id;
+                $page_data['unit_id']    =   $unit_id;
+                $this->load->view('backend/admin/daily_marks_all_print_view', $page_data);
+            }
+            else{
+                $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
+                $class_name   = $this->db->get_where('class' , array('class_id' => $class_id))->row()->name;
+                $page_data['student_id'] =   $student_id;
+                $page_data['class_id']   =   $class_id;
+                $page_data['unit_id']    =   $unit_id;
+                $this->load->view('backend/admin/marks_all_print_view', $page_data);
+            }
+        }
+
+        //Marks print view function.
+        function marks_old_print_view($data = '') 
+        {
+            $this->isAdmin();
+
+            $info = base64_decode($data);
+            $ex = explode("-",$info);
+
+            // <?php echo base64_encode($student_id.'-'.$class_id.'-'.$section_id.'-'.$year.'-'.$semester_id)
+            
+            $student_id = $ex[0];
+            $class_id = $ex[1];
+
+            if($this->useDailyMarks){                
+                $page_data['student_id'] =   $student_id;
+                $page_data['class_id']   =   $class_id;
+                $page_data['data']       =   $data;
+                $this->load->view('backend/admin/daily_marks_old_print_view_all', $page_data);
+            }
+            else{
+                $page_data['student_id'] =   $student_id;
+                $page_data['class_id']   =   $class_id;
+                $page_data['data']       =   $data;                
+                $this->load->view('backend/admin/marks_old_print_view_all', $page_data);
+            }
+        }
+
         //Time card
         function time_card( $param1 = '', $param2 = '' ) 
         {

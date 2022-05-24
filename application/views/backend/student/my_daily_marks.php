@@ -150,6 +150,13 @@
                                         <?php endforeach;?>
                                     </tbody>
                                 </table>
+                                <div class="form-buttons-w text-right">
+                                    <a target="_blank"
+                                        href="<?php echo base_url();?>student/marks_print_all_view/<?php echo base64_encode($student_id.'-'. $row2['unit_id']);?>/"><button
+                                            class="btn btn-rounded btn-success" type="submit"><i
+                                                class="picons-thin-icon-thin-0333_printer"></i>
+                                            <?php echo getPhrase('print');?></button></a>
+                                </div>
                             </div>
                         </div>
                     </div>

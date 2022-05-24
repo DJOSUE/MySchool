@@ -130,7 +130,7 @@
                                                 }                                                
                                             }
                                     ?>
-                                    <tr class="text-center">
+                                    <tr class="text-center table-font-print">
                                         <td>
                                             <?= getPhrase('score'); ?>:
                                         </td>
@@ -145,7 +145,7 @@
                                         <?php endfor;?>
                                     </tr>
                                     <?php endforeach;?>
-                                    <tr class="text-center">
+                                    <tr class="text-center table-font-print">
                                         <td>
                                             %
                                         </td>
@@ -172,7 +172,7 @@
                             </div>
                         </div>
                         <div class="rcard-body div-center top-20 text-center">
-                            <table class="table width-500">
+                            <table class="rcard-table table width-500">
                                 <thead>
                                     <tr>
                                         <?php foreach ($names as $item) :?>
@@ -187,7 +187,7 @@
                                         <?php foreach ($percentage as $item) :
                                             $var = json_decode($item, true);
                                         ?>
-                                        <td class="text-center" <?= $achieve_level2 == $item ? $select : '' ?>>
+                                        <td class="text-center table-font-print" <?= $achieve_level2 == $item ? $select : '' ?>>
                                             <?= $var['min'].' - '.$var['max'].'&' ?>
                                         </td>
                                         <?php endforeach; ?>
@@ -202,7 +202,7 @@
                                     <td><b>Comment</b></td>
                                 </tr>
                                 <tr>
-                                    <td >
+                                    <td>
                                         <?=$comment;?>
                                     </td>
                                 </tr>

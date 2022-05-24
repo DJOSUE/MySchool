@@ -8452,7 +8452,7 @@ html {
     
     .table tfoot th,
     .table thead th {
-        /* font-size: 0.63rem; */
+        font-size: 0.63rem;
         text-transform: uppercase;
         border-top: none;
     }
@@ -8461,6 +8461,10 @@ html {
         /* font-size: 0.63rem; */
         /* text-transform: uppercase; */
         border-top: none;
+    }
+
+    .table-font-print {
+        font-size: 0.65rem;
     }
     
     .table tbody+tbody {
@@ -20809,12 +20813,12 @@ Contents:
         font-size: 1.05rem;
     }
     
-    .rcard-<div class="rcard-heading" style="display: flex; justify-content: center;"><div id="chart_div"></div></div> {
+    .rcard-heading {
         text-align: center;
         margin-bottom: 2.5rem;
         margin-top: 2.5rem;
         position: relative;
-        z-index: 2;
+        z-index: 2; 
     }
     
     .rcard-heading h5 {
