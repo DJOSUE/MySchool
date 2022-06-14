@@ -14,7 +14,7 @@
                     <div class="row">
                         <?php 
                         $this->db->group_by('class_id');
-                        $classes = $this->db->get_where('subject', array('teacher_id' => $teacher_id))->result_array();
+                        $classes = $this->db->get_where('subject', array('teacher_id' => $teacher_id, 'year' => $running_year, 'semester_id' => $running_semester))->result_array();
                         foreach($classes as $cl):
                     ?>
                         <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
@@ -32,7 +32,7 @@
                                                 <div class="country">
                                                     <b><?php echo getPhrase('sections');?>:</b><br/>
                                                     <?php 
-                                                        $sections = $this->db->get_where('section', array('class_id' => $cl['class_id'], 'year' => $running_year, 'semester_id' => $running_semester))->result_array(); 
+                                                        $sections = $this->db->get_where('section', array('section_id' => $cl['section_id'], 'class_id' => $cl['class_id'], 'year' => $running_year, 'semester_id' => $running_semester))->result_array(); 
                                                         foreach($sections as $sec):
                                                             $is_saturday = false;
                                                             if(strpos(strtolower($sec['name']),'saturday')!== false)

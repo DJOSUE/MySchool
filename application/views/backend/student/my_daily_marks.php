@@ -45,6 +45,7 @@
                                         <tr>
                                             <th><?php echo getPhrase('subject');?></th>
                                             <th><?php echo getPhrase('teacher');?></th>
+                                            <th><?php echo getPhrase('attendance');?></th>
                                             <th><?php echo getPhrase('mark');?></th>
                                             <th><?php echo getPhrase('grade');?></th>
                                             <th><?php echo getPhrase('gpa');?></th>
@@ -53,29 +54,32 @@
                                     <tbody>
                                         <?php 
                                         $subjects = $this->db->get_where('v_enrollment' , array('class_id' => $class_id, 'student_id' => $student_id, 'year' => $running_year, 'semester_id'=> $running_semester))->result_array();
+                                        $total_mark = 0;                                        
+                                        $total_count = 0;
+                                        $total_labuno = 0;
                                         foreach ($subjects as $key => $item):
 
                                             $subject_id = $item['subject_id'];
                                             $section_id = $item['section_id'];
 
                                             $average = $this->db->query("SELECT ROUND((SUM(labuno)/COUNT(IF(labuno = '-' or labuno is null,null,'1'))), $roundPrecision) AS 'labuno',
-                                                                                        ROUND((SUM(labdos)/COUNT(IF(labdos = '-' or labdos is null,null,'1'))), $roundPrecision) AS 'labdos',
-                                                                                        ROUND((SUM(labtres)/COUNT(IF(labtres = '-' or labtres is null,null,'1'))), $roundPrecision) AS 'labtres',
-                                                                                        ROUND((SUM(labcuatro)/COUNT(IF(labcuatro = '-' or labcuatro is null,null,'1'))), $roundPrecision) AS 'labcuatro',
-                                                                                        ROUND((SUM(labcinco)/COUNT(IF(labcinco = '-' or labcinco is null,null,'1'))), $roundPrecision) AS 'labcinco',
-                                                                                        ROUND((SUM(labseis)/COUNT(IF(labseis = '-' or labseis is null,null,'1'))), $roundPrecision) AS 'labseis',
-                                                                                        ROUND((SUM(labsiete)/COUNT(IF(labsiete = '-' or labsiete is null,null,'1'))), $roundPrecision) AS 'labsiete',
-                                                                                        ROUND((SUM(labocho)/COUNT(IF(labocho = '-' or labocho is null,null,'1'))), $roundPrecision) AS 'labocho',
-                                                                                        ROUND((SUM(labnueve)/COUNT(IF(labnueve = '-' or labnueve is null,null,'1'))), $roundPrecision) AS 'labnueve',
-                                                                                        ROUND((SUM(labdiez)/COUNT(IF(labdiez = '-' or labdiez is null,null,'1'))), $roundPrecision) AS 'labdiez'
-                                                                                    FROM mark_daily 
-                                                                                    WHERE student_id = '$student_id'
-                                                                                    AND class_id = '$class_id'
-                                                                                    AND section_id = '$section_id'
-                                                                                    AND subject_id = '$subject_id'
-                                                                                    AND year = '$running_year'
-                                                                                    AND semester_id = '$running_semester'
-                                                                                ")->first_row();
+                                                                                ROUND((SUM(labdos)/COUNT(IF(labdos = '-' or labdos is null,null,'1'))), $roundPrecision) AS 'labdos',
+                                                                                ROUND((SUM(labtres)/COUNT(IF(labtres = '-' or labtres is null,null,'1'))), $roundPrecision) AS 'labtres',
+                                                                                ROUND((SUM(labcuatro)/COUNT(IF(labcuatro = '-' or labcuatro is null,null,'1'))), $roundPrecision) AS 'labcuatro',
+                                                                                ROUND((SUM(labcinco)/COUNT(IF(labcinco = '-' or labcinco is null,null,'1'))), $roundPrecision) AS 'labcinco',
+                                                                                ROUND((SUM(labseis)/COUNT(IF(labseis = '-' or labseis is null,null,'1'))), $roundPrecision) AS 'labseis',
+                                                                                ROUND((SUM(labsiete)/COUNT(IF(labsiete = '-' or labsiete is null,null,'1'))), $roundPrecision) AS 'labsiete',
+                                                                                ROUND((SUM(labocho)/COUNT(IF(labocho = '-' or labocho is null,null,'1'))), $roundPrecision) AS 'labocho',
+                                                                                ROUND((SUM(labnueve)/COUNT(IF(labnueve = '-' or labnueve is null,null,'1'))), $roundPrecision) AS 'labnueve',
+                                                                                ROUND((SUM(labdiez)/COUNT(IF(labdiez = '-' or labdiez is null,null,'1'))), $roundPrecision) AS 'labdiez'
+                                                                            FROM mark_daily 
+                                                                            WHERE student_id = '$student_id'
+                                                                            AND class_id = '$class_id'
+                                                                            AND section_id = '$section_id'
+                                                                            AND subject_id = '$subject_id'
+                                                                            AND year = '$running_year'
+                                                                            AND semester_id = '$running_semester'
+                                                                        ")->first_row();
                                             // Calculate the average 
                                             $count = 0;
                                             $Total_Sum = array_sum($average);
@@ -119,6 +123,11 @@
                                             
                                             $mark = $count > 0 ? round(($labototal/$count), (int)$roundPrecision) : '-';
 
+
+                                            // Totals                                            
+                                            $total_mark += $mark;
+                                            $total_count++;
+
                                         ?>
                                         <tr>
                                             <td>
@@ -129,6 +138,16 @@
                                                     src="<?php echo $this->crud->get_image_url('teacher',$item['teacher_id']);?>"
                                                     width="25px" style="border-radius: 10px;margin-right:5px;">
                                                 <?php echo $item['teacher_name']; ?>
+                                            </td>
+                                            <td>
+                                                <?php if(($labouno < $min || $labouno == 0) && $labouno != '-'):?>
+                                                <a class="btn btn-rounded btn-sm btn-danger"
+                                                    style="color:white"><?php if($labouno == 0) echo '0'; else echo $labouno;?></a>
+                                                <?php endif;?>
+                                                <?php if($labouno >= $min):?>
+                                                <a class="btn btn-rounded btn-sm btn-info"
+                                                    style="color:white"><?php echo $labouno;?></a>
+                                                <?php endif;?>
                                             </td>
                                             <td>
                                                 <?php if(($mark < $min || $mark == 0) && $mark != '-'):?>
@@ -148,9 +167,32 @@
                                             </td>    
                                         </tr>
                                         <?php endforeach;?>
+                                        <tr class="form-buttons-w">
+                                            <?php
+                                                $total_average = ($total_count > 0 ? round(($total_mark/$total_count), (int)$roundPrecision) : '-');
+                                                $total_attendance = ($total_count > 0 ? round(($total_labuno/$total_count), (int)$roundPrecision) : '-');
+                                            ?>
+                                            <td>
+                                            </td>
+                                            <td class="text-right">
+                                                <b><?= getPhrase('total');?></b>
+                                            </td>
+                                            <td>
+                                                
+                                            </td>
+                                            <td>
+                                                <?= $total_average; ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $this->crud->get_grade($total_average);?>
+                                            </td>
+                                            <td>
+                                                <?php echo $this->crud->get_gpa($total_average);?>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
-                                <div class="form-buttons-w text-right">
+                                <div class="text-right">
                                     <a target="_blank"
                                         href="<?php echo base_url();?>student/marks_print_all_view/<?php echo base64_encode($student_id.'-'. $row2['unit_id']);?>/"><button
                                             class="btn btn-rounded btn-success" type="submit"><i

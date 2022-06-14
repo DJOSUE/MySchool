@@ -340,7 +340,7 @@
             $this->isAdmin();
             $page_data['class_id']      = html_escape($this->input->post('class_id'));
             $page_data['section_id']    = html_escape($this->input->post('section_id'));
-            // $page_data['subject_id']    = $this->input->post('subject_id');
+            $page_data['subject_id']    = $this->input->post('subject_id');
             $page_data['page_name']     = 'students_report';
             $page_data['page_title']    = getPhrase('students_report');
             $this->load->view('backend/index', $page_data);
@@ -594,8 +594,10 @@
             }
             if ($param1 == 'delete')
             {
+                $data['status']   = 0;
                 $this->db->where('admin_id', $param2);
-                $this->db->delete('admin');
+                $this->db->update('admin', $data);
+                // $this->db->delete('admin');
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
                 redirect(base_url() . 'admin/admins/', 'refresh');
             }
@@ -3446,6 +3448,7 @@
                 if ( $param1 == 'student' ){
                     $this->unset_admin();
                     $this->session->set_userdata('role_id', '6');
+                    $this->session->set_userdata('program_id', $row->dormitory_id);
                     $this->session->set_userdata('student_login', $row->student_session);
                     $this->session->set_userdata('student_id', $row->student_id);
                     $this->session->set_userdata('login_user_id', $row->student_id);
@@ -3536,6 +3539,7 @@
             $this->session->unset_userdata('login_user_id');
             $this->session->unset_userdata('name');
             $this->session->unset_userdata('login_type');
+            $this->session->unset_userdata('program_id');
         }
 
         //Check Admin session.

@@ -95,7 +95,7 @@
 														    </li>
 														    <li>
     															<span class="title"><?php echo getPhrase('gender');?>:</span>
-															    <span class="text"><?php if($row['sex'] == 'M') echo getPhrase('male'); else echo getPhrase('female');?></span>
+															    <span class="text"><?= $this->db->get_where('gender', array('code' => $row['sex']))->row()->name;?></span>
 														    </li>
 														    <li>
     															<span class="title"><?php echo getPhrase('class');?>:</span>
@@ -153,6 +153,7 @@
 											    </ul>
 										    </div>
 									    </div>
+										<?php if($this->crud->getInfo('social_login')):?>
 									    <h3 class="text-center"><?php echo getPhrase('your_linked_accounts');?></h3>
                                         <?php $photo  = $this->crud->getUserSocial('student', 'fb_photo');?>
                                         <?php $name   = $this->crud->getUserSocial('student', 'fb_name');?>
@@ -210,6 +211,7 @@
                                                 </div>
                                             </div>
                                         </div>
+										<?php endif;?>
 								    </div>
                     			</div>
             			    </div>

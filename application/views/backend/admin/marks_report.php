@@ -128,13 +128,13 @@
                         <div class="form-group label-floating is-select">
                             <label class="control-label"><?php echo getPhrase('semester');?></label>
                             <div class="select">
-                                <select name="exam_id" required>
+                                <select name="unit_id" required>
                                     <option value=""><?php echo getPhrase('select');?></option>
                                     <?php $exam = $this->db->get('units')->result_array();
             					        	    foreach($exam as $row):
             					            ?>
                                     <option value="<?php echo $row['unit_id'];?>"
-                                        <?php if($exam_id == $row['unit_id']) echo "selected";?>>
+                                        <?php if($unit_id == $row['unit_id']) echo "selected";?>>
                                         <?php echo $row['name'];?></option>
                                     <?php endforeach;?>
                                 </select>
@@ -150,7 +150,7 @@
                 </div>
                 <hr>
                 <?php echo form_close();?>
-                <?php if($class_id != "" && $section_id != "" && $student_id != "" && $exam_id != ""):?>
+                <?php if($class_id != "" && $section_id != "" && $student_id != "" && $unit_id != ""):?>
                 <div class="element-wrapper">
                     <div class="rcard-w">
                         <div class="infos">
@@ -162,7 +162,7 @@
                                 <div class="company-name"><?php echo $system_name;?></div>
                                 <div class="company-address"><?php echo getPhrase('marks');?></div>
                                 <div class="company-address">
-                                    <?php echo $this->db->get_where('exam', array('unit_id' => $exam_id))->row()->name;?>
+                                    <?php echo $this->db->get_where('units', array('unit_id' => $unit_id))->row()->name;?>
                                 </div>
                             </div>
                             <div class="info-2">
@@ -196,7 +196,7 @@
                     				        $exams = $this->crud->get_exams();
                     				        $subjects = $this->db->get_where('subject' , array('class_id' => $class_id, 'section_id' => $section_id))->result_array();
                     				        foreach ($subjects as $row3):
-                    				        $mark = $this->db->get_where('mark' , array('student_id' => $student_id,'subject_id' => $row3['subject_id'], 'class_id' => $class_id, 'unit_id' => $exam_id, 'year' => $running_year));    
+                    				        $mark = $this->db->get_where('mark_daily' , array('student_id' => $student_id,'subject_id' => $row3['subject_id'], 'class_id' => $class_id, 'unit_id' => $unit_id, 'year' => $running_year));    
                     				        if($mark->num_rows() > 0) 
                     				        {
                         				        $marks = $mark->result_array();
@@ -207,10 +207,10 @@
                                         <td><?php echo $row3['name'];?></td>
                                         <td><?php echo $this->crud->get_name('teacher', $row3['teacher_id']);?></td>
                                         <td class="text-center">
-                                            <?php echo $this->db->get_where('mark' , array('subject_id' => $row3['subject_id'], 'unit_id' => $exam_id, 'student_id'=> $student_id,'year' => $running_year))->row()->labtotal; ?>
+                                            <?php echo $this->db->get_where('mark_daily' , array('subject_id' => $row3['subject_id'], 'unit_id' => $unit_id, 'student_id'=> $student_id,'year' => $running_year))->row()->labtotal; ?>
                                         </td>
                                         <td class="text-center">
-                                            <?php echo $this->db->get_where('mark' , array('subject_id' => $row3['subject_id'], 'unit_id' => $exam_id, 'student_id'=> $student_id,'year' => $running_year))->row()->comment; ?>
+                                            <?php echo $this->db->get_where('mark_daily' , array('subject_id' => $row3['subject_id'], 'unit_id' => $unit_id, 'student_id'=> $student_id,'year' => $running_year))->row()->comment; ?>
                                         </td>
                                     </tr>
                                     <?php endforeach; } endforeach; ?>

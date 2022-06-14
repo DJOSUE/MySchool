@@ -44,7 +44,7 @@
                     </td>
                     <td class="dl12">
                         <b class="dl11"><?php echo getPhrase('gender');?></b><br>
-                        <?php if($row['sex'] == 'M') echo getPhrase('male'); else echo getPhrase('female');?>
+                        <?php $this->db->get_where('gender', array('code' => $row['sex']))->row()->name;?>
                     </td>
                 </tr>
                 <tr>

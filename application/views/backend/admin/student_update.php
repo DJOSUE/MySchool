@@ -116,13 +116,13 @@
                                                 <label class="control-label"><?php echo getPhrase('gender');?></label>
                                                 <div class="select">
                                                     <select name="gender" required="">
-                                                        <option value="">Seleccionar</option>
-                                                        <option value="M"
-                                                            <?php if($row['sex'] == 'M') echo "selected";?>>
-                                                            <?php echo getPhrase('male');?></option>
-                                                        <option value="F"
-                                                            <?php if($row['sex'] == 'F') echo "selected";?>>
-                                                            <?php echo getPhrase('female');?></option>
+                                                        <option value=""><?php echo getPhrase('select');?></option>
+                                                        <?php
+                                                        $genders = $this->db->get('gender')->result_array();
+                                                        foreach($genders as $gender):
+                                                        ?>                                                        
+                                                        <option value="<?= $gender['code']?>" <?= $gender['code'] == $row['gender'] ? 'selected': ''; ?>><?= $gender['name']?></option>
+                                                        <?php endforeach;?>
                                                     </select>
                                                 </div>
                                             </div>

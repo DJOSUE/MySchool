@@ -14,7 +14,7 @@
                     <div class="row">
                         <?php 
                         $this->db->group_by('class_id');
-                        $classes = $this->db->get_where('subject', array('teacher_id' => $teacher_id))->result_array();
+                        $classes = $this->db->get_where('subject', array('teacher_id' => $teacher_id, 'year' => $running_year, 'semester_id' => $running_semester))->result_array();
                         foreach($classes as $cl):
                     ?>
                         <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">

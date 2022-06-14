@@ -119,20 +119,20 @@
                                     </h4>
                                     <p>
                                         <b>
-										<?php 
+                                            <?php 
 											$this->db->where('class_id', $class_id); 
 											$this->db->where('section_id', $section_id); 
 											$this->db->group_by('student_id');
 											echo $this->db->count_all_results('enroll');
 										?>
-										</b>
+                                        </b>
                                         <?php echo getPhrase('students');?> |
                                         <b>
-										<?php 
+                                            <?php 
 											$this->db->where('class_id', $class_id);
 											$this->db->where('section_id', $section_id); 
 											echo $this->db->count_all_results('subject');?>
-										</b>
+                                        </b>
                                         <?php echo getPhrase('subjects');?>.
                                         <br>
                                         <b><?php echo getPhrase('running_year');?>:</b>
@@ -161,12 +161,12 @@
                                     </div>
                                 </div>
                                 <hr>
-                                <div class="col-sm-6">
+                                <!-- <div class="col-sm-6">
                                     <div class="element-box">
                                         <h5 class="form-header"><?php echo getPhrase('gender');?></h5>
                                         <canvas id="myChart" width="100" height="100"></canvas>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="col-sm-6">
                                     <div class="element-box">
                                         <div class="form-header">
@@ -176,22 +176,30 @@
                                             <table width="100%" class="table table-lightborder table-lightfont">
                                                 <thead>
                                                     <tr>
-                                                        <th style="text-align: left;"><?php echo getPhrase('subject');?>
+                                                        <th style="text-align: left;">
+                                                            <?php echo getPhrase('subject');?>
                                                         </th>
                                                         <th style="text-align: center;">
-                                                            <?php echo getPhrase('teacher');?></th>
+                                                            <?php echo getPhrase('teacher');?>
+                                                        </th>
+                                                        <th style="text-align: center;">
+                                                            <?php echo getPhrase('total');?>
+                                                        </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php 
-      												        $subjects = $this->db->get_where('subject',array('class_id' => $class_id, 'section_id' => $section_id))->result_array();
-      												        foreach ($subjects as $subject): ?>
+   												        $subjects = $this->db->get_where('subject',array('class_id' => $class_id, 'section_id' => $section_id))->result_array();
+   												        foreach ($subjects as $subject): ?>
                                                     <tr>
                                                         <td style="text-align: left;"><?php echo $subject['name'];?>
                                                         </td>
                                                         <td style="text-align: center;"><a
                                                                 class="btn btn-rounded btn-sm btn-purple"
                                                                 style="color:white"><?php echo $this->crud->get_name('teacher', $subject['teacher_id']);?></a>
+                                                        </td>
+                                                        <td style="text-align: center;">
+                                                            <?= $this->academic->countStudentsSubject($class_id, $section_id, $subject['subject_id']);?>
                                                         </td>
                                                     </tr>
                                                     <?php endforeach;?>

@@ -35,13 +35,18 @@
             <div class="os-tabs-w menu-shad">
                 <div class="os-tabs-controls">
                     <ul class="navs navs-tabs upper">
+                        <?php
+                        // echo '<pre>';
+                        // var_dump($program_id);
+                        // echo '</pre>';
+                        ?>
                         <?php if($syllabus != ""):?>
                         <li class="navs-item">
                             <a class="navs-links book-trigger active" id="bookLink01" href="#stepContent01"><i
                                     class="os-icon picons-thin-icon-thin-0008_book_reading_read_manual"></i><span><?= getPhrase('syllabus');?></span></a>
                         </li>
                         <?php endif; ?>
-                        <?php if($application != ""):?>
+                        <?php if($application != "" && ($program_id == 1 || $program_id == 0)):?>
                         <li class="navs-item">
                             <a class="navs-links book-trigger" id="bookLink02" href="#stepContent02"><i
                                     class="os-icon os-icon picons-thin-icon-thin-0006_book_writing_reading_read_manual"></i><span><?= getPhrase('application');?></span></a>
@@ -60,6 +65,9 @@
                         </li>
                         <?php endif; ?>
                     </ul>
+                    <h4>
+                        <?= $class_name;?>
+                    </h4>
                 </div>
             </div>
             <div class="content">
@@ -74,7 +82,7 @@
                     <?php if($application != ""):?>
                     <div class="book-content" id="stepContent02">
                         <div class="row">
-                            <iframe class="iframe" src="<?= $application;?>" frameborder="0">></iframe>
+                            <iframe class="iframe" referrerpolicy="unsafe-url" src="<?= $application;?>" frameborder="0">></iframe>
                         </div>
                     </div>
                     <?php endif; ?>

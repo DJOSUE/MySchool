@@ -23,7 +23,7 @@
     <div class="fixed-sidebar-left sidebar--small" id="sidebar-left">
         <a href="<?php echo base_url();?>admin/panel/" class="logo">
             <div class="img-wrap">
-                <img src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
+                <img class="nav-icon" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
             </div>
         </a>
         <div class="mCustomScrollbar" data-mcs-theme="dark">
@@ -266,7 +266,7 @@
     <div class="fixed-sidebar-left sidebar--large" id="sidebar-left-1">
         <a href="<?php echo base_url();?>admin/panel/" class="logo">
             <div class="img-wrap">
-                <img src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
+                <img class="nav-icon" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
             </div>
             <div class="title-block">
                 <h6 class="logo-title"><?php echo $this->crud->getInfo('system_name');?></h6>
@@ -504,13 +504,13 @@
 <div class="fixed-sidebar fixed-sidebar-responsive">
     <div class="fixed-sidebar-left sidebar--small" id="sidebar-left-responsive">
         <a href="<?php echo base_url();?>admin/panel/" class="logo js-sidebar-open">
-            <img src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
+            <img class="nav-icon" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
         </a>
     </div>
     <div class="fixed-sidebar-left sidebar--large" id="sidebar-left-1-responsive">
         <a href="<?php echo base_url();?>" class="logo">
             <div class="img-wrap">
-                <img class="nav-icon-mobile" class="nav-icon-mobile" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
+                <img class="nav-icon" class="nav-icon-mobile" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
             </div>
             <div class="title-block">
                 <h6 class="logo-title"><?php echo $this->crud->getInfo('system_name')?></h6>

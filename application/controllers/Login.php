@@ -59,7 +59,7 @@ class Login extends EduAppGT
     {
         $username = html_escape($this->input->post('username'));
         $password = html_escape($this->input->post('password'));
-        $credential = array('username' => $username, 'password' => sha1($password));
+        $credential = array('username' => $username, 'password' => sha1($password), 'status' => '1');
 
         $query = $this->db->get_where('admin', $credential);
         if ($query->num_rows() > 0) 
@@ -78,6 +78,7 @@ class Login extends EduAppGT
         {
             $row = $query->row();
             $this->session->set_userdata('role_id', '5');
+            $this->session->set_userdata('program_id', '0');
             $this->session->set_userdata('teacher_login', '1');
             $this->session->set_userdata('teacher_id', $row->teacher_id);
             $this->session->set_userdata('login_user_id', $row->teacher_id);
@@ -90,6 +91,7 @@ class Login extends EduAppGT
         {
             $row = $query->row();
             $this->session->set_userdata('role_id', '6');
+            $this->session->set_userdata('program_id', $row->dormitory_id);
             $this->session->set_userdata('student_login', $row->student_session);
             $this->session->set_userdata('student_id', $row->student_id);
             $this->session->set_userdata('login_user_id', $row->student_id);
@@ -146,14 +148,14 @@ class Login extends EduAppGT
             $reset_account_type = '';
             $new_password = substr( md5( rand(100000000,20000000000) ) , 0,7);
             $new_hashed_password    =   sha1($new_password);
-            $query = $this->db->get_where('admin' , array('email' => $email));
+            $query = $this->db->get_where('admin' , array('email' => $email, 'status' => '1'));
             if ($query->num_rows() > 0) 
             {
                 $this->db->where('email' , $email);
                 $this->db->update('admin' , array('password' =>     $new_hashed_password));
                 $this->mail->submitPassword($email , $new_password);
             }
-            $query = $this->db->get_where('teacher' , array('email' => $email));
+            $query = $this->db->get_where('teacher' , array('email' => $email, 'status' => '1'));
             if ($query->num_rows() > 0) 
             {
                 $this->db->where('email' , $email);
@@ -161,28 +163,28 @@ class Login extends EduAppGT
 
                 $this->mail->submitPassword($email , $new_password);
             }
-            $query = $this->db->get_where('parent' , array('email' => $email));
+            $query = $this->db->get_where('parent' , array('email' => $email, 'status' => '1'));
             if ($query->num_rows() > 0) 
             {
                 $this->db->where('email' , $email);
                 $this->db->update('parent' , array('password' => $new_hashed_password));
                 $this->mail->submitPassword($email , $new_password);
             }
-            $query = $this->db->get_where('student' , array('email' => $email));
+            $query = $this->db->get_where('student' , array('email' => $email, 'status' => '1'));
             if ($query->num_rows() > 0) 
             {
                 $this->db->where('email' , $email);
                 $this->db->update('student' , array('password' => $new_hashed_password));
                 $this->mail->submitPassword($email , $new_password);
             }
-            $query = $this->db->get_where('accountant' , array('email' => $email));
+            $query = $this->db->get_where('accountant' , array('email' => $email, 'status' => '1'));
             if ($query->num_rows() > 0) 
             {
                 $this->db->where('email' , $email);
                 $this->db->update('accountant' , array('password' => $new_hashed_password));
                 $this->mail->submitPassword($email , $new_password);
             }
-            $query = $this->db->get_where('librarian' , array('email' => $email));
+            $query = $this->db->get_where('librarian' , array('email' => $email, 'status' => '1'));
             if ($query->num_rows() > 0) 
             {
                 $this->db->where('email' , $email);

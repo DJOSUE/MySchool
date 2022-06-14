@@ -50,7 +50,8 @@ class Books extends EduAppGT
             switch ($userLogged) {
                 case 'student':
                     // Get the class and the section
-                    $student_id = $this->session->userdata('login_user_id');                    
+                    $student_id = $this->session->userdata('login_user_id');
+                    $program_id = $this->session->userdata('program_id');
                     $class = $this->db->get_where('enroll' , array('student_id' => $student_id, 'year' => $this->runningYear, 'semester_id'=> $this->runningSemester))->row();
                     $section = $this->db->get_where('section', array('section_id' => $class->section_id, 'year' => $this->runningYear, 'semester_id'=> $this->runningSemester))->row();
 
@@ -63,7 +64,7 @@ class Books extends EduAppGT
                         $is_saturday = false;
                     }
 
-                    $this->book($class->class_id, $is_saturday);
+                    $this->book($class->class_id, $is_saturday, $program_id);
                     break;
                 
                 default:
@@ -83,12 +84,16 @@ class Books extends EduAppGT
     }
 
     //book function.
-    private function book ($class_id, $is_saturday = false)
+    private function book ($class_id, $is_saturday = false, $program_id = '1')
     {
+        $class_name = $this->db->get_where('class' , array('class_id' => $class_id))->row()->name;
+
         $data['class_id']       = $class_id;
+        $data['class_name']     = $class_name;
+        $data['program_id']     = $program_id;
         $data['is_saturday']    = $is_saturday;
         $data['page_name']      = 'book';
-        $data['page_title']     = 'beginner';
+        $data['page_title']     = $class_name;
          $this->load->view('backend/books/index', $data);
         // $this->load->view('backend/index', $data);
     }

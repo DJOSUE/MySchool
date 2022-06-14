@@ -1034,6 +1034,18 @@
             $page_data['student_id']  = $student_id;
             $this->load->view('backend/student/book_'.$class_name, $page_data);
         }
+
+        function updateAvatar(){
+            if(isset($_POST["image"]))
+            {
+                $this->user->updateAvatar('student');
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url().'student/student_update/','refresh');
+            }
+            else{
+                redirect(base_url().'student/student_update/','refresh');
+            }
+        }
         
         //End of Student.php
     }

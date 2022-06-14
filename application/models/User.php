@@ -105,8 +105,10 @@ class User extends School
     
     public function deleteLibrarian($librarianId)
     {
+        $data['status']   = 0;
         $this->db->where('librarian_id', $librarianId);
-        $this->db->delete('librarian');
+        $this->db->update('librarian', $data);
+        // $this->db->delete('librarian');
     }
     
     public function createAccountant()
@@ -156,8 +158,10 @@ class User extends School
     
     public function deleteAccountant($accountantId)
     {
+        $data['status']   = 0;
         $this->db->where('accountant_id', $accountantId);
-        $this->db->delete('accountant');
+        $this->db->update('accountant', $data);
+        // $this->db->delete('accountant');
     }
     
     public function createAdmin()
@@ -213,6 +217,13 @@ class User extends School
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/admin_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
     }
     
+    public function deleteAdmin($adminId)
+    {
+        $data['status']   = 0;
+        $this->db->where('admin_id', $adminId);
+        $this->db->update('admin', $data);
+    }
+
     public function acceptTeacher($teacherId)
     {
         $pending = $this->db->get_where('pending_users', array('user_id' => $teacherId))->result_array();
@@ -281,8 +292,10 @@ class User extends School
     
     public function deleteTeacher($teacherId)
     {
+        $data['status']   = 0;
         $this->db->where('teacher_id', $teacherId);
-        $this->db->delete('teacher');
+        $this->db->update('teacher', $data);
+        // $this->db->delete('teacher');
     }
     
     public function createParent()
@@ -358,8 +371,10 @@ class User extends School
     
     public function deleteParent($parentId)
     {
+        $data['status']   = 0;
         $this->db->where('parent_id' , $parentId);
-        $this->db->delete('parent');
+        $this->db->update('parent', $data);
+        // $this->db->delete('parent');
     }
     
     public function updateCurrentAdmin()
@@ -639,6 +654,8 @@ class User extends School
         $data['email'] = $this->input->post('email');
         $data['phone'] = $this->input->post('phone');
         $data['address'] = $this->input->post('address');
+        $data['sex'] = $this->input->post('gender');
+        $data['birthday'] = $this->input->post('datetimepicker');
         if($this->input->post('password') != "")
         {
             $data['password'] = sha1($this->input->post('password'));
@@ -648,7 +665,31 @@ class User extends School
         }
         $this->db->where('student_id', $this->session->userdata('login_user_id'));
         $this->db->update('student', $data);
+
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/student_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+    }
+
+    public function updateAvatar($table){
+        $user_id = $this->session->userdata('login_user_id');
+        if(isset($_POST["image"]))
+        {
+            $md5        = md5(date('d-m-Y H:i:s'));
+            $image_name = $md5.str_replace(' ', '', $user_id).'png';
+
+            $data = $_POST["image"];
+            $image_array_1 = explode(";", $data);
+            $image_array_2 = explode(",", $image_array_1[1]);
+
+            $data = base64_decode($image_array_2[1]);
+
+            $destination = 'public/uploads/'.$table.'_image/' . $image_name;
+
+            $data_update['image'] = $image_name;
+            $this->db->where($table.'_id', $user_id);
+            $this->db->update($table, $data_update);
+
+            file_put_contents($destination, $data);
+        }
     }
     
     public function updateModalStudent($studentId)
@@ -875,11 +916,5 @@ class User extends School
         $this->db->update('teacher', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/teacher_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
     }
-    
-    
-    
-    
-    
-    
     
 }

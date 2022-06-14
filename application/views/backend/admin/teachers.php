@@ -66,7 +66,7 @@
                                                          <div class="row" id="results">
                                                              <?php 
     																$this->db->order_by('first_name', 'asc');
-																    $teacher = $this->db->get('teacher')->result_array();
+																    $teacher = $this->db->get_where('teacher', array('status' => '1'))->result_array();
                                                                     foreach($teacher as $row):
                                                                 ?>
                                                              <div class="col-xl-4 col-md-6 results">
@@ -169,9 +169,13 @@
                                  <label class="control-label"><?php echo getPhrase('gender');?></label>
                                  <div class="select">
                                      <select name="gender">
-                                         <option value=""><?php echo getPhrase('select');?></option>
-                                         <option value="M"><?php echo getPhrase('male');?></option>
-                                         <option value="F"><?php echo getPhrase('female');?></option>
+                                        <option value=""><?php echo getPhrase('select');?></option>
+                                        <?php
+                                        $genders = $this->db->get('gender')->result_array();
+                                        foreach($genders as $gender):
+                                        ?>                                                        
+                                        <option value="<?= $gender['code']?>"><?= $gender['name']?></option>
+                                        <?php endforeach;?>
                                      </select>
                                  </div>
                              </div>
