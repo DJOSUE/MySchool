@@ -134,8 +134,9 @@
                                                         <?php
                                                         $genders = $this->db->get('gender')->result_array();
                                                         foreach($genders as $gender):
-                                                        ?>                                                        
-                                                        <option value="<?= $gender['code']?>"><?= $gender['name']?></option>
+                                                        ?>
+                                                        <option value="<?= $gender['code']?>"><?= $gender['name']?>
+                                                        </option>
                                                         <?php endforeach;?>
                                                     </select>
                                                 </div>
@@ -167,7 +168,7 @@
                                                 <label
                                                     class="control-label"><?php echo getPhrase('country_of_birth');?></label>
                                                 <div class="select">
-                                                    <select name="country_id" id="country_id" required="">
+                                                    <select name="country_id" id="country_id" required="true">
                                                         <option value=""><?php echo getPhrase('select');?></option>
                                                         <?php $countries = $this->db->get('countries')->result_array();
                                                               foreach($countries as $country):
@@ -247,7 +248,7 @@
                                                 <label
                                                     class="control-label"><?php echo getPhrase('classroom');?></label>
                                                 <div class="select">
-                                                    <select name="dormitory_id">
+                                                    <select name="dormitory_id" required>
                                                         <option value=""><?php echo getPhrase('select');?></option>
                                                         <?php 
         	                  										$classroom = $this->db->get('dormitory')->result_array();
@@ -334,8 +335,9 @@
                                                         <?php
                                                         $genders = $this->db->get('gender')->result_array();
                                                         foreach($genders as $gender):
-                                                        ?>                                                        
-                                                        <option value="<?= $gender['code']?>"><?= $gender['name']?></option>
+                                                        ?>
+                                                        <option value="<?= $gender['code']?>"><?= $gender['name']?>
+                                                        </option>
                                                         <?php endforeach;?>
                                                     </select>
                                                 </div>
@@ -495,196 +497,196 @@
     </div>
 </div>
 
-<script>
-function get_level() {
+<script >
+    function get_level() {
 
-    const weighting = <?=json_encode($placement_weighting)?>;
+        const weighting = <?=json_encode($placement_weighting)?>;
 
-    var average = [];
+        var average = [];
 
-    for (let i = 0; i < <?= $quantity_score ?>; i++) {
-        name = 'score' + (i + 1);
-        value = document.getElementById(name).value;
-        average[i] = (value / weighting[name]);
+        for (let i = 0; i < <?= $quantity_score ?>; i++) {
+            name = 'score' + (i + 1);
+            value = document.getElementById(name).value;
+            average[i] = (value / weighting[name]);
+        }
+
+        var result = Math.round((eval(average.join('+')) / average.length) * 100);
+
+        if (result >= 0 && result <= 20) {
+            document.getElementById("suggested_level").innerHTML = "BEGINNERS";
+        } else if (result >= 21 && result <= 40) {
+            document.getElementById("suggested_level").innerHTML = "BASIC";
+        } else if (result >= 41 && result <= 60) {
+            document.getElementById("suggested_level").innerHTML = "INTERMEDIATE";
+        } else if (result >= 61 && result <= 80) {
+            document.getElementById("suggested_level").innerHTML = "ADVANCED";
+        } else if (result >= 81 && result <= 100) {
+            document.getElementById("suggested_level").innerHTML = "EXPERT I";
+        }
     }
 
-    var result = Math.round((eval(average.join('+')) / average.length) * 100);
+    $(document).ready(function() {
+        var query;
+        $("#user_student").keyup(function(e) {
+            query = $("#user_student").val();
+            $("#result_student").queue(function(n) {
+                $.ajax({
+                    type: "POST",
+                    url: '<?php echo base_url();?>register/search_user',
+                    data: "c=" + query,
+                    dataType: "html",
+                    error: function() {
+                        alert("¡Error!");
+                    },
+                    success: function(data) {
+                        if (data == "success") {
+                            texto =
+                                "<b style='color:#ff214f'><?php echo getPhrase('already_exist');?></b>";
+                            $("#result_student").html(texto);
+                            $('#sub_form').attr('disabled', 'disabled');
+                        } else {
+                            texto = "";
+                            $("#result_student").html(texto);
+                            $('#sub_form').removeAttr('disabled');
+                        }
+                        n();
+                    }
+                });
+            });
+        });
+    });
 
-    if (result >= 0 && result <= 20) {
-        document.getElementById("suggested_level").innerHTML = "BEGINNERS";
-    } else if (result >= 21 && result <= 40) {
-        document.getElementById("suggested_level").innerHTML = "BASIC";
-    } else if (result >= 41 && result <= 60) {
-        document.getElementById("suggested_level").innerHTML = "INTERMEDIATE";
-    } else if (result >= 61 && result <= 80) {
-        document.getElementById("suggested_level").innerHTML = "ADVANCED";
-    } else if (result >= 81 && result <= 100) {
-        document.getElementById("suggested_level").innerHTML = "EXPERT I";
+    $(document).ready(function() {
+        var query;
+        $("#parent_username").keyup(function(e) {
+            query = $("#parent_username").val();
+            $("#result").queue(function(n) {
+                $.ajax({
+                    type: "POST",
+                    url: '<?php echo base_url();?>register/search_user',
+                    data: "c=" + query,
+                    dataType: "html",
+                    error: function() {
+                        alert("¡Error!");
+                    },
+                    success: function(data) {
+                        if (data == "success") {
+                            texto =
+                                "<b style='color:#ff214f'><?php echo getPhrase('already_exist');?></b>";
+                            $("#result").html(texto);
+                            $('#sub_form').attr('disabled', 'disabled');
+                        } else {
+                            texto = "";
+                            $("#result").html(texto);
+                            $('#sub_form').removeAttr('disabled');
+                        }
+                        n();
+                    }
+                });
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        var query;
+        $("#parent_email").keyup(function(e) {
+            query = $("#parent_email").val();
+            $("#email_result_parent").queue(function(n) {
+                $.ajax({
+                    type: "POST",
+                    url: '<?php echo base_url();?>register/search_email',
+                    data: "c=" + query,
+                    dataType: "html",
+                    error: function() {
+                        alert("¡Error!");
+                    },
+                    success: function(data) {
+                        if (data == "success") {
+                            texto =
+                                "<b style='color:#ff214f'><?php echo getPhrase('email_already_exist');?></b>";
+                            $("#email_result_parent").html(texto);
+                            $('#sub_form').attr('disabled', 'disabled');
+                        } else {
+                            texto = "";
+                            $("#email_result_parent").html(texto);
+                            $('#sub_form').removeAttr('disabled');
+                        }
+                        n();
+                    }
+                });
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        var query;
+        $("#student_email").keyup(function(e) {
+            query = $("#student_email").val();
+            $("#email_result_student").queue(function(n) {
+                $.ajax({
+                    type: "POST",
+                    url: '<?php echo base_url();?>register/search_email',
+                    data: "c=" + query,
+                    dataType: "html",
+                    error: function() {
+                        alert("¡Error!");
+                    },
+                    success: function(data) {
+                        if (data == "success") {
+                            texto =
+                                "<b style='color:#ff214f'><?php echo getPhrase('email_already_exist');?></b>";
+                            $("#email_result_student").html(texto);
+                            $('#sub_form').attr('disabled', 'disabled');
+                        } else {
+                            texto = "";
+                            $("#email_result_student").html(texto);
+                            $('#sub_form').removeAttr('disabled');
+                        }
+                        n();
+                    }
+                });
+            });
+        });
+    });
+
+    function get_class_sections(class_id) {
+        console.log(class_id);
+
+        $.ajax({
+            url: '<?php echo base_url();?>admin/get_class_section/' + class_id,
+            success: function(response) {
+                jQuery('#section_selector_holder').html(response);
+            }
+        });
     }
-}
 
-$(document).ready(function() {
-    var query;
-    $("#user_student").keyup(function(e) {
-        query = $("#user_student").val();
-        $("#result_student").queue(function(n) {
-            $.ajax({
-                type: "POST",
-                url: '<?php echo base_url();?>register/search_user',
-                data: "c=" + query,
-                dataType: "html",
-                error: function() {
-                    alert("¡Error!");
-                },
-                success: function(data) {
-                    if (data == "success") {
-                        texto =
-                            "<b style='color:#ff214f'><?php echo getPhrase('already_exist');?></b>";
-                        $("#result_student").html(texto);
-                        $('#sub_form').attr('disabled', 'disabled');
-                    } else {
-                        texto = "";
-                        $("#result_student").html(texto);
-                        $('#sub_form').removeAttr('disabled');
-                    }
-                    n();
-                }
-            });
+    function get_class_section_subjects(section_id) {
+
+        console.log(section_id);
+
+        var class_id = document.getElementById("class_id").value;
+        // var year = document.getElementById("year_id").value;
+        // var period = document.getElementById("period_id").value;
+
+
+
+        $.ajax({
+            url: '<?php echo base_url();?>admin/get_class_section_subjects/' + class_id + '/' +
+                section_id, //+ '/' + year + '/' + period ,
+            success: function(response) {
+                jQuery('#subject_selector_holder').html(response).selectpicker('refresh');
+            }
         });
-    });
-});
+    }
 
-$(document).ready(function() {
-    var query;
-    $("#parent_username").keyup(function(e) {
-        query = $("#parent_username").val();
-        $("#result").queue(function(n) {
-            $.ajax({
-                type: "POST",
-                url: '<?php echo base_url();?>register/search_user',
-                data: "c=" + query,
-                dataType: "html",
-                error: function() {
-                    alert("¡Error!");
-                },
-                success: function(data) {
-                    if (data == "success") {
-                        texto =
-                            "<b style='color:#ff214f'><?php echo getPhrase('already_exist');?></b>";
-                        $("#result").html(texto);
-                        $('#sub_form').attr('disabled', 'disabled');
-                    } else {
-                        texto = "";
-                        $("#result").html(texto);
-                        $('#sub_form').removeAttr('disabled');
-                    }
-                    n();
-                }
-            });
-        });
-    });
-});
-
-$(document).ready(function() {
-    var query;
-    $("#parent_email").keyup(function(e) {
-        query = $("#parent_email").val();
-        $("#email_result_parent").queue(function(n) {
-            $.ajax({
-                type: "POST",
-                url: '<?php echo base_url();?>register/search_email',
-                data: "c=" + query,
-                dataType: "html",
-                error: function() {
-                    alert("¡Error!");
-                },
-                success: function(data) {
-                    if (data == "success") {
-                        texto =
-                            "<b style='color:#ff214f'><?php echo getPhrase('email_already_exist');?></b>";
-                        $("#email_result_parent").html(texto);
-                        $('#sub_form').attr('disabled', 'disabled');
-                    } else {
-                        texto = "";
-                        $("#email_result_parent").html(texto);
-                        $('#sub_form').removeAttr('disabled');
-                    }
-                    n();
-                }
-            });
-        });
-    });
-});
-
-$(document).ready(function() {
-    var query;
-    $("#student_email").keyup(function(e) {
-        query = $("#student_email").val();
-        $("#email_result_student").queue(function(n) {
-            $.ajax({
-                type: "POST",
-                url: '<?php echo base_url();?>register/search_email',
-                data: "c=" + query,
-                dataType: "html",
-                error: function() {
-                    alert("¡Error!");
-                },
-                success: function(data) {
-                    if (data == "success") {
-                        texto =
-                            "<b style='color:#ff214f'><?php echo getPhrase('email_already_exist');?></b>";
-                        $("#email_result_student").html(texto);
-                        $('#sub_form').attr('disabled', 'disabled');
-                    } else {
-                        texto = "";
-                        $("#email_result_student").html(texto);
-                        $('#sub_form').removeAttr('disabled');
-                    }
-                    n();
-                }
-            });
-        });
-    });
-});
-
-function get_class_sections(class_id) {
-    console.log(class_id);
-
-    $.ajax({
-        url: '<?php echo base_url();?>admin/get_class_section/' + class_id,
-        success: function(response) {
-            jQuery('#section_selector_holder').html(response);
+    $('#check').click(function() {
+        if ($('#check').is(':checked') == true) {
+            $("#new_parent").show(500);
+            $("#initial").hide(500);
+        } else {
+            $("#new_parent").hide(500);
+            $("#initial").show(500);
         }
     });
-}
-
-function get_class_section_subjects(section_id) {
-
-    console.log(section_id);
-
-    var class_id = document.getElementById("class_id").value;
-    // var year = document.getElementById("year_id").value;
-    // var period = document.getElementById("period_id").value;
-
-
-
-    $.ajax({
-        url: '<?php echo base_url();?>admin/get_class_section_subjects/' + class_id + '/' +
-            section_id, //+ '/' + year + '/' + period ,
-        success: function(response) {
-            jQuery('#subject_selector_holder').html(response).selectpicker('refresh');
-        }
-    });
-}
-
-$('#check').click(function() {
-    if ($('#check').is(':checked') == true) {
-        $("#new_parent").show(500);
-        $("#initial").hide(500);
-    } else {
-        $("#new_parent").hide(500);
-        $("#initial").show(500);
-    }
-});
-$("#new_parent").hide();
+    $("#new_parent").hide();
 </script>
