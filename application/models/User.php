@@ -447,6 +447,7 @@ class User extends School
         $data['last_name']         = $this->input->post('last_name');
         $data['birthday']          = $this->input->post('datetimepicker');
         $data['username']          = $this->input->post('username');
+        $data['student_code']      = $this->input->post('student_code');
         $data['student_session']   = 1;
         $data['email']             = $this->input->post('email');
         $data['since']             = $this->crud->getDateFormat();
@@ -618,6 +619,8 @@ class User extends School
         $data['phone']           = $this->input->post('phone');
         $data['sex']             = $this->input->post('gender');
         $data['username']        = $this->input->post('username');
+        $data['student_code']    = $this->input->post('student_code');
+        $data['country_id']      = $this->input->post('country_id');
         if($this->input->post('password') != "")
         {
            $data['password'] = sha1($this->input->post('password'));

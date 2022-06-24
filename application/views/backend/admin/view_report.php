@@ -54,7 +54,7 @@
                                 <div id="panel">
                                 <?php
                                     $this->db->order_by('report_message_id' , 'desc'); 
-                                    $news_messages = $this->db->get_where('reporte_mensaje' , array('report_code' => $row['report_code']))->result_array();
+                                    $news_messages = $this->db->get_where('report_message' , array('report_code' => $row['report_code']))->result_array();
                                     foreach ($news_messages as $row2):
                                 ?>
                     		        <div class="element-box-w b-t">
@@ -131,7 +131,7 @@
                         timer: 8000
                     }); 
                     Toast.fire({
-                        type: 'success',
+                        icon: 'success',
                         title: post_message
                     })
     		    }});

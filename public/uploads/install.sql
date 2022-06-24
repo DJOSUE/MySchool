@@ -2157,11 +2157,11 @@ CREATE TABLE IF NOT EXISTS `student_report` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `reporte_mensaje`
+-- Estructura de tabla para la tabla `report_message`
 --
 
-DROP TABLE IF EXISTS `reporte_mensaje`;
-CREATE TABLE IF NOT EXISTS `reporte_mensaje` (
+DROP TABLE IF EXISTS `report_message`;
+CREATE TABLE IF NOT EXISTS `report_message` (
   `report_message_id` int(11) NOT NULL AUTO_INCREMENT,
   `report_code` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `message` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,

@@ -1268,7 +1268,7 @@
             $this->isAdmin();
             
             if($this->useDailyMarks){
-                $page_data['page_name']  = 'student_past_daily_marks';
+                $page_data['page_name']  = 'student_past_daily_marks_a';
                 $page_data['page_title'] =  getPhrase('student_past_daily_marks');
                 $page_data['student_id'] =  $student_id;
                 $this->load->view('backend/index', $page_data);
@@ -1974,7 +1974,7 @@
             {
                 $this->user->downloadExcel();
             }
-            if ($param1 == 'addmission') 
+            if ($param1 == 'admission') 
             {
                 $student_id = $this->user->studentAdmission();
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
@@ -3102,7 +3102,7 @@
                 $page_data['student_id'] =   $student_id;
                 $page_data['class_id']   =   $class_id;
                 $page_data['data']       =   $data;
-                $this->load->view('backend/admin/daily_marks_old_print_view_all', $page_data);
+                $this->load->view('backend/admin/daily_marks_old_print_view_all_a', $page_data);
             }
             else{
                 $page_data['student_id'] =   $student_id;

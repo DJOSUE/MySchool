@@ -12,7 +12,7 @@
             <div class="conty">
                 <div class="ui-block">
                     <div class="ui-block-content">
-                        <?php echo form_open(base_url() . 'admin/student/addmission/' , array('enctype' => 'multipart/form-data', 'autocomplete' => 'off'));?>
+                        <?php echo form_open(base_url() . 'admin/student/admission/' , array('enctype' => 'multipart/form-data', 'autocomplete' => 'off'));?>
                         <div class="steps-w">
                             <div class="step-triggers">
                                 <a class="step-trigger active"
@@ -183,7 +183,7 @@
                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                             <div class="form-group label-floating">
                                                 <label class="control-label"><?php echo getPhrase('roll');?></label>
-                                                <input class="form-control" name="roll" type="text">
+                                                <input class="form-control" name="student_code" type="text">
                                             </div>
                                         </div>
                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">

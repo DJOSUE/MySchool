@@ -144,7 +144,7 @@
                         timer: 8000
                         }); 
                         Toast.fire({
-                            type: 'success',
+                            icon: 'success',
                             title: '<?php echo getPhrase('comment_success');?>'
                         });
                     }});

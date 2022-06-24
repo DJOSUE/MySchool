@@ -320,7 +320,7 @@
                                 timer: 8000
                             }); 
                             Toast.fire({
-                                type: 'success',
+                                icon: 'success',
                                 title: updated
                             });
                         }
@@ -416,7 +416,7 @@
                             timer: 8000
                         }); 
                         Toast.fire({
-                            type: 'success',
+                            icon: 'success',
                             title: updated
                         })
     		        }});
@@ -747,7 +747,7 @@
                     timer: 8000
                 }); 
                 Toast.fire({
-                    type: 'success',
+                    icon: 'success',
                     title: 'Update'
                 })
             }
@@ -776,7 +776,7 @@
                             timer: 8000
                         }); 
                         Toast.fire({
-                            type: 'success',
+                            icon: 'success',
                             title: updated
                         })
     		        }});
@@ -803,7 +803,7 @@
                     timer: 8000
                 }); 
                 Toast.fire({
-                    type: 'success',
+                    icon: 'success',
                     title: updated
                 })
             }});

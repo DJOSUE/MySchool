@@ -1021,7 +1021,7 @@ function vote(poll_code) {
                     timer: 8000
                 });
                 Toast.fire({
-                    type: 'success',
+                    icon: 'success',
                     title: post_message
                 })
             }
