@@ -1993,6 +1993,30 @@ CREATE TABLE IF NOT EXISTS `payment` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `payment_gateways`
+--
+
+CREATE TABLE `payment_gateways` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `settings` longtext DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `payment_gateways`
+--
+
+INSERT INTO `payment_gateways` (`id`, `name`, `settings`, `status`) VALUES
+(1, 'paypal', NULL, 0),
+(2, 'stripe', NULL, 0),
+(3, 'razorpay', NULL, 0),
+(5, 'paystack', NULL, 0),
+(6, 'flutterwave', NULL, 0);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `pending_users`
 --
 
@@ -2133,11 +2157,11 @@ CREATE TABLE IF NOT EXISTS `student_report` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `reporte_mensaje`
+-- Estructura de tabla para la tabla `report_message`
 --
 
-DROP TABLE IF EXISTS `reporte_mensaje`;
-CREATE TABLE IF NOT EXISTS `reporte_mensaje` (
+DROP TABLE IF EXISTS `report_message`;
+CREATE TABLE IF NOT EXISTS `report_message` (
   `report_message_id` int(11) NOT NULL AUTO_INCREMENT,
   `report_code` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `message` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,

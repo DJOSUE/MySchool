@@ -8,7 +8,10 @@
     $ex = explode('-', $info);
     
     $class_id   = $ex[0];
+    $section_id = $ex[1];
     $subject_id = $ex[2];
+
+    $section_name = $this->db->get_where('section', array('section_id' => $ex[1]))->row()->name;
 
     $sub = $this->db->get_where('subject', array('subject_id' => $ex[2]))->result_array();
     foreach($sub as $row):
@@ -27,7 +30,7 @@
                 </h3>
                 <small
                     style="font-size:0.90rem; color:#fff;"><?php echo $this->db->get_where('class', array('class_id' => $ex[0]))->row()->name;?>
-                    "<?php echo $this->db->get_where('section', array('section_id' => $ex[1]))->row()->name;?>"</small>
+                    "<?= $section_name; ?>"</small>
             </div>
         </div>
         <div class="os-tabs-w menu-shad">
@@ -616,6 +619,29 @@
                                     </center>
                                     <br><br><br>
                                     <?php endif;?>
+                                </div>
+                                <div class="ui-block">
+                                    <div class="ui-block-title">
+                                        <h6 class="title"><?= getPhrase('class_books');?></h6>
+                                    </div>
+                                    <div class="ui-block-content">
+                                        <ul class="widget w-personal-info item-block">
+                                            <?php
+                                                $is_saturday = false;
+                                                if(strpos(strtolower($section_name),'saturday')!== false)
+                                                {
+                                                    $is_saturday = true;
+                                                }
+                                            ?>
+                                            <a href="<?php echo base_url();?>books/<?php echo base64_encode($class_id."|".$is_saturday);?>/"
+                                                        class="h6 author-name">
+                                                    <?= getPhrase('books');?>
+                                            </a>
+                                            
+                                            <hr>
+                                            
+                                        </ul>
+                                    </div>
                                 </div>
                                 <div class="ui-block">
                                     <div class="ui-block-title">

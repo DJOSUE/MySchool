@@ -130,7 +130,7 @@
         <div class="fixed-sidebar-left sidebar--large" id="sidebar-left-1-responsive">
             <a href="<?php echo base_url();?>accountant/panel/" class="logo">
                 <div class="img-wrap">
-                    <img src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
+                    <img class="nav-icon-mobile" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
                 </div>
                 <div class="title-block">
                     <h6 class="logo-title"><?php echo $this->crud->getInfo('system_name');?></h6>

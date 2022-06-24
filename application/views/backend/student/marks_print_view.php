@@ -45,6 +45,7 @@
                                 <h5><?php echo $exam_name;?></h5>
                                 <div class="rcard-date"><?php echo $class_name;?></div>
                             </div>
+                            <br/><br/>
                             <div class="rcard-table table-responsive">
                                 <table class="table">
                                     <thead>

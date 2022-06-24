@@ -116,13 +116,29 @@
                                                 <label class="control-label"><?php echo getPhrase('gender');?></label>
                                                 <div class="select">
                                                     <select name="gender" required="">
-                                                        <option value="">Seleccionar</option>
-                                                        <option value="M"
-                                                            <?php if($row['sex'] == 'M') echo "selected";?>>
-                                                            <?php echo getPhrase('male');?></option>
-                                                        <option value="F"
-                                                            <?php if($row['sex'] == 'F') echo "selected";?>>
-                                                            <?php echo getPhrase('female');?></option>
+                                                        <option value=""><?php echo getPhrase('select');?></option>
+                                                        <?php
+                                                        $genders = $this->db->get('gender')->result_array();
+                                                        foreach($genders as $gender):
+                                                        ?>                                                        
+                                                        <option value="<?= $gender['code']?>" <?= $gender['code'] == $row['sex'] ? 'selected': ''; ?>><?= $gender['name']?></option>
+                                                        <?php endforeach;?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="form-group label-floating is-select">
+                                                <label class="control-label"><?php echo getPhrase('country_of_birth');?></label>
+                                                <div class="select">
+                                                    <select name="country_id" required="">
+                                                        <option value=""><?php echo getPhrase('select');?></option>
+                                                        <?php
+                                                        $countries = $this->db->get('countries')->result_array();
+                                                        foreach($countries as $country):
+                                                        ?>                                                        
+                                                        <option value="<?= $country['country_id']?>" <?= $country['country_id'] == $row['country_id'] ? 'selected': ''; ?>><?= $country['name']?></option>
+                                                        <?php endforeach;?>
                                                     </select>
                                                 </div>
                                             </div>
@@ -168,42 +184,11 @@
                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                             <div class="form-group label-floating">
                                                 <label class="control-label"><?php echo getPhrase('roll');?></label>
-                                                <input class="form-control" name="roll"
-                                                    value="<?php echo $this->db->get_where('enroll', array('student_id' => $row['student_id']))->row()->roll;?>"
+                                                <input class="form-control" name="student_code"
+                                                    value="<?php echo $row['student_code'];?>"
                                                     type="text">
                                             </div>
-                                        </div>
-                                        <!-- <div class="col col-lg-6 col-md-6 col-sm-12 col-12">                
-                                                    <div class="form-group label-floating is-select">
-                                                        <label class="control-label"><?php echo getPhrase('class');?></label>
-                                                        <div class="select">
-                                                            <select name="class_id">
-                                                                <option value=""><?php echo getPhrase('select');?></option>
-                                                                <?php $classes = $this->db->get('class')->result_array();
-                                                                    foreach($classes as $class):
-                                                                ?>
-                                                                <option value="<?php echo $class['class_id'];?>" <?php if($class['class_id'] == $this->db->get_where('enroll', array('student_id' => $row['student_id']))->row()->class_id) echo "selected";?>><?php echo $class['name'];?></option>
-                                                            <?php endforeach;?>
-                                                            </select>
-                                                        </div>
-                                                    </div>                
-                                                </div>
-                                                <div class="col col-lg-6 col-md-6 col-sm-12 col-12">              
-                                                    <div class="form-group label-floating is-select">
-                                                        <label class="control-label"><?php echo getPhrase('section');?></label>
-                                                        <div class="select">
-                                                        <?php $class_id = $this->db->get_where('enroll', array('student_id' => $row['student_id']))->row()->class_id;?>
-                                                            <select name="section_id">
-                                                                <option value=""><?php echo getPhrase('select');?></option>
-                                                                <?php $sections = $this->db->get_where('section', array('class_id' => $class_id))->result_array();
-                                                                foreach($sections as $section):
-                                                                ?>
-                                                                <option value="<?php echo $section['section_id'];?>" <?php if($section['section_id'] == $this->db->get_where('enroll', array('student_id' => $row['student_id']))->row()->section_id) echo "selected";?>><?php echo $section['name'];?></option>
-                                                                <?php endforeach;?>
-                                                            </select>
-                                                        </div>
-                                                    </div>  
-                                                </div> -->
+                                        </div>                                        
                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                             <div class="form-group label-floating is-select">
                                                 <label class="control-label"><?php echo getPhrase('parent');?></label>

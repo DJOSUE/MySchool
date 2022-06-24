@@ -1405,4 +1405,9 @@ class Academic extends School
 
         return true;
     }
+
+    public function countStudentsSubject($classId, $sectionId, $subjectId){
+        $students = $this->db->get_where('enroll', array('class_id' => $classId, 'section_id' => $sectionId, 'subject_id' => $subjectId))->num_rows();
+        return $students;
+    }
 }

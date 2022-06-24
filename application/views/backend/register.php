@@ -388,7 +388,7 @@
             timer: 8000
             }); 
             Toast.fire({
-            type: 'success',
+            icon: 'success',
             title: '<?php echo $this->session->flashdata("flash_message");?>'
             })
         </script>

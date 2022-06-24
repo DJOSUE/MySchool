@@ -17,9 +17,9 @@
     <div class="form-body without-side">
         <div class="row">
             <div class="form-holder">
-                <div class="form-content" style="background-image: url(<?php echo base_url();?>public/uploads/bglogin.jpg); background-size:cover;">
+                <div class="form-content" style="background-image: url(<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('bglogin');?>); background-size:cover;">
                     <div class="form-items">
-                        <center><img class="logo-size" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('logo');?>" alt="" style="width:120px;"></center>
+                        <center><img class="logo-size" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('logo');?>" alt="" class="w120"></center>
                         <br><h5><?php echo getPhrase('recover_your_password');?></h5><br>
                          <?php echo form_open(base_url() . 'login/lost_password/recovery');?>
                             <input class="form-control" type="text" name="field" placeholder="<?php echo getPhrase('your_email');?>" required>

@@ -143,8 +143,12 @@
                                         <div class="select">
                                             <select name="gender" id="slct" required="">
                                                 <option value=""><?php echo getPhrase('select');?></option>
-                                                <option value="M"><?php echo getPhrase('male');?></option>
-                                                <option value="F"><?php echo getPhrase('female');?></option>
+                                                <?php
+                                                $genders = $this->db->get('gender')->result_array();
+                                                foreach($genders as $gender):
+                                                ?>                                                        
+                                                <option value="<?= $gender['code']?>"><?= $gender['name']?></option>
+                                                <?php endforeach;?>
                                             </select>
                                         </div>
                                     </div>

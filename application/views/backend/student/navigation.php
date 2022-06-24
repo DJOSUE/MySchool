@@ -10,7 +10,7 @@
     <div class="fixed-sidebar-left sidebar--small" id="sidebar-left">
         <a href="<?php echo base_url();?>student/panel/" class="logo">
             <div class="img-wrap">
-                <img src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
+                <img class="nav-icon" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
             </div>
         </a>
         <div class="mCustomScrollbar" data-mcs-theme="dark">
@@ -60,7 +60,7 @@
                         </div>
                     </a>
                 </li>
-                <?php if(has_permission('class_routine')):?>
+                <?php if(menu_option_visible('class_routine')):?>
                 <li <?php if($page_name == 'class_routine'):?>class="currentItem" <?php endif;?>>
                     <a href="<?php echo base_url();?>student/class_routine/" data-toggle="tooltip"
                         data-placement="right" data-original-title="<?php echo getPhrase('class_routine');?>">
@@ -70,7 +70,7 @@
                     </a>
                 </li>
                 <?php endif; ?>
-                <?php if(has_permission('library')):?>
+                <?php if(menu_option_visible('library')):?>
                 <li <?php if($page_name == 'library'):?>class="currentItem" <?php endif;?>>
                     <a href="<?php echo base_url();?>student/library/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('library');?>">
@@ -88,6 +88,7 @@
                         </div>
                     </a>
                 </li>
+                <?php if(menu_option_visible('permissions')):?>
                 <li <?php if($page_name == 'request'):?>class="currentItem" <?php endif;?>>
                     <a href="<?php echo base_url();?>student/request/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('permissions');?>">
@@ -96,7 +97,8 @@
                         </div>
                     </a>
                 </li>
-                <?php if($this->crud->getInfo('students_reports') == 1):?>
+                <?php endif; ?>
+                <?php if(menu_option_visible('teacher_reports')):?>
                 <li <?php if($page_name == 'send_report' || $page_name == 'view_report'):?>class="currentItem"
                     <?php endif;?>>
                     <a href="<?php echo base_url();?>student/send_report/" data-toggle="tooltip" data-placement="right"
@@ -115,7 +117,7 @@
                         </div>
                     </a>
                 </li>
-                <?php if(has_permission('invoice')):?>
+                <?php if(menu_option_visible('payments')):?>
                 <li <?php if($page_name == 'invoice' || $page_name == 'view_invoice'):?>class="currentItem"
                     <?php endif;?>>
                     <a href="<?php echo base_url();?>student/invoice/" data-toggle="tooltip" data-placement="right"
@@ -126,6 +128,17 @@
                     </a>
                 </li>
                 <?php endif; ?>
+                <?php if(!menu_option_visible('school_books')):?>
+                <li <?php if($page_name == 'book' ):?>class="currentItem"
+                    <?php endif;?>>
+                    <a href="<?php echo base_url();?>books/" data-toggle="tooltip" data-placement="right"
+                        data-original-title="<?php echo getPhrase('school_books');?>">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0008_book_reading_read_manual"></i>
+                        </div>
+                    </a>
+                </li>
+                <?php endif;?>
             </ul>
         </div>
     </div>
@@ -133,7 +146,7 @@
     <div class="fixed-sidebar-left sidebar--large" id="sidebar-left-1">
         <a href="<?php echo base_url();?>student/panel/" class="logo">
             <div class="img-wrap">
-                <img src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
+                <img class="nav-icon"  src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
             </div>
             <div class="title-block">
                 <h6 class="logo-title"><?php echo $this->crud->getInfo('system_name');?></h6>
@@ -188,6 +201,7 @@
                         <span class="left-menu-title"><?php echo getPhrase('marks');?></span>
                     </a>
                 </li>
+                <?php if(menu_option_visible('class_routine')):?>
                 <li>
                     <a href="<?php echo base_url();?>student/class_routine/">
                         <div class="left-menu-icon">
@@ -196,6 +210,8 @@
                         <span class="left-menu-title"><?php echo getPhrase('class_routine');?></span>
                     </a>
                 </li>
+                <?php endif; ?>
+                <?php if(menu_option_visible('library')):?>
                 <li>
                     <a href="<?php echo base_url();?>student/library/">
                         <div class="left-menu-icon">
@@ -204,6 +220,7 @@
                         <span class="left-menu-title"><?php echo getPhrase('library');?></span>
                     </a>
                 </li>
+                <?php endif; ?>
                 <li>
                     <a href="<?php echo base_url();?>student/noticeboard/">
                         <div class="left-menu-icon">
@@ -211,7 +228,8 @@
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('news');?></span>
                     </a>
-                </li>
+                </li>                
+                <?php if(menu_option_visible('permissions')):?>
                 <li>
                     <a href="<?php echo base_url();?>student/request/">
                         <div class="left-menu-icon">
@@ -220,7 +238,8 @@
                         <span class="left-menu-title"><?php echo getPhrase('permissions');?></span>
                     </a>
                 </li>
-                <?php if($this->crud->getInfo('students_reports') == 1):?>
+                <?php endif; ?>
+                <?php if(menu_option_visible('students_reports')):?>                
                 <li>
                     <a href="<?php echo base_url();?>student/send_report/">
                         <div class="left-menu-icon">
@@ -238,6 +257,7 @@
                         <span class="left-menu-title"><?php echo getPhrase('calendar');?></span>
                     </a>
                 </li>
+                <?php if(menu_option_visible('payments')):?>
                 <li>
                     <a href="<?php echo base_url();?>student/invoice/">
                         <div class="left-menu-icon">
@@ -246,6 +266,17 @@
                         <span class="left-menu-title"><?php echo getPhrase('payments');?></span>
                     </a>
                 </li>
+                <?php endif;?>
+                <?php if(!menu_option_visible('school_books')):?>
+                <li>
+                    <a href="<?php echo base_url();?>books/">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0008_book_reading_read_manual"></i>
+                        </div>
+                        <span class="left-menu-title"><?php echo getPhrase('school_books');?></span>
+                    </a>
+                </li>
+                <?php endif;?>
                 <br><br>
                 <li></li>
             </ul>
@@ -256,13 +287,13 @@
 <div class="fixed-sidebar fixed-sidebar-responsive">
     <div class="fixed-sidebar-left sidebar--small" id="sidebar-left-responsive">
         <a href="<?php echo base_url();?>student/panel/" class="logo js-sidebar-open">
-            <img src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
+            <img class="nav-icon" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
         </a>
     </div>
     <div class="fixed-sidebar-left sidebar--large" id="sidebar-left-1-responsive">
         <a href="<?php echo base_url();?>student/panel/" class="logo">
             <div class="img-wrap">
-                <img src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
+                <img class="nav-icon-mobile" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
             </div>
             <div class="title-block">
                 <h6 class="logo-title"><?php echo $this->crud->getInfo('system_name');?></h6>
@@ -317,6 +348,7 @@
                         <span class="left-menu-title"><?php echo getPhrase('marks');?></span>
                     </a>
                 </li>
+                <?php if(menu_option_visible('class_routine')):?>
                 <li>
                     <a href="<?php echo base_url();?>student/class_routine/">
                         <div class="left-menu-icon">
@@ -325,6 +357,8 @@
                         <span class="left-menu-title"><?php echo getPhrase('class_routine');?></span>
                     </a>
                 </li>
+                <?php endif; ?>
+                <?php if(menu_option_visible('library')):?>
                 <li>
                     <a href="<?php echo base_url();?>student/library/">
                         <div class="left-menu-icon">
@@ -333,6 +367,7 @@
                         <span class="left-menu-title"><?php echo getPhrase('library');?></span>
                     </a>
                 </li>
+                <?php endif; ?>
                 <li>
                     <a href="<?php echo base_url();?>student/noticeboard/">
                         <div class="left-menu-icon">
@@ -341,6 +376,7 @@
                         <span class="left-menu-title"><?php echo getPhrase('news');?></span>
                     </a>
                 </li>
+                <?php if(menu_option_visible('permissions')):?>
                 <li>
                     <a href="<?php echo base_url();?>student/request/">
                         <div class="left-menu-icon">
@@ -349,7 +385,8 @@
                         <span class="left-menu-title"><?php echo getPhrase('permissions');?></span>
                     </a>
                 </li>
-                <?php if($this->crud->getInfo('students_reports') == 1):?>
+                <?php endif; ?>
+                <?php if(menu_option_visible('teacher_reports')):?>
                 <li>
                     <a href="<?php echo base_url();?>student/send_report/">
                         <div class="left-menu-icon">
@@ -367,6 +404,7 @@
                         <span class="left-menu-title"><?php echo getPhrase('calendar');?></span>
                     </a>
                 </li>
+                <?php if(menu_option_visible('payments')):?>
                 <li>
                     <a href="<?php echo base_url();?>student/invoice/">
                         <div class="left-menu-icon">
@@ -374,7 +412,19 @@
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('payments');?></span>
                     </a>
-                </li><br><br>
+                </li>
+                <?php endif;?>
+                <?php if(!menu_option_visible('school_books')):?>
+                <li>
+                    <a href="<?php echo base_url();?>books/">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0008_book_reading_read_manual"></i>
+                        </div>
+                        <span class="left-menu-title"><?php echo getPhrase('school_books');?></span>
+                    </a>
+                </li>
+                <?php endif;?>
+                <br><br>
                 <li></li>
             </ul>
         </div>

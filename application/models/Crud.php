@@ -233,7 +233,7 @@ class Crud extends School
         $data['timestamp']    = $this->crud->getDateFormat();
         $data['sender_type']  = $this->session->userdata('login_type');
         $data['sender_id']    = $this->session->userdata('login_user_id');
-        return $this->db->insert('reporte_mensaje', $data);
+        return $this->db->insert('report_message', $data);
     }
     
     public function updateReport($code)
@@ -248,7 +248,7 @@ class Crud extends School
         $this->db->where('report_code',$code);
         $this->db->delete('student_report');
         $this->db->where('report_code',$code);
-        $this->db->delete('reporte_mensaje');
+        $this->db->delete('report_message');
     }
     
     //SetRead
@@ -2271,7 +2271,7 @@ class Crud extends School
         $this->db->truncate('question_bank');
         $this->db->truncate('question_paper');
         $this->db->truncate('student_report');
-        $this->db->truncate('reporte_mensaje');
+        $this->db->truncate('report_message');
         $this->db->truncate('reports');
         $this->db->truncate('report_response');
         $this->db->truncate('request');

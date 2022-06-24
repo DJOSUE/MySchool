@@ -2,7 +2,7 @@
         <div class="fixed-sidebar-left sidebar--small" id="sidebar-left">
             <a href="<?php echo base_url();?>teacher/panel/" class="logo">
                 <div class="img-wrap">
-                    <img src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
+                    <img class="nav-icon" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
                 </div>
             </a>
             <div class="mCustomScrollbar" data-mcs-theme="dark">
@@ -20,7 +20,7 @@
                         </a>
                     </li>
                     <!-- Time Card Access -->
-                    <?php if(has_permission('time_card')):?>
+                    <?php if(menu_option_visible('time_card')):?>
                     <li <?php if($page_name == 'time_card' || $page_name == 'time_sheet'):?>class="currentItem"<?php endif;?>>
                         <a href="<?php echo base_url();?>teacher/time_card/" data-toggle="tooltip" data-placement="right" data-original-title="<?php echo getPhrase('time_card');?>">
                             <div class="left-menu-icon">
@@ -50,7 +50,7 @@
                             </div>
                         </a>
                     </li>
-                    <?php if(has_permission('my_routine')):?>
+                    <?php if(menu_option_visible('my_routine')):?>
                     <li <?php if($page_name == 'my_routine'):?>class="currentItem"<?php endif;?>>
                         <a href="<?php echo base_url();?>teacher/my_routine/" data-toggle="tooltip" data-placement="right" data-original-title="<?php echo getPhrase('class_routine');?>">
                             <div class="left-menu-icon">
@@ -80,7 +80,7 @@
                             </div>
                         </a>
                     </li>
-                    <?php if(has_permission('library')):?>
+                    <?php if(menu_option_visible('library')):?>
                     <li <?php if($page_name == 'library'):?>class="currentItem"<?php endif;?>>
                         <a href="<?php echo base_url();?>teacher/library/" data-toggle="tooltip" data-placement="right" data-original-title="<?php echo getPhrase('library');?>">
                             <div class="left-menu-icon">
@@ -103,11 +103,22 @@
                             </div>
                         </a>
                     </li>
-                    <?php if(has_permission('notify')):?>
+                    <?php if(menu_option_visible('notify')):?>
                     <li <?php if($page_name == 'notify'):?>class="currentItem"<?php endif;?>>
                         <a href="<?php echo base_url();?>teacher/notify/" data-toggle="tooltip" data-placement="right" data-original-title="<?php echo getPhrase('notifications');?>">
                             <div class="left-menu-icon">
                                 <i class="picons-thin-icon-thin-0286_mobile_message_sms"></i>
+                            </div>
+                        </a>
+                    </li>
+                    <?php endif;?>
+                    <?php if(!menu_option_visible('school_books')):?>
+                    <li <?php if($page_name == 'book' || $page_name == 'book_list'):?>class="currentItem"
+                        <?php endif;?>>
+                        <a href="<?php echo base_url();?>books/" data-toggle="tooltip" data-placement="right"
+                            data-original-title="<?php echo getPhrase('school_books');?>">
+                            <div class="left-menu-icon">
+                                <i class="picons-thin-icon-thin-0008_book_reading_read_manual"></i>
                             </div>
                         </a>
                     </li>
@@ -119,7 +130,7 @@
         <div class="fixed-sidebar-left sidebar--large" id="sidebar-left-1">
             <a href="<?php echo base_url();?>teacher/panel/" class="logo">
                 <div class="img-wrap">
-                    <img src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
+                    <img class="nav-icon" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
                 </div>
                 <div class="title-block">
                     <h6 class="logo-title"><?php echo $this->crud->getInfo('system_name');?></h6>
@@ -229,6 +240,14 @@
                             <span class="left-menu-title"><?php echo getPhrase('notifications');?></span>
                         </a>
                     </li>
+                    <li>
+                        <a href="<?php echo base_url();?>books/">
+                            <div class="left-menu-icon">
+                                <i class="picons-thin-icon-thin-0008_book_reading_read_manual"></i>
+                            </div>
+                            <span class="left-menu-title"><?php echo getPhrase('school_books');?></span>
+                        </a>
+                    </li>
                     <br><br>
                     <li></li>
                 </ul>
@@ -239,7 +258,7 @@
     <div class="fixed-sidebar fixed-sidebar-responsive">
         <div class="fixed-sidebar-left sidebar--small" id="sidebar-left-responsive">
             <a href="<?php echo base_url();?>teacher/panel/" class="logo js-sidebar-open">
-                <img src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
+                <img class="nav-icon" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
             </a>
         </div>
         <div class="fixed-sidebar-left sidebar--large" id="sidebar-left-1-responsive">
@@ -354,7 +373,16 @@
                             </div>
                             <span class="left-menu-title"><?php echo getPhrase('notifications');?></span>
                         </a>
-                    </li><br><br>
+                    </li>
+                    <li>
+                        <a href="<?php echo base_url();?>books">
+                            <div class="left-menu-icon">
+                                <i class="picons-thin-icon-thin-0008_book_reading_read_manual"></i>
+                            </div>
+                            <span class="left-menu-title"><?php echo getPhrase('school_books');?></span>
+                        </a>
+                    </li>
+                    <br><br>
                     <li></li>
                 </ul>
             </div>

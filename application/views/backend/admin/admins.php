@@ -68,7 +68,7 @@
                                                         </div>
                                                         <div class="row" id="results">
                                                             <?php 
-															    $admins = $this->db->get_where('admin', array('admin_id !=' => $this->session->userdata('login_user_id')))->result_array();
+															    $admins = $this->db->get_where('admin', array('status' => '1', 'admin_id !=' => $this->session->userdata('login_user_id')))->result_array();
                                                                 foreach($admins as $row):
                                                             ?>
                                                             <div class="col-xl-4 col-md-6 results">
@@ -237,8 +237,12 @@
                                 <div class="select">
                                     <select name="gender" required="">
                                         <option value=""><?php echo getPhrase('select');?></option>
-                                        <option value="M"><?php echo getPhrase('male');?></option>
-                                        <option value="F"><?php echo getPhrase('female');?></option>
+                                        <?php
+                                        $genders = $this->db->get('gender')->result_array();
+                                        foreach($genders as $gender):
+                                        ?>                                                        
+                                        <option value="<?= $gender['code']?>"><?= $gender['name']?></option>
+                                        <?php endforeach;?>
                                     </select>
                                 </div>
                             </div>

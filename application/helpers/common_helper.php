@@ -65,3 +65,58 @@ if ( ! function_exists('is_super_admin'))
         return false;
     }
 }
+
+
+if ( ! function_exists('academic_option_visible'))
+{
+    function option_visible($option){
+        $CI	=&	get_instance();
+		$CI->load->database();
+
+        $query = $CI->db->get_where('academic_settings', array('type' => $option))->row();
+        
+        if($query->description == 1){
+            return true;
+        }
+        else{
+            return false;
+        }
+    } 
+}
+
+if ( ! function_exists('menu_option_visible'))
+{
+    function menu_option_visible($option){
+        $CI	=&	get_instance();
+		$CI->load->database();
+
+        $query = $CI->db->get_where('settings', array('type' => $option))->row();
+        
+        if($query->description == 1){
+            return true;
+        }
+        else{
+            return false;
+        }
+    } 
+}
+
+if ( ! function_exists('compress'))
+{
+    function compress($source, $destination, $quality){
+        $info = getimagesize($source);
+
+        if ($info['mime'] == 'image/jpeg') 
+            $image = imagecreatefromjpeg($source);
+    
+        elseif ($info['mime'] == 'image/gif') 
+            $image = imagecreatefromgif($source);
+    
+        elseif ($info['mime'] == 'image/png') 
+            $image = imagecreatefrompng($source);
+    
+        imagejpeg($image, $destination, $quality);
+    
+        return $destination;
+    } 
+}

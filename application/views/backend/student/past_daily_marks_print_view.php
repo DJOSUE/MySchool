@@ -69,7 +69,27 @@
                         <div class="rcard-heading">
                             <h5><?php echo $class_name;?></h5>
                             <div class="rcard-date"><?php echo $year.'-'.$semester_name.'-'.$section_name;?></div>
+                        </div>                        
+                        <div class="row" style="padding-left: 20px;">
+                            <?php                              
+                            $attendance = $this->db->query("SELECT ROUND((SUM(labuno)/COUNT(IF(labuno = '-' or labuno is null,null,'1'))), $roundPrecision) AS 'labuno'
+                                                              FROM mark_daily 
+                                                             WHERE student_id = '$student_id'
+                                                               AND class_id = '$class_id'
+                                                               AND section_id = '$section_id'
+                                                               AND year = '$year'
+                                                               AND semester_id = '$semester_id'
+                                                           ")->first_row();
+                                                                                       
+                            echo getPhrase('attendance').': ';
+                            if($attendance->labuno != '')
+                                echo $attendance->labuno;
+                            else 
+                                echo '0';
+                            ?>
+
                         </div>
+                        <br/>
                         <div class="rcard-table table-responsive">
                             <table class="table">
                                 <thead>

@@ -1,6 +1,6 @@
 <?php 
     $ex = explode('-', base64_decode($data));
-    $unit_id            = $ex[1];
+    $unit_id            =   $ex[1];
     $roundPrecision     =   $this->crud->getInfo('round_precision');
     $running_year       =   $this->crud->getInfo('running_year');
     $running_semester   =   $this->crud->getInfo('running_semester'); 
@@ -68,6 +68,7 @@
                             <h5><?php echo $exam_name;?></h5>
                             <div class="rcard-date"><?php echo $class_name;?></div>
                         </div>
+                        <br/><br/>
                         <div class="rcard-table table-responsive">
                             <table class="table">
                                 <thead>

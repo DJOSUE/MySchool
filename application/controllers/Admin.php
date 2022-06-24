@@ -340,7 +340,7 @@
             $this->isAdmin();
             $page_data['class_id']      = html_escape($this->input->post('class_id'));
             $page_data['section_id']    = html_escape($this->input->post('section_id'));
-            // $page_data['subject_id']    = $this->input->post('subject_id');
+            $page_data['subject_id']    = $this->input->post('subject_id');
             $page_data['page_name']     = 'students_report';
             $page_data['page_title']    = getPhrase('students_report');
             $this->load->view('backend/index', $page_data);
@@ -594,8 +594,10 @@
             }
             if ($param1 == 'delete')
             {
+                $data['status']   = 0;
                 $this->db->where('admin_id', $param2);
-                $this->db->delete('admin');
+                $this->db->update('admin', $data);
+                // $this->db->delete('admin');
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
                 redirect(base_url() . 'admin/admins/', 'refresh');
             }
@@ -1266,7 +1268,7 @@
             $this->isAdmin();
             
             if($this->useDailyMarks){
-                $page_data['page_name']  = 'student_past_daily_marks';
+                $page_data['page_name']  = 'student_past_daily_marks_a';
                 $page_data['page_title'] =  getPhrase('student_past_daily_marks');
                 $page_data['student_id'] =  $student_id;
                 $this->load->view('backend/index', $page_data);
@@ -1972,7 +1974,7 @@
             {
                 $this->user->downloadExcel();
             }
-            if ($param1 == 'addmission') 
+            if ($param1 == 'admission') 
             {
                 $student_id = $this->user->studentAdmission();
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
@@ -3060,6 +3062,56 @@
             }
         }
 
+        //Marks print view function.
+        function marks_all_print_view($student_id  = '', $unit_id = '') 
+        {
+            $this->isAdmin();
+
+            if($this->useDailyMarks){
+                $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
+                $class_name   = $this->db->get_where('class' , array('class_id' => $class_id))->row()->name;
+                $page_data['student_id'] =   $student_id;
+                $page_data['class_id']   =   $class_id;
+                $page_data['unit_id']    =   $unit_id;
+                $this->load->view('backend/admin/daily_marks_all_print_view', $page_data);
+            }
+            else{
+                $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
+                $class_name   = $this->db->get_where('class' , array('class_id' => $class_id))->row()->name;
+                $page_data['student_id'] =   $student_id;
+                $page_data['class_id']   =   $class_id;
+                $page_data['unit_id']    =   $unit_id;
+                $this->load->view('backend/admin/marks_all_print_view', $page_data);
+            }
+        }
+
+        //Marks print view function.
+        function marks_old_print_view($data = '') 
+        {
+            $this->isAdmin();
+
+            $info = base64_decode($data);
+            $ex = explode("-",$info);
+
+            // <?php echo base64_encode($student_id.'-'.$class_id.'-'.$section_id.'-'.$year.'-'.$semester_id)
+            
+            $student_id = $ex[0];
+            $class_id = $ex[1];
+
+            if($this->useDailyMarks){                
+                $page_data['student_id'] =   $student_id;
+                $page_data['class_id']   =   $class_id;
+                $page_data['data']       =   $data;
+                $this->load->view('backend/admin/daily_marks_old_print_view_all_a', $page_data);
+            }
+            else{
+                $page_data['student_id'] =   $student_id;
+                $page_data['class_id']   =   $class_id;
+                $page_data['data']       =   $data;                
+                $this->load->view('backend/admin/marks_old_print_view_all', $page_data);
+            }
+        }
+
         //Time card
         function time_card( $param1 = '', $param2 = '' ) 
         {
@@ -3396,6 +3448,7 @@
                 if ( $param1 == 'student' ){
                     $this->unset_admin();
                     $this->session->set_userdata('role_id', '6');
+                    $this->session->set_userdata('program_id', $row->dormitory_id);
                     $this->session->set_userdata('student_login', $row->student_session);
                     $this->session->set_userdata('student_id', $row->student_id);
                     $this->session->set_userdata('login_user_id', $row->student_id);
@@ -3486,6 +3539,7 @@
             $this->session->unset_userdata('login_user_id');
             $this->session->unset_userdata('name');
             $this->session->unset_userdata('login_type');
+            $this->session->unset_userdata('program_id');
         }
 
         //Check Admin session.

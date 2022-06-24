@@ -73,7 +73,7 @@
 														    </li>
 														    <li>
 															    <span class="title"><?php echo getPhrase('gender');?>:</span>
-    															<span class="text"><?php if($row['gender'] == 'M') echo getPhrase('male'); else echo getPhrase('female');?></span>
+    															<span class="text"><?= $this->db->get_where('gender', array('code' => $row['gender']))->row()->name;;?></span>
 														    </li>
 														    <li>
 															    <span class="title"><?php echo getPhrase('address');?>:</span>

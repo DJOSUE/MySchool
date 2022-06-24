@@ -362,14 +362,14 @@
 							</tr>
 							<?php endforeach;?>
 						</table>
-						<table cellpading="0" cellspacing="0" border="0" style="margin: 20px 0; width: 40%;">
+						<!-- <table cellpading="0" cellspacing="0" border="0" style="margin: 20px 0; width: 40%;">
 							<tr>
-								<td><?php echo getPhrase('mens');?></td>
-								<td><?php echo $m;?></td>
-								<td><?php echo getPhrase('women');?></td>
-								<td><?php echo $f;?></td>
+								<td><?php //echo getPhrase('mens');?></td>
+								<td><?php //echo $m;?></td>
+								<td><?php //echo getPhrase('women');?></td>
+								<td><?php //echo $f;?></td>
 							</tr>
-						</table>
+						</table> -->
 						<table cellpading="0" cellspacing="0" border="0">
 							<tr>
 								<td><?php echo getPhrase('teacher');?></td>

@@ -2,6 +2,7 @@
     $system_name        =	$this->crud->getInfo('system_name');
 	$system_title       =	$this->crud->getInfo('system_title');
     $account_type       = $this->session->userdata('login_type'); 
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,7 +17,24 @@
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <link href="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('favicon');?>" rel="icon">
     <link href="<?php echo base_url();?>public/style/cms/css/main.css" media="all" rel="stylesheet">
+    <script src="<?php echo base_url();?>public/style/jquery.min.js"></script>
+    <script src="<?php echo base_url();?>public/style/js/sweetalert2.all.min.js"></script> 
     <?php include 'topcss.php';?>	
+    <script>
+        'use strict';
+        var rootAppURI = '<?php echo base_url();?>';
+        var today      = '<?php echo getPhrase('today');?>';
+        var month      = '<?php echo getPhrase('month');?>';
+        var week       = '<?php echo getPhrase('week');?>';
+        var day        = '<?php echo getPhrase('day');?>';
+        var list       = '<?php echo getPhrase('list');?>';
+        var exist      = '<?php echo getPhrase('email_already_exist');?>';
+        var locale     = '<?php echo $this->crud->getInfo('calendar');?>';
+        var updated    = '<?php echo getPhrase('successfully_updated');?>';
+        var uriseg     = '<?php echo $this->uri->segment(2);?>';
+        var urig       = '<?php echo $this->uri->segment(1);?>';
+        var select_qn = '<?php echo getPhrase('select_question_type');?>';
+    </script>
 </head>
 <body class="menu-position-side menu-side-left full-screen with-content-panel">
     <div class="with-side-panel">
