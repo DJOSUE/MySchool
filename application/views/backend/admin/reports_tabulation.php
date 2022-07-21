@@ -1,26 +1,11 @@
 <?php 
-	$running_year       = $this->crud->getInfo('running_year');
-    $running_semester   = $this->crud->getInfo('running_semester'); 
-    $roundPrecision    = $this->crud->getInfo('round_precision');
-    $quantityGrades     = $this->crud->getInfo('quantity_grades');
-    $useDailyMarks      = $this->crud->getInfo('use_daily_marks');
+	$running_year 		= $this->crud->getInfo('running_year');
+	$running_semester 	= $this->crud->getInfo('running_semester');
+	$useDailyMarks      = $this->crud->getInfo('use_daily_marks');
     $useGradeAttendance = $this->crud->getInfo('use_grade_attendance');
 
 	$accounting_report  = has_permission('accounting_report');
-
-    $tmpQuantity = $quantityGrades;
-
-    $grades[] = [1, 'lab_uno_', 'labuno'];
-    $grades[] = [2, 'lab_dos_', 'labdos'];
-    $grades[] = [3, 'lab_tres_', 'labtres'];
-    $grades[] = [4, 'lab_cuatro_', 'labcuatro'];
-    $grades[] = [5, 'lab_cinco_', 'labcinco'];
-    $grades[] = [6, 'lab_seis_', 'labseis'];
-    $grades[] = [7, 'lab_siete_', 'labsiete'];
-    $grades[] = [8, 'lab_ocho_', 'labocho'];
-    $grades[] = [9, 'lab_nueve_', 'labnueve'];
-    $grades[] = [10, 'lab_diez_', 'labdiez'];
-    
+	
 	//$subject = $this->db->get_where('v_subject', array('subject_id' => $subject_id))->row();
 ?>
 <style type="text/css">
@@ -103,12 +88,12 @@
 			<div class="os-tabs-controls">
 				<ul class="navs navs-tabs">
 					<li class="navs-item">
-						<a class="navs-links" href="<?php echo base_url();?>admin/general_reports/"><i
+						<a class="navs-links" href="<?php echo base_url();?>admin/reports_general/"><i
 								class="picons-thin-icon-thin-0658_cup_place_winner_award_prize_achievement"></i>
 							<span><?php echo getPhrase('classes');?></span></a>
 					</li>
 					<li class="navs-item">
-						<a class="navs-links" href="<?php echo base_url();?>admin/students_report/"><i
+						<a class="navs-links" href="<?php echo base_url();?>admin/reports_students/"><i
 								class="picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i>
 							<span><?php echo getPhrase('students');?></span></a>
 					</li>
@@ -120,19 +105,19 @@
                     </li>
                     <?php endif;?>
 					<li class="navs-item">
-						<a class="navs-links" href="<?php echo base_url();?>admin/marks_report/"><i
+						<a class="navs-links" href="<?php echo base_url();?>admin/reports_marks/"><i
 								class="picons-thin-icon-thin-0100_to_do_list_reminder_done"></i>
 							<span><?php echo getPhrase('final_marks');?></span></a>
 					</li>
 					<li class="navs-item">
-						<a class="navs-links <?php if($page_name == 'tabulation_daily_report') echo "active";?>"
-							href="<?php echo base_url();?>admin/tabulation_report/"><i
+						<a class="navs-links <?php if($page_name == 'reports_tabulation') echo "active";?>"
+							href="<?php echo base_url();?>admin/reports_tabulation/"><i
 								class="picons-thin-icon-thin-0070_paper_role"></i>
 							<span><?php echo getPhrase('tabulation_sheet');?></span></a>
 					</li>
 					<?php if($accounting_report == 'true'):?>
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/accounting_report/"><i
+                        <a class="navs-links" href="<?php echo base_url();?>admin/reports_accounting/"><i
                                 class="picons-thin-icon-thin-0406_money_dollar_euro_currency_exchange_cash"></i>
                             <span><?php echo getPhrase('accounting');?></span></a>
                     </li>
@@ -144,7 +129,7 @@
 			<div class="content-box">
 				<h5 class="form-header"><?php echo getPhrase('tabulation_sheet');?></h5>
 				<hr>
-				<?php echo form_open(base_url() . 'admin/tabulation_report/', array('class' => 'form m-b'));?>
+				<?php echo form_open(base_url() . 'admin/reports_tabulation/', array('class' => 'form m-b'));?>
 				<div class="row">
 					<div class="col-sm-3">
 						<div class="form-group label-floating is-select">
@@ -255,25 +240,18 @@
 								<th class="text-center">#</th>
 								<th class="text-center"><?php echo getPhrase('student');?></th>
 								<?php 
-                                    $subjectLabel = $this->db->get_where('subject' , array('subject_id' => $subject_id))->row();
-                                    for ($i=1; $i <= $quantityGrades; $i++):
-                                        $name = 'la'.$i;
-                                ?>
-                                    <th style="text-align: center;">
-                                        <?php echo $subjectLabel->$name; ?>
-                                    </th>
-                                <?php endfor; ?>
+									$exam = $this->db->get('units')->result_array();
+									foreach($exam as $row):
+								?>
+								<th class="text-center"><?php echo $row['name'];?></th>
+								<?php endforeach;?>
 								<th class="text-center"><?php echo getPhrase('average');?></th>
 							</tr>
 							<?php
 							$n = 1;
 							$m = 0;
 							$f = 0;
-							$students = $this->db->get_where('enroll', array('class_id' => $class_id, 
-                                                                             'section_id' => $section_id, 
-                                                                             'subject_id' => $subject_id, 
-                                                                             'year' => $running_year
-                                                            ))->result_array();
+							$students = $this->db->get_where('enroll', array('class_id' => $class_id, 'section_id' => $section_id, 'subject_id' => $subject_id, 'year' => $running_year))->result_array();
 							foreach($students as $row):
 								if($this->db->get_where('student', array('student_id' => $row['student_id']))->row()->sex == 'M'){
 									$m+=1;
@@ -282,94 +260,32 @@
 								}
 							?>
 							<tr class="text-center" id="student-<?php echo $row['student_id'];?>">
-								<td class="text-center">
-                                    <?php echo $n++;?>
-                                </td>
+								<td class="text-center"><?php echo $n++;?></td>
 								
 								<td class="text-center">
 									<?php echo $this->crud->get_name('student', $row['student_id']);?></td>
-                                <?php 	
-                                    $average = $this->db->query("SELECT ROUND((SUM(labuno)/COUNT(IF(labuno = '-' or labuno IS NULL,null,'1'))), $roundPrecision) AS 'labuno',
-                                                                                                    ROUND((SUM(labdos)/COUNT(IF(labdos = '-' or labdos IS NULL,null,'1'))), $roundPrecision) AS 'labdos',
-                                                                                                    ROUND((SUM(labtres)/COUNT(IF(labtres = '-' or labtres IS NULL,null,'1'))), $roundPrecision) AS 'labtres',
-                                                                                                    ROUND((SUM(labcuatro)/COUNT(IF(labcuatro = '-' or labcuatro IS NULL,null,'1'))), $roundPrecision) AS 'labcuatro',
-                                                                                                    ROUND((SUM(labcinco)/COUNT(IF(labcinco = '-' or labcinco IS NULL,null,'1'))), $roundPrecision) AS 'labcinco',
-                                                                                                    ROUND((SUM(labseis)/COUNT(IF(labseis = '-' or labseis IS NULL,null,'1'))), $roundPrecision) AS 'labseis',
-                                                                                                    ROUND((SUM(labsiete)/COUNT(IF(labsiete = '-' or labsiete IS NULL,null,'1'))), $roundPrecision) AS 'labsiete',
-                                                                                                    ROUND((SUM(labocho)/COUNT(IF(labocho = '-' or labocho IS NULL,null,'1'))), $roundPrecision) AS 'labocho',
-                                                                                                    ROUND((SUM(labnueve)/COUNT(IF(labnueve = '-' or labnueve IS NULL,null,'1'))), $roundPrecision) AS 'labnueve',
-                                                                                                    ROUND((SUM(labdiez)/COUNT(IF(labdiez = '-' or labdiez IS NULL,null,'1'))), $roundPrecision) AS 'labdiez'
-                                                                FROM mark_daily 
-                                                                WHERE student_id = '$row[student_id]'
-                                                                    AND class_id = '$class_id'
-                                                                    AND section_id = '$section_id'
-                                                                    AND subject_id = '$subject_id'
-                                                                    AND year = '$running_year'
-                                                                    AND semester_id = '$running_semester' 
-                                                                    ")->result_array();
-                                    
-                                    // Math to get Average
-                                    $Total_Sum = array_sum($average[0]);
-                                    $count = 0;
-                                    
-                                    $labouno        = $average[0][labuno];
-                                    $labodos        = $average[0][labdos];
-                                    $labotres       = $average[0][labtres];
-                                    $labocuatro     = $average[0][labcuatro];
-                                    $labocinco      = $average[0][labcinco];
-                                    $laboseis       = $average[0][labseis];
-                                    $labosiete      = $average[0][labsiete];
-                                    $laboocho       = $average[0][labocho];
-                                    $labonueve      = $average[0][labnueve];
-                                    $labodiez       = $average[0][labdiez];
-                        
-                                    // Calculate the average 
-                                    if(is_numeric($labouno)     && $labouno != '-' ) { $count++; } 
-                                    if(is_numeric($labodos)     && $labodos != '-' ) { $count++; }  
-                                    if(is_numeric($labotres)    && $labotres != '-' ) { $count++; }  
-                                    if(is_numeric($labocuatro)  && $labocuatro != '-' ) { $count++; }  
-                                    if(is_numeric($labocinco)   && $labocinco != '-') { $count++; }
-                                    if(is_numeric($laboseis)    && $laboseis != '-' ) { $count++; } 
-                                    if(is_numeric($labosiete)   && $labosiete != '-' ) { $count++; }  
-                                    if(is_numeric($laboocho)    && $laboocho != '-' ) { $count++; }  
-                                    if(is_numeric($labonueve)   && $labonueve != '-' ) { $count++; }  
-                                    if(is_numeric($labodiez)    && $labodiez != '-') { $count++; }
-
-                                    if($Total_Sum > 0)
-                                        $mark =  round(($Total_Sum/$count),$roundPrecision);
-                                    else
-                                        $mark = "-";
-                                    
-                                    $tmpQuantity = $quantityGrades;
-                                        
-                                    //$average += $this->db->get_where('mark', array('student_id' => $row['student_id'], 'year' => $running_year, 'unit_id' => $key['unit_id'],'subject_id' => $subject_id))->row()->labtotal;
-                                ?>
-								<?php
-                                    for ($i=0; $i < $quantityGrades; $i++):
-                                        $name = $grades[$i];
-                                ?>
-                                <td>
-                                    <center><label
-                                            name="<?php echo $name[1].$row['mark_daily_id'];?>"
-                                            style="width:55px; border: 1; text-align: center;">
-                                            <?php echo $average[0][$name[2]];?></label> </center>
-                                </td>
-                                <?php endfor; ?>
-								
+								<?php 	
+								$average = 0;
+								$exams = $this->crud->get_exams();
+								foreach($exams as $key):
+								$average += $this->db->get_where('mark', array('student_id' => $row['student_id'], 'year' => $running_year, 'unit_id' => $key['unit_id'],'subject_id' => $subject_id))->row()->labtotal;
+							?>
 								<td class="text-center">
-                                    <?php echo $mark;?>
-                                </td>
+									<?php echo $this->db->get_where('mark', array('student_id' => $row['student_id'], 'year' => $running_year, 'unit_id' => $key['unit_id'],'subject_id' => $subject_id))->row()->labtotal;?>
+								</td>
+								<?php endforeach;?>
+								<td class="text-center"><?php echo $average/count($exams);?></td>
 							</tr>
 							<?php endforeach;?>
 						</table>
-						<!-- <table cellpading="0" cellspacing="0" border="0" style="margin: 20px 0; width: 40%;">
+						<table cellpading="0" cellspacing="0" border="0" style="margin: 20px 0; width: 40%;">
 							<tr>
-								<td><?php //echo getPhrase('mens');?></td>
-								<td><?php //echo $m;?></td>
-								<td><?php //echo getPhrase('women');?></td>
-								<td><?php //echo $f;?></td>
+								<td><?php echo getPhrase('mens');?></td>
+								<td><?php echo $m;?></td>
+								<td><?php echo getPhrase('women');?></td>
+								<td><?php echo $f;?></td>
 							</tr>
-						</table> -->
+						</table>
 						<table cellpading="0" cellspacing="0" border="0">
 							<tr>
 								<td><?php echo getPhrase('teacher');?></td>

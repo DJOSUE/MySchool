@@ -160,6 +160,7 @@ class Auth extends EduAppGT
                     $row = $query->row();
                     $this->session->set_userdata('admin_login', $row->status);
                     $this->session->set_userdata('admin_id', $row->admin_id);
+                    $this->session->set_userdata('role_id', $row->owner_status);
                     $this->session->set_userdata('login_user_id', $row->admin_id);
                     $this->session->set_userdata('name', $row->name);
                     $this->session->set_userdata('login_type', 'admin');
@@ -169,6 +170,7 @@ class Auth extends EduAppGT
                 if ($query->num_rows() > 0) 
                 {
                     $row = $query->row();
+                    $this->session->set_userdata('role_id', '5');
                     $this->session->set_userdata('teacher_login', '1');
                     $this->session->set_userdata('teacher_id', $row->teacher_id);
                     $this->session->set_userdata('login_user_id', $row->teacher_id);
@@ -180,6 +182,7 @@ class Auth extends EduAppGT
                 if ($query->num_rows() > 0) 
                 {
                     $row = $query->row();
+                    $this->session->set_userdata('role_id', '6');
                     $this->session->set_userdata('student_login', $row->student_session);
                     $this->session->set_userdata('student_id', $row->student_id);
                     $this->session->set_userdata('login_user_id', $row->student_id);
@@ -191,6 +194,7 @@ class Auth extends EduAppGT
                 if ($query->num_rows() > 0) 
                 {
                     $row = $query->row();
+                    $this->session->set_userdata('role_id', '7');
                     $this->session->set_userdata('parent_login', '1');
                     $this->session->set_userdata('parent_id', $row->parent_id);
                     $this->session->set_userdata('login_user_id', $row->parent_id);
@@ -202,6 +206,7 @@ class Auth extends EduAppGT
                 if ($query->num_rows() > 0) 
                 {
                     $row = $query->row();
+                    $this->session->set_userdata('role_id', '4');
                     $this->session->set_userdata('accountant_login', '1');
                     $this->session->set_userdata('accountant_id', $row->accountant_id);
                     $this->session->set_userdata('login_user_id', $row->accountant_id);
@@ -213,6 +218,7 @@ class Auth extends EduAppGT
                 if ($query->num_rows() > 0) 
                 {
                     $row = $query->row();
+                    $this->session->set_userdata('role_id', '8');
                     $this->session->set_userdata('librarian_login', '1');
                     $this->session->set_userdata('librarian_id', $row->librarian_id);
                     $this->session->set_userdata('login_user_id', $row->librarian_id);

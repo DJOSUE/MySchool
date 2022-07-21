@@ -70,6 +70,12 @@ class Payments extends EduAppGT
             $data['status']            = 'completed';   
             $this->db->where('invoice_id', $invoiceId);
             $this->db->update('invoice', $data);
+
+            $table      = 'invoice';
+            $action     = 'update';
+            $update_id  = $invoiceId;
+            $this->crud->save_log($table, $action, $update_id, $data);
+
             $data2['method']       =   'stripe';
             $data2['invoice_id']   =   $invoiceId;
             $data2['timestamp']    =   strtotime(date("m/d/Y"));
@@ -79,6 +85,12 @@ class Payments extends EduAppGT
             $data2['student_id']   =   $this->db->get_where('invoice' , array('invoice_id' => $invoiceId))->row()->student_id;
             $data2['amount']       =   $this->db->get_where('invoice' , array('invoice_id' => $invoiceId))->row()->amount;
             $this->db->insert('payment' , $data2);
+
+            $table      = 'payment';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $data2);
+
         }
         $this->session->set_flashdata('flash_message' , getPhrase('thanks_for_your_payment'));
         if($type == 'parent'){
@@ -150,6 +162,12 @@ class Payments extends EduAppGT
                 $data['status']            = 'completed';   
                 $this->db->where('invoice_id', $invoiceId);
                 $this->db->update('invoice', $data);
+
+                $table      = 'invoice';
+                $action     = 'update';
+                $update_id  = $invoiceId;
+                $this->crud->save_log($table, $action, $update_id, $data);
+                
                 $data2['method']       =   'razorpay';
                 $data2['invoice_id']   =   $invoiceId;
                 $data2['timestamp']    =   strtotime(date("m/d/Y"));
@@ -159,6 +177,11 @@ class Payments extends EduAppGT
                 $data2['student_id']   =   $this->db->get_where('invoice' , array('invoice_id' => $invoiceId))->row()->student_id;
                 $data2['amount']       =   $this->db->get_where('invoice' , array('invoice_id' => $invoiceId))->row()->amount;
                 $this->db->insert('payment' , $data2);
+
+                $table      = 'payment';
+                $action     = 'insert';
+                $insert_id  = $this->db->insert_id();
+                $this->crud->save_log($table, $action, $insert_id, $data2);
             
                 $this->session->set_flashdata('flash_message' , getPhrase('thanks_for_your_payment'));
                 if($type == 'parent'){
@@ -238,6 +261,12 @@ class Payments extends EduAppGT
                 $data['status']            = 'completed';   
                 $this->db->where('invoice_id', $invoiceId);
                 $this->db->update('invoice', $data);
+
+                $table      = 'invoice';
+                $action     = 'update';
+                $update_id  = $invoiceId;
+                $this->crud->save_log($table, $action, $update_id, $data);
+
                 $data2['method']       =   'paystack';
                 $data2['invoice_id']   =   $invoiceId;
                 $data2['timestamp']    =   strtotime(date("m/d/Y"));
@@ -247,6 +276,11 @@ class Payments extends EduAppGT
                 $data2['student_id']   =   $this->db->get_where('invoice' , array('invoice_id' => $invoiceId))->row()->student_id;
                 $data2['amount']       =   $this->db->get_where('invoice' , array('invoice_id' => $invoiceId))->row()->amount;
                 $this->db->insert('payment' , $data2);
+
+                $table      = 'payment';
+                $action     = 'insert';
+                $insert_id  = $this->db->insert_id();
+                $this->crud->save_log($table, $action, $insert_id, $data2);
             
                 $this->session->set_flashdata('flash_message' , getPhrase('thanks_for_your_payment'));
                 if($type == 'parent'){
@@ -319,6 +353,12 @@ class Payments extends EduAppGT
                     $update_data['status']            = 'completed';   
                     $this->db->where('invoice_id', $invoiceId);
                     $this->db->update('invoice', $update_data);
+
+                    $table      = 'invoice';
+                    $action     = 'update';
+                    $update_id  = $invoiceId;
+                    $this->crud->save_log($table, $action, $update_id, $update_data);
+
                     $insert_data['method']       =   'flutterwave';
                     $insert_data['invoice_id']   =   $invoiceId;
                     $insert_data['timestamp']    =   strtotime(date("m/d/Y"));
@@ -328,6 +368,12 @@ class Payments extends EduAppGT
                     $insert_data['student_id']   =   $this->db->get_where('invoice' , array('invoice_id' => $invoiceId))->row()->student_id;
                     $insert_data['amount']       =   $this->db->get_where('invoice' , array('invoice_id' => $invoiceId))->row()->amount;
                     $this->db->insert('payment' , $insert_data);
+
+                    $table      = 'payment';
+                    $action     = 'insert';
+                    $insert_id  = $this->db->insert_id();
+                    $this->crud->save_log($table, $action, $insert_id, $insert_data);
+
 					$this->session->set_flashdata('flash_message' , getPhrase('thanks_for_your_payment'));
 					
 				}elseif( (isset($_GET['cancelled']) && $_GET['cancelled'] == true))

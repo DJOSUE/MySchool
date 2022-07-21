@@ -91,7 +91,7 @@ class Login extends EduAppGT
         {
             $row = $query->row();
             $this->session->set_userdata('role_id', '6');
-            $this->session->set_userdata('program_id', $row->dormitory_id);
+            $this->session->set_userdata('program_id', $row->program_id);
             $this->session->set_userdata('student_login', $row->student_session);
             $this->session->set_userdata('student_id', $row->student_id);
             $this->session->set_userdata('login_user_id', $row->student_id);
@@ -145,51 +145,59 @@ class Login extends EduAppGT
         if($param1 == 'recovery')
         {
             $email  = html_escape($_POST["field"]);
-            $reset_account_type = '';
-            $new_password = substr( md5( rand(100000000,20000000000) ) , 0,7);
-            $new_hashed_password    =   sha1($new_password);
+            $bytes = random_bytes(20);
+            $password_token = bin2hex($bytes);
+
             $query = $this->db->get_where('admin' , array('email' => $email, 'status' => '1'));
             if ($query->num_rows() > 0) 
             {
+                $table = base64_encode('admin');
                 $this->db->where('email' , $email);
-                $this->db->update('admin' , array('password' =>     $new_hashed_password));
-                $this->mail->submitPassword($email , $new_password);
+                $this->db->update('admin' , array('password_token' => $password_token));
+                $this->mail->submitPassword($email, $password_token, $table);
+
             }
             $query = $this->db->get_where('teacher' , array('email' => $email, 'status' => '1'));
             if ($query->num_rows() > 0) 
             {
+                $table = base64_encode('teacher');
                 $this->db->where('email' , $email);
-                $this->db->update('teacher' , array('password' => $new_hashed_password));
+                $this->db->update('teacher' , array('password_token' => $password_token));
+                $this->mail->submitPassword($email, $password_token, $table);
 
-                $this->mail->submitPassword($email , $new_password);
             }
             $query = $this->db->get_where('parent' , array('email' => $email, 'status' => '1'));
             if ($query->num_rows() > 0) 
             {
+                $table = base64_encode('parent');
                 $this->db->where('email' , $email);
-                $this->db->update('parent' , array('password' => $new_hashed_password));
-                $this->mail->submitPassword($email , $new_password);
+                $this->db->update('parent' , array('password_token' => $password_token));
+                $this->mail->submitPassword($email, $password_token, $table);
+
             }
             $query = $this->db->get_where('student' , array('email' => $email, 'status' => '1'));
             if ($query->num_rows() > 0) 
             {
+                $table = base64_encode('student');
                 $this->db->where('email' , $email);
-                $this->db->update('student' , array('password' => $new_hashed_password));
-                $this->mail->submitPassword($email , $new_password);
+                $this->db->update('student' , array('password_token' => $password_token));
+                $this->mail->submitPassword($email, $password_token, $table);
             }
             $query = $this->db->get_where('accountant' , array('email' => $email, 'status' => '1'));
             if ($query->num_rows() > 0) 
             {
+                $table = base64_encode('accountant');
                 $this->db->where('email' , $email);
-                $this->db->update('accountant' , array('password' => $new_hashed_password));
-                $this->mail->submitPassword($email , $new_password);
+                $this->db->update('accountant' , array('password_token' => $password_token));
+                $this->mail->submitPassword($email, $password_token, $table);
             }
             $query = $this->db->get_where('librarian' , array('email' => $email, 'status' => '1'));
             if ($query->num_rows() > 0) 
             {
+                $table = base64_encode('librarian');
                 $this->db->where('email' , $email);
-                $this->db->update('librarian' , array('password' => $new_hashed_password));
-                $this->mail->submitPassword($email , $new_password);
+                $this->db->update('librarian' , array('password_token' => $password_token));
+                $this->mail->submitPassword($email, $password_token, $table);
             }
             $this->session->set_flashdata('success_recovery', '1');
             redirect(base_url(), 'refresh'); 

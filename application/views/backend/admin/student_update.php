@@ -232,14 +232,14 @@
                                                 <label
                                                     class="control-label"><?php echo getPhrase('classroom');?></label>
                                                 <div class="select">
-                                                    <select name="dormitory_id">
+                                                    <select name="classroom_id">
                                                         <option value=""><?php echo getPhrase('select');?></option>
                                                         <?php 
-                                                                    $classroom = $this->db->get('dormitory')->result_array();
+                                                                    $classroom = $this->db->get('class_room')->result_array();
                                                                     foreach($classroom as $room):
                                                                 ?>
-                                                        <option value="<?php echo $room['dormitory_id'];?>"
-                                                            <?php if($row['dormitory_id'] == $room['dormitory_id']) echo "selected";?>>
+                                                        <option value="<?php echo $room['classroom_id'];?>"
+                                                            <?php if($row['classroom_id'] == $room['classroom_id']) echo "selected";?>>
                                                             <?php echo $room['name'];?></option>
                                                         <?php endforeach;?>
                                                     </select>

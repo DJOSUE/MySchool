@@ -57,7 +57,7 @@
                                             $teacher_id = $this->db->get_where('subject', array('subject_id' => $row2['subject_id']))->row()->teacher_id;
                                         ?>
                                         <td style="text-align:center">
-                                            <?php echo '<b>'.getPhrase('classroom').'</b>: '.$this->db->get_where('dormitory', array('dormitory_id' => $row2['classroom_id']))->row()->name.'.<br>'.$row2['time_start'].":".$row2['time_start_min']." " ."<b>".$row2['amstart']."</b>". ' - ' . $row2['time_end'].":".$row2['time_end_min']." "."<b>".$row2['amend']."</b>";?>
+                                            <?php echo '<b>'.getPhrase('classroom').'</b>: '.$this->db->get_where('class_room', array('classroom_id' => $row2['classroom_id']))->row()->name.'.<br>'.$row2['time_start'].":".$row2['time_start_min']." " ."<b>".$row2['amstart']."</b>". ' - ' . $row2['time_end'].":".$row2['time_end_min']." "."<b>".$row2['amend']."</b>";?>
                                             <br><b><?php echo $this->crud->get_subject_name_by_id($row2['subject_id']);?></b><br><small><?php echo $this->crud->get_name('teacher',$teacher_id);?></small>
                                         </td>
                                         <?php endforeach;?>

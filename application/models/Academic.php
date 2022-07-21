@@ -63,6 +63,12 @@ class Academic extends School
             $data['year']                = $year;
             $data['activity_type']       = $type;
             $this->db->insert('activity_read',$data);
+
+            $table      = 'activity_read';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $data);
+
         }
     }
     
@@ -97,7 +103,13 @@ class Academic extends School
         $data['subject_id']     = $this->input->post('subject_id');
         $data['section_id']     = $this->input->post('section_id');
         $data['user_id']        = $this->session->userdata('login_user_id');
-        $this->db->insert('live',$data);  
+        $this->db->insert('live',$data);
+
+        $table      = 'live';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
     }
     
     public function updateLiveClass($liveId)
@@ -112,6 +124,12 @@ class Academic extends School
         $data['wall_type']         = 'live';
         $this->db->where('live_id', $liveId);
         $this->db->update('live',$data);  
+
+        $table      = 'live';
+        $action     = 'update';
+        $update_id  = $liveId;
+        $this->crud->save_log($table, $action, $update_id, $data);
+
     }
     
     public function deleteLiveClass($liveId)
@@ -127,6 +145,12 @@ class Academic extends School
         $data['mark_from']   = html_escape($this->input->post('from'));
         $data['mark_upto']   = html_escape($this->input->post('to'));
         $this->db->insert('grade', $data);
+
+        $table      = 'grade';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
     }   
     
     public function updateLevel($levelId)
@@ -137,6 +161,12 @@ class Academic extends School
         $data['mark_upto']   = html_escape($this->input->post('to'));
         $this->db->where('grade_id', $levelId);
         $this->db->update('grade', $data);
+
+        $table      = 'grade';
+        $action     = 'update';
+        $update_id  = $levelId;
+        $this->crud->save_log($table, $action, $update_id, $data);
+
     }
     
     public function deleteLevel($levelId)
@@ -152,6 +182,11 @@ class Academic extends School
         $data['mark_from']  = $this->input->post('from');
         $data['mark_upto']  = $this->input->post('to');
         $this->db->insert('gpa', $data);
+
+        $table      = 'gpa';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
     }
 
     public function updateGPA($gpaID)
@@ -162,6 +197,11 @@ class Academic extends School
         $data['mark_upto']  = $this->input->post('to');
         $this->db->where('gpa_id', $gpaID);
         $this->db->update('gpa', $data);
+
+        $table      = 'gpa';
+        $action     = 'update';
+        $update_id  = $gpaID;
+        $this->crud->save_log($table, $action, $update_id, $data);
     }
     
     public function deleteGPA($gpaID)
@@ -220,6 +260,12 @@ class Academic extends School
         $data['uploader_id']    = $this->session->userdata('login_user_id');
         $data['homework_code']  = substr(md5(rand(100000000, 200000000)), 0, 10);
         $this->db->insert('homework', $data);
+
+        $table      = 'homework';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
         move_uploaded_file($_FILES["file_name"]["tmp_name"], "public/uploads/homework/" . $_FILES["file_name"]["name"]);
         $this->crud->send_homework_notify();
         $homework_code = $data['homework_code'];
@@ -242,6 +288,11 @@ class Academic extends School
             $notify['original_id']   = $this->session->userdata('login_user_id');
             $notify['original_type'] = $this->session->userdata('login_type');
             $this->db->insert('notification', $notify);
+
+            $table      = 'notification';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $notify);
         }
         return $homework_code;
     }
@@ -257,6 +308,11 @@ class Academic extends School
         $data['type']        = $this->input->post('type');
         $this->db->where('homework_code', $homework_code);
         $this->db->update('homework', $data);
+
+        $table      = 'homework';
+        $action     = 'update';
+        $update_id  = $homework_code;
+        $this->crud->save_log($table, $action, $update_id, $data);
     }
     
     public function reviewHomework()
@@ -271,6 +327,12 @@ class Academic extends School
             $data['teacher_comment'] = $comment[$i];
             $this->db->where_in('id', $id[$i]);
             $this->db->update('deliveries', $data);
+
+            $table      = 'deliveries';
+            $action     = 'update';
+            $update_id  = $id[$i];
+            $this->crud->save_log($table, $action, $update_id, $data);
+            
         }
     }
     
@@ -285,6 +347,11 @@ class Academic extends School
         $this->db->where('id', $this->input->post('id'));
         $this->db->update('deliveries', $data);
 
+        $table      = 'deliveries';
+        $action     = 'update';
+        $update_id  = $this->input->post('id');
+        $this->crud->save_log($table, $action, $update_id, $data);
+
         $notify['notify']        = "<strong>". $this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('homework_rated') ." <b>".$title.".</b>";
         $notify['user_id']       = $student_id;
         $notify['user_type']     = 'student';
@@ -295,6 +362,11 @@ class Academic extends School
         $notify['original_id']   = $this->session->userdata('login_user_id');
         $notify['original_type'] = $this->session->userdata('login_type');
         $this->db->insert('notification', $notify);
+
+        $table      = 'notification';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $notify);
     }
     
     public function createForum()
@@ -318,6 +390,12 @@ class Academic extends School
         $data['teacher_id']      = $this->session->userdata('login_user_id');
         $data['post_code']       = substr(md5(rand(100000000, 200000000)), 0, 10);
         $this->db->insert('forum', $data);
+
+        $table      = 'forum';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
         $this->crud->send_forum_notify();
         move_uploaded_file($_FILES["userfile"]["tmp_name"], "public/uploads/forum/" . $_FILES["userfile"]["name"]);
     }
@@ -336,6 +414,11 @@ class Academic extends School
         $data['teacher_id']      = $this->session->userdata('login_user_id');
         $this->db->where('post_code', $code);
         $this->db->update('forum', $data);
+
+        $table      = 'forum';
+        $action     = 'update';
+        $update_id  = $code;
+        $this->crud->save_log($table, $action, $update_id, $data);
     }
     
     public function createMaterial()
@@ -357,6 +440,12 @@ class Academic extends School
         $data['year']              = $this->runningYear;
         $data['semester_id']       = $this->runningSemester;
         $this->db->insert('document',$data);
+
+        $table      = 'document';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
         move_uploaded_file($_FILES["file_name"]["tmp_name"], "public/uploads/document/" . str_replace(" ", "",$_FILES["file_name"]["name"]));
         
         $notify['notify'] = "<strong>".$this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong> ". " ".getPhrase('study_material_notify');
@@ -377,6 +466,12 @@ class Academic extends School
             $notify['original_id']   = $this->session->userdata('login_user_id');
             $notify['original_type'] = $this->session->userdata('login_type');
             $this->db->insert('notification', $notify);
+
+            $table      = 'notification';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $notify);
+
         }
     }
     
@@ -410,6 +505,11 @@ class Academic extends School
 
         $this->db->where('online_exam_id', $this->input->post('online_exam_id'));
         $this->db->update('online_exam', $data);
+        
+        $table      = 'online_exam';
+        $action     = 'update';
+        $update_id  = $this->input->post('online_exam_id');
+        $this->crud->save_log($table, $action, $update_id, $data);
     }
     
     public function createOnlineExam()
@@ -438,6 +538,11 @@ class Academic extends School
         
         $this->crud->send_exam_notify();
         $this->db->insert('online_exam', $data);
+
+        $table      = 'online_exam';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
     }
     
     public function promoteStudents()
@@ -455,6 +560,11 @@ class Academic extends School
             $enroll_data['year']            =   $this->input->post('promotion_year');
             $enroll_data['date_added']      =   strtotime(date("Y-m-d H:i:s"));
             $this->db->insert('enroll' , $enroll_data);
+
+            $table      = 'enroll';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $enroll_data);
         } 
     }
     
@@ -471,6 +581,12 @@ class Academic extends School
         $data['year']        = $year == '' ? $this->runningYear : $year;
         $data['semester_id'] = $semesterId == '' ? $this->runningSemester : $semesterId;
         $this->db->insert('subject', $data);
+
+        $table      = 'subject';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/subject_icon/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
     }
 
@@ -487,6 +603,12 @@ class Academic extends School
         $data['year']        = $year == '' ? $this->runningYear : $year;
         $data['semester_id'] = $semesterId == '' ? $this->runningSemester : $semesterId;
         $this->db->insert('subject', $data);
+
+        $table      = 'subject';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/subject_icon/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
     }
     
@@ -505,6 +627,11 @@ class Academic extends School
         $data['la10'] = html_escape($this->input->post('la10'));
         $this->db->where('subject_id', $courseId);
         $this->db->update('subject', $data);
+
+        $table      = 'subject';
+        $action     = 'update';
+        $update_id  = $courseId;
+        $this->crud->save_log($table, $action, $update_id, $data);
     }
     
     public function updateCourse($courseId)
@@ -521,6 +648,12 @@ class Academic extends School
         $this->db->where('subject_id', $courseId);
         $this->db->update('subject', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/subject_icon/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'subject';
+        $action     = 'update';
+        $update_id  = $courseId;
+        $this->crud->save_log($table, $action, $update_id, $data);
+
     }
     
     public function deleteCourse($courseId)
@@ -538,6 +671,12 @@ class Academic extends School
         $data2['class_id']    =   $class_id;
         $data2['name']        =   'A';
         $this->db->insert('section' , $data2);
+
+        $table      = 'section';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data2);
+
     }
     
     public function updateClass($classId)
@@ -546,6 +685,11 @@ class Academic extends School
         $data['teacher_id']   = $this->input->post('teacher_id');
         $this->db->where('class_id', $classId);
         $this->db->update('class', $data);
+
+        $table      = 'class';
+        $action     = 'update';
+        $update_id  = $classId;
+        $this->crud->save_log($table, $action, $update_id, $data);
     }
     
     public function deleteClass($classId)
@@ -563,6 +707,11 @@ class Academic extends School
         $data['year']           =   $year == '' ? $this->runningYear : $year;
         $data['semester_id']    =   $semesterId == '' ? $this->runningSemester : $semesterId;
         $this->db->insert('section' , $data);
+
+        $table      = 'section';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
     }
     
     public function updateSection($sectionId){
@@ -570,6 +719,11 @@ class Academic extends School
         $data['teacher_id'] = $this->input->post('teacher_id');
         $this->db->where('section_id', $sectionId);
         $this->db->update('section', $data);
+
+        $table      = 'section';
+        $action     = 'update';
+        $update_id  = $sectionId;
+        $this->crud->save_log($table, $action, $update_id, $data);
     }
     
     public function deleteSection($sectionId)
@@ -582,6 +736,11 @@ class Academic extends School
     {
         $data['name']    = $this->input->post('name');
         $this->db->insert('units', $data);
+
+        $table      = 'units';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
     }
     
     public function updateUnit($unitId)
@@ -589,6 +748,12 @@ class Academic extends School
         $data['name']    = $this->input->post('name');
         $this->db->where('unit_id', $unitId);
         $this->db->update('units', $data);
+
+        $table      = 'units';
+        $action     = 'update';
+        $update_id  = $unitId;
+        $this->crud->save_log($table, $action, $update_id, $data);
+
     }
     
     public function deleteUnit($unitId)
@@ -601,6 +766,11 @@ class Academic extends School
     {
         $data['name']    = $this->input->post('name');
         $this->db->insert('semesters', $data);
+
+        $table      = 'semesters';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
     }
     
     public function updateSemester($semesterId)
@@ -608,6 +778,11 @@ class Academic extends School
         $data['name']    = $this->input->post('name');
         $this->db->where('semester_id', $semesterId);
         $this->db->update('semesters', $data);
+
+        $table      = 'semesters';
+        $action     = 'update';
+        $update_id  = $semesterId;
+        $this->crud->save_log($table, $action, $update_id, $data);
     }
     
     public function deleteSemester($semesterId)
@@ -634,6 +809,12 @@ class Academic extends School
         $data['status']      = 0;
         $data['code']        = substr(md5(rand(0, 1000000)), 0, 7);
         $this->db->insert('reports', $data);
+
+        $table      = 'reports';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
         $this->crud->students_reports($this->input->post('student_id'),$parent_id);
         move_uploaded_file($_FILES["file_name"]["tmp_name"], 'public/uploads/report_files/'. $_FILES["file_name"]["name"]);
         
@@ -664,7 +845,13 @@ class Academic extends School
         $data['date']        = $this->crud->getDateFormat();
         $data['sender_type'] = $this->session->userdata('login_type');
         $data['sender_id']   = $this->session->userdata('login_user_id');
-        return $this->db->insert('report_response', $data);
+        $this->db->insert('report_response', $data);
+
+        $table      = 'report_response';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        return $this->crud->save_log($table, $action, $insert_id, $data);
+
     }
     
     public function updateReport($code)
@@ -687,6 +874,11 @@ class Academic extends School
         $notify['original_type'] = $this->session->userdata('login_type');
         $this->db->insert('notification', $notify);
 
+        $table      = 'notification';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $notify);
+
         $notify2['notify']        = $notify['notify'];
         $notify2['user_id']       = $parent_id;
         $notify2['user_type']     = 'parent';
@@ -698,9 +890,19 @@ class Academic extends School
         $notify2['original_type'] = $this->session->userdata('login_type');
         $this->db->insert('notification', $notify2);
 
+        $table      = 'notification';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $notify2);
+
         $data['status']           = 1;
         $this->db->where('code', $code);
         $this->db->update('reports', $data);
+
+        $table      = 'reports';
+        $action     = 'update';
+        $update_id  = $code;
+        $this->crud->save_log($table, $action, $update_id, $data);
     }
     
     function getInfo($type) {
@@ -730,6 +932,11 @@ class Academic extends School
         $data['teacher_id']     = $teacher_id;
         $data['year']           = $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;
         $this->db->insert('class_routine', $data);
+
+        $table      = 'class_routine';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
     }
     
     public function updateRoutine($routineId)
@@ -745,6 +952,11 @@ class Academic extends School
         $data['year']           = $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;
         $this->db->where('class_routine_id', $routineId);
         $this->db->update('class_routine', $data);
+
+        $table      = 'class_routine';
+        $action     = 'update';
+        $update_id  = $routineId;
+        $this->crud->save_log($table, $action, $update_id, $data);
     }
     
     public function deleteRoutine($routineId)
@@ -802,11 +1014,28 @@ class Academic extends School
             
             $obtained_marks = round(($labototal / $count), $this->roundPrecision);
             
+            $data['mark_obtained'] = $obtained_marks;
+            $data['labuno'] = $labouno;
+            $data['labdos'] = $labodos;
+            $data['labtres'] = $labotres;
+            $data['labcuatro'] = $labocuatro;
+            $data['labcinco'] = $labocinco;
+            $data['labseis'] = $laboseis;
+            $data['labsiete'] = $labosiete;
+            $data['labocho'] = $laboocho;
+            $data['labnueve'] = $labonueve;
+            $data['labdiez'] = $labodiez;
+            $data['labtotal'] = $labototal;
+            $data['comment'] = $comment;
+            
+
             $this->db->where('mark_id' , $row['mark_id']);
-            $this->db->update('mark' , array('mark_obtained' => $obtained_marks , 'labuno' => $labouno,
-                                             'labdos' => $labodos, 'labtres' => $labotres, 'labcuatro' => $labocuatro, 'labcinco' => $labocinco, 'labseis' => $laboseis,
-                                             'labsiete' => $labosiete, 'labocho' => $laboocho, 'labnueve' => $labonueve, 'labdiez' => $labodiez,
-                                             'labtotal' => $labototal, 'comment' => $comment));
+            $this->db->update('mark' , $data);
+            
+            $table      = 'mark';
+            $action     = 'update';
+            $update_id  = $row['mark_id'];
+            $this->crud->save_log($table, $action, $update_id, $data);
         }
         $info = base64_encode($class_id.'-'.$section_id.'-'.$subject_id);
         return $info;
@@ -872,11 +1101,28 @@ class Academic extends School
             else 
                 $obtained_marks = '-';
             
+            $data['mark_obtained'] = $obtained_marks;
+            $data['labuno'] = $labouno;
+            $data['labdos'] = $labodos;
+            $data['labtres'] = $labotres;
+            $data['labcuatro'] = $labocuatro;
+            $data['labcinco'] = $labocinco;
+            $data['labseis'] = $laboseis;
+            $data['labsiete'] = $labosiete;
+            $data['labocho'] = $laboocho;
+            $data['labnueve'] = $labonueve;
+            $data['labdiez'] = $labodiez;
+            $data['labtotal'] = $labototal;
+            $data['comment'] = $comment;
+
             $this->db->where('mark_daily_id' , $row['mark_daily_id']);
-            $this->db->update('mark_daily' , array('mark_obtained' => $obtained_marks , 'labuno' => $labouno,
-                                             'labdos' => $labodos, 'labtres' => $labotres, 'labcuatro' => $labocuatro, 'labcinco' => $labocinco, 'labseis' => $laboseis,
-                                             'labsiete' => $labosiete, 'labocho' => $laboocho, 'labnueve' => $labonueve, 'labdiez' => $labodiez,
-                                             'labtotal' => $labototal, 'comment' => $comment));
+            $this->db->update('mark_daily' , $data);
+
+            $table      = 'mark_daily';
+            $action     = 'update';
+            $update_id  = $row['mark_daily_id'];
+            $this->crud->save_log($table, $action, $update_id, $data);
+
         }
         $info = base64_encode($class_id.'-'.$section_id.'-'.$subject_id);
         return $info;
@@ -1073,12 +1319,27 @@ class Academic extends School
             else 
                 $obtained_marks = '-';
             
+            $data['mark_obtained'] = $obtained_marks;
+            $data['labuno'] = $labouno;
+            $data['labdos'] = $labodos;
+            $data['labtres'] = $labotres;
+            $data['labcuatro'] = $labocuatro;
+            $data['labcinco'] = $labocinco;
+            $data['labseis'] = $laboseis;
+            $data['labsiete'] = $labosiete;
+            $data['labocho'] = $laboocho;
+            $data['labnueve'] = $labonueve;
+            $data['labdiez'] = $labodiez;
+            $data['labtotal'] = $labototal;
+
             $this->db->where('mark_daily_id' , $row['mark_daily_id']);
-            $this->db->update('mark_daily' , array('mark_obtained' => $obtained_marks , 'labuno' => $labouno,
-                                             'labdos' => $labodos, 'labtres' => $labotres, 'labcuatro' => $labocuatro, 'labcinco' => $labocinco, 'labseis' => $laboseis,
-                                             'labsiete' => $labosiete, 'labocho' => $laboocho, 'labnueve' => $labonueve, 'labdiez' => $labodiez,
-                                             'labtotal' => $labototal));
-            
+            $this->db->update('mark_daily' , $data);
+        
+            $table      = 'mark_daily';
+            $action     = 'update';
+            $update_id  = $row['mark_daily_id'];
+            $this->crud->save_log($table, $action, $update_id, $data);
+
         }
 
         $filter = base64_encode( $student_id.'|'.$unit_id.'|'.$mark_date );
@@ -1117,6 +1378,11 @@ class Academic extends School
                     $data['student_id'] = $row['student_id'];
                     
                     $this->db->insert('mark_daily' , $data);
+
+                    $table      = 'mark_daily';
+                    $action     = 'insert';
+                    $insert_id  = $this->db->insert_id();
+                    $this->crud->save_log($table, $action, $insert_id, $data);
                 }
             }
             else
@@ -1130,6 +1396,11 @@ class Academic extends School
                     $data['student_id'] = $row['student_id'];
                     
                     $this->db->insert('mark' , $data);
+
+                    $table      = 'mark';
+                    $action     = 'insert';
+                    $insert_id  = $this->db->insert_id();
+                    $this->crud->save_log($table, $action, $insert_id, $data);
                 }
             }
         }
@@ -1189,6 +1460,11 @@ class Academic extends School
         $data['issue_start_date']   = html_escape(strtotime($this->input->post('start')));
         $data['issue_end_date']     = html_escape(strtotime($this->input->post('end')));
         $this->db->insert('book_request', $data);
+
+        $table      = 'book_request';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
     }
     
     function sendFileHomework($homeworkCode)
@@ -1210,6 +1486,12 @@ class Academic extends School
         $data['subject_id']      = $this->input->post('subject_id');
         $data['status'] = 1;
         $this->db->insert('deliveries', $data);
+
+        $table      = 'deliveries';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
         $delivery = $this->db->insert_id();
         include 'public/class.fileuploader.php';
         $FileUploader = new FileUploader('files', array(
@@ -1223,7 +1505,13 @@ class Academic extends School
             $insert_data['homework_code'] = $homeworkCode;
             $insert_data['student_id']    = $this->session->userdata('login_user_id');
             $insert_data['delivery_id']   = $delivery;
-            $this->db->insert('homework_files', $insert_data);   
+            $this->db->insert('homework_files', $insert_data); 
+
+            $table      = 'homework_files';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $insert_data);
+
         }
     }
     
@@ -1239,6 +1527,12 @@ class Academic extends School
         $data['subject_id']       = $this->input->post('subject_id');
         $data['status']           = 1;
         $this->db->insert('deliveries', $data);
+
+        $table      = 'deliveries';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+        
     }
     
     public function updateTextHomework($id)
@@ -1248,6 +1542,12 @@ class Academic extends School
         $data['student_comment']  = html_escape($this->input->post('comment'));
         $this->db->where('id', $id);
         $this->db->update('deliveries', $data);
+
+        $table      = 'deliveries';
+        $action     = 'update';
+        $update_id  = $id;
+        $this->crud->save_log($table, $action, $update_id, $data);
+
     }
     
     public function deleteFileHomework($fhomework_file_id)
@@ -1272,6 +1572,12 @@ class Academic extends School
         $data['student_comment'] = html_escape($this->input->post('comment'));
         $this->db->where('id', $id);
         $this->db->update('deliveries', $data);
+
+        $table      = 'deliveries';
+        $action     = 'update';
+        $update_id  = $id;
+        $this->crud->save_log($table, $action, $update_id, $data);
+
         
         include 'public/class.fileuploader.php';
         $FileUploader = new FileUploader('files', array(
@@ -1285,7 +1591,13 @@ class Academic extends School
             $insert_data['homework_code'] = $homeworkCode;
             $insert_data['student_id']    = $this->session->userdata('login_user_id');
             $insert_data['delivery_id']   = $id;
-            $this->db->insert('homework_files', $insert_data);   
+            $this->db->insert('homework_files', $insert_data);
+
+            $table      = 'homework_files';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $data);
+            
         }
     }
     
@@ -1341,6 +1653,11 @@ class Academic extends School
 
                 $data['student_id'] = $row['student_id'];
                 $this->db->insert('pa_test' , $data);
+                
+                $table      = 'pa_test';
+                $action     = 'insert';
+                $insert_id  = $this->db->insert_id();
+                $this->crud->save_log($table, $action, $insert_id, $data);
             }
         }
     }   
@@ -1396,11 +1713,27 @@ class Academic extends School
 
             $scoretotal      = (int)$score1 + (int)$score2 + (int)$score3 + (int)$score4 + (int)$score5 + (int)$score6 + (int)$score7 + (int)$score8 + (int)$score9 + (int)$score10;          
             
+            $data_update['scoretotal'] = $scoretotal;
+            $data_update['comment'] = $comment;
+            $data_update['score1'] = $score1;
+            $data_update['score2'] = $score2;
+            $data_update['score3'] = $score3;
+            $data_update['score4'] = $score4;
+            $data_update['score5'] = $score5;
+            $data_update['score6'] = $score6;
+            $data_update['score7'] = $score7;
+            $data_update['score8'] = $score8;
+            $data_update['score9'] = $score9;
+            $data_update['score10'] = $score10;
+
+
             $this->db->where('test_id' , $row['test_id']);
-            $this->db->update('pa_test' , array('scoretotal' => $scoretotal, 'comment' => $comment,
-                                             'score1' => $score1, 'score2' => $score2, 'score3' => $score3, 'score4' => $score4, 'score5' => $score5,
-                                             'score6' => $score6, 'score7' => $score7, 'score8' => $score8, 'score9' => $score9, 'score10' => $score10
-                                             ));
+            $this->db->update('pa_test' , $data_update);
+
+            $table      = 'pa_test';
+            $action     = 'update';
+            $update_id  = $row['test_id'];
+            $this->crud->save_log($table, $action, $update_id, $data_update);
         }
 
         return true;

@@ -37,8 +37,8 @@
                     									<div class="col-sm-12">     
 															<div class="row">
 																<?php 
-																    $this->db->order_by('dormitory_id', 'desc');
-																    $rooms = $this->db->get('dormitory')->result_array();
+																    $this->db->order_by('classroom_id', 'desc');
+																    $rooms = $this->db->get('class_room')->result_array();
 					                                                foreach($rooms as $room):
 				                                                ?>
                                   								<div class="col-sm-6">
@@ -46,9 +46,9 @@
 			                                                            <div class="more" style="float:right; margin-right:15px; ">
                                                                             <i class="icon-options"></i>                                
                                                                             <ul class="more-dropdown" style="z-index:999">
-                                                                                <li><a href="javascript:void(0);" onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_classrooms/<?php echo $room['dormitory_id'];?>');"><?php echo getPhrase('students');?></a></li>
-                                                                                <li><a href="javascript:void(0);" onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_classroom/<?php echo $room['dormitory_id'];?>');"><?php echo getPhrase('edit');?></a></li>
-                                                                                <li><a onClick="return confirm('<?php echo getPhrase('confirm_delete');?>')" href="<?php echo base_url();?>admin/classrooms/delete/<?php echo $room['dormitory_id'];?>"><?php echo getPhrase('delete');?></a></li>
+                                                                                <li><a href="javascript:void(0);" onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_classrooms/<?php echo $room['classroom_id'];?>');"><?php echo getPhrase('students');?></a></li>
+                                                                                <li><a href="javascript:void(0);" onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_classroom/<?php echo $room['classroom_id'];?>');"><?php echo getPhrase('edit');?></a></li>
+                                                                                <li><a onClick="return confirm('<?php echo getPhrase('confirm_delete');?>')" href="<?php echo base_url();?>admin/classrooms/delete/<?php echo $room['classroom_id'];?>"><?php echo getPhrase('delete');?></a></li>
                                                                             </ul>
                                                                         </div>
 				                                                        <div class="birthday-item inline-items">

@@ -15,9 +15,9 @@
                             <div class="select">
                                 <select name="classroom_id">
                                     <option value=""><?php echo getPhrase('select');?></option>
-                                    <?php $clsm = $this->db->get('dormitory')->result_array();
+                                    <?php $clsm = $this->db->get('class_room')->result_array();
                                     foreach($clsm as $row5): ?>
-                                    <option value="<?php echo $row5['dormitory_id'];?>" <?php if($row5['dormitory_id'] == $row['classroom_id']) echo 'selected';?>><?php echo $row5['name'];?></option>
+                                    <option value="<?php echo $row5['classroom_id'];?>" <?php if($row5['classroom_id'] == $row['classroom_id']) echo 'selected';?>><?php echo $row5['name'];?></option>
                                   <?php endforeach;?>
                                 </select>
                             </div>

@@ -6,7 +6,7 @@
 
     // Array Pages
     $message_pages      = array('message', 'group');
-    $admissions_pages   = array('new_student');
+    $admissions_pages   = array('admission_dashboard', 'admission_new_applicant', 'admission_applicant','admission_new_student');
     $routine_pages      = array('class_routine_view', 'teacher_routine');
     $library_pages      = array('library', 'book_request', 'update_book');
     $time_card_pages    = array('time_card', 'time_sheet', 'payment_period', 'worker_schedule', 'workers', 'worked_hours');
@@ -15,7 +15,11 @@
                                 'student_invoices', 'student_update', 'student_portal', 'librarian', 'pending', 'teacher_subjects', 'teacher_schedules', 'users', 'admins', 
                                 'teachers', 'teacher_profile', 'teacher_update', 'parents', 'students', 'student_update_class', 'student_enrollments', 'student_past_marks');    
     $academic_pages     = array('attendance', 'live', 'exam_room', 'exam_results', 'exam_edit', 'homework', 'homework_room', 'homework_edit', 'homework_details', 'meet', 
-                                'grados', 'upload_marks', 'study_material', 'cursos', 'subject_dashboard', 'forum_room', 'online_exams', 'edit_forum', 'forum', 'daily_marks', 'daily_marks_average');
+                                'grados', 'upload_marks', 'study_material', 'cursos', 'subject_dashboard', 'forum_room', 'online_exams', 'edit_forum', 'forum', 'daily_marks', 
+                                'daily_marks_average');
+    $reports_pages      = array('reports_general','reports_students', 'reports_attendance', 'reports_accounting', 'reports_tabulation', 'reports_tabulation_daily', 'report_marks');
+
+    //  if($page_name ==  $page_name == '' || $page_name == ''):
 
 
 ?>
@@ -76,7 +80,7 @@
                 <!-- Admissions Access -->
                 <?php if(has_permission('admissions')):?>
                 <li <?php if(in_array($page_name, $admissions_pages)):?>class="currentItem" <?php endif;?>>
-                    <a href="<?php echo base_url();?>admin/new_student/" data-toggle="tooltip" data-placement="right"
+                    <a href="<?php echo base_url();?>admin/admission_dashboard/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('admissions');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i>
@@ -225,9 +229,9 @@
                 <?php endif;?>
                 <!-- System Reports Access -->
                 <?php if(has_permission('system_reports')):?>
-                <li <?php if($page_name == 'general_reports' || $page_name == 'students_report' || $page_name == 'attendance_report' ||$page_name == 'accounting_report' || $page_name == 'tabulation_report' || $page_name == 'tabulation_daily_report' || $page_name == 'marks_report'):?>class="currentItem"
+                <li <?php if(in_array($page_name, $academic_pages)):?>class="currentItem"
                     <?php endif;?>>
-                    <a href="<?php echo base_url();?>admin/general_reports/" data-toggle="tooltip"
+                    <a href="<?php echo base_url();?>admin/reports_general/" data-toggle="tooltip"
                         data-placement="right" data-original-title="<?php echo getPhrase('system_reports');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0378_analytics_presentation_statistics_graph"></i>
@@ -321,7 +325,7 @@
                 <!-- Admissions Access -->
                 <?php if(has_permission('admissions')):?>
                 <li>
-                    <a href="<?php echo base_url();?>admin/new_student/">
+                    <a href="<?php echo base_url();?>admin/admission_dashboard/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i>
                         </div>
@@ -464,7 +468,7 @@
                 <!-- System Reports Access -->
                 <?php if(has_permission('system_reports')):?>
                 <li>
-                    <a href="<?php echo base_url();?>admin/general_reports/">
+                    <a href="<?php echo base_url();?>admin/reports_general/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0378_analytics_presentation_statistics_graph"></i>
                         </div>
@@ -564,7 +568,7 @@
                 <!-- Admissions Access -->
                 <?php if(has_permission('admissions')):?>
                 <li>
-                    <a href="<?php echo base_url();?>admin/new_student/">
+                    <a href="<?php echo base_url();?>admin/admission_dashboard/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i>
                         </div>
@@ -707,7 +711,7 @@
                 <!-- System Reports Access -->
                 <?php if(has_permission('system_reports')):?>
                 <li>
-                    <a href="<?php echo base_url();?>admin/general_reports/">
+                    <a href="<?php echo base_url();?>admin/reports_general/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0378_analytics_presentation_statistics_graph"></i>
                         </div>

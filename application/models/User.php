@@ -54,6 +54,11 @@ class User extends School
             if ($librarian_query->num_rows() > 0) 
             {
                 return 'success';                  
+            }
+            $applicant_query = $this->db->get_where('applicant', $credential);
+            if ($applicant_query->num_rows() > 0) 
+            {
+                return 'success';                  
             } 
         }
     }
@@ -75,6 +80,12 @@ class User extends School
         $data['password']     = sha1($this->input->post('password'));
         $this->db->insert('librarian', $data);
         $teacher_id = $this->db->insert_id();
+
+        $table      = 'librarian';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/librarian_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
     }
     
@@ -127,6 +138,12 @@ class User extends School
         $data['username']     = html_escape($this->input->post('username'));
         $data['password']     = sha1($this->input->post('password'));
         $this->db->insert('accountant', $data);
+
+        $table      = 'accountant';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
         $teacher_id = $this->db->insert_id();
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/accountant_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
     }
@@ -180,6 +197,12 @@ class User extends School
         $data['since']        = $this->crud->getDateFormat();
         $data['owner_status'] = $this->input->post('owner_status');
         $this->db->insert('admin', $data);
+
+        $table      = 'admin';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/admin_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
     }
     
@@ -238,6 +261,12 @@ class User extends School
             $data['phone']      = $row['phone'];
             $data['since']      = $row['since'];
             $this->db->insert('teacher', $data);
+
+            $table      = 'teacher';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $data);
+
             $teacher_id = $this->db->insert_id();
             $this->mail->accountConfirm('teacher', $teacher_id);
         }
@@ -263,6 +292,12 @@ class User extends School
         }
         $data['password']    = sha1($this->input->post('password'));
         $this->db->insert('teacher', $data);
+
+        $table      = 'teacher';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/teacher_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
     }
     
@@ -317,6 +352,12 @@ class User extends School
         $data['password']       = sha1($this->input->post('password'));
         $data['image']          = $md5.str_replace(' ', '', $_FILES['userfile']['name']);
         $this->db->insert('parent', $data);
+
+        $table      = 'parent';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/parent_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
     }
     
@@ -362,6 +403,12 @@ class User extends School
             $data['password']    = $row['password'];
             $data['phone']       = $row['phone'];
             $this->db->insert('parent', $data);
+
+            $table      = 'parent';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $data);
+
             $parent_id = $this->db->insert_id();
             $this->mail->accountConfirm('parent', $parent_id);
         }
@@ -442,22 +489,32 @@ class User extends School
         $semesterId =   $p_semesterId   == '' ? $this->runningSemester  : $p_semesterId;
         $quantity_score = intval($this->academic->getInfo('ap_quantity_score'));
 
+        $bytes = random_bytes(20);
+        $password_token = bin2hex($bytes);
+
+        //Generate the student_code if is blank
+        $student_code = $this->input->post('student_code');
+        if(empty($student_code)){
+            $student_code = 'L'.sprintf('%08d', rand()).$this->runningYear;
+        }
+
         $md5 = md5(date('d-m-Y H:i:s'));
         $data['first_name']        = $this->input->post('first_name');
         $data['last_name']         = $this->input->post('last_name');
         $data['birthday']          = $this->input->post('datetimepicker');
         $data['username']          = $this->input->post('username');
-        $data['student_code']      = $this->input->post('student_code');
+        $data['student_code']      = $student_code;
         $data['student_session']   = 1;
         $data['email']             = $this->input->post('email');
         $data['since']             = $this->crud->getDateFormat();
         $data['phone']             = $this->input->post('phone');
         $data['sex']               = $this->input->post('gender');
-        $data['password']          = sha1($this->input->post('password'));
+        $data['password']          = "NO_CONFIRM";// sha1($this->input->post('password'));
+        $data['password_token']    = $password_token;
         $data['address']           = $this->input->post('address');
         $data['country_id']        = $this->input->post('country_id');
         $data['transport_id']      = $this->input->post('transport_id');
-        $data['dormitory_id']      = $this->input->post('dormitory_id');
+        $data['program_id']      = $this->input->post('program_id');
 
         if($_FILES['userfile']['name'] != ''){
             $data['image']             = $md5.str_replace(' ', '', $_FILES['userfile']['name']);   
@@ -483,6 +540,12 @@ class User extends School
             $data3['password']        = sha1($this->input->post('parent_password'));
             $data3['image']           = "";
             $this->db->insert('parent', $data3);
+
+            $table      = 'parent';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $data3);
+
             $parent_id = $this->db->insert_id();
             $data['parent_id']        = $parent_id;    
         }
@@ -495,6 +558,11 @@ class User extends School
         $data['authorized_phone']  = $this->input->post('auth_phone');
         $data['note']              = $this->input->post('note');
         $this->db->insert('student', $data);
+
+        $table      = 'student';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
 
         // Enroll
         $student_id = $this->db->insert_id();
@@ -532,8 +600,11 @@ class User extends School
         
         $this->db->insert( 'pa_test', $data5 );
 
-        // $this->db->insert('enroll', $data4);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/student_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        // Send Email of Confirmation
+
+        
         
         return $student_id;
     }
@@ -564,6 +635,12 @@ class User extends School
             $data2['date_added']   = strtotime(date("Y-m-d H:i:s"));
             $data2['year']         = $this->runningYear;
             $this->db->insert('enroll', $data2);
+
+            $table      = 'enroll';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $data2);
+            
             $this->mail->accountConfirm('student', $student_id);
         }
         $this->db->where('user_id', $studentId);
@@ -591,7 +668,13 @@ class User extends School
                 $data['since']         =  $this->crud->getDateFormat();
                 if($data['first_name'] != "")
                 {
-                    $this->db->insert('student',$data);
+                    $this->db->insert('student', $data);
+
+                    $table      = 'student';
+                    $action     = 'insert';
+                    $insert_id  = $this->db->insert_id();
+                    $this->crud->save_log($table, $action, $insert_id, $data);
+
                     $student_id = $this->db->insert_id();
                     $data2['enroll_code']   =   substr(md5(rand(0, 1000000)), 0, 7);
                     $data2['student_id']    =   $student_id;
@@ -604,6 +687,12 @@ class User extends School
                     $data2['date_added']    =   strtotime(date("Y-m-d H:i:s"));
                     $data2['year']          =   $this->runningYear;
                     $this->db->insert('enroll' , $data2);
+
+                    $table      = 'enroll';
+                    $action     = 'insert';
+                    $insert_id  = $this->db->insert_id();
+                    $this->crud->save_log($table, $action, $insert_id, $data2);
+
                 }
            }
         }
@@ -627,7 +716,7 @@ class User extends School
         }
         $data['address']           = $this->input->post('address');
         $data['transport_id']      = $this->input->post('transport_id');
-        $data['dormitory_id']      = $this->input->post('dormitory_id');
+        $data['program_id']        = $this->input->post('program_id');
         $data['diseases']          = $this->input->post('diseases');
         $data['allergies']         = $this->input->post('allergies');
         $data['doctor']            = $this->input->post('doctor');
@@ -813,6 +902,12 @@ class User extends School
         $data['type']    = "teacher";
         $data['password']    = sha1($this->input->post('password'));
         $this->db->insert('pending_users', $data);
+
+        $table      = 'pending_users';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
         $user_id = $this->db->insert_id();
         $this->mail->welcomeUser($user_id);
 
@@ -829,6 +924,12 @@ class User extends School
             $notify['original_id'] = "";
             $notify['original_type'] = "";
             $this->db->insert('notification', $notify);
+
+            $table      = 'notification';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $notify);
+
         }
     }
     
@@ -849,6 +950,12 @@ class User extends School
         $data['type']        = "student";
         $data['password']    = sha1($this->input->post('password'));
         $this->db->insert('pending_users', $data);
+
+        $table      = 'pending_users';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
         $user_id = $this->db->insert_id();
         $this->mail->welcomeUser($user_id);
 
@@ -865,6 +972,12 @@ class User extends School
             $notify['original_id'] = "";
             $notify['original_type'] = "";
             $this->db->insert('notification', $notify);
+
+            $table      = 'notification';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $notify);
+
         }
 
     }
@@ -881,6 +994,12 @@ class User extends School
         $data['type']        = "parent";
         $data['password']    = sha1($this->input->post('password'));
         $this->db->insert('pending_users', $data);
+
+        $table      = 'pending_users';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+        
         $user_id = $this->db->insert_id();
         $this->mail->welcomeUser($user_id);
 
@@ -897,6 +1016,12 @@ class User extends School
             $notify['original_id'] = "";
             $notify['original_type'] = "";
             $this->db->insert('notification', $notify);
+
+            $table      = 'notification';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $notify);
+            
         }
     }
     
@@ -918,6 +1043,19 @@ class User extends School
         $this->db->where('teacher_id', $this->session->userdata('login_user_id'));
         $this->db->update('teacher', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/teacher_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+    }
+
+    public function updatePasswordUser($table, $password, $user_id){
+        
+        $data_update['password'] = $password;
+        $data_update['password_token'] = null;
+
+        if($table == 'student'){
+            $data_update['email_validated'] = 1;
+        }
+
+        $this->db->where($table.'_id', $user_id);
+        $this->db->update($table, $data_update);
     }
     
 }

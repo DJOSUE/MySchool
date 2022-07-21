@@ -120,11 +120,17 @@ class Mail extends School
     }
     
     //Send new password to user function.
-    function submitPassword($email,$password)
+    function submitPassword($email, $password_token, $table)
     {
-        $email_sub  = getPhrase('recover_your_password');
-        $email_msg  = getPhrase('success_password')."<br>";
-        $email_msg  .= getPhrase('new_password').": <b>". $password ."<b/><br>.";
+        $url         = base_url() . 'forgot_password/new_password/'.$password_token.'/'.$table;
+        $email_sub   = getPhrase('recover_your_password');
+        $email_msg   = "<h2>".getPhrase('success_password')."</h2><b/><br>";
+        $email_msg  .= getPhrase('new_password_message');
+        $email_msg  .= "<b/><br><br>";
+        $email_msg  .= '<div style="text-align: center;">';
+        $email_msg  .= '<a href="'.$url.'" class="button" target="_blank">'.getPhrase('set_new_password').'</a>';
+        $email_msg  .= '</div>';
+
         $data = array(
             'email_msg' => $email_msg
         );
@@ -258,7 +264,7 @@ class Mail extends School
         $username     = $this->db->get_where('pending_users', array('user_id' => $id))->row()->username;
         $type         = $this->db->get_where('pending_users', array('user_id' => $id))->row()->type;
         $email_sub    = getPhrase('welcome')." ". $user_name;
-        $email_msg   .= getPhrase('hi')." <strong>".$user_name.",</strong><br><br>";
+        $email_msg    = getPhrase('hi')." <strong>".$user_name.",</strong><br><br>";
         $email_msg   .= getPhrase('new_account_has_been_created_with_your_email_address_in')." ".base_url()."<br><br>";
         $email_msg   .= getPhrase('your_data_are_as_follows').":<br><br>";
         $email_msg   .=  "<strong>".getPhrase('name').":</strong> ".$user_name."<br>";
@@ -306,6 +312,9 @@ class Mail extends School
             show_error($this->email->print_debugger());
         }
 	}
+
+    //Sent password to the new student
+    
     
     //End of Mail.php
 }

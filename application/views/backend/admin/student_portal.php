@@ -47,6 +47,12 @@
                                             <div class="col-lg-6">
                                                 <div class="value-pair">
                                                     <div><?php echo getPhrase('account_type');?>:</div>
+                                                    <div class="value badge badge-pill badge-info">
+                                                        <?php echo $this->db->get_where('class_room', array('classroom_id' => $row['classroom_id']))->row()->name;?>
+                                                    </div>
+                                                </div>
+                                                <div class="value-pair">
+                                                    <div><?php echo getPhrase('program');?>:</div>
                                                     <div class="value badge badge-pill badge-primary">
                                                         <?php echo getPhrase('student');?></div>
                                                 </div>
@@ -57,7 +63,7 @@
                                                 <div class="value-pair">
                                                     <div><?php echo getPhrase('roll');?>:</div>
                                                     <div class="value">
-                                                        <?php echo $this->db->get_where('enroll', array('student_id' => $row['student_id']))->row()->roll;?>.
+                                                        <?php echo $row['student_code']?>.
                                                     </div>
                                                 </div>
                                             </div>
@@ -102,7 +108,7 @@
                                                             <span
                                                                 class="title"><?php echo getPhrase('classroom');?>:</span>
                                                             <span
-                                                                class="text"><?php echo $this->db->get_where('dormitory', array('dormitory_id' => $row['dormitory_id']))->row()->name;?></span>
+                                                                class="text"><?php echo $this->db->get_where('class_room', array('classroom_id' => $row['classroom_id']))->row()->name;?></span>
                                                         </li>
                                                         <li>
                                                             <span

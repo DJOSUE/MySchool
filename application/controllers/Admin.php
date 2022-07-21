@@ -190,6 +190,12 @@
                 $notify['status'] = 1;
                 $this->db->where('id', html_escape($_GET['id']));
                 $this->db->update('notification', $notify);
+
+                $table      = 'notification';
+                $action     = 'update';
+                $update_id  = html_escape($_GET['id']);
+                $this->crud->save_log($table, $action, $update_id, $notify);
+                
             }
             $page_data['page_name']  = 'panel';
             $page_data['page_title'] = getPhrase('dashboard');
@@ -254,6 +260,12 @@
                 $notify['status'] = 1;
                 $this->db->where('id', html_escape($_GET['id']));
                 $this->db->update('notification', $notify);
+
+                $table      = 'notification';
+                $action     = 'update';
+                $update_id  = html_escape($_GET['id']);
+                $this->crud->save_log($table, $action, $update_id, $notify);
+
             }
             if ($param1 == 'send_new') 
             {
@@ -335,22 +347,22 @@
         }
     
         //Students reports function.
-        function students_report($param1 = '', $param2 = '')
+        function reports_students($param1 = '', $param2 = '')
         {
             $this->isAdmin();
             $page_data['class_id']      = html_escape($this->input->post('class_id'));
             $page_data['section_id']    = html_escape($this->input->post('section_id'));
             $page_data['subject_id']    = $this->input->post('subject_id');
-            $page_data['page_name']     = 'students_report';
+            $page_data['page_name']     = 'reports_students';
             $page_data['page_title']    = getPhrase('students_report');
             $this->load->view('backend/index', $page_data);
         }
     
         //General reports function.
-        function general_reports($class_id = '', $section_id = '')
+        function reports_general($class_id = '', $section_id = '')
         {
             $this->isAdmin();
-            $page_data['page_name']     = 'general_reports';
+            $page_data['page_name']     = 'reports_general';
             $page_data['class_id']      = html_escape($this->input->post('class_id'));
             $page_data['section_id']    = html_escape($this->input->post('section_id'));
             $page_data['page_title']    = getPhrase('general_reports');
@@ -491,15 +503,6 @@
                 }
             }
         }
-    
-        //Create Student function.
-        function new_student($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-            $page_data['page_name']  = 'new_student';
-            $page_data['page_title'] = getPhrase('admissions');
-            $this->load->view('backend/index', $page_data);
-        }
         
         //Grade Levels function.
         function grade($param1 = '', $param2 = '')
@@ -597,6 +600,12 @@
                 $data['status']   = 0;
                 $this->db->where('admin_id', $param2);
                 $this->db->update('admin', $data);
+
+                $table      = 'admin';
+                $action     = 'update';
+                $update_id  = $param2;
+                $this->crud->save_log($table, $action, $update_id, $data);
+
                 // $this->db->delete('admin');
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
                 redirect(base_url() . 'admin/admins/', 'refresh');
@@ -1154,6 +1163,11 @@
                     $this->db->where('year', $this->runningYear);
                     $this->db->where('semester_id', $this->runningSemester);
                     $this->db->update('enroll', $data );
+
+                    $table      = 'enroll';
+                    $action     = 'update';
+                    $update_id  = $student_id.'-'.$current_class_id.'-'.$current_section_id.'-'.$current_subject_id;
+                    $this->crud->save_log($table, $action, $update_id, $data);
                     
                     $this->db->reset_query();
                     // Update Marks
@@ -1168,10 +1182,19 @@
                     $this->db->where('year', $this->runningYear);
                     $this->db->where('semester_id', $this->runningSemester);
 
+                    
+                    $action     = 'update';
+                    $update_id  = $student_id.'-'.$current_class_id.'-'.$current_section_id.'-'.$current_subject_id;
+
                     if($this->useDailyMarks){
                         $this->db->update('mark_daily', $data1 );
+                        $table      = 'mark_daily';
+                        $this->crud->save_log($table, $action, $update_id, $data1);
+
                     }else{
                         $this->db->update('mark', $data1 );
+                        $table      = 'mark';
+                        $this->crud->save_log($table, $action, $update_id, $data1);
                     }
                     
                 }
@@ -1216,6 +1239,11 @@
             foreach ($subjects as $key) {
                 $data['subject_id'] = $key;
                 $this->db->insert('enroll', $data);
+
+                $table      = 'enroll';
+                $action     = 'insert';
+                $insert_id  = $this->db->insert_id();
+                $this->crud->save_log($table, $action, $insert_id, $data);
             }
     
             $this->session->set_flashdata('flash_message', getPhrase('successfully_added'));
@@ -1408,6 +1436,12 @@
                 $notify['status'] = 1;
                 $this->db->where('id', html_escape($_GET['id']));
                 $this->db->update('notification', $notify);
+
+                $table      = 'notification';
+                $action     = 'update';
+                $update_id  = html_escape($_GET['id']);
+                $this->crud->save_log($table, $action, $update_id, $notify);
+
             }           
             if ($param1 == "accept")
             {
@@ -1436,6 +1470,12 @@
                 $notify['status'] = 1;
                 $this->db->where('id', html_escape($_GET['id']));
                 $this->db->update('notification', $notify);
+
+                $table      = 'notification';
+                $action     = 'update';
+                $update_id  = html_escape($_GET['id']);
+                $this->crud->save_log($table, $action, $update_id, $notify);
+
             }
             if ($param1 == "accept")
             {
@@ -1483,6 +1523,12 @@
                 $notify['status'] = 1;
                 $this->db->where('id', html_escape($_GET['id']));
                 $this->db->update('notification', $notify);
+
+                $table      = 'notification';
+                $action     = 'update';
+                $update_id  = html_escape($_GET['id']);
+                $this->crud->save_log($table, $action, $update_id, $notify);
+
             }
             if($param1 == 'update')
             {
@@ -1953,6 +1999,11 @@
                 $notify['status'] = 1;
                 $this->db->where('id', html_escape($_GET['id']));
                 $this->db->update('notification', $notify);
+
+                $table      = 'notification';
+                $action     = 'update';
+                $update_id  = html_escape($_GET['id']);
+                $this->crud->save_log($table, $action, $update_id, $notify);
             }
             $page_data['code'] = $report_code;
             $page_data['page_name'] = 'looking_report';
@@ -1982,7 +2033,7 @@
                 {
                    redirect(base_url() . 'admin/download_file/'.$student_id.'/'.base64_encode($this->input->post('password')), 'refresh');
                 }else{
-                    redirect(base_url() . 'admin/new_student/', 'refresh');
+                    redirect(base_url() . 'admin/admission_new_student/', 'refresh');
                 }
             }
             if ($param1 == 'do_update') 
@@ -2522,7 +2573,7 @@
         {
             $this->isAdmin();
             $page_data['class_id']    = $class_id;
-            $page_data['unit_id']     = $unit_id;
+            // $page_data['unit_id']     = $unit_id;
             $page_data['section_id']  = $section_id;
             $page_data['subject_id']  = $subject_id;
             $this->load->view('backend/admin/tab_sheet_print' , $page_data);
@@ -2633,7 +2684,7 @@
         }
         
         //Tabulation report function.
-        function tabulation_report($param1 = '', $param2 = '')
+        function reports_tabulation($param1 = '', $param2 = '')
         {
             $this->isAdmin();
 
@@ -2642,40 +2693,40 @@
             $page_data['subject_id']   = $this->input->post('subject_id');
 
             if($this->useDailyMarks){
-                $page_data['page_name']   = 'tabulation_daily_report';
+                $page_data['page_name']   = 'reports_tabulation_daily';
                 $page_data['page_title']  = getPhrase('tabulation_daily_report');
                 $this->load->view('backend/index', $page_data);
             } 
             else { 
-                $page_data['page_name']   = 'tabulation_report';
+                $page_data['page_name']   = 'reports_tabulation';
                 $page_data['page_title']  = getPhrase('tabulation_report');
                 $this->load->view('backend/index', $page_data);
             }
         }
         
         //Accounting report function.
-        function accounting_report($param1 = '', $param2 = '')
+        function reports_accounting($param1 = '', $param2 = '')
         {
           $this->isAdmin();
-          $page_data['page_name']   = 'accounting_report';
+          $page_data['page_name']   = 'reports_accounting';
           $page_data['page_title']  = getPhrase('accounting_report');
           $this->load->view('backend/index', $page_data);
         }
          
         //Marks report function.
-        function marks_report($param1 = '', $param2 = '')
+        function reports_marks($param1 = '', $param2 = '')
         {
             $this->isAdmin();
             if($param1 == 'generate')
             {
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-                redirect(base_url() . 'admin/marks_report/', 'refresh');
+                redirect(base_url() . 'admin/reports_marks/', 'refresh');
             }
             $page_data['class_id']   = $this->input->post('class_id');
             $page_data['section_id']   = $this->input->post('section_id');
             $page_data['student_id']   = $this->input->post('student_id');
             $page_data['unit_id']   = $this->input->post('unit_id');
-            $page_data['page_name']   = 'marks_report';
+            $page_data['page_name']   = 'reports_marks';
             $page_data['page_title']  = getPhrase('marks_report');
             $this->load->view('backend/index', $page_data);
         }
@@ -2725,6 +2776,12 @@
                 $notify['status'] = 1;
                 $this->db->where('id', html_escape($_GET['id']));
                 $this->db->update('notification', $notify);
+
+                $table      = 'notification';
+                $action     = 'update';
+                $update_id  = html_escape($_GET['id']);
+                $this->crud->save_log($table, $action, $update_id, $notify);
+
             }
             if($param1 == 'create')
             {
@@ -3136,6 +3193,12 @@
                 $data['start_time'] = date("H:i");
                 $data['pcinfo_in']  = $this->input->post( 'pcinfo_in' );
                 $this->db->insert('time_sheet', $data);
+
+                $table      = 'time_sheet';
+                $action     = 'insert';
+                $insert_id  = $this->db->insert_id();
+                $this->crud->save_log($table, $action, $insert_id, $data);
+                
                 $this->session->set_flashdata('flash_message', getPhrase('successfully_updated'));
             }
     
@@ -3422,6 +3485,8 @@
                 $query = $this->db->get_where($param1, array($table_id => $user_id));
                 $row = $query->row();
 
+                $this->crud->save_login_as_log($param1, $user_id);  
+
                 if ( $param1 == 'admin' ) {
 
                     $this->unset_admin();
@@ -3448,7 +3513,7 @@
                 if ( $param1 == 'student' ){
                     $this->unset_admin();
                     $this->session->set_userdata('role_id', '6');
-                    $this->session->set_userdata('program_id', $row->dormitory_id);
+                    $this->session->set_userdata('program_id', $row->program_id);
                     $this->session->set_userdata('student_login', $row->student_session);
                     $this->session->set_userdata('student_id', $row->student_id);
                     $this->session->set_userdata('login_user_id', $row->student_id);
@@ -3530,7 +3595,65 @@
             $this->load->view('backend/admin/test_print', $page_data);
             
         }
-        
+
+        /** Admission System */
+        //Admission Dashboard
+        function admission_dashboard(){
+            $this->isAdmin();
+            $page_data['page_name']  = 'admission_dashboard';
+            $page_data['page_title'] =  getPhrase('admission_dashboard');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //Create Student function.
+        function admission_new_applicant($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            $page_data['page_name']  = 'admission_new_applicant';
+            $page_data['page_title'] = getPhrase('admissions');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //Create Student function.
+        function admission_new_student($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            $page_data['page_name']  = 'admission_new_student';
+            $page_data['page_title'] = getPhrase('admissions');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //Create Student function.
+        function admission_applicant($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            $page_data['page_name']  = 'admission_applicant';
+            $page_data['page_title'] = getPhrase('admission_applicant');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function applicant($param1)
+        {
+            $this->isAdmin();
+
+            $message = '';
+            switch ($param1) {
+                case 'register':
+                    $this->applicant->register();
+                    $message =  getPhrase('successfully_added');
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+
+            $this->session->set_flashdata('flash_message' , $message);// getPhrase('account_has_been_created_but_require_approval'));
+            redirect(base_url() . 'admin/admission_dashboard', 'refresh');
+        }
+
+
+        /** Tools functions */
         // unset Admin cookies
         function unset_admin(){
             $this->session->unset_userdata('admin_login');

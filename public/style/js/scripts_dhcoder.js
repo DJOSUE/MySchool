@@ -330,7 +330,7 @@
         });
     }
     
-    if(uriseg == 'general_reports')
+    if(uriseg == 'reports_general')
     {
         var female    = $("#female").val();
         var male      = $("#male").val();
@@ -455,7 +455,7 @@
        	}
     }
     
-    if(uriseg == 'new_student')
+    if(uriseg == 'admission_new_student')
     {
         $(document).ready(function(){         
             var query;          

@@ -16,13 +16,13 @@
             <div class="os-tabs-controls">
                 <ul class="navs navs-tabs">
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/general_reports/"><i
+                        <a class="navs-links" href="<?php echo base_url();?>admin/reports_general/"><i
                                 class="picons-thin-icon-thin-0658_cup_place_winner_award_prize_achievement"></i>
                             <span><?php echo getPhrase('classes');?></span></a>
                     </li>
                     <li class="navs-item">
-                        <a class="navs-links <?php if($page_name == 'students_report') echo "active";?>"
-                            href="<?php echo base_url();?>admin/students_report/"><i
+                        <a class="navs-links <?php if($page_name == 'reports_students') echo "active";?>"
+                            href="<?php echo base_url();?>admin/reports_students/"><i
                                 class="picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i>
                             <span><?php echo getPhrase('students');?></span></a>
                     </li>
@@ -34,18 +34,18 @@
                     </li>
                     <?php endif;?>
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/marks_report/"><i
+                        <a class="navs-links" href="<?php echo base_url();?>admin/reports_marks/"><i
                                 class="picons-thin-icon-thin-0100_to_do_list_reminder_done"></i>
                             <span><?php echo getPhrase('final_marks');?></span></a>
                     </li>
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/tabulation_report/"><i
+                        <a class="navs-links" href="<?php echo base_url();?>admin/reports_tabulation/"><i
                                 class="picons-thin-icon-thin-0070_paper_role"></i>
                             <span><?php echo getPhrase('tabulation_sheet');?></span></a>
                     </li>
                     <?php if($accounting_report == 'true'):?>
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/accounting_report/"><i
+                        <a class="navs-links" href="<?php echo base_url();?>admin/reports_accounting/"><i
                                 class="picons-thin-icon-thin-0406_money_dollar_euro_currency_exchange_cash"></i>
                             <span><?php echo getPhrase('accounting');?></span></a>
                     </li>
@@ -58,7 +58,7 @@
                 <h5 class="form-header"><?php echo getPhrase('students_report');?></h5>
                 <div class="content-i">
                     <div class="content-box">
-                        <?php echo form_open(base_url() . 'admin/students_report/', array('class' => 'form m-b'));?>
+                        <?php echo form_open(base_url() . 'admin/reports_students/', array('class' => 'form m-b'));?>
                         <div class="row" style="margin-top: -30px; border-radius: 5px;">
                             <div class="col-sm-3">
                                 <div class="form-group label-floating is-select">
@@ -248,7 +248,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js"></script>
 <script type="text/javascript">
     $("#btnExport").click(function(e) {
-		var reportName = '<?php echo getPhrase('tabulation_report').'_'.date('d-m-Y');?>';
+		var reportName = '<?php echo getPhrase('reports_tabulation').'_'.date('d-m-Y');?>';
 		var a = document.createElement('a');
 		var data_type = 'data:application/vnd.ms-excel;charset=utf-8';
 		var table_html = $('#dvData')[0].outerHTML;
