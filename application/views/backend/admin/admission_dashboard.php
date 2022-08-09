@@ -1,4 +1,25 @@
-<?php $running_year = $this->crud->getInfo('running_year');?>
+<?php 
+
+    $running_year = $this->crud->getInfo('running_year');
+       
+    if($country_id != '')
+    {
+        $this->db->where('country_id', $country_id);
+    }
+    if($status_id != '')
+    {   
+        $this->db->where('status', $status_id);
+    }
+    if($name != '')
+    {
+        $this->db->like('full_name' , str_replace("%20", " ", $name));
+    } 
+    $student_query = $this->db->get('v_applicants');
+    $students = $student_query->result_array();
+
+    
+    
+?>
 <div class="content-w">
     <?php include 'fancy.php';?>
     <div class="header-spacer"></div>
@@ -27,164 +48,185 @@
         <div class="container-fluid">
             <div class="content-i">
                 <div class="content-box">
-                    <h5 class="form-header"><?php echo getPhrase('class_report');?></h5>
-                    <div class="row">
-                        <div class="content-i">
-                            <div class="content-box">
-                                <?php echo form_open(base_url() . 'admin/reports_general/', array('class' => 'form m-b'));?>
-                                <div class="row" style="margin-top: -30px; border-radius: 5px;">
-                                    <div class="col-sm-3">
-                                        <div class="form-group label-floating is-select">
-                                            <label class="control-label"><?php echo getPhrase('country');?></label>
-                                            <div class="select">
-                                                <select name="country_id"
-                                                    onchange="get_class_sections(this.value)">
-                                                    <option value=""><?php echo getPhrase('select');?></option>
-                                                    <?php
-													$countries = $this->db->get('countries')->result_array();
-													foreach($countries as $row):                        
-										        ?>
-                                                    <option value="<?php echo $row['country_id'];?>"
-                                                        <?php if($country_id == $row['country_id']) echo "selected";?>>
-                                                        <?php echo $row['name'];?></option>
-                                                    <?php endforeach;?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="form-group label-floating is-select">
-                                            <label class="control-label"><?php echo getPhrase('status');?></label>
-                                            <div class="select">
-                                                <select name="status_id"
-                                                    onchange="get_class_sections(this.value)">
-                                                    <option value=""><?php echo getPhrase('select');?></option>
-                                                    <?php
-													$countries = $this->db->get('v_applicant_status')->result_array();
-													foreach($countries as $row):                        
-										        ?>
-                                                    <option value="<?php echo $row['status_id'];?>"
-                                                        <?php if($status_id == $row['status_id']) echo "selected";?>>
-                                                        <?php echo $row['name'];?></option>
-                                                    <?php endforeach;?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3 bd-white">
-                                            <div class="form-group label-floating">
-                                                <label
-                                                    class="control-label"><?php echo getPhrase('name');?></label>
-                                                <input class="form-control" name="name" type="text">
-                                            </div>
-                                        </div>
-                                    <div class="col-sm-2">
-                                        <div class="form-group">
-                                            <button class="btn btn-success btn-upper" style="margin-top:20px"
-                                                type="submit"><span><?php echo getPhrase('get_report');?></span></button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <?php echo form_close();?>
-                                <?php if($class_id != "" && $section_id != ""):?>
-                                <div class="row">
-                                    <div class="text-center col-sm-6"><br>
-                                        <h4><?php echo $this->db->get_where('class', array('class_id' => $class_id))->row()->name;?>
-                                            - <?php echo getPhrase('section');?>:
-                                            <?php echo $this->db->get_where('section', array('section_id' => $section_id))->row()->name;?>
-                                        </h4>
-                                        <p>
-                                            <b>
-                                                <?php 
-											$this->db->where('class_id', $class_id); 
-											$this->db->where('section_id', $section_id); 
-											$this->db->group_by('student_id');
-											echo $this->db->count_all_results('enroll');
-										?>
-                                            </b>
-                                            <?php echo getPhrase('students');?> |
-                                            <b>
-                                                <?php 
-											$this->db->where('class_id', $class_id);
-											$this->db->where('section_id', $section_id); 
-											echo $this->db->count_all_results('subject');?>
-                                            </b>
-                                            <?php echo getPhrase('subjects');?>.
-                                            <br>
-                                            <b><?php echo getPhrase('running_year');?>:</b>
-                                            <?php echo $running_year;?>
-                                            <br>
-                                            <b><?php echo getPhrase('running_semester');?>:</b>
-                                            <?php echo $this->db->get_where('semesters', array('semester_id' => $running_semester))->row()->name;;?>
-                                        </p>
-                                    </div>
-                                    <div class="col-sm-6 text-center">
-                                        <div class="up-main-info">
-                                            <!-- <div class="user-avatar-w">
-                                            <div class="user-avatar">
-                                                <img alt=""
-                                                    src="<?php //echo $this->crud->get_image_url('teacher', $this->db->get_where('class', array('class_id' => $class_id))->row()->teacher_id);?>"
-                                                    width="80">
-                                            </div>
-                                        </div>
-                                        <h4 class="up-header">
-                                            <?php //echo $this->crud->get_name('teacher', $this->db->get_where('class', array('class_id' => $class_id))->row()->teacher_id);?>
-                                        </h4>
-                                        <h6 class="up-sub-header">
-                                            <div class="value badge badge-pill badge-success">
-                                                <?php //echo getPhrase('teacher');?></div>
-                                        </h6> -->
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <!-- <div class="col-sm-6">
-                                    <div class="element-box">
-                                        <h5 class="form-header"><?php echo getPhrase('gender');?></h5>
-                                        <canvas id="myChart" width="100" height="100"></canvas>
-                                    </div>
-                                </div> -->
-                                    <div class="col-sm-6">
-                                        <div class="element-box">
-                                            <div class="form-header">
-                                                <h6><?php echo getPhrase('subjects');?></h6>
-                                            </div>
-                                            <div class="table-responsive">
-                                                <table width="100%" class="table table-lightborder table-lightfont">
-                                                    <thead>
-                                                        <tr>
-                                                            <th style="text-align: left;">
-                                                                <?php echo getPhrase('subject');?>
-                                                            </th>
-                                                            <th style="text-align: center;">
-                                                                <?php echo getPhrase('teacher');?>
-                                                            </th>
-                                                            <th style="text-align: center;">
-                                                                <?php echo getPhrase('total');?>
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <?php 
-   												        $subjects = $this->db->get_where('subject',array('class_id' => $class_id, 'section_id' => $section_id))->result_array();
-   												        foreach ($subjects as $subject): ?>
-                                                        <tr>
-                                                            <td style="text-align: left;"><?php echo $subject['name'];?>
-                                                            </td>
-                                                            <td style="text-align: center;"><a
-                                                                    class="btn btn-rounded btn-sm btn-purple"
-                                                                    style="color:white"><?php echo $this->crud->get_name('teacher', $subject['teacher_id']);?></a>
-                                                            </td>
-                                                            <td style="text-align: center;">
-                                                                <?= $this->academic->countStudentsSubject($class_id, $section_id, $subject['subject_id']);?>
-                                                            </td>
-                                                        </tr>
+                    <div class="element-box-tp">
+                        <h5 class="form-header"><?php echo getPhrase('class_report');?></h5>
+                        <div class="row">
+                            <div class="content-i">
+                                <div class="content-box">
+                                    <?php echo form_open(base_url() . 'admin/admission_dashboard/', array('class' => 'form m-b'));?>
+                                    <div class="row" style="margin-top: -30px; border-radius: 5px;">
+                                        <div class="col-sm-3">
+                                            <div class="form-group label-floating is-select">
+                                                <label class="control-label"><?php echo getPhrase('country');?></label>
+                                                <div class="select">
+                                                    <select name="country_id" onchange="get_class_sections(this.value)">
+                                                        <option value=""><?php echo getPhrase('select');?></option>
+                                                        <?php
+                                                        $countries = $this->db->get('countries')->result_array();
+                                                        foreach($countries as $row):                        
+                                                    ?>
+                                                        <option value="<?php echo $row['country_id'];?>"
+                                                            <?php if($country_id == $row['country_id']) echo "selected";?>>
+                                                            <?php echo $row['name'];?></option>
                                                         <?php endforeach;?>
-                                                    </tbody>
-                                                </table>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group label-floating is-select">
+                                                <label class="control-label"><?php echo getPhrase('status');?></label>
+                                                <div class="select">
+                                                    <select name="status_id">
+                                                        <option value=""><?php echo getPhrase('select');?></option>
+                                                        <?php
+                                                        $status = $this->db->get('v_applicant_status')->result_array();
+                                                        foreach($status as $row):
+                                                            if($row['status_id'] != 3):                      
+                                                    ?>
+                                                        <option value="<?php echo $row['status_id'];?>"
+                                                            <?php if($status_id == $row['status_id']) echo "selected";?>>
+                                                            <?php echo $row['name'];?></option>
+                                                        <?php endif; endforeach;?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group label-floating">
+                                                <label class="control-label"><?php echo getPhrase('name');?></label>
+                                                <input class="form-control" name="name" type="text" value="<?= $name?>">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="form-group">
+                                                <button class="btn btn-success btn-upper" style="margin-top:20px"
+                                                    type="submit"><span><?php echo getPhrase('get_report');?></span></button>
                                             </div>
                                         </div>
                                     </div>
+                                    <?php echo form_close();?>
+
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="table-responsive">
+                                <?php 
+                                        if($name != "_blank" || $status_id != "_blank" || $country_id != "_blank"):
+                                            if($student_query->num_rows() > 0):
+                                    ?>
+                                <table class="table table-padded">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center"><?php echo getPhrase('first_name')?></th>
+                                            <th class="text-center"><?php echo getPhrase('last_name')?></th>
+                                            <th class="text-center"><?php echo getPhrase('country')?></th>
+                                            <th class="text-center"><?php echo getPhrase('email')?></th>
+                                            <th class="text-center"><?php echo getPhrase('phone')?></th>
+                                            <th class="text-center"><?php echo getPhrase('type')?></th>
+                                            <th class="text-center"><?php echo getPhrase('status')?></th>
+                                            <th class="text-center"><?php echo getPhrase('created_by')?></th>
+                                            <th class="text-center"><?php echo getPhrase('updated_by')?></th>
+                                            <th class="text-center"><?php echo getPhrase('assigned_to')?></th>
+                                            <th class="text-center"><?php echo getPhrase('options')?></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php $students = $student_query->result_array();
+                                            foreach($students as $row) :
+                                                $allow_actions = is_student($row['applicant_id']);
+                                        ?>
+                                        <tr style="height:25px;">
+                                            <td>
+                                                <center>
+                                                    <label style="width:55px; border: 1; text-align: center;">
+                                                        <?php echo ($row['first_name']);?>
+                                                    </label>
+                                                </center>
+                                            </td>
+                                            <td>
+                                                <center>
+                                                    <label style="width:55px; border: 1; text-align: center;">
+                                                        <?php echo ($row['last_name']);?>
+                                                    </label>
+                                                </center>
+                                            </td>
+                                            <td>
+                                                <center>
+                                                    <label style="width:55px; border: 1; text-align: center;">
+                                                        <?php echo ($row['country_name']);?>
+                                                    </label>
+                                                </center>
+                                            </td>
+                                            <td>
+                                                <center>
+                                                    <?php echo ($row['email']);?>
+                                                </center>
+                                            </td>
+                                            <td>
+                                                <center>
+                                                    <?php echo ($row['phone']);?>
+                                                </center>
+                                            </td>
+                                            <td>
+                                                <center>
+                                                    <div class="value badge badge-pill"
+                                                        style="background-color: <?= $row['applicant_type_color']?>;">
+                                                        <?php echo ($row['applicant_type']);?>
+                                                    </div>
+                                                </center>
+                                            </td>
+                                            <td>
+                                                <center>
+                                                    <div class="value badge badge-pill"
+                                                        style="background-color: <?= $row['status_color']?>;">
+                                                        <?php echo ($row['status_name']);?>
+                                                    </div>
+                                                </center>
+                                            </td>
+                                            <td>
+                                                <center>
+                                                    <?php echo ($row['created_by_name']);?>
+                                                </center>
+                                            </td>
+                                            <td>
+                                                <center>
+                                                    <?php echo ($row['updated_by_name']);?>
+                                                </center>
+                                            </td>
+                                            <td>
+                                                <center>
+                                                    <?php echo ($row['assigned_to_name']);?>
+                                                </center>
+                                            </td>
+                                            <td class="row-actions">
+                                                <a href="<?php echo base_url();?>admin/admission_applicant/<?= $row['applicant_id'];?>"
+                                                    class="grey" data-toggle="tooltip" data-placement="top"
+                                                    data-original-title="<?php echo getPhrase('view');?>">
+                                                    <i
+                                                        class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible"></i>
+                                                </a>
+                                                <?php if(!$allow_actions):?>
+                                                <a href="javascript:void(0);" class="grey" data-toggle="tooltip"
+                                                    data-placement="top"
+                                                    data-original-title="<?php echo getPhrase('add_interaction');?>"
+                                                    onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_admission_add_interaction/<?= $row['applicant_id'];?>');">
+                                                    <i class="os-icon picons-thin-icon-thin-0151_plus_add_new"></i>
+                                                </a>
+                                                <a href="javascript:void(0);" class="grey" data-toggle="tooltip"
+                                                    data-placement="top"
+                                                    data-original-title="<?php echo getPhrase('edit');?>"
+                                                    onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_admission_edit_applicant/<?=$row['applicant_id'];?>');">
+                                                    <i
+                                                        class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new"></i>
+                                                </a>
+                                                <? endif;?>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach; endif;?>
+                                    </tbody>
+                                </table>
                                 <?php endif;?>
                             </div>
                         </div>

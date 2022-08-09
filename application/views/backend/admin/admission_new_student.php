@@ -3,6 +3,16 @@
     $ap_test_names          = json_decode($this->academic->getInfo('ap_test_names'), true);
     $placement_weighting	= json_decode($this->academic->getInfo('placement_weighting'), true);
     $level_percent          =    $this->db->query('SELECT * FROM class WHERE percentage IS NOT NULL')->result_array(); 
+
+    $first_name = $data['first_name'];
+    $last_name  = $data['last_name'];
+    $birthday   = $data['birthday'];
+    $email      = $data['email'];
+    $phone      = $data['phone'];
+    $gender     = $data['gender'];
+    $address    = $data['address'];
+    $country_id = $data['country_id'];
+    $applicant_id = $data['applicant_id'];
 ?>
 
 <?php $running_year = $this->crud->getInfo('running_year');?>
@@ -15,28 +25,34 @@
                 <ul class="navs navs-tabs upper">
                     <li class="navs-item">
                         <a class="navs-links" href="<?php echo base_url();?>admin/admission_dashboard/">
-                        <i class="os-icon picons-thin-icon-thin-0482_gauge_dashboard_empty"></i><span><?php echo getPhrase('home');?></span></a>
+                            <i
+                                class="os-icon picons-thin-icon-thin-0482_gauge_dashboard_empty"></i><span><?php echo getPhrase('home');?></span></a>
                     </li>
                     <li class="navs-item">
                         <a class="navs-links" href="<?php echo base_url();?>admin/admission_new_applicant/">
-                        <i class="os-icon picons-thin-icon-thin-0716_user_profile_add_new"></i><span><?php echo getPhrase('new_applicant');?></span></a>
+                            <i
+                                class="os-icon picons-thin-icon-thin-0716_user_profile_add_new"></i><span><?php echo getPhrase('new_applicant');?></span></a>
                     </li>
                     <li class="navs-item">
                         <a class="navs-links active" href="<?php echo base_url();?>admin/admission_new_student/">
-                        <i class="os-icon picons-thin-icon-thin-0706_user_profile_add_new"></i><span><?php echo getPhrase('new_student');?></span></a>
+                            <i
+                                class="os-icon picons-thin-icon-thin-0706_user_profile_add_new"></i><span><?php echo getPhrase('new_student');?></span></a>
                     </li>
                 </ul>
             </div>
         </div><br>
         <div class="container-fluid">
             <div class="layout-w">
-                <div class="content-w">                    
+                <div class="content-w">
                     <div class="content-i">
                         <div class="content-box">
                             <div class="conty">
                                 <div class="ui-block">
                                     <div class="ui-block-content">
                                         <?php echo form_open(base_url() . 'admin/student/admission/' , array('enctype' => 'multipart/form-data', 'autocomplete' => 'off'));?>
+                                        <?php if($applicant_id > 0):?>
+                                        <input type="hidden" name="applicant_id" value="<?=$applicant_id;?>"/>
+                                        <?php endif;?>
                                         <div class="steps-w">
                                             <div class="step-triggers">
                                                 <a class="step-trigger active"
@@ -85,7 +101,7 @@
                                                                         <td style="text-align: center;">
                                                                             <center>
                                                                                 <input type="text" class="form-control"
-                                                                                    name="comment_placement" required
+                                                                                    name="comment_placement" 
                                                                                     value="<?php echo $row['comment'];?>">
                                                                             </center>
                                                                         </td>
@@ -120,7 +136,7 @@
                                                                 <label
                                                                     class="control-label"><?php echo getPhrase('first_name');?></label>
                                                                 <input class="form-control" name="first_name"
-                                                                    type="text" required="">
+                                                                    type="text" required="" value="<?=$first_name;?>">
                                                             </div>
                                                         </div>
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -128,7 +144,7 @@
                                                                 <label
                                                                     class="control-label"><?php echo getPhrase('last_name');?></label>
                                                                 <input class="form-control" name="last_name" type="text"
-                                                                    required="">
+                                                                    required="" value="<?=$last_name;?>">
                                                             </div>
                                                         </div>
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -145,8 +161,8 @@
                                                             <div class="form-group label-floating">
                                                                 <label
                                                                     class="control-label"><?php echo getPhrase('email');?></label>
-                                                                <input class="form-control" name="email"
-                                                                    id="student_email" type="email" required="">
+                                                                <input class="form-control" name="email" type="email"
+                                                                    id="student_email" required="" value="<?=$email;?>">
                                                                 <small><span id="email_result_student"></span></small>
                                                             </div>
                                                         </div>
@@ -154,7 +170,8 @@
                                                             <div class="form-group label-floating">
                                                                 <label
                                                                     class="control-label"><?php echo getPhrase('phone');?></label>
-                                                                <input class="form-control" name="phone" type="text">
+                                                                <input class="form-control" name="phone" type="text"
+                                                                    value="<?=$phone;?>">
                                                             </div>
                                                         </div>
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -165,11 +182,11 @@
                                                                     <select name="gender" required="">
                                                                         <option value="">
                                                                             <?php echo getPhrase('select');?></option>
-                                                                        <?php
-                                                        $genders = $this->db->get('gender')->result_array();
-                                                        foreach($genders as $gender):
-                                                        ?>
-                                                                        <option value="<?= $gender['code']?>">
+                                                                        <?php $genders = $this->db->get('gender')->result_array();
+                                                                            foreach($genders as $gender):
+                                                                        ?>
+                                                                        <option value="<?= $gender['code']?>"
+                                                                            <?=$gender == $gender['code'] ? 'selected' : '' ;?>">
                                                                             <?= $gender['name']?>
                                                                         </option>
                                                                         <?php endforeach;?>
@@ -199,7 +216,8 @@
                                                             <div class="form-group label-floating">
                                                                 <label
                                                                     class="control-label"><?php echo getPhrase('address');?></label>
-                                                                <input class="form-control" name="address" type="text">
+                                                                <input class="form-control" name="address" type="text"
+                                                                    value="<?=$address;?>">
                                                             </div>
                                                         </div>
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -212,10 +230,11 @@
                                                                         <option value="">
                                                                             <?php echo getPhrase('select');?></option>
                                                                         <?php $countries = $this->db->get('countries')->result_array();
-                                                              foreach($countries as $country):
-                                                        ?>
+                                                                            foreach($countries as $country):
+                                                                        ?>
                                                                         <option
-                                                                            value="<?php echo $country['country_id'];?>">
+                                                                            value="<?php echo $country['country_id'];?>"
+                                                                            <?=$country_id == $country['country_id'] ? 'selected' : '' ;?>>
                                                                             <?php echo $country['name'];?></option>
                                                                         <?php endforeach;?>
                                                                     </select>
@@ -593,195 +612,195 @@
 </div>
 
 <script>
-    function get_level() {
+function get_level() {
 
-        const weighting = <?=json_encode($placement_weighting)?>;
+    const weighting = <?=json_encode($placement_weighting)?>;
 
-        var average = [];
+    var average = [];
 
-        for (let i = 0; i < <?= $quantity_score ?>; i++) {
-            name = 'score' + (i + 1);
-            value = document.getElementById(name).value;
-            average[i] = (value / weighting[name]);
-        }
-
-        var result = Math.round((eval(average.join('+')) / average.length) * 100);
-
-        if (result >= 0 && result <= 20) {
-            document.getElementById("suggested_level").innerHTML = "BEGINNERS";
-        } else if (result >= 21 && result <= 40) {
-            document.getElementById("suggested_level").innerHTML = "BASIC";
-        } else if (result >= 41 && result <= 60) {
-            document.getElementById("suggested_level").innerHTML = "INTERMEDIATE";
-        } else if (result >= 61 && result <= 80) {
-            document.getElementById("suggested_level").innerHTML = "ADVANCED";
-        } else if (result >= 81 && result <= 100) {
-            document.getElementById("suggested_level").innerHTML = "EXPERT I";
-        }
+    for (let i = 0; i < <?= $quantity_score ?>; i++) {
+        name = 'score' + (i + 1);
+        value = document.getElementById(name).value;
+        average[i] = (value / weighting[name]);
     }
 
-    $(document).ready(function() {
-        var query;
-        $("#user_student").keyup(function(e) {
-            query = $("#user_student").val();
-            $("#result_student").queue(function(n) {
-                $.ajax({
-                    type: "POST",
-                    url: '<?php echo base_url();?>register/search_user',
-                    data: "c=" + query,
-                    dataType: "html",
-                    error: function() {
-                        alert("¡Error!");
-                    },
-                    success: function(data) {
-                        if (data == "success") {
-                            texto =
-                                "<b style='color:#ff214f'><?php echo getPhrase('already_exist');?></b>";
-                            $("#result_student").html(texto);
-                            $('#sub_form').attr('disabled', 'disabled');
-                        } else {
-                            texto = "";
-                            $("#result_student").html(texto);
-                            $('#sub_form').removeAttr('disabled');
-                        }
-                        n();
-                    }
-                });
-            });
-        });
-    });
+    var result = Math.round((eval(average.join('+')) / average.length) * 100);
 
-    $(document).ready(function() {
-        var query;
-        $("#parent_username").keyup(function(e) {
-            query = $("#parent_username").val();
-            $("#result").queue(function(n) {
-                $.ajax({
-                    type: "POST",
-                    url: '<?php echo base_url();?>register/search_user',
-                    data: "c=" + query,
-                    dataType: "html",
-                    error: function() {
-                        alert("¡Error!");
-                    },
-                    success: function(data) {
-                        if (data == "success") {
-                            texto =
-                                "<b style='color:#ff214f'><?php echo getPhrase('already_exist');?></b>";
-                            $("#result").html(texto);
-                            $('#sub_form').attr('disabled', 'disabled');
-                        } else {
-                            texto = "";
-                            $("#result").html(texto);
-                            $('#sub_form').removeAttr('disabled');
-                        }
-                        n();
-                    }
-                });
-            });
-        });
-    });
-
-    $(document).ready(function() {
-        var query;
-        $("#parent_email").keyup(function(e) {
-            query = $("#parent_email").val();
-            $("#email_result_parent").queue(function(n) {
-                $.ajax({
-                    type: "POST",
-                    url: '<?php echo base_url();?>register/search_email',
-                    data: "c=" + query,
-                    dataType: "html",
-                    error: function() {
-                        alert("¡Error!");
-                    },
-                    success: function(data) {
-                        if (data == "success") {
-                            texto =
-                                "<b style='color:#ff214f'><?php echo getPhrase('email_already_exist');?></b>";
-                            $("#email_result_parent").html(texto);
-                            $('#sub_form').attr('disabled', 'disabled');
-                        } else {
-                            texto = "";
-                            $("#email_result_parent").html(texto);
-                            $('#sub_form').removeAttr('disabled');
-                        }
-                        n();
-                    }
-                });
-            });
-        });
-    });
-
-    $(document).ready(function() {
-        var query;
-        $("#student_email").keyup(function(e) {
-            query = $("#student_email").val();
-            $("#email_result_student").queue(function(n) {
-                $.ajax({
-                    type: "POST",
-                    url: '<?php echo base_url();?>register/search_email',
-                    data: "c=" + query,
-                    dataType: "html",
-                    error: function() {
-                        alert("¡Error!");
-                    },
-                    success: function(data) {
-                        if (data == "success") {
-                            texto =
-                                "<b style='color:#ff214f'><?php echo getPhrase('email_already_exist');?></b>";
-                            $("#email_result_student").html(texto);
-                            $('#sub_form').attr('disabled', 'disabled');
-                        } else {
-                            texto = "";
-                            $("#email_result_student").html(texto);
-                            $('#sub_form').removeAttr('disabled');
-                        }
-                        n();
-                    }
-                });
-            });
-        });
-    });
-
-    function get_class_sections(class_id) {
-        console.log(class_id);
-
-        $.ajax({
-            url: '<?php echo base_url();?>admin/get_class_section/' + class_id,
-            success: function(response) {
-                jQuery('#section_selector_holder').html(response);
-            }
-        });
+    if (result >= 0 && result <= 20) {
+        document.getElementById("suggested_level").innerHTML = "BEGINNERS";
+    } else if (result >= 21 && result <= 40) {
+        document.getElementById("suggested_level").innerHTML = "BASIC";
+    } else if (result >= 41 && result <= 60) {
+        document.getElementById("suggested_level").innerHTML = "INTERMEDIATE";
+    } else if (result >= 61 && result <= 80) {
+        document.getElementById("suggested_level").innerHTML = "ADVANCED";
+    } else if (result >= 81 && result <= 100) {
+        document.getElementById("suggested_level").innerHTML = "EXPERT I";
     }
+}
 
-    function get_class_section_subjects(section_id) {
-
-        console.log(section_id);
-
-        var class_id = document.getElementById("class_id").value;
-        // var year = document.getElementById("year_id").value;
-        // var period = document.getElementById("period_id").value;
-
-
-
-        $.ajax({
-            url: '<?php echo base_url();?>admin/get_class_section_subjects/' + class_id + '/' +
-                section_id, //+ '/' + year + '/' + period ,
-            success: function(response) {
-                jQuery('#subject_selector_holder').html(response).selectpicker('refresh');
-            }
+$(document).ready(function() {
+    var query;
+    $("#user_student").keyup(function(e) {
+        query = $("#user_student").val();
+        $("#result_student").queue(function(n) {
+            $.ajax({
+                type: "POST",
+                url: '<?php echo base_url();?>register/search_user',
+                data: "c=" + query,
+                dataType: "html",
+                error: function() {
+                    alert("¡Error!");
+                },
+                success: function(data) {
+                    if (data == "success") {
+                        texto =
+                            "<b style='color:#ff214f'><?php echo getPhrase('already_exist');?></b>";
+                        $("#result_student").html(texto);
+                        $('#sub_form').attr('disabled', 'disabled');
+                    } else {
+                        texto = "";
+                        $("#result_student").html(texto);
+                        $('#sub_form').removeAttr('disabled');
+                    }
+                    n();
+                }
+            });
         });
-    }
+    });
+});
 
-    $('#check').click(function() {
-        if ($('#check').is(':checked') == true) {
-            $("#new_parent").show(500);
-            $("#initial").hide(500);
-        } else {
-            $("#new_parent").hide(500);
-            $("#initial").show(500);
+$(document).ready(function() {
+    var query;
+    $("#parent_username").keyup(function(e) {
+        query = $("#parent_username").val();
+        $("#result").queue(function(n) {
+            $.ajax({
+                type: "POST",
+                url: '<?php echo base_url();?>register/search_user',
+                data: "c=" + query,
+                dataType: "html",
+                error: function() {
+                    alert("¡Error!");
+                },
+                success: function(data) {
+                    if (data == "success") {
+                        texto =
+                            "<b style='color:#ff214f'><?php echo getPhrase('already_exist');?></b>";
+                        $("#result").html(texto);
+                        $('#sub_form').attr('disabled', 'disabled');
+                    } else {
+                        texto = "";
+                        $("#result").html(texto);
+                        $('#sub_form').removeAttr('disabled');
+                    }
+                    n();
+                }
+            });
+        });
+    });
+});
+
+$(document).ready(function() {
+    var query;
+    $("#parent_email").keyup(function(e) {
+        query = $("#parent_email").val();
+        $("#email_result_parent").queue(function(n) {
+            $.ajax({
+                type: "POST",
+                url: '<?php echo base_url();?>register/search_email',
+                data: "c=" + query,
+                dataType: "html",
+                error: function() {
+                    alert("¡Error!");
+                },
+                success: function(data) {
+                    if (data == "success") {
+                        texto =
+                            "<b style='color:#ff214f'><?php echo getPhrase('email_already_exist');?></b>";
+                        $("#email_result_parent").html(texto);
+                        $('#sub_form').attr('disabled', 'disabled');
+                    } else {
+                        texto = "";
+                        $("#email_result_parent").html(texto);
+                        $('#sub_form').removeAttr('disabled');
+                    }
+                    n();
+                }
+            });
+        });
+    });
+});
+
+$(document).ready(function() {
+    var query;
+    $("#student_email").keyup(function(e) {
+        query = $("#student_email").val();
+        $("#email_result_student").queue(function(n) {
+            $.ajax({
+                type: "POST",
+                url: '<?php echo base_url();?>register/search_email',
+                data: "c=" + query,
+                dataType: "html",
+                error: function() {
+                    alert("¡Error!");
+                },
+                success: function(data) {
+                    if (data == "success") {
+                        texto =
+                            "<b style='color:#ff214f'><?php echo getPhrase('email_already_exist');?></b>";
+                        $("#email_result_student").html(texto);
+                        $('#sub_form').attr('disabled', 'disabled');
+                    } else {
+                        texto = "";
+                        $("#email_result_student").html(texto);
+                        $('#sub_form').removeAttr('disabled');
+                    }
+                    n();
+                }
+            });
+        });
+    });
+});
+
+function get_class_sections(class_id) {
+    console.log(class_id);
+
+    $.ajax({
+        url: '<?php echo base_url();?>admin/get_class_section/' + class_id,
+        success: function(response) {
+            jQuery('#section_selector_holder').html(response);
         }
     });
-    $("#new_parent").hide();
+}
+
+function get_class_section_subjects(section_id) {
+
+    console.log(section_id);
+
+    var class_id = document.getElementById("class_id").value;
+    // var year = document.getElementById("year_id").value;
+    // var period = document.getElementById("period_id").value;
+
+
+
+    $.ajax({
+        url: '<?php echo base_url();?>admin/get_class_section_subjects/' + class_id + '/' +
+            section_id, //+ '/' + year + '/' + period ,
+        success: function(response) {
+            jQuery('#subject_selector_holder').html(response).selectpicker('refresh');
+        }
+    });
+}
+
+$('#check').click(function() {
+    if ($('#check').is(':checked') == true) {
+        $("#new_parent").show(500);
+        $("#initial").hide(500);
+    } else {
+        $("#new_parent").hide(500);
+        $("#initial").show(500);
+    }
+});
+$("#new_parent").hide();
 </script>

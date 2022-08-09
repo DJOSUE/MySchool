@@ -7,7 +7,7 @@
 
     function showAjaxModal(url)
     {
-        jQuery('#exampleModal .modal-body').html('<div class="text-center tp200"><img src="<?php echo base_url();?>public/assets/images/preloader.gif" /></div>');
+        jQuery('#exampleModal .modal-body').html('<div class="text-center tp200"><img src="/public/assets/images/preloader.gif" /></div>');
         jQuery('#exampleModal').modal('show', {backdrop: 'true'});
         $.ajax({
             url: url,

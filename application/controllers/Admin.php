@@ -3572,7 +3572,45 @@
             $this->load->view( 'backend/index', $page_data );
         }
 
-        //Student Profile function.
+        /** Student Module */
+        // 
+        function admission_student_interaction($action, $student_id = '', $interaction_id = '', $return_url = '')
+        {
+            $message = '';
+            switch ($action) 
+            {
+                case 'add':
+                    if($return_url == '')
+                    {
+                        $return_url = 'admin/student_portal/'.$student_id;
+                    }
+                    else
+                    {
+                        $return_url = base64_decode($return_url);
+                    }
+                    
+                    $this->student->add_interaction($student_id);
+                    $message =  getPhrase('successfully_added');
+                    break;
+
+                case 'update':
+                    if($return_url == '')
+                        $return_url = 'admin/student_portal/'.$student_id;
+                    
+                    $this->student->update_interaction($interaction_id);
+                    $message =  getPhrase('successfully_added');
+                    break;
+
+                default:
+                    # code...
+                    break;
+            }
+
+            $this->session->set_flashdata('flash_message' , $message);
+            redirect(base_url() . $return_url, 'refresh');
+        } 
+        
+        // Student Placement Test
         function placement_achievement($student_id, $param1='')
         {
             $this->isAdmin();
@@ -3584,8 +3622,8 @@
             $page_data['class_id']   =  $class_id;
             $this->load->view('backend/index', $page_data);
         }
-
-        //Test print view function.
+        
+        // Test print view function.
         function test_print($test_id, $student_id = "") 
         {
             $this->isAdmin();
@@ -3596,10 +3634,25 @@
             
         }
 
-        /** Admission System */
-        //Admission Dashboard
+        /** Admission Module */
+        // Admission Dashboard
         function admission_dashboard(){
             $this->isAdmin();
+
+            $name       = "";
+            $country_id = "_blank";
+            $status_id  = "_blank";
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') 
+            {
+                $country_id = $this->input->post('country_id');
+                $status_id  = $this->input->post('status_id');
+                $name       = $this->input->post('name');
+            }
+
+            $page_data['country_id'] = $country_id;
+            $page_data['status_id']  = $status_id;
+            $page_data['name']       = $name;
             $page_data['page_name']  = 'admission_dashboard';
             $page_data['page_title'] =  getPhrase('admission_dashboard');
             $this->load->view('backend/index', $page_data);
@@ -3615,32 +3668,50 @@
         }
 
         //Create Student function.
-        function admission_new_student($param1 = '', $param2 = '')
+        function admission_new_student($data = '', $param2 = '')
         {
             $this->isAdmin();
+            // If is convert of applicant to student
+            $page_data['data']  = $data;
             $page_data['page_name']  = 'admission_new_student';
             $page_data['page_title'] = getPhrase('admissions');
             $this->load->view('backend/index', $page_data);
         }
 
-        //Create Student function.
-        function admission_applicant($param1 = '', $param2 = '')
+        // Create Student function.
+        function admission_applicant($applicant_id = '', $param2 = '')
         {
             $this->isAdmin();
-            $page_data['page_name']  = 'admission_applicant';
-            $page_data['page_title'] = getPhrase('admission_applicant');
+            $page_data['applicant_id'] = $applicant_id;
+            $page_data['page_name']    = 'admission_applicant';
+            $page_data['page_title']   = getPhrase('admission_applicant');
             $this->load->view('backend/index', $page_data);
         }
 
-        function applicant($param1)
+        // 
+        function admission_applicant_update($applicant_id = '', $param2 = '')
+        {
+            $this->isAdmin();
+            $page_data['applicant_id'] = $applicant_id;
+            $page_data['page_name']    = 'admission_applicant_update';
+            $page_data['page_title']   = getPhrase('admission_applicant_update');
+            $this->load->view('backend/index', $page_data);
+        }
+
+
+        function applicant($action, $applicant_id = '')
         {
             $this->isAdmin();
 
             $message = '';
-            switch ($param1) {
+            switch ($action) {
                 case 'register':
                     $this->applicant->register();
                     $message =  getPhrase('successfully_added');
+                    break;
+                case 'update':
+                    $this->applicant->update($applicant_id);
+                    $message =  getPhrase('successfully_updated');
                     break;
                 
                 default:
@@ -3652,6 +3723,280 @@
             redirect(base_url() . 'admin/admission_dashboard', 'refresh');
         }
 
+        function admission_search($search_key)
+        {
+            $this->isAdmin();
+            $token = $this->generate_token();
+
+            $search_value = base64_encode($search_key);
+
+            $url_app = ADMISSION_PLATFORM_URL.'student_list?auth_token='.$token.'&search_string='.$search_value.'&search_field=name';
+
+            $ch_app = curl_init($url_app);
+            curl_setopt($ch_app, CURLOPT_HTTPGET, true);
+            curl_setopt($ch_app, CURLOPT_RETURNTRANSFER, true);
+            $response_json_app = curl_exec($ch_app);
+            curl_close($ch_app);
+            $response = json_decode($response_json_app, true);
+
+            if($response["status"] === "success")
+            {
+                if(count($response["student_list"]) > 0 )
+                {
+                    // Create the HTML response
+                    
+                    $html_string  = '<div class="table-responsive">';
+                    $html_string .= '<table class="table table-bordered">';
+                    $html_string .= '<thead>';
+                    $html_string .= '<tr style="background:#f2f4f8; height:35px;">';
+                    $html_string .= '<th style="text-align: center;">';
+                    $html_string .= getPhrase('full_name');
+                    $html_string .= '</th>';
+                    
+                    $html_string .= '<th style="text-align: center;">';
+                    $html_string .= getPhrase('gender');;
+                    $html_string .= '</th>';
+                    $html_string .= '<th style="text-align: center;">';
+                    $html_string .= getPhrase('birthdate');;
+                    $html_string .= '</th>';
+                    $html_string .= '<th style="text-align: center;">';
+                    $html_string .= getPhrase('phone');;
+                    $html_string .= '</th>';
+                    $html_string .= '<th style="text-align: center;">';
+                    $html_string .= getPhrase('country');;
+                    $html_string .= '</th>';
+
+                    $html_string .= '<th style="text-align: center;">';
+                    $html_string .= getPhrase('email');
+                    $html_string .= '</th>';
+                    $html_string .= '<th style="text-align: center;">';
+                    $html_string .= getPhrase('status_application');;
+                    $html_string .= '</th>';
+                    $html_string .= '<th style="text-align: center;">';
+                    $html_string .= getPhrase('created_at');
+                    $html_string .= '</th>';
+                    $html_string .= '<th style="text-align: center;">';
+                    $html_string .= getPhrase('action');
+                    $html_string .= '</th>';
+                    $html_string .= '</tr>';
+                    $html_string .= '</thead>';
+                    $html_string .= '<tbody>';
+
+                    $student_list = $response["student_list"];
+
+                    foreach ($student_list as $row)
+                    {
+
+                        $email = $row['email'];
+                        // look if exist
+                        $applicant_id     = $this->db->get_where('applicant' , array('email' => $email ))->result_array();
+
+                        if(count($applicant_id) == 0 ){
+                            $html_string .= '<tr style="height:25px;">';
+                            $html_string .= '<td><center>';
+                            $html_string .= '<label name="full_name_'.$row['user_id'].'">';
+                            $html_string .= $row['full_name'];
+                            $html_string .= '</label>';
+                            $html_string .= '</center></td>';
+
+                            $html_string .= '<td><center>';
+                            $html_string .= '<label name="gender'.$row['user_id'].'">';
+                            $html_string .= $row['gender'];
+                            $html_string .= '</label>';
+                            $html_string .= '</center></td>';
+                            $html_string .= '<td><center>';
+                            $html_string .= '<label name="birthdate'.$row['user_id'].'">';
+                            $html_string .= $row['birthdate'];
+                            $html_string .= '</label>';
+                            $html_string .= '</center></td>';
+                            $html_string .= '<td><center>';
+                            $html_string .= '<label name="country'.$row['user_id'].'">';
+                            $html_string .= $row['country'];
+                            $html_string .= '</label>';
+                            $html_string .= '</center></td>';
+                            $html_string .= '<td><center>';
+                            $html_string .= '<label name="phone'.$row['user_id'].'">';
+                            $html_string .= $row['phone'];
+                            $html_string .= '</label>';
+                            $html_string .= '</center></td>';
+
+                            $html_string .= '<td><center>';
+                            $html_string .= '<label name="status_name_'.$row['user_id'].'">';
+                            $html_string .= $row['status_name'];
+                            $html_string .= '</label>';
+                            $html_string .= '</center></td>';
+                            $html_string .= '<td><center>';
+                            $html_string .= '<label name="email_'.$row['user_id'].'">';
+                            $html_string .= $email;
+                            $html_string .= '</label>';
+                            $html_string .= '</center></td>';
+                            $html_string .= '<td><center>';
+                            $html_string .= '<label name="created_at_'.$row['user_id'].'">';
+                            $html_string .= $row['created_at'];
+                            $html_string .= '</label>';
+                            $html_string .= '</center></td>';
+                            $html_string .= '<td><center>';
+                            $encode = base64_encode($row['email']);
+                            $html_string .= '<a class="text-center" href="/admin/admission_import_student/'.$encode.'">';
+                            $html_string .= '<i class="picons-thin-icon-thin-0086_import_file_load"></i>';
+                            $html_string .= '</a>';
+                            $html_string .= '</center></td>';
+                        }
+                        
+                    }
+                    
+                    $html_string .= '</tbody>';
+                    $html_string .= '</table>';
+                    $html_string .= '</div>';
+
+                    echo $html_string;
+                }
+                else
+                {
+                    echo "no_result";
+                }
+            }
+            else
+            {
+                echo "failed";
+            }
+            
+        }
+
+        function admission_import_student($encode)
+        {
+            $this->isAdmin();
+
+            $email = base64_decode($encode);
+            $token = $this->generate_token();
+
+            $url_app = ADMISSION_PLATFORM_URL.'student_list?auth_token='.$token.'&search_string='.$encode;
+
+            $ch_app = curl_init($url_app);
+            curl_setopt($ch_app, CURLOPT_HTTPGET, true);
+            curl_setopt($ch_app, CURLOPT_RETURNTRANSFER, true);
+            $response_json_app = curl_exec($ch_app);
+            curl_close($ch_app);
+            $response = json_decode($response_json_app, true);
+
+            if($response["status"] === "success")
+            {
+                if(count($response["student_list"]) == 1 )
+                {
+                    $student = $response["student_list"][0];
+
+                    $gender = strtoupper(substr($student['gender'], 0, 1));
+
+                    $country_id = $this->db->get_where('countries' , array('name' => $student['country'] ))->row()->country_id;
+
+                    $_POST['first_name']    = $student['first_name'];
+                    $_POST['last_name']     = $student['last_name'];
+                    $_POST['birthday']      = $student['birthday'];
+                    $_POST['email']         = $student['email'];
+                    $_POST['phone']         = $student['phone'];
+                    $_POST['gender']        = $gender;
+                    $_POST['address']       = $student['address'];
+                    $_POST['country_id']    = $country_id;
+                    $_POST['type_id']       = '1'; // 1 = international
+                    $_POST['is_imported']   = '1'; // 1 = international
+
+                    $this->applicant('register');
+                }
+            }
+            else
+            {
+                echo "failed";
+            }
+
+        }
+
+        function admission_applicant_interaction($action, $applicant_id = '', $interaction_id = '', $return_url = '')
+        {
+            $message = '';
+            switch ($action) {
+                case 'add':
+                    if($return_url != '')
+                        $return_url = 'admin/admission_dashboard';
+                    $this->applicant->add_interaction();
+                    $message =  getPhrase('successfully_added');
+
+                    if($applicant_id != '')
+                    {
+                        $status_id_old = $this->db->get_where('v_applicants' , array('applicant_id' => $applicant_id) )->row()->status;
+        
+                        $status_id_new = $this->input->post('status_id');
+        
+                        if($status_id_old != $status_id_new)
+                        {
+                            $this->applicant->update_status($applicant_id, $status_id_new);
+                        }
+                    }
+
+                    break;
+                case 'update':
+                    if($return_url != '')
+                        $return_url = 'admin/admission_applicant/'.$applicant_id;
+                    $this->applicant->update_interaction($interaction_id);
+                    $message =  getPhrase('successfully_added');
+
+                default:
+                    # code...
+                    break;
+            }
+
+            $this->session->set_flashdata('flash_message' , $message);
+            redirect(base_url() . $return_url, 'refresh');
+        }
+
+        function admission_applicant_convert($applicant_id)
+        {
+            $applicant = $this->db->get_where('applicant' , array('applicant_id' => $applicant_id))->row();
+
+            
+
+            $data['first_name'] = $applicant->first_name;
+            $data['last_name']  = $applicant->last_name;
+            $data['birthday']   = $applicant->birthday;
+            $data['email']      = $applicant->email;
+            $data['phone']      = $applicant->phone;
+            $data['gender']     = $applicant->gender;
+            $data['address']    = $applicant->address;
+            $data['country_id'] = $applicant->country_id;
+            $data['applicant_id'] = $applicant_id;
+
+            // var_dump($data);
+            
+            $this->admission_new_student($data);
+        }
+
+        function admission_applicant_document_api($document_id, $user_id)
+        {
+            $this->isAdmin();
+            $page_data['document_id']  = str_replace('==','',$document_id);
+            $page_data['user_id']      = $user_id;
+            $page_data['page_name']    = 'admission_applicant_document_api';
+            $page_data['page_title']   = getPhrase('admission_applicant_document_api');
+            $this->load->view('backend/admin/admission_applicant_document_api', $page_data);
+        }
+
+        function admission_applicant_send_message_api($email, $message_thread_code)
+        {
+            $message = html_escape($this->input->post( 'message' ));
+
+            $email = base64_decode($email);
+
+            $token = $this->generate_token();
+            $url_app = ADMISSION_PLATFORM_URL.'message_thread?auth_token='.$token.'&email='.$email.'&message_thread_code='.$message_thread_code.'&message='.$message;
+            $ch_app = curl_init($url_app);
+            curl_setopt($ch_app, CURLOPT_POST, true);
+            curl_setopt($ch_app, CURLOPT_POSTFIELDS, $message);
+
+            $response_json_app = curl_exec($ch_app);
+            curl_close($ch_app);
+            $response_app = json_decode($response_json_app, true);
+
+            echo $response_app;
+        }
 
         /** Tools functions */
         // unset Admin cookies
@@ -3674,5 +4019,21 @@
                 redirect(base_url(), 'refresh');
             }
         }
+
+        /** Admission Integration */
+        function generate_token()
+        {
+            $url = 'https://admission.americanone-esl.com/api/login?email=victor.ochoa@americanone-esl.com&password=victor.ochoa';
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_HTTPGET, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response_json = curl_exec($ch);
+            curl_close($ch);
+            $response=json_decode($response_json, true);
+
+            return $response['token'];
+        }
+
+
         //End of Admin.php content. 
     }

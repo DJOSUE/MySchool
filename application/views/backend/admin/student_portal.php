@@ -1,7 +1,9 @@
 <?php 
+    $user_id = $this->session->userdata('login_user_id');
     $student_info = $this->db->get_where('student' , array('student_id' => $student_id))->result_array(); 
-    foreach($student_info as $row): 
-?>
+    foreach($student_info as $row):
+        $student_id = $row['student_id'];
+?>  
 <div class="content-w">
     <?php include 'fancy.php';?>
     <div class="header-spacer"></div>
@@ -190,6 +192,97 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="ui-block">
+                                        <div class="ui-block-title">
+                                            <h6 class="title"><?= getPhrase('interactions');?>
+                                            </h6>
+                                            <span class="action-right">
+                                            <button class="btn btn-rounded btn-primary"
+                                                            onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_student_add_interaction/<?= $student_id;?>');">
+                                                            <?= getPhrase('add_interaction');?></button>
+                                            </span>
+                                        </div>
+                                        <div class="ui-block-content">
+                                            <div class="edu-posts cta-with-media">
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered">
+                                                        <thead style="text-align: center;">
+                                                            <tr style="background:#f2f4f8;">
+                                                                <th>
+                                                                    <?= getPhrase('comment');?>
+                                                                </th>
+                                                                <th>
+                                                                    <?= getPhrase('created_by');?>
+                                                                </th>
+                                                                <th>
+                                                                    <?= getPhrase('created_at');?>
+                                                                </th>
+                                                                <th>
+                                                                    <?= getPhrase('file');?>
+                                                                </th>
+                                                                <th>
+                                                                    <?= getPhrase('options');?>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php 
+                                                                $interactions = $this->db->get_where('v_student_interaction', array('student_id' => $row['student_id']))->result_array();
+                                                                foreach ($interactions as $item):
+                                                            ?>
+                                                            <tr>
+                                                                <td class="text-center">
+                                                                    <center>
+                                                                        <?= strip_tags(html_entity_decode($item['comment']));?>
+                                                                    </center>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <center>
+                                                                        <?= $item['first_name'];?>
+                                                                    </center>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <center>
+                                                                        <?= $item['created_at'];?>
+                                                                    </center>
+                                                                </td>
+                                                                <td class="row-actions">
+                                                                    <?php if($item['file_name']):?>
+                                                                    <a href="<?= base_url().PATH_STUDENT_INTERACTION_FILES;?><?= $item['file_name'];?>"
+                                                                        class="grey" data-toggle="tooltip"
+                                                                        data-placement="top" target="_blank"
+                                                                        data-original-title="<?= getPhrase('view');?>">
+                                                                        <i
+                                                                            class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible"></i>
+                                                                    </a>
+                                                                    <? endif;?>
+                                                                </td>
+                                                                <td class="row-actions">
+                                                                    <a href="javascript:void(0);" class="grey"
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        data-original-title="<?= getPhrase('view');?>"
+                                                                        onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_student_view_interaction/<?=$item['interaction_id'];?>');">
+                                                                        <i
+                                                                            class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible"></i>
+                                                                    </a>
+                                                                    <?php if($user_id == $item['created_by'] && !$allow_actions):?>
+                                                                    <a href="javascript:void(0);" class="grey"
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        data-original-title="<?= getPhrase('edit');?>"
+                                                                        onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_student_update_interaction/<?=$item['interaction_id'];?>');">
+                                                                        <i
+                                                                            class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new"></i>
+                                                                    </a>
+                                                                    <?php endif;?>
+                                                                </td>
+                                                            </tr>
+                                                            <?php endforeach;?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -241,7 +334,7 @@
                                                         <?php echo getPhrase('update_information');?>
                                                     </a>
                                                 </li>
-												<li>
+                                                <li>
                                                     <i class="picons-thin-icon-thin-0133_arrow_right_next"
                                                         style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
                                                     <a
@@ -249,7 +342,7 @@
                                                         <?php echo getPhrase('update_class');?>
                                                     </a>
                                                 </li>
-												<li>
+                                                <li>
                                                     <i class="picons-thin-icon-thin-0133_arrow_right_next"
                                                         style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
                                                     <a
@@ -281,7 +374,7 @@
                                                         <?php echo getPhrase('marks');?>
                                                     </a>
                                                 </li>
-												<li>
+                                                <li>
                                                     <i class="picons-thin-icon-thin-0133_arrow_right_next"
                                                         style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
                                                     <a

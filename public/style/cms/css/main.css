@@ -27371,3 +27371,8 @@ table {
     height: 80%; 
     position: absolute;
 }
+.action-right {
+    margin-left: auto;
+    margin-right: 0px;
+    float: right;
+}

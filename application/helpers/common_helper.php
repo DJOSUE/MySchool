@@ -13,7 +13,7 @@ if (!function_exists('check_permission')) {
     }
 }
 
-if ( ! function_exists('has_permission'))
+if (!function_exists('has_permission'))
 {
     function has_permission($permission_for, $role_id = ''){
         $CI	=&	get_instance();
@@ -43,7 +43,7 @@ if ( ! function_exists('has_permission'))
     } 
 }
 
-if ( ! function_exists('is_super_admin'))
+if (!function_exists('is_super_admin'))
 {
     function is_super_admin($admin_id = ''){
         $CI	=&	get_instance();
@@ -67,7 +67,7 @@ if ( ! function_exists('is_super_admin'))
 }
 
 
-if ( ! function_exists('academic_option_visible'))
+if (!function_exists('academic_option_visible'))
 {
     function option_visible($option){
         $CI	=&	get_instance();
@@ -84,7 +84,7 @@ if ( ! function_exists('academic_option_visible'))
     } 
 }
 
-if ( ! function_exists('menu_option_visible'))
+if (!function_exists('menu_option_visible'))
 {
     function menu_option_visible($option){
         $CI	=&	get_instance();
@@ -101,7 +101,7 @@ if ( ! function_exists('menu_option_visible'))
     } 
 }
 
-if ( ! function_exists('compress'))
+if (!function_exists('compress'))
 {
     function compress($source, $destination, $quality){
         $info = getimagesize($source);
@@ -118,5 +118,78 @@ if ( ! function_exists('compress'))
         imagejpeg($image, $destination, $quality);
     
         return $destination;
+    } 
+}
+
+if (!function_exists('is_student'))
+{
+    function is_student($applicant_id)
+    {
+        $CI	=&	get_instance();
+		$CI->load->database();
+
+        $query = $CI->db->get_where('applicant', array('applicant_id' => $applicant_id))->row();
+        
+        // 3 = student
+        if($query->status == 3){
+            return true;
+        }
+        else{
+            return false;
+        }
+    } 
+}
+
+if (!function_exists('is_international'))
+{
+    function is_international($applicant_id)
+    {
+        $CI	=&	get_instance();
+		$CI->load->database();
+
+        $query = $CI->db->get_where('applicant', array('applicant_id' => $applicant_id))->row();
+        
+        // 3 = student
+        if($query->type_id == 1){
+            return true;
+        }
+        else{
+            return false;
+        }
+    } 
+}
+
+if (!function_exists('is_international'))
+{
+    function is_international($applicant_id)
+    {
+        $CI	=&	get_instance();
+		$CI->load->database();
+
+        $query = $CI->db->get_where('applicant', array('applicant_id' => $applicant_id))->row();
+        
+        // 3 = student
+        if($query->type_id == 1){
+            return true;
+        }
+        else{
+            return false;
+        }
+    } 
+}
+
+if (!function_exists('generate_token'))
+{
+    function generate_token()
+    {
+        $url = ADMISSION_PLATFORM_URL.'login?email=victor.ochoa@americanone-esl.com&password=victor.ochoa';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response_json = curl_exec($ch);
+        curl_close($ch);
+        $response=json_decode($response_json, true);
+
+        return $response['token'];
     } 
 }

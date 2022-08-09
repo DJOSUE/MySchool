@@ -19,7 +19,13 @@
                                 'daily_marks_average');
     $reports_pages      = array('reports_general','reports_students', 'reports_attendance', 'reports_accounting', 'reports_tabulation', 'reports_tabulation_daily', 'report_marks');
 
-    //  if($page_name ==  $page_name == '' || $page_name == ''):
+    $attendance_pages   = array('teacher_report_view', 'teacher_attendance_view', 'teacher_attendance_report','teacher_attendance');
+
+    $calendar_pages     = array('calendar');
+
+    $polls_pages        = array('polls', 'view_poll', 'new_poll');
+
+    //  if($page_name == 'polls' || $page_name == '' || $page_name == 'new_poll')
 
 
 ?>
@@ -47,8 +53,7 @@
                 </li>
                 <!-- Time Card Access -->
                 <?php if(has_permission('time_card')):?>
-                <li <?php if(in_array($page_name, $time_card_pages)):?>class="currentItem"
-                    <?php endif;?>>
+                <li <?= in_array($page_name, $time_card_pages) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/time_card/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('time_card');?>">
                         <div class="left-menu-icon">
@@ -59,7 +64,7 @@
                 <?php endif;?>
                 <!-- Messages Access -->
                 <?php if(has_permission('messages')):?>
-                <li <?php if(in_array($page_name, $message_pages)):?>class="currentItem" <?php endif;?>>
+                <li <?= in_array($page_name, $message_pages) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/message/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('messages');?>">
                         <div class="left-menu-icon">
@@ -69,7 +74,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Users Access -->
-                <li <?php if(in_array($page_name, $users_pages)):?> class="currentItem" <?php endif;?>>
+                <li <?= in_array($page_name, $users_pages) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/users/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('users');?>">
                         <div class="left-menu-icon">
@@ -79,7 +84,7 @@
                 </li>                
                 <!-- Admissions Access -->
                 <?php if(has_permission('admissions')):?>
-                <li <?php if(in_array($page_name, $admissions_pages)):?>class="currentItem" <?php endif;?>>
+                <li <?= in_array($page_name, $admissions_pages) ? 'class="currentItem"': '';?>>
                     <a href="<?php echo base_url();?>admin/admission_dashboard/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('admissions');?>">
                         <div class="left-menu-icon">
@@ -90,8 +95,7 @@
                 <?php endif;?>
                 <!-- Class Routine Access -->
                 <?php if(has_permission('schedules')):?>
-                <li <?php if(in_array($page_name, $routine_pages)):?>class="currentItem"
-                    <?php endif;?>>
+                <li <?= in_array($page_name, $routine_pages) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/class_routine_view/" data-toggle="tooltip"
                         data-placement="right" data-original-title="<?php echo getPhrase('class_routine');?>">
                         <div class="left-menu-icon">
@@ -102,8 +106,7 @@
                 <?php endif;?>
                 <!-- Academic Access -->
                 <?php if(has_permission('academic')):?>
-                <li <?php if(in_array($page_name, $academic_pages)):?>class="currentItem"
-                    <?php endif;?>>
+                <li <?= in_array($page_name, $academic_pages) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/grados/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('academic');?>">
                         <div class="left-menu-icon">
@@ -114,8 +117,7 @@
                 <?php endif;?>
                 <!-- Library Access -->
                 <?php if(has_permission('library')):?>
-                <li <?php if(in_array($page_name, $library_pages)):?>class="currentItem"
-                    <?php endif;?>>
+                <li <?= (in_array($page_name, $library_pages)) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/library/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('library');?>">
                         <div class="left-menu-icon">
@@ -126,8 +128,7 @@
                 <?php endif;?>
                 <!-- Attendance Access -->
                 <?php if(has_permission('attendance')):?>
-                <li <?php if($page_name == 'teacher_report_view' || $page_name == 'teacher_attendance_view' || $page_name == 'teacher_attendance_report' || $page_name == 'teacher_attendance'):?>class="currentItem"
-                    <?php endif;?>>
+                <li <? in_array($page_name, $attendance_pages) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/teacher_attendance/" data-toggle="tooltip"
                         data-placement="right" data-original-title="<?php echo getPhrase('teacher_attendance');?>">
                         <div class="left-menu-icon">
@@ -138,7 +139,7 @@
                 <?php endif;?>
                 <!-- Calendar Access -->
                 <?php if(has_permission('calendar')):?>
-                <li <?php if($page_name == 'calendar'):?>class="currentItem" <?php endif;?>>
+                <li <?= in_array($page_name, $calendar_pages) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/calendar/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('calendar');?>">
                         <div class="left-menu-icon">
@@ -149,8 +150,7 @@
                 <?php endif;?>
                 <!-- Polls Access -->
                 <?php if(has_permission('polls')):?>
-                <li <?php if($page_name == 'polls' || $page_name == 'view_poll' || $page_name == 'new_poll'):?>class="currentItem"
-                    <?php endif;?>>
+                <li <?= in_array($page_name, $polls_pages) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/polls/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('polls');?>">
                         <div class="left-menu-icon">

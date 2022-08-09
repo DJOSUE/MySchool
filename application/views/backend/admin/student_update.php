@@ -149,12 +149,15 @@
                                                 <div class="select">
                                                     <select name="student_session" required="">
                                                         <option value=""><?php echo getPhrase('select');?></option>
-                                                        <option value="1"
-                                                            <?php if($row['student_session'] == 1) echo "selected";?>>
-                                                            <?php echo getPhrase('active');?></option>
-                                                        <option value="0"
-                                                            <?php if($row['student_session'] == 0) echo "selected";?>>
-                                                            <?php echo getPhrase('inactive');?></option>
+
+                                                        <?php $status = $this->db->get('v_student_status')->result_array();
+                                                            foreach($status as $item):
+                                                        ?>
+                                                        <option value="<?=$item['status_id']?>"
+                                                            <?php if($row['student_session'] == $item['status_id']) echo "selected";?>>
+                                                            <?= $item['name'];?>
+                                                        </option>
+                                                        <? endforeach;?>
                                                     </select>
                                                 </div>
                                             </div>

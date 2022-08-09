@@ -270,6 +270,24 @@
             <div class="modal-body">
                 <div class="ui-block-content">
                     <div class="row">
+                        <div class="input-group">
+                            <div class="select">
+                                <select name="role_id" required="" style="width: 150px;">
+                                    <?php
+                                $roles = $this->db->get('roles')->result_array();
+                                foreach($roles as $role):
+                                ?>
+                                    <option value="<?= $role['status_id']?>"
+                                        <?= $role['role_id'] == $row['role_id'] ? 'selected': ''; ?>>
+                                        <?= $role['name']?>
+                                    </option>
+                                    <?php endforeach;?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
                         <div class="col-sm-3">
                             <div class="checkbox">
                                 <label>
