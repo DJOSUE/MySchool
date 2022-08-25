@@ -7,8 +7,8 @@
         <div class="conty">
             <div class="header-spacer"></div>
             <div class="container">
-                <div class="row">
-                    <div class="col  col-sm-12 col-12">
+                <div class="">
+                    <div class="col">
                         <div class="ui-block">
                             <div class="ui-block-title">
                                 <h6 class="title"><?= getPhrase('search_results_students');?></h6>
@@ -48,6 +48,13 @@
                                             </span>
                                             <?php endif;?>
                                         </span>
+                                    </div>
+                                    <div class="navs-links action-right">
+                                        <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top"
+                                            data-original-title="<?= getPhrase('add_task');?>"
+                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_task_add/<?= $row['student_id'].'/student/'.$return_url;?>');">
+                                            <i class="picons-thin-icon-thin-0706_user_profile_add_new"></i>
+                                        </a>
                                     </div>
                                     <div class="navs-links action-right">
                                         <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top"
@@ -105,8 +112,15 @@
                                     </div>
                                     <div class="navs-links action-right">
                                         <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top"
+                                            data-original-title="<?= getPhrase('add_task');?>"
+                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_task_add/<?= $row['applicant_id'].'/applicant/'.$return_url;?>');">
+                                            <i class="picons-thin-icon-thin-0706_user_profile_add_new"></i>
+                                        </a>
+                                    </div>
+                                    <div class="navs-links action-right">
+                                        <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top"
                                             data-original-title="<?= getPhrase('add_interaction');?>"
-                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_admission_add_interaction/<?= $row['applicant_id'];?>');">
+                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_admission_add_interaction/<?= $row['applicant_id'].'/'.$return_url;?>');">
                                             <i class="picons-thin-icon-thin-0151_plus_add_new"></i>
                                         </a>
                                     </div>

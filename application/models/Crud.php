@@ -2273,10 +2273,24 @@ class Crud extends School
     
     function get_name($type = '', $id = '')
     {
-        $first = $this->db->get_where(''.$type.'',array($type."_id" => $id))->row()->first_name;
-        $last = $this->db->get_where(''.$type.'',array($type."_id" => $id))->row()->last_name;
+        $query = $this->db->get_where(''.$type.'',array($type."_id" => $id))->row();
+        $first = $query->first_name;
+        $last = $query->last_name;
+        
         $name = $first." ".$last;
         return $name;
+    }
+
+    function get_user_info($type = '', $id = '')
+    {
+        $query = $this->db->get_where(''.$type.'',array($type."_id" => $id))->row_array();
+
+        return $query;
+    }
+
+    function get_gender_user($code = '') {
+        $query = $this->db->get_where('gender', array('code' => $code));
+        return $query->row()->name;        
     }
 
     function get_image_url($type = '', $id = '') 

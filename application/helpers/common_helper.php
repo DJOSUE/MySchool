@@ -159,25 +159,6 @@ if (!function_exists('is_international'))
     } 
 }
 
-if (!function_exists('is_international'))
-{
-    function is_international($applicant_id)
-    {
-        $CI	=&	get_instance();
-		$CI->load->database();
-
-        $query = $CI->db->get_where('applicant', array('applicant_id' => $applicant_id))->row();
-        
-        // 3 = student
-        if($query->type_id == 1){
-            return true;
-        }
-        else{
-            return false;
-        }
-    } 
-}
-
 if (!function_exists('generate_token'))
 {
     function generate_token()
@@ -193,3 +174,16 @@ if (!function_exists('generate_token'))
         return $response['token'];
     } 
 }
+
+if (!function_exists('get_table_user'))
+{
+    function get_table_user($role_id)
+    {
+        $CI	=&	get_instance();
+		$CI->load->database();
+
+        $query = $CI->db->get_where('roles', array('role_id' => $role_id))->row();
+        return $query->table;
+    } 
+}
+

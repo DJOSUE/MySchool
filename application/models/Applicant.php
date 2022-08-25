@@ -79,6 +79,19 @@ class Applicant extends School
         if(!empty($this->input->post('assigned_to')))
             $data['assigned_to']    = html_escape($this->input->post('assigned_to'));
         
+        // Get tags
+        $tags = $this->applicant->get_tags();
+        $tags_selected = [];
+        foreach($tags as $tag){
+            if($this->input->post('tag_'.$tag['tag_id']))                
+                array_push($tags_selected, $tag['tag_id']);
+        }
+
+        if(count($tags_selected) > 0)
+        {
+            $tags_id['tags_id'] = $tags_selected;
+            $data['tags']    = json_encode($tags_id);
+        }
 
         $this->db->where('applicant_id', $applicant_id);
         $this->db->update('applicant', $data);
@@ -142,5 +155,45 @@ class Applicant extends School
         $table      = 'applicant_interaction';
         $action     = 'update';
         $this->crud->save_log($table, $action, $interaction_id, $data);
+    }
+
+    public function get_tags()
+    {
+        $this->db->reset_query();
+        $this->db->select('code as tag_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'TAGSFD');
+        $query = $this->db->get('parameters')->result_array();
+        return $query;
+    }
+
+    // Get the list of the info pf the applicants
+    public function get_applicant_types()
+    {
+        $this->db->reset_query();
+        $this->db->select('code as type_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'TYPEAPPLIC');
+        $query = $this->db->get('parameters')->result_array();;
+        
+        return $query;
+    }
+
+    // Get the list of the info pf the applicants
+    public function get_applicant_status()
+    {
+        $this->db->reset_query();
+        $this->db->select('code as type_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'APPLSTATUS');
+        $query = $this->db->get('parameters')->result_array();;
+        
+        return $query;
+    }
+
+    //** Get numbers for dashboard */
+
+    function applicant_total($field ,$status_id)
+    {
+        $this->db->where($field, $status_id);
+        $applicant_query = $this->db->get('v_applicants');
+        return $applicant_query->num_rows();
     }
 }

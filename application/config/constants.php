@@ -88,8 +88,18 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 /** App constants
  * 
  */
+
+defined('FILES_ALLOWED_ATTACHMENT')         OR define('FILES_ALLOWED_ATTACHMENT', 'image/jpeg,image/png,application/pdf'); // Task Files
+defined('FILES_ALLOWED_IMAGE')              OR define('FILES_ALLOWED_IMAGE', 'image/jpeg,image/png'); // Task Files
+
+
 defined('ADMISSION_PLATFORM_URL')           OR define('ADMISSION_PLATFORM_URL', 'https://admission.americanone-esl.com/api/'); // Link of the API of admission platform
 
 defined('PATH_APPLICANT_FILES')             OR define('PATH_APPLICANT_FILES', 'public/uploads/applicant_files/'); // applicant_file
-defined('PATH_STUDENT_INTERACTION_FILES')   OR define('PATH_STUDENT_INTERACTION_FILES', 'public/uploads/student_interaction/'); // student interaction
 defined('PATH_PUBLIC_ASSETS_IMAGES_FILES')  OR define('PATH_PUBLIC_ASSETS_IMAGES_FILES', 'public/assets/images/'); // applicant_file
+
+defined('PATH_STUDENT_IMAGE')               OR define('PATH_STUDENT_IMAGE', 'public/uploads/student_image/'); // student image
+defined('PATH_STUDENT_INTERACTION_FILES')   OR define('PATH_STUDENT_INTERACTION_FILES', 'public/uploads/student_interaction/'); // student interaction
+
+defined('PATH_TASK_FILES')               OR define('PATH_TASK_FILES', 'public/uploads/task_files/'); // Task Files
+

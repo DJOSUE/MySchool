@@ -1,12 +1,13 @@
 <?php 
     $user_id = $this->session->userdata('login_user_id');
-    $applicant_info = $this->db->get_where('v_applicants' , array('applicant_id' => $applicant_id))->result_array(); 
+    $applicant_info = $this->db->get_where('applicant' , array('applicant_id' => $applicant_id))->result_array(); 
     $allow_actions = is_student($applicant_id);
     $is_international = is_international($applicant_id);
 
     foreach($applicant_info as $row): 
         $full_name_encode = base64_encode(str_replace(" ","_",strtoupper($row['full_name'])));
-
+        $return_url = base64_encode('admission_applicant/'.$applicant_id);
+        $tags_applicant = json_decode($row['tags'], true)['tags_id'];
 ?>
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -132,18 +133,33 @@
                                                         </ul>
                                                     </div>
                                                 </div>
+                                                <hr/>
+                                                <h6 class="title"><?= getPhrase('tags');?></h6>
+                                                <div class="row">
+                                                    <?php 
+                                                    $tags = $this->applicant->get_tags();
+                                                    foreach($tags as $tag):
+                                                        $tag_id = $tag['tag_id'];
+                                                    ?>
+                                                    <div class="col-sm-2">
+                                                        <div class="description-toggle">
+                                                            <div class="description-toggle-content">
+                                                                <div class="h7"><?= $tag['name'];?></div>
+                                                            </div>
+                                                            <div class="togglebutton">
+                                                                <label><input name="tag_<?=$tag_id?>" value="1" type="checkbox"  disabled
+                                                                        <?php if(in_array($tag_id, $tags_applicant)) echo "checked";?>></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <?php endforeach;?>
+                                                </div> 
                                             </div>
                                         </div>
                                         <div class=" ui-block-title row" style="border-style: none;">
                                             <div class="col-sm-4">
                                                 <div class="row" style="justify-content: flex-end;">
-                                                    <?php if(!$allow_actions):?>
-                                                    <div class="form-buttons">
-                                                        <button class="btn btn-rounded btn-primary"
-                                                            onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_admission_add_interaction/<?= $applicant_id;?>');">
-                                                            <?= getPhrase('add_interaction');?></button>
-                                                    </div> &nbsp;&nbsp;&nbsp;&nbsp;
-                                                    <?php endif;?>
+                                                    
                                                     <?php if($is_international):?>
                                                     <div class="form-buttons">
                                                         <button class="btn btn-rounded btn-primary"
@@ -306,8 +322,117 @@
                                         <br />
                                         <div class="ui-block">
                                             <div class="ui-block-title">
-                                                <h6 class="title"><?= getPhrase('interactions');?>
+                                                <h6 class="col title"><?= getPhrase('task');?>
                                                 </h6>
+                                                <div class="col" style="justify-content: flex-end;">
+                                                    <?php if(!$allow_actions):?>
+                                                    <div class="form-buttons">
+                                                        <button class="btn btn-rounded btn-primary"
+                                                        onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_task_add/<?= $row['applicant_id'].'/applicant/'.$return_url;?>');">
+                                                            <?= getPhrase('add_task');?></button>
+                                                    </div> &nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <?php endif;?>
+                                                </div>
+                                            </div>
+                                            <div class="ui-block-content">
+                                                <div class="edu-posts cta-with-media">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered">
+                                                            <thead style="text-align: center;">
+                                                                <tr style="background:#f2f4f8;">
+                                                                    <th>
+                                                                        <?= getPhrase('title');?>
+                                                                    </th>
+                                                                    <th>
+                                                                        <?= getPhrase('created_by');?>
+                                                                    </th>
+                                                                    <th>
+                                                                        <?= getPhrase('created_at');?>
+                                                                    </th>
+                                                                    <th>
+                                                                        <?= getPhrase('file');?>
+                                                                    </th>
+                                                                    <th>
+                                                                        <?= getPhrase('status');?>
+                                                                    </th>
+                                                                    <th>
+                                                                        <?= getPhrase('options');?>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php 
+                                                                $tasks = $this->db->get_where('task', array('user_type' => 'applicant', 'user_id' => $applicant_id))->result_array();
+
+                                                                // echo '<pre>';
+                                                                // var_dump($return_url);
+                                                                // echo '</pre>';
+
+                                                                foreach ($tasks as $item):
+                                                                ?>
+                                                                <tr>
+                                                                    <td class="text-center">
+                                                                        <?= $item['title'];?>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <?= $this->crud->get_name('admin', $item['created_by']);?>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <?= $item['created_at'];?>
+                                                                    </td>
+                                                                    <td class="row-actions">
+                                                                        <?php if($item['task_file']):?>
+                                                                        <a href="<?= base_url().PATH_TASK_FILES;?><?= $item['task_file'];?>"
+                                                                            class="grey" data-toggle="tooltip"
+                                                                            data-placement="top" target="_blank"
+                                                                            data-original-title="<?= getPhrase('view');?>">
+                                                                            <i
+                                                                                class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible"></i>
+                                                                        </a>
+                                                                        <? endif;?>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <?= $this->task->get_status($item['status_id']);?>
+                                                                    </td>
+                                                                    <td class="row-actions">
+                                                                        <a href="<?php echo base_url();?>admin/task_info/<?= $item['task_code'];?>"
+                                                                            class="grey" data-toggle="tooltip" data-placement="top"
+                                                                            data-original-title="<?php echo getPhrase('view');?>">
+                                                                            <i
+                                                                                class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible"></i>
+                                                                        </a>
+                                                                        <?php if($user_id == $item['created_by'] && !$allow_actions):?>                                                                        
+                                                                        <a href="javascript:void(0);" class="grey"
+                                                                            data-toggle="tooltip" data-placement="top"
+                                                                            data-original-title="<?= getPhrase('add_message');?>"
+                                                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_task_add_message/<?=$item['task_code'].'/'.$return_url;?>');">
+                                                                            <i
+                                                                                class="os-icon picons-thin-icon-thin-0151_plus_add_new"></i>
+                                                                        </a>
+                                                                        <?php endif;?>
+                                                                    </td>
+                                                                </tr>
+                                                                <?php endforeach?>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="ui-block">
+                                            <div class="ui-block-title">
+                                                <h6 class="col title"><?= getPhrase('interactions');?>
+                                                </h6>
+                                                <div class="col" style="justify-content: flex-end;">
+                                                    <?php if(!$allow_actions):?>
+                                                    <div class="form-buttons">
+                                                        <button class="btn btn-rounded btn-primary"
+                                                            onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_admission_add_interaction/<?= $applicant_id;?>');">
+                                                            <?= getPhrase('add_interaction');?></button>
+                                                    </div> &nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <?php endif;?>
+                                                </div>
                                             </div>
                                             <div class="ui-block-content">
                                                 <div class="edu-posts cta-with-media">
@@ -394,7 +519,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>                                        
                                     </div>
                                 </div>
                             </div>

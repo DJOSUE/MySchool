@@ -1,24 +1,24 @@
-<?php 
+<?php
 
     $running_year = $this->crud->getInfo('running_year');
-       
+
     if($country_id != '')
     {
         $this->db->where('country_id', $country_id);
     }
     if($status_id != '')
-    {   
+    {
         $this->db->where('status', $status_id);
     }
     if($name != '')
     {
         $this->db->like('full_name' , str_replace("%20", " ", $name));
-    } 
+    }
     $student_query = $this->db->get('v_applicants');
     $students = $student_query->result_array();
 
-    
-    
+
+
 ?>
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -49,12 +49,70 @@
             <div class="content-i">
                 <div class="content-box">
                     <div class="element-box-tp">
-                        <h5 class="form-header"><?php echo getPhrase('class_report');?></h5>
+                        <div class="row">
+                            <?php $applicant_type = $this->applicant->get_applicant_types();
+                                foreach($applicant_type as $type):
+                            ?>                            
+                            <div class="col col-xl-2 col-lg-4 col-md-4 col-sm-8 col-8">
+                                <div class="ui-block list" data-mh="friend-groups-item">
+                                    <div class="friend-item friend-groups">
+                                        <div class="friend-item-content">
+                                            <div class="friend-avatar">
+                                                <?php if($type['icon'] != ''):?>
+                                                <br/>
+                                                <i class="picons-thin-icon-thin-<?= $type['icon'];?>" style="font-size:45px; color: <?= $type['color'];?>;"></i>
+                                                <?php endif;?>
+                                                <h1 style="font-weight:bold;"><?= $this->applicant->applicant_total('type_id', $type['type_id'])?></h1>
+                                                <div class="author-content">
+                                                    <div class="country"><b> <?= $type['name'];?></b></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php endforeach;?>
+                            <?php $applicant_type = $this->db->get('v_applicant_status')->result_array();
+                                foreach($applicant_type as $type):
+                            ?>
+                            <div class="col col-xl-2 col-lg-4 col-md-4 col-sm-8 col-8">
+                                <div class="ui-block list" data-mh="friend-groups-item">
+                                    <div class="friend-item friend-groups">
+                                        <div class="friend-item-content">
+                                            <div class="friend-avatar">
+                                                <?php if($type['icon'] != ''):?>
+                                                <br/>
+                                                <i class="picons-thin-icon-thin-<?= $type['icon'];?>" style="font-size:45px; color: <?= $type['color'];?>;"></i>
+                                                <?php endif;?>
+                                                <h1 style="font-weight:bold;"><?= $this->applicant->applicant_total('status', $type['status_id'])?></h1>
+                                                <div class="author-content">
+                                                    <div class="country"><b> <?= $type['name'];?></b></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php endforeach;?>
+                            
+                        </div>
+
+                    </div>
+                    <br>
+                    <br>
+                    <div class="element-box-tp">
+                        <h5 class="form-header"><?php echo getPhrase('applicant_report');?></h5>
                         <div class="row">
                             <div class="content-i">
                                 <div class="content-box">
                                     <?php echo form_open(base_url() . 'admin/admission_dashboard/', array('class' => 'form m-b'));?>
                                     <div class="row" style="margin-top: -30px; border-radius: 5px;">
+                                        <div class="col-sm-3">
+                                            <div class="form-group label-floating" style="border: 1px solid #EAEAF5;border-radius: 5px; background: white;">
+                                                <label class="control-label"><?php echo getPhrase('name');?></label>
+                                                <input class="form-control" name="name" type="text" value="<?= $name?>">
+                                            </div>
+                                        </div>
                                         <div class="col-sm-3">
                                             <div class="form-group label-floating is-select">
                                                 <label class="control-label"><?php echo getPhrase('country');?></label>
@@ -63,7 +121,7 @@
                                                         <option value=""><?php echo getPhrase('select');?></option>
                                                         <?php
                                                         $countries = $this->db->get('countries')->result_array();
-                                                        foreach($countries as $row):                        
+                                                        foreach($countries as $row):
                                                     ?>
                                                         <option value="<?php echo $row['country_id'];?>"
                                                             <?php if($country_id == $row['country_id']) echo "selected";?>>
@@ -82,7 +140,7 @@
                                                         <?php
                                                         $status = $this->db->get('v_applicant_status')->result_array();
                                                         foreach($status as $row):
-                                                            if($row['status_id'] != 3):                      
+                                                            if($row['status_id'] != 3):
                                                     ?>
                                                         <option value="<?php echo $row['status_id'];?>"
                                                             <?php if($status_id == $row['status_id']) echo "selected";?>>
@@ -92,16 +150,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-3">
-                                            <div class="form-group label-floating">
-                                                <label class="control-label"><?php echo getPhrase('name');?></label>
-                                                <input class="form-control" name="name" type="text" value="<?= $name?>">
-                                            </div>
-                                        </div>
+
                                         <div class="col-sm-2">
                                             <div class="form-group">
                                                 <button class="btn btn-success btn-upper" style="margin-top:20px"
-                                                    type="submit"><span><?php echo getPhrase('get_report');?></span></button>
+                                                    type="submit"><span><?php echo getPhrase('search');?></span></button>
                                             </div>
                                         </div>
                                     </div>
@@ -112,11 +165,19 @@
                         </div>
                         <div class="row">
                             <div class="table-responsive">
-                                <?php 
+                                <?php
                                         if($name != "_blank" || $status_id != "_blank" || $country_id != "_blank"):
                                             if($student_query->num_rows() > 0):
                                     ?>
-                                <table class="table table-padded">
+                                <a href="#" id="btnExport" data-toggle="tooltip" data-placement="top"
+                                    data-original-title="<?php echo getPhrase('download');?>">
+                                    <button class="btn btn-info btn-sm btn-rounded">
+                                        <i class="picons-thin-icon-thin-0123_download_cloud_file_sync"
+                                            style="font-weight: 300; font-size: 25px;"></i>
+                                    </button>
+                                </a>
+
+                                <table class="table table-padded" id="dvData">
                                     <thead>
                                         <tr>
                                             <th class="text-center"><?php echo getPhrase('first_name')?></th>
@@ -236,3 +297,19 @@
         </div>
     </div>
 </div>
+<script>
+$("#btnExport").click(function(e) {
+    var reportName = '<?php echo getPhrase('applicants').'_'.date('d-m-Y');?>';
+    var a = document.createElement('a');
+    var data_type = 'data:application/vnd.ms-excel;charset=utf-8';
+    var table_html = $('#dvData')[0].outerHTML;
+    table_html = table_html.replace(/<tfoot[\s\S.]*tfoot>/gmi, '');
+    var css_html =
+        '<style>td {border: 0.5pt solid #c0c0c0} .tRight { text-align:right} .tLeft { text-align:left} </style>';
+    a.href = data_type + ',' + encodeURIComponent('<html><head>' + css_html + '</' + 'head><body>' +
+        table_html + '</body></html>');
+    a.download = reportName + '.xls';
+    a.click();
+    e.preventDefault();
+});
+</script>

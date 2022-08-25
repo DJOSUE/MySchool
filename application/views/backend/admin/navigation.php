@@ -5,6 +5,7 @@
     $admin_type = $role_id;// $this->db->get_where('admin', array('admin_id' => $admin_id))->row()->owner_status;
 
     // Array Pages
+    $task_pages         = array('task_dashboard', 'task_student', 'task_applicant', 'task_info');
     $message_pages      = array('message', 'group');
     $admissions_pages   = array('admission_dashboard', 'admission_new_applicant', 'admission_applicant','admission_new_student');
     $routine_pages      = array('class_routine_view', 'teacher_routine');
@@ -33,7 +34,8 @@
     <div class="fixed-sidebar-left sidebar--small" id="sidebar-left">
         <a href="<?php echo base_url();?>admin/panel/" class="logo">
             <div class="img-wrap">
-                <img class="nav-icon" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
+                <img class="nav-icon"
+                    src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
             </div>
         </a>
         <div class="mCustomScrollbar" data-mcs-theme="dark">
@@ -62,6 +64,17 @@
                     </a>
                 </li>
                 <?php endif;?>
+                <!-- Tasks -->
+                <?php if(has_permission('task')):?>
+                <li <?= in_array($page_name, $task_pages) ? 'class="currentItem"' : '';?>>
+                    <a href="<?php echo base_url();?>admin/task_dashboard/" data-toggle="tooltip" data-placement="right"
+                        data-original-title="<?php echo getPhrase('task_dashboard');?>">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0100_to_do_list_reminder_done"></i>
+                        </div>
+                    </a>
+                </li>
+                <?php endif;?>
                 <!-- Messages Access -->
                 <?php if(has_permission('messages')):?>
                 <li <?= in_array($page_name, $message_pages) ? 'class="currentItem"' : '';?>>
@@ -81,12 +94,12 @@
                             <i class="picons-thin-icon-thin-0704_users_profile_group_couple_man_woman"></i>
                         </div>
                     </a>
-                </li>                
+                </li>
                 <!-- Admissions Access -->
                 <?php if(has_permission('admissions')):?>
                 <li <?= in_array($page_name, $admissions_pages) ? 'class="currentItem"': '';?>>
-                    <a href="<?php echo base_url();?>admin/admission_dashboard/" data-toggle="tooltip" data-placement="right"
-                        data-original-title="<?php echo getPhrase('admissions');?>">
+                    <a href="<?php echo base_url();?>admin/admission_dashboard/" data-toggle="tooltip"
+                        data-placement="right" data-original-title="<?php echo getPhrase('admissions');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i>
                         </div>
@@ -128,7 +141,7 @@
                 <?php endif;?>
                 <!-- Attendance Access -->
                 <?php if(has_permission('attendance')):?>
-                <li <? in_array($page_name, $attendance_pages) ? 'class="currentItem"' : '';?>>
+                <li <? in_array($page_name, $attendance_pages) ? 'class="currentItem"' : '' ;?>>
                     <a href="<?php echo base_url();?>admin/teacher_attendance/" data-toggle="tooltip"
                         data-placement="right" data-original-title="<?php echo getPhrase('teacher_attendance');?>">
                         <div class="left-menu-icon">
@@ -229,8 +242,7 @@
                 <?php endif;?>
                 <!-- System Reports Access -->
                 <?php if(has_permission('system_reports')):?>
-                <li <?php if(in_array($page_name, $academic_pages)):?>class="currentItem"
-                    <?php endif;?>>
+                <li <?php if(in_array($page_name, $reports_pages)):?>class="currentItem" <?php endif;?>>
                     <a href="<?php echo base_url();?>admin/reports_general/" data-toggle="tooltip"
                         data-placement="right" data-original-title="<?php echo getPhrase('system_reports');?>">
                         <div class="left-menu-icon">
@@ -270,7 +282,8 @@
     <div class="fixed-sidebar-left sidebar--large" id="sidebar-left-1">
         <a href="<?php echo base_url();?>admin/panel/" class="logo">
             <div class="img-wrap">
-                <img class="nav-icon" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
+                <img class="nav-icon"
+                    src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
             </div>
             <div class="title-block">
                 <h6 class="logo-title"><?php echo $this->crud->getInfo('system_name');?></h6>
@@ -302,7 +315,18 @@
                         <span class="left-menu-title"><?php echo getPhrase('time_card');?></span>
                     </a>
                 </li>
-                <?php endif;?>                
+                <?php endif;?>
+                 <!-- Tasks -->
+                 <?php if(has_permission('task')):?>
+                <li <?= in_array($page_name, $task_pages) ? 'class="currentItem"' : '';?>>
+                    <a href="<?php echo base_url();?>admin/task_dashboard/" >
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0100_to_do_list_reminder_done"></i>
+                        </div>
+                        <span class="left-menu-title"><?php echo getPhrase('task_dashboard');?></span>
+                    </a>
+                </li>
+                <?php endif;?>
                 <!-- Messages Access -->
                 <?php if(has_permission('messages')):?>
                 <li>
@@ -508,13 +532,15 @@
 <div class="fixed-sidebar fixed-sidebar-responsive">
     <div class="fixed-sidebar-left sidebar--small" id="sidebar-left-responsive">
         <a href="<?php echo base_url();?>admin/panel/" class="logo js-sidebar-open">
-            <img class="nav-icon" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
+            <img class="nav-icon"
+                src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
         </a>
     </div>
     <div class="fixed-sidebar-left sidebar--large" id="sidebar-left-1-responsive">
         <a href="<?php echo base_url();?>" class="logo">
             <div class="img-wrap">
-                <img class="nav-icon" class="nav-icon-mobile" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
+                <img class="nav-icon" class="nav-icon-mobile"
+                    src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('icon_white');?>">
             </div>
             <div class="title-block">
                 <h6 class="logo-title"><?php echo $this->crud->getInfo('system_name')?></h6>
@@ -536,6 +562,7 @@
                         <span class="left-menu-title"><?php echo getPhrase('dashboard');?></span>
                     </a>
                 </li>
+                <!-- Time Card -->
                 <?php if(has_permission('time_card')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/time_card/">
@@ -543,6 +570,17 @@
                             <i class="picons-thin-icon-thin-0844_stopwatch_training_time"></i>
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('time_card');?></span>
+                    </a>
+                </li>
+                <?php endif;?>
+                <!-- Tasks -->
+                <?php if(has_permission('task')):?>
+                <li>
+                    <a href="<?php echo base_url();?>admin/task_dashboard/">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0100_to_do_list_reminder_done"></i>
+                        </div>
+                        <span class="left-menu-title"><?php echo getPhrase('task_dashboard');?></span>
                     </a>
                 </li>
                 <?php endif;?>

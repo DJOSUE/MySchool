@@ -6,8 +6,8 @@
 
     $student_info = $this->db->get_where('student' , array('student_id' => $student_id))->result_array(); 
     foreach($student_info as $row):
-    $class_id = $this->db->get_where('enroll', array('student_id' => $row['student_id'], 'year' => $running_year))->row()->class_id;
-    $section_id = $this->db->get_where('enroll', array('student_id' => $row['student_id'], 'year' => $running_year))->row()->section_id;
+    $class_id = $this->db->get_where('enroll', array('student_id' => $student_id, 'year' => $running_year, 'semester_id' => $running_semester))->row()->class_id;
+    $section_id = $this->db->get_where('enroll', array('student_id' => $student_id, 'year' => $running_year, 'semester_id' => $running_semester))->row()->section_id;
 ?>
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -97,6 +97,7 @@
                                                 <tbody>
                                                 <?php 
                                                         $enrollment_average = $this->db->get_where('v_enrollment' , array('student_id' => $student_id, 'class_id' => $class_id, 'section_id' => $section_id, 'year' => $running_year, 'semester_id' => $running_semester))->result_array();
+                                                        
                                                         foreach ($enrollment_average as $row_average): 
                                                             $subject_id = $row_average['subject_id'];
                                                             $average = $this->db->query("SELECT ROUND((SUM(labuno)/COUNT(IF(labuno = '-' or labuno is null,null,'1'))), $roundPrecision) AS 'labuno',
@@ -219,9 +220,12 @@
                                                 <tbody>
                                                     <?php 
                                                         $enrollment = $this->db->get_where('v_enrollment' , array('student_id' => $student_id, 'class_id' => $class_id, 'section_id' => $section_id, 'year' => $running_year, 'semester_id' => $running_semester))->result_array();
+
                                                         foreach ($enrollment as $row3): 
                                                             $subject_id = $row3['subject_id'];
                                                             $unit_id = $row2['unit_id'];
+
+
 
                                                             $average = $this->db->query("SELECT ROUND((SUM(labuno)/COUNT(IF(labuno = '-' or labuno is null,null,'1'))), $roundPrecision) AS 'labuno',
                                                                                                 ROUND((SUM(labdos)/COUNT(IF(labdos = '-' or labdos is null,null,'1'))), $roundPrecision) AS 'labdos',

@@ -3,6 +3,7 @@
     $student_info = $this->db->get_where('student' , array('student_id' => $student_id))->result_array(); 
     foreach($student_info as $row):
         $student_id = $row['student_id'];
+        $return_url = base64_encode('student_portal/'.$student_id)
 ?>  
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -192,6 +193,107 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <br/>
+                                    <div class="ui-block">
+                                            <div class="ui-block-title">
+                                                <h6 class="col title"><?= getPhrase('task');?>
+                                                </h6>
+                                                <div class="col" style="justify-content: flex-end;">
+                                                    <?php if(!$allow_actions):?>
+                                                    <div class="form-buttons">
+                                                        <button class="btn btn-rounded btn-primary"
+                                                        onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_task_add/<?= $row['student_id'].'/student/'.$return_url;?>');">
+                                                            <?= getPhrase('add_task');?></button>
+                                                    </div> &nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <?php endif;?>
+                                                </div>
+                                            </div>
+                                            <div class="ui-block-content">
+                                                <div class="edu-posts cta-with-media">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered">
+                                                            <thead style="text-align: center;">
+                                                                <tr style="background:#f2f4f8;">
+                                                                    <th>
+                                                                        <?= getPhrase('title');?>
+                                                                    </th>
+                                                                    <th>
+                                                                        <?= getPhrase('created_by');?>
+                                                                    </th>
+                                                                    <th>
+                                                                        <?= getPhrase('created_at');?>
+                                                                    </th>
+                                                                    <th>
+                                                                        <?= getPhrase('file');?>
+                                                                    </th>
+                                                                    <th>
+                                                                        <?= getPhrase('status');?>
+                                                                    </th>
+                                                                    <th>
+                                                                        <?= getPhrase('options');?>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php 
+                                                                $tasks = $this->db->get_where('task', array('user_type' => 'student', 'user_id' => $student_id))->result_array();
+
+                                                                // echo '<pre>';
+                                                                // var_dump($return_url);
+                                                                // echo '</pre>';
+
+                                                                foreach ($tasks as $item):
+                                                                ?>
+                                                                <tr>
+                                                                    <td class="text-center">
+                                                                        <?= $item['title'];?>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <?= $this->crud->get_name('admin', $item['created_by']);?>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <?= $item['created_at'];?>
+                                                                    </td>
+                                                                    <td class="row-actions">
+                                                                        <?php if($item['task_file']):?>
+                                                                        <a href="<?= base_url().PATH_TASK_FILES;?><?= $item['task_file'];?>"
+                                                                            class="grey" data-toggle="tooltip"
+                                                                            data-placement="top" target="_blank"
+                                                                            data-original-title="<?= getPhrase('view');?>">
+                                                                            <i
+                                                                                class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible"></i>
+                                                                        </a>
+                                                                        <? endif;?>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <?= $this->task->get_status($item['status_id']);?>
+                                                                    </td>
+                                                                    <td class="row-actions">
+                                                                        <a href="<?php echo base_url();?>admin/task_info/<?= $item['task_code'];?>"
+                                                                            class="grey" data-toggle="tooltip" data-placement="top"
+                                                                            data-original-title="<?php echo getPhrase('view');?>">
+                                                                            <i
+                                                                                class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible"></i>
+                                                                        </a>
+                                                                        <?php if($user_id == $item['created_by'] && !$allow_actions):?>                                                                        
+                                                                        <a href="javascript:void(0);" class="grey"
+                                                                            data-toggle="tooltip" data-placement="top"
+                                                                            data-original-title="<?= getPhrase('add_message');?>"
+                                                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_task_add_message/<?=$item['task_code'].'/'.$return_url;?>');">
+                                                                            <i
+                                                                                class="os-icon picons-thin-icon-thin-0151_plus_add_new"></i>
+                                                                        </a>
+                                                                        <?php endif;?>
+                                                                    </td>
+                                                                </tr>
+                                                                <?php endforeach?>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <br/>
                                     <div class="ui-block">
                                         <div class="ui-block-title">
                                             <h6 class="title"><?= getPhrase('interactions');?>

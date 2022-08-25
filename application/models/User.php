@@ -514,7 +514,8 @@ class User extends School
         $data['address']           = $this->input->post('address');
         $data['country_id']        = $this->input->post('country_id');
         $data['transport_id']      = $this->input->post('transport_id');
-        $data['program_id']      = $this->input->post('program_id');
+        $data['program_id']        = $this->input->post('program_id');
+        $data['created_by']        = $this->session->userdata('login_user_id');
 
         if($_FILES['userfile']['name'] != ''){
             $data['image']             = $md5.str_replace(' ', '', $_FILES['userfile']['name']);   
@@ -600,7 +601,7 @@ class User extends School
         
         $this->db->insert( 'pa_test', $data5 );
 
-        move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/student_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+        move_uploaded_file($_FILES['userfile']['tmp_name'], PATH_STUDENT_IMAGE . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
 
         // Send Email of Confirmation
 
@@ -734,6 +735,8 @@ class User extends School
         }
         $data['parent_id']         = $this->input->post('parent_id');
         $data['student_session']   = $this->input->post('student_session');
+        $data['updated_by']        = $this->session->userdata('login_user_id');
+
         $this->db->where('student_id', $studentId);
         $this->db->update('student', $data);
 
@@ -742,7 +745,7 @@ class User extends School
         // $data2['section_id']       = $this->input->post('section_id');
         // $this->db->where('student_id', $studentId);
         // $this->db->update('enroll', $data2);
-        move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/student_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+        move_uploaded_file($_FILES['userfile']['tmp_name'], PATH_STUDENT_IMAGE . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
     }
     
     public function updateCurrentStudent()
@@ -763,7 +766,7 @@ class User extends School
         $this->db->where('student_id', $this->session->userdata('login_user_id'));
         $this->db->update('student', $data);
 
-        move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/student_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+        move_uploaded_file($_FILES['userfile']['tmp_name'], PATH_STUDENT_IMAGE . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
     }
 
     public function updateAvatar($table){
@@ -809,7 +812,7 @@ class User extends School
         }
         $this->db->where('student_id', $studentId);
         $this->db->update('student', $data);
-        move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/student_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+        move_uploaded_file($_FILES['userfile']['tmp_name'], PATH_STUDENT_IMAGE . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
     }
     
     public function downloadExcel()

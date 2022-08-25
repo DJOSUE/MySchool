@@ -1912,12 +1912,6 @@
             }
         }
         
-        //Get all students to Bulk invoice function.
-        function get_class_students_mass($class_id = '')
-        {
-            $this->crud->fetchStudents($class_id);
-        }
-        
         //Delete question from online exam function.
         function delete_question_from_online_exam($question_id)
         {
@@ -2077,17 +2071,6 @@
             $this->load->view('backend/index', $page_data);
         }
     
-        //Get students to promote function.
-        function get_students_to_promote($class_id_from = '' , $class_id_to  = '', $running_year  = '', $promotion_year = '', $section_id_from = '')
-        {
-            $page_data['class_id_from']     =   $class_id_from;
-            $page_data['section_id_from']   =   $section_id_from;
-            $page_data['class_id_to']       =   $class_id_to;
-            $page_data['running_year']      =   $running_year;
-            $page_data['promotion_year']    =   $promotion_year;
-            $this->load->view('backend/admin/student_promotion_selector' , $page_data);
-        }
-    
         //View marks function.
         function view_marks($student_id = '')
         {
@@ -2193,16 +2176,6 @@
                 $this->academic->deleteClass($param2);
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
                 redirect(base_url() . 'admin/grados/', 'refresh');
-            }
-        }
-
-        //Get subjects by classId function
-        function get_subject($class_id = '') 
-        {
-            $subject = $this->db->get_where('subject' , array('class_id' => $class_id))->result_array();
-            foreach ($subject as $row) 
-            {
-                echo '<option value="' . $row['subject_id'] . '">' . $row['name'] . '</option>';
             }
         }
     
@@ -2318,113 +2291,6 @@
             $page_data['section_id']    = $section_id;
             $page_data['semester_id']   = $semester_id;
             $this->load->view('backend/index', $page_data);    
-        }
-
-        //Get sections by classId function.
-        function get_class_section($class_id = '', $pYear = '', $pSemesterId = '')
-        {
-            $year       =   $pYear == '' ? $this->runningYear : $pYear;
-            $SemesterId =   $pSemesterId == '' ? $this->runningSemester : $pSemesterId;
-            
-            $sections = $this->db->get_where('section' , array('class_id' => $class_id, 'year' => $year, 'semester_id' => $SemesterId))->result_array();
-            echo '<option value="">' . getPhrase('select') . '</option>';
-            foreach ($sections as $row) 
-            {
-                echo '<option value="' . $row['section_id'] . '">' . $row['name'] . '</option>';
-            }
-        }
-
-        //Get sections by classId and teacherID of the current semester.
-        function get_class_section_by_teacher($class_id = '', $teacher_id = '')
-        {
-            $year       =   $this->runningYear;
-            $SemesterId =   $this->runningSemester;
-            
-            $sections = $this->db->query("SELECT section_id, section_name FROM v_subject WHERE class_id = '$class_id' AND teacher_id = '$teacher_id' AND year = '$year' AND semester_id = '$SemesterId' GROUP BY section_id")->result_array();
-            
-            echo '<option value="">' . getPhrase('select') . '</option>';
-            foreach ($sections as $row) 
-            {
-                echo '<option value="' . $row['section_id'] . '">' . $row['section_name'] . '</option>';
-            }
-        }
-
-        //Get subjects by classId and sectionId.
-        function get_class_section_subjects($class_id = '', $section_id = '', $pYear = '', $pSemesterId = '')
-        {
-            $year       =   $pYear == '' ? $this->runningYear : $pYear;
-            $SemesterId =   $pSemesterId == '' ? $this->runningSemester : $pSemesterId;
-
-            $subject = $this->db->get_where( 'subject', array( 'class_id' => $class_id, 'section_id' => $section_id, 'year' => $year, 'semester_id' => $SemesterId ) )->result_array();
-            
-            foreach ( $subject as $row )  {
-                echo '<option value="' . $row['subject_id'] . '">' . $row['name'] . ' (' . $this->crud->get_name('teacher', $row['teacher_id']) . ')' . '</option>';
-            }
-        }
-
-        //Get subjects by classId and sectionId of the current semester.
-        function get_class_section_subjects_for_update($student_id = '', $class_id = '', $section_id = '')
-        {
-            $running_year = $this->runningYear;
-            $running_semester = $this->runningSemester;
-
-            $student_enroll = $this->db->get_where('v_enroll', array('student_id' => $student_id, 'year' => $running_year, 'semester_id' => $running_semester ))->result_array(); 
-
-            $subjects = $this->db->get_where( 'v_subject', array( 'class_id' => $class_id, 'section_id' => $section_id  ) )->result_array();
-            $html = "";
-            $count = 0;
-    
-            foreach ($student_enroll as $item) {
-                $count++;
-                $html .= '<div class="col col-lg-6 col-md-6 col-sm-12 col-12">';
-                $html .= '<div class="form-group label-floating is-select">';
-                $html .= '<label class="control-label">'.getPhrase('subject').'_'.$count.'</label>';
-                $html .= '<div class="select">';
-                $html .= '<select name="future_subject_id_'.$item['subject_id'].'">';
-                $html .= '<option value="">'.getPhrase('select').'</option>';
-                foreach ( $subjects as $item )  {
-                    $html .= '<option value="'.$item['subject_id'].'">';
-                    $html .= $item['name']." - ".$item["teacher_name"];
-                    $html .= '</option> ';
-                }
-                $html .= '</select> </div> </div> </div>';
-            }
-            echo $html;
-        }
-
-        //Get Students by sectionId function of the current semester.
-        function get_class_stundets($section_id = '')
-        {
-            $year       =   $this->runningYear;
-            $SemesterId =   $this->runningSemester;
-
-            // $students = $this->db->get_where('enroll' , array('section_id' => $section_id))->result_array();
-            $students = $this->db->query("SELECT student_id, full_name FROM v_enroll WHERE section_id = '$section_id' AND year = '$year' AND semester_id = '$SemesterId' GROUP BY student_id")->result_array();;
-
-            foreach ($students as $row) 
-            {
-                echo '<option value="' . $row['student_id'] . '">' . $row['full_name'] . '</option>';
-            }
-        }
-
-        //Get subjects by sectionId function.
-        function get_class_subject($section_id = '')
-        {
-            $subjects = $this->db->get_where('subject' , array('section_id' => $section_id))->result_array();
-            foreach ($subjects as $row) 
-            {
-                echo '<option value="' . $row['subject_id'] . '">' . $row['name'] . '</option>';
-            }
-        }
-        
-        //Get Students by SectionId function.
-        function get_class_students_section($section_id = '')
-        {
-            $students = $this->db->get_where('enroll' , array('section_id' => $section_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->result_array();
-            foreach ($students as $row) 
-            {
-                echo '<option value="' . $row['student_id'] . '">' . $this->crud->get_name('student', $row['student_id']) . '</option>';
-            }
         }
 
         //Manage units function.
@@ -2641,16 +2507,6 @@
             $this->load->view('backend/index', $page_data);
         }
     
-        //Get Sections by ClassId in dropdown function.
-        function get_sectionss($class_id = '')
-        {
-            $sections = $this->db->get_where('section' , array('class_id' => $class_id))->result_array();
-            foreach ($sections as $row) 
-            {
-                echo '<option value="' . $row['section_id'] . '">' . $row['name'] . '</option>';
-            }
-        }
-    
         //Attendance report function.
         function attendance_report($param1 = '', $param2 = '', $param3 = '', $param4 = '', $param5 = '') 
         {
@@ -2672,25 +2528,27 @@
             $page_data['page_title']  = getPhrase('attendance_report');
             $this->load->view('backend/index',$page_data);
         }
-         
-        //Get Students by SectionId
-        function get_class_studentss($section_id = '')
-        {
-            $students = $this->db->get_where('enroll' , array('section_id' => $section_id))->result_array();
-            foreach ($students as $row) 
-            {
-             echo '<option value="' . $row['student_id'] . '">' . $this->crud->get_name('student', $row['student_id'])  . '</option>';
-            }
-        }
         
         //Tabulation report function.
         function reports_tabulation($param1 = '', $param2 = '')
         {
             $this->isAdmin();
 
-            $page_data['class_id']   = $this->input->post('class_id');
-            $page_data['section_id']   = $this->input->post('section_id');
-            $page_data['subject_id']   = $this->input->post('subject_id');
+            $year_id = $this->input->post( 'year_id' );
+            if ($year_id == '') {
+                $year_id = $this->runningYear;
+            }
+
+            $semester_id = $this->input->post( 'semester_id' );
+            if ( $semester_id == '' ) {
+                $semester_id = $this->runningSemester;
+            }
+
+            $page_data['year_id']       = $year_id;
+            $page_data['semester_id']   = $semester_id;
+            $page_data['class_id']      = $this->input->post('class_id');
+            $page_data['section_id']    = $this->input->post('section_id');
+            $page_data['subject_id']    = $this->input->post('subject_id');
 
             if($this->useDailyMarks){
                 $page_data['page_name']   = 'reports_tabulation_daily';
@@ -3169,6 +3027,7 @@
             }
         }
 
+        /** Time Card Module */
         //Time card
         function time_card( $param1 = '', $param2 = '' ) 
         {
@@ -3699,9 +3558,14 @@
         }
 
 
-        function applicant($action, $applicant_id = '')
+        function applicant($action, $applicant_id = '', $return_url = '')
         {
             $this->isAdmin();
+
+            if($return_url == '')
+            {
+                $return_url = 'admission_dashboard';
+            }
 
             $message = '';
             switch ($action) {
@@ -3711,6 +3575,7 @@
                     break;
                 case 'update':
                     $this->applicant->update($applicant_id);
+                    $return_url .= '/'.$applicant_id;
                     $message =  getPhrase('successfully_updated');
                     break;
                 
@@ -3720,7 +3585,7 @@
             }
 
             $this->session->set_flashdata('flash_message' , $message);// getPhrase('account_has_been_created_but_require_approval'));
-            redirect(base_url() . 'admin/admission_dashboard', 'refresh');
+            redirect(base_url() . 'admin/'.$return_url, 'refresh');
         }
 
         function admission_search($search_key)
@@ -3998,6 +3863,228 @@
             echo $response_app;
         }
 
+        /** Reports Module */
+        // task Dashboard
+        function reports_students_all()
+        {
+            $year_id = $this->input->post( 'year_id' );
+            if ($year_id == '') {
+                $year_id = $this->runningYear;
+            }
+
+            $semester_id = $this->input->post( 'semester_id' );
+            if ( $semester_id == '' ) {
+                $semester_id = $this->runningSemester;
+            }
+
+            $this->isAdmin();
+            $page_data['year_id']       = $year_id;
+            $page_data['semester_id']   = $semester_id;
+            $page_data['page_name']     = 'reports_students_all';
+            $page_data['page_title']    = getPhrase('reports_students_all');
+            $this->load->view('backend/index', $page_data);
+        }
+        
+        /** Task Module */
+        // task Dashboard
+        function task_dashboard()
+        {
+            $this->isAdmin();
+            
+            if($_SERVER['REQUEST_METHOD'] === 'POST')
+            {   
+                $department_id  = $this->input->post('department_id');                
+                $priority_id    = $this->input->post('priority_id');
+                $status_id      = $this->input->post('status_id');
+                $text           = $this->input->post('text');
+                $assigned_me    = $this->input->post('assigned_me');                
+            }
+            else
+            {    
+                $department_id  = "_blank";
+                $priority_id    = "_blank";
+                $status_id      = "_blank";
+                $assigned_me = 1;
+            }
+
+            $page_data['department_id'] = $department_id;
+            $page_data['priority_id']   = $priority_id;
+            $page_data['status_id']     = $status_id;
+            $page_data['text']          = $text;
+            $page_data['assigned_me']   = $assigned_me;
+            $page_data['page_name']     = 'task_dashboard';
+            $page_data['page_title']    =  getPhrase('task_dashboard');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function task_applicant()
+        {
+            $this->isAdmin();
+            
+            if($_SERVER['REQUEST_METHOD'] === 'POST')
+            {   
+                $category_id    = $this->input->post('category_id');                
+                $priority_id    = $this->input->post('priority_id');
+                $status_id      = $this->input->post('status_id');
+                $text           = $this->input->post('text');
+                $assigned_me    = $this->input->post('assigned_me');                
+            }
+            else
+            {    
+                $department_id  = "_blank";
+                $priority_id    = "_blank";
+                $status_id      = "_blank";
+                $assigned_me = 1;
+            }
+
+            $page_data['category_id']   = $category_id;
+            $page_data['priority_id']   = $priority_id;
+            $page_data['status_id']     = $status_id;
+            $page_data['text']          = $text;
+            $page_data['assigned_me']   = $assigned_me;
+            $page_data['page_name']     = 'task_applicant';
+            $page_data['page_title']    =  getPhrase('task_applicant');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function task_student()
+        {
+            $this->isAdmin();
+            
+            if($_SERVER['REQUEST_METHOD'] === 'POST')
+            {   
+                $category_id    = $this->input->post('category_id');                
+                $priority_id    = $this->input->post('priority_id');
+                $status_id      = $this->input->post('status_id');
+                $text           = $this->input->post('text');
+                $assigned_me    = $this->input->post('assigned_me');                
+            }
+            else
+            {    
+                $category_id  = "_blank";
+                $priority_id    = "_blank";
+                $status_id      = "_blank";
+                $assigned_me = 1;
+            }
+
+            $page_data['category_id']   = $category_id;
+            $page_data['priority_id']   = $priority_id;
+            $page_data['status_id']     = $status_id;
+            $page_data['text']          = $text;
+            $page_data['assigned_me']   = $assigned_me;
+            $page_data['page_name']     = 'task_student';
+            $page_data['page_title']    =  getPhrase('task_student');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function task_info($task_code = '', $param2 = '')
+        {
+            $this->isAdmin();
+            $page_data['task_code']    = $task_code;
+            $page_data['page_name']    = 'task_info';
+            $page_data['page_title']   = getPhrase('task_info');
+            $this->load->view('backend/index', $page_data);
+
+        }
+
+        function task($action, $task_id = '', $return_url = '')
+        {
+            $this->isAdmin();
+
+            $message = '';
+            switch ($action) {
+                case 'register':
+                    
+                    $this->task->create();
+                    $message =  getPhrase('successfully_added');
+                    
+                    $user_id    = html_escape($this->input->post('user_id'));
+
+                    switch ($return_url) {
+                        case 'student':
+                            $return_url = 'student_portal/'.$user_id;
+                            break;
+                        case 'applicant':
+                            $return_url = 'admission_applicant/'.$user_id;
+                            # code...
+                            break;
+                    }
+                    break;
+                case 'update':
+                    $this->task->update($task_id);
+                    $message =  getPhrase('successfully_updated');
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+
+            $this->session->set_flashdata('flash_message' , $message);
+            redirect(base_url() .'admin/'.$return_url, 'refresh');
+        }
+
+        function task_message($action, $task_code = '', $task_message_id = '', $return_url = '')
+        {
+            if($return_url == '')
+            {
+                $return_url = 'admin/task_info/'.$task_code;
+            }
+            else
+            {
+                if(base64_decode($return_url, true ))
+                {
+                    $return_url = 'admin/'.base64_decode($return_url);
+                }
+                else
+                {
+                    $return_url = 'admin/'.$return_url;
+                }
+            }
+
+            $message = '';
+            switch ($action) {
+                case 'add':
+                    $this->task->add_message($task_code);
+                    $message =  getPhrase('successfully_added');
+
+                    if($task_code != '')
+                    {
+                        $status_id_old = $this->db->get_where('task' , array('task_code' => $task_code))->row()->status;
+        
+                        $status_id_new = $this->input->post('status_id');
+        
+                        if($status_id_old != $status_id_new)
+                        {
+                            $this->task->update_status($task_code, $status_id_new);
+                        }
+                    }
+
+                    break;
+                case 'update':                    
+                    $this->task->update_message($task_message_id);
+                    $message =  getPhrase('successfully_updated');
+
+                default:
+                    # code...
+                    break;
+            }
+
+            $this->session->set_flashdata('flash_message' , $message);
+            redirect(base_url() . $return_url, 'refresh');
+        }
+
+        //Get subjects by classId and sectionId.
+        function get_category_dropdown($department_id)
+        {
+            $departments = $this->task->get_categories($department_id);
+            $options = '';
+            foreach ( $departments as $row )  {
+                $options .= '<option value="' . $row['category_id'] . '">' . $row['name'] . '</option>';
+            }
+            echo $options;
+        }
+
         /** Tools functions */
         // unset Admin cookies
         function unset_admin(){
@@ -4034,6 +4121,158 @@
             return $response['token'];
         }
 
+        //Get sections by classId function.
+        function get_class_section($class_id = '', $pYear = '', $pSemesterId = '')
+        {
+            $year       =   $pYear == '' ? $this->runningYear : $pYear;
+            $SemesterId =   $pSemesterId == '' ? $this->runningSemester : $pSemesterId;
+            
+            $sections = $this->db->get_where('section' , array('class_id' => $class_id, 'year' => $year, 'semester_id' => $SemesterId))->result_array();
+            echo '<option value="">' . getPhrase('select') . '</option>';
+            foreach ($sections as $row) 
+            {
+                echo '<option value="' . $row['section_id'] . '">' . $row['name'] . '</option>';
+            }
+        }
 
+        //Get sections by classId and teacherID of the current semester.
+        function get_class_section_by_teacher($class_id = '', $teacher_id = '')
+        {
+            $year       =   $this->runningYear;
+            $SemesterId =   $this->runningSemester;
+            
+            $sections = $this->db->query("SELECT section_id, section_name FROM v_subject WHERE class_id = '$class_id' AND teacher_id = '$teacher_id' AND year = '$year' AND semester_id = '$SemesterId' GROUP BY section_id")->result_array();
+            
+            echo '<option value="">' . getPhrase('select') . '</option>';
+            foreach ($sections as $row) 
+            {
+                echo '<option value="' . $row['section_id'] . '">' . $row['section_name'] . '</option>';
+            }
+        }
+
+        //Get subjects by classId and sectionId.
+        function get_class_section_subjects($class_id = '', $section_id = '', $pYear = '', $pSemesterId = '')
+        {
+            $year       =   $pYear == '' ? $this->runningYear : $pYear;
+            $SemesterId =   $pSemesterId == '' ? $this->runningSemester : $pSemesterId;
+
+            $subject = $this->db->get_where( 'subject', array( 'class_id' => $class_id, 'section_id' => $section_id, 'year' => $year, 'semester_id' => $SemesterId ) )->result_array();
+            
+            foreach ( $subject as $row )  {
+                echo '<option value="' . $row['subject_id'] . '">' . $row['name'] . ' (' . $this->crud->get_name('teacher', $row['teacher_id']) . ')' . '</option>';
+            }
+        }
+
+        //Get subjects by classId and sectionId of the current semester.
+        function get_class_section_subjects_for_update($student_id = '', $class_id = '', $section_id = '')
+        {
+            $running_year = $this->runningYear;
+            $running_semester = $this->runningSemester;
+
+            $student_enroll = $this->db->get_where('v_enroll', array('student_id' => $student_id, 'year' => $running_year, 'semester_id' => $running_semester ))->result_array(); 
+
+            $subjects = $this->db->get_where( 'v_subject', array( 'class_id' => $class_id, 'section_id' => $section_id  ) )->result_array();
+            $html = "";
+            $count = 0;
+    
+            foreach ($student_enroll as $item) {
+                $count++;
+                $html .= '<div class="col col-lg-6 col-md-6 col-sm-12 col-12">';
+                $html .= '<div class="form-group label-floating is-select">';
+                $html .= '<label class="control-label">'.getPhrase('subject').'_'.$count.'</label>';
+                $html .= '<div class="select">';
+                $html .= '<select name="future_subject_id_'.$item['subject_id'].'">';
+                $html .= '<option value="">'.getPhrase('select').'</option>';
+                foreach ( $subjects as $item )  {
+                    $html .= '<option value="'.$item['subject_id'].'">';
+                    $html .= $item['name']." - ".$item["teacher_name"];
+                    $html .= '</option> ';
+                }
+                $html .= '</select> </div> </div> </div>';
+            }
+            echo $html;
+        }
+
+        //Get Students by sectionId function of the current semester.
+        function get_class_stundets($section_id = '')
+        {
+            $year       =   $this->runningYear;
+            $SemesterId =   $this->runningSemester;
+
+            // $students = $this->db->get_where('enroll' , array('section_id' => $section_id))->result_array();
+            $students = $this->db->query("SELECT student_id, full_name FROM v_enroll WHERE section_id = '$section_id' AND year = '$year' AND semester_id = '$SemesterId' GROUP BY student_id")->result_array();;
+
+            foreach ($students as $row) 
+            {
+                echo '<option value="' . $row['student_id'] . '">' . $row['full_name'] . '</option>';
+            }
+        }
+
+        //Get subjects by sectionId function.
+        function get_class_subject($section_id = '')
+        {
+            $subjects = $this->db->get_where('subject' , array('section_id' => $section_id))->result_array();
+            foreach ($subjects as $row) 
+            {
+                echo '<option value="' . $row['subject_id'] . '">' . $row['name'] . '</option>';
+            }
+        }
+        
+        //Get Students by SectionId function.
+        function get_class_students_section($section_id = '')
+        {
+            $students = $this->db->get_where('enroll' , array('section_id' => $section_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->result_array();
+            foreach ($students as $row) 
+            {
+                echo '<option value="' . $row['student_id'] . '">' . $this->crud->get_name('student', $row['student_id']) . '</option>';
+            }
+        }
+
+        //Get Students by SectionId
+        function get_class_studentss($section_id = '')
+        {
+            $students = $this->db->get_where('enroll' , array('section_id' => $section_id))->result_array();
+            foreach ($students as $row) 
+            {
+             echo '<option value="' . $row['student_id'] . '">' . $this->crud->get_name('student', $row['student_id'])  . '</option>';
+            }
+        }
+
+        //Get all students to Bulk invoice function.
+        function get_class_students_mass($class_id = '')
+        {
+            $this->crud->fetchStudents($class_id);
+        }
+
+        //Get students to promote function.
+        function get_students_to_promote($class_id_from = '' , $class_id_to  = '', $running_year  = '', $promotion_year = '', $section_id_from = '')
+        {
+            $page_data['class_id_from']     =   $class_id_from;
+            $page_data['section_id_from']   =   $section_id_from;
+            $page_data['class_id_to']       =   $class_id_to;
+            $page_data['running_year']      =   $running_year;
+            $page_data['promotion_year']    =   $promotion_year;
+            $this->load->view('backend/admin/student_promotion_selector' , $page_data);
+        }
+        
+        //Get subjects by classId function
+        function get_subject($class_id = '') 
+        {
+            $subject = $this->db->get_where('subject' , array('class_id' => $class_id))->result_array();
+            foreach ($subject as $row) 
+            {
+                echo '<option value="' . $row['subject_id'] . '">' . $row['name'] . '</option>';
+            }
+        }
+
+        //Get Sections by ClassId in dropdown function.
+        function get_sectionss($class_id = '')
+        {
+            $sections = $this->db->get_where('section' , array('class_id' => $class_id))->result_array();
+            foreach ($sections as $row) 
+            {
+                echo '<option value="' . $row['section_id'] . '">' . $row['name'] . '</option>';
+            }
+        }
         //End of Admin.php content. 
     }

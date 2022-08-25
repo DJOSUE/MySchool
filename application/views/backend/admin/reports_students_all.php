@@ -112,6 +112,11 @@
 								class="picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i>
 							<span><?php echo getPhrase('students');?></span></a>
 					</li>
+                    <li class="navs-item">
+						<a class="navs-links active" href="<?php echo base_url();?>admin/reports_students_all/"><i
+								class="picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i>
+							<span><?php echo getPhrase('students_all');?></span></a>
+					</li>
 					<?php if(!$useGradeAttendance): ?>
                     <li class="navs-item">
                         <a class="navs-links" href="<?php echo base_url();?>admin/attendance_report/"><i
@@ -125,7 +130,7 @@
 							<span><?php echo getPhrase('final_marks');?></span></a>
 					</li>
 					<li class="navs-item">
-						<a class="navs-links active"
+						<a class="navs-links"
 							href="<?php echo base_url();?>admin/reports_tabulation/"><i
 								class="picons-thin-icon-thin-0070_paper_role"></i>
 							<span><?php echo getPhrase('tabulation_sheet');?></span></a>
@@ -144,13 +149,13 @@
 			<div class="content-box">
 				<h5 class="form-header"><?php echo getPhrase('tabulation_sheet');?></h5>
 				<hr>
-				<?php echo form_open(base_url() . 'admin/reports_tabulation/', array('class' => 'form m-b'));?>
+				<?php echo form_open(base_url() . 'admin/reports_students_all/', array('class' => 'form m-b'));?>
 				<div class="row">
 					<div class="col-sm-2">
                         <div class="form-group label-floating is-select">
                             <label class="control-label"><?php echo getPhrase('year');?></label>
                             <div class="select">
-                                <select name="year_id" id="year_id" required="" onchange="get_class_sections();">
+                                <select name="year_id" id="year_id" required="">
                                     <option value=""><?php echo getPhrase('select');?></option>
                                     <?php 
                                         $class = $this->db->get_where('years', array('status' => '1'))->result_array();
@@ -167,7 +172,7 @@
                         <div class="form-group label-floating is-select">
                             <label class="control-label"><?php echo getPhrase('semesters');?></label>
                             <div class="select">
-                                <select name="semester_id" id="semester_id" required="" onchange="get_class_sections();">
+                                <select name="semester_id" id="semester_id" required="">
                                     <option value=""><?php echo getPhrase('select');?></option>
                                     <?php 
                                         $class = $this->db->get('semesters')->result_array();
@@ -180,74 +185,6 @@
                             </div>
                         </div>
                     </div>
-					<div class="col-sm-2">
-						<div class="form-group label-floating is-select">
-							<label class="control-label"><?php echo getPhrase('class');?></label>
-							<div class="select">
-								<select name="class_id" required="" onchange="get_class_sections(this.value);">
-									<option value=""><?php echo getPhrase('select');?></option>
-									<?php 
-										$class = $this->db->get('class')->result_array();
-										foreach ($class as $row): 
-									?>
-									<option value="<?php echo $row['class_id']; ?>"
-										<?php if($class_id == $row['class_id']) echo "selected";?>>
-										<?php echo $row['name']; ?></option>
-									<?php endforeach; ?>
-								</select>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-2">
-						<div class="form-group label-floating is-select">
-							<label class="control-label"><?php echo getPhrase('section');?></label>
-							<div class="select">
-								<?php if($section_id == ""):?>
-								<select name="section_id" required id="section_holder"
-									onchange="get_class_subjects(this.value);get_student(this.value)">
-									<option value=""><?php echo getPhrase('select');?></option>
-								</select>
-								<?php else:?>
-								<select name="section_id" required id="section_holder"
-									onchange="get_class_subjects(this.value);get_student(this.value)">
-									<option value=""><?php echo getPhrase('select');?></option>
-									<?php 
-										$sections = $this->db->get_where('section', array('class_id' => $class_id, 'year' => $running_year, 'semester_id' => $running_semester))->result_array();
-										foreach ($sections as $key):
-									?>
-									<option value="<?php echo $key['section_id'];?>"
-										<?php if($section_id == $key['section_id']) echo "selected";?>>
-										<?php echo $key['name'];?></option>
-									<?php endforeach;?>
-								</select>
-								<?php endif;?>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-2">
-						<div class="form-group label-floating is-select">
-							<label class="control-label"><?php echo getPhrase('subject');?></label>
-							<div class="select">
-								<?php if($subject_id == ""):?>
-								<select name="subject_id" required id="subject_holder">
-									<option value=""><?php echo getPhrase('select');?></option>
-								</select>
-								<?php else:?>
-								<select name="subject_id" required id="subject_holder">
-									<option value=""><?php echo getPhrase('select');?></option>
-									<?php 
-											$subjects = $this->db->get_where('subject', array('class_id' => $class_id, 'section_id' => $section_id))->result_array();
-											foreach ($subjects as $key):
-										?>
-									<option value="<?php echo $key['subject_id'];?>"
-										<?php if($subject_id == $key['subject_id']) echo "selected";?>>
-										<?php echo $key['name'];?></option>
-									<?php endforeach;?>
-								</select>
-								<?php endif;?>
-							</div>
-						</div>
-					</div>
 					<div class="col-sm-2">
 						<div class="form-group">
 							<button class="btn btn-success btn-upper" style="margin-top:20px"
@@ -303,10 +240,8 @@
 							$n = 1;
 							$m = 0;
 							$f = 0;
-							$students = $this->db->get_where('enroll', array('class_id' => $class_id, 
-                                                                             'section_id' => $section_id, 
-                                                                             'subject_id' => $subject_id, 
-                                                                             'year' => $running_year
+							$students = $this->db->get_where('enroll', array('year' => $year_id, 
+                                                                             'semester_id' => $semester_id
                                                             ))->result_array();
 							foreach($students as $row):
 								if($this->db->get_where('student', array('student_id' => $row['student_id']))->row()->sex == 'M'){
@@ -335,9 +270,6 @@
 																		ROUND((SUM(labdiez)/COUNT(IF(labdiez = '-' or labdiez IS NULL,null,'1'))), $roundPrecision) AS 'labdiez'
                                                                 FROM mark_daily 
                                                                 WHERE student_id = '$row[student_id]'
-                                                                    AND class_id = '$class_id'
-                                                                    AND section_id = '$section_id'
-                                                                    AND subject_id = '$subject_id'
                                                                     AND year = '$year_id'
                                                                     AND semester_id = '$semester_id' 
                                                                     ")->result_array();
@@ -443,26 +375,6 @@
 		a.click();
 		e.preventDefault();
 	});
-
-	function get_class_sections(class_id) {
-		year_id = <?= $year_id;?>;
-		semester_id = <?= $semester_id;?>;
-		$.ajax({
-			url: '<?php echo base_url();?>admin/get_class_section/' + class_id + '/' + year_id + '/' + semester_id,
-			success: function(response) {
-				jQuery('#section_holder').html(response);
-			}
-		});
-	}
-
-	function get_class_subjects(section_id) {
-		$.ajax({
-			url: '<?php echo base_url();?>admin/get_class_subject/' + section_id,
-			success: function(response) {
-				jQuery('#subject_holder').html(response);
-			}
-		});
-	}
 
 	function printDiv(nombreDiv) {
 		var contenido = document.getElementById(nombreDiv).innerHTML;
