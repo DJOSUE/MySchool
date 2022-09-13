@@ -29,9 +29,23 @@ class Applicant extends School
 
         if(!empty($this->input->post('is_imported')))
         {
-            $data['is_imported']        = $this->input->post('is_imported');
+            $data['is_imported'] = $this->input->post('is_imported');
         }
 
+        if(!empty($this->input->post('agent_code')))
+        {
+            $data['agent_code']  = $this->input->post('agent_code');
+        }
+
+        if(!empty($this->input->post('status_id')))
+            $data['status']       = html_escape($this->input->post('status_id'));
+
+        if(!empty($this->input->post('agent_code')))
+            $data['agent_code']   = html_escape($this->input->post('agent_code'));
+
+        if(!empty($this->input->post('referral_by')))
+            $data['referral_by']  = html_escape($this->input->post('referral_by'));
+       
         $this->db->insert('applicant', $data);
 
         $table      = 'applicant';
@@ -54,7 +68,7 @@ class Applicant extends School
             $data['last_name']      = ucfirst(html_escape($this->input->post('last_name')));
 
         if(!empty($this->input->post('datetimepicker')))
-            $data['birthday']       = html_escape($this->input->post('datetimepicker'));
+            $data['birthday']       = date('Y-m-d', strtotime($this->input->post('datetimepicker')));
         
         if(!empty($this->input->post('email')))
             $data['email']          = html_escape($this->input->post('email'));
@@ -78,8 +92,14 @@ class Applicant extends School
             $data['status']         = html_escape($this->input->post('status_id'));
         if(!empty($this->input->post('assigned_to')))
             $data['assigned_to']    = html_escape($this->input->post('assigned_to'));
+        if(!empty($this->input->post('agent_code')))
+            $data['agent_code']     = $this->input->post('agent_code');
+        if(!empty($this->input->post('reference_id')))
+            $data['reference_id']   = $this->input->post('reference_id');
         
-        // Get tags
+        
+        
+            // Get tags
         $tags = $this->applicant->get_tags();
         $tags_selected = [];
         foreach($tags as $tag){
@@ -93,12 +113,49 @@ class Applicant extends School
             $data['tags']    = json_encode($tags_id);
         }
 
+        // echo$data['birthday'];
+
         $this->db->where('applicant_id', $applicant_id);
         $this->db->update('applicant', $data);
 
         $table      = 'applicant';
         $action     = 'update';        
         $this->crud->save_log($table, $action, $applicant_id, $data);
+    }
+
+    function update_tag($applicant_id, $tag_id, $selected)
+    {
+        $this->db->reset_query();
+        $this->db->select('tags');
+        $this->db->where('applicant_id', $applicant_id);
+        $query = $this->db->get('applicant')->row_array();
+
+        $tags_id =  json_decode($query['tags']);
+        $ids =  $tags_id->tags_id;
+        $exist = in_array($tag_id, $ids);
+
+        if($selected == 'true')
+        {
+            if(!$exist)
+                array_push($ids, $tag_id);
+        }
+        else 
+        {
+            $key = array_search($tag_id, $ids);
+            unset($ids[$key]);
+            $ids = array_values($ids);
+        }
+
+        $tags['tags_id'] = $ids;
+        $data['tags']    = json_encode($tags);
+
+        $this->db->where('applicant_id', $applicant_id);
+        $this->db->update('applicant', $data);
+
+        $table      = 'applicant';
+        $action     = 'update';        
+        $this->crud->save_log($table, $action, $applicant_id, $data);
+
     }
 
     function update_status($applicant_id, $status_id)
@@ -177,22 +234,62 @@ class Applicant extends School
         return $query;
     }
 
+    public function get_applicant_type_info($type_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('code as type_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'TYPEAPPLIC');
+        $this->db->where('code', $type_id);
+        $query = $this->db->get('parameters')->row_array();
+        
+        return $query;
+    }
+
     // Get the list of the info pf the applicants
     public function get_applicant_status()
     {
         $this->db->reset_query();
-        $this->db->select('code as type_id, name, value_1 as color, value_2 as icon');
+        $this->db->select('code as status_id, name, value_1 as color, value_2 as icon');
         $this->db->where('parameter_id', 'APPLSTATUS');
         $query = $this->db->get('parameters')->result_array();;
         
         return $query;
     }
 
+    public function get_applicant_status_info($status_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('code as type_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'APPLSTATUS');
+        $this->db->where('code', $status_id);
+        $query = $this->db->get('parameters')->row_array();
+        
+        return $query;
+    }
+
+
+    public function get_agent_list()
+    {
+        $this->db->reset_query();
+        $this->db->select('code as agent_code, name, ');
+        $this->db->where('parameter_id', 'APPLAGENT');
+        $query = $this->db->get('parameters')->result_array();;
+        
+        return $query;
+    }
     //** Get numbers for dashboard */
 
-    function applicant_total($field ,$status_id)
+    function applicant_total($field ,$field_id)
     {
-        $this->db->where($field, $status_id);
+        $this->db->where($field, $field_id);
+        $applicant_query = $this->db->get('v_applicants');
+        return $applicant_query->num_rows();
+    }
+
+    function applicant_total_type($type_id, $field, $field_id)
+    {
+        $this->db->where('type_id', $type_id);
+        $this->db->where($field, $field_id);
         $applicant_query = $this->db->get('v_applicants');
         return $applicant_query->num_rows();
     }

@@ -8,11 +8,30 @@
     </div>
     <div class="ui-block-content">
         <span style="display:inline;">
-            <h4><?= getPhrase('applicant');?>: </h4>
-            <h6><?= $row['first_name'] . ' ' . $row['last_name']; ?></h6>
+            <h4><?= getPhrase('applicant');?>: <?= $row['first_name'] . ' ' . $row['last_name']; ?> </h4>
         </span>
         <?php echo form_open(base_url() . 'admin/applicant/update/'.$row['applicant_id'] , array('enctype' => 'multipart/form-data'));?>
         <input type="hidden" name="applicant_id" value="<?= $row['applicant_id']?>">
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('assigned_to');?></label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <div class="select">
+                        <select name="assigned_to" style="width: 150px;">
+                            <option value=""><?= getPhrase('select');?></option>
+                            <?php $advisors = $this->db->get_where('admin', array('status' => 1, 'owner_status' => '3'))->result_array();
+                            foreach($advisors as $advisor):
+                            ?>
+                            <option value="<?= $advisor['admin_id']?>"
+                                <?= $advisor['admin_id'] == $row['assigned_to'] ? 'selected': ''; ?>>
+                                <?= $advisor['first_name']?>
+                            </option>
+                            <?php endforeach;?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="form-group row">
             <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('status');?></label>
             <div class="col-sm-6">

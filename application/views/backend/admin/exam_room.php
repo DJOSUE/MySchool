@@ -18,9 +18,11 @@
                             <li class="navs-item">
                                 <a class="navs-links" href="<?php echo base_url();?>admin/exam_results/<?php echo $online_exam_id;?>/"><i class="os-icon picons-thin-icon-thin-0100_to_do_list_reminder_done"></i><span><?php echo getPhrase('results');?></span></a>
                             </li>
+                            <?php if(has_permission('online_exams_management')):?>
                             <li class="navs-item">
                                 <a class="navs-links" href="<?php echo base_url();?>admin/exam_edit/<?php echo $online_exam_id;?>/"><i class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new"></i><span><?php echo getPhrase('edit');?></span></a>
                             </li>
+                            <?php endif;?>
                         </ul>
                     </div>
                 </div>
@@ -81,10 +83,12 @@
                                                             <td><small><?php echo $added_question['question_title']; ?></small></td>
                                                         <?php endif; ?>
                                                         <td style="text-align: center;"><?php echo $added_question['mark']; ?></td>
+                                                        <?php if(has_permission('online_exams_management')):?>
                                                         <td style="text-align: center;">
                                                             <a href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/popup/update_online_exam_question/<?php echo $added_question['question_bank_id'];?>')" class="btn btn-success btn-sm"><i class="picons-thin-icon-thin-0001_compose_write_pencil_new" aria-hidden="true"></i></a>
                                                             <a href="<?php echo base_url();?>admin/delete_question_from_online_exam/<?php echo $added_question['question_bank_id'];?>" onclick="return confirm('<?php echo getPhrase('confirm_delete');?>')" class="btn btn-danger btn-sm" data-toggle="tooltip" title="<?php echo getPhrase('delete'); ?>"><i class="picons-thin-icon-thin-0057_bin_trash_recycle_delete_garbage_full" aria-hidden="true"></i></a>
                                                         </td>
+                                                        <?php endif; ?>
                                                     </tr>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
@@ -144,6 +148,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <?php if(has_permission('online_exams_management')):?>
                                 <div class="pipeline white lined-danger">
                                     <div class="panel-heading">
                                         <h5 class="panel-title" ><?php echo getPhrase('add_question');?></h5>
@@ -168,6 +173,7 @@
                                     </div>
                                     <div id="question_holder"></div>
                                 </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>

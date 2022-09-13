@@ -21,9 +21,11 @@
                         <li class="navs-item">
                             <a class="navs-links active" href="<?php echo base_url();?>admin/exam_results/<?php echo $online_exam_id;?>/"><i class="os-icon picons-thin-icon-thin-0100_to_do_list_reminder_done"></i><span><?php echo getPhrase('results');?></span></a>
                         </li>
+                        <?php if(has_permission('online_exams_management')):?>
                         <li class="navs-item">
                             <a class="navs-links" href="<?php echo base_url();?>admin/exam_edit/<?php echo $online_exam_id;?>/"><i class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new"></i><span><?php echo getPhrase('edit');?></span></a>
                         </li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>

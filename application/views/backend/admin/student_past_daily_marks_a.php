@@ -148,7 +148,7 @@
                                                         if($labonueve   == '' ) { $labonueve    = '-'; }  
                                                         if($labodiez    == '' ) { $labodiez     = '-'; }
 
-                                                        if(is_numeric($average->labuno)     && $average->labuno != '' ) { $count++; } 
+                                                        // if(is_numeric($average->labuno)     && $average->labuno != '' ) { $count++; } 
                                                         if(is_numeric($average->labdos)     && $average->labdos != '' ) { $count++; }  
                                                         if(is_numeric($average->labtres)    && $average->labtres != '' ) { $count++; }  
                                                         if(is_numeric($average->labcuatro)  && $average->labcuatro != '' ) { $count++; }  
@@ -159,7 +159,7 @@
                                                         if(is_numeric($average->labnueve)   && $average->labnueve != '' ) { $count++; }  
                                                         if(is_numeric($average->labdiez)    && $average->labdiez != '' ) { $count++; }                                                            
                                                         
-                                                        $labototal  = (float)$labouno + (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
+                                                        $labototal  = (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
                                         
                                                         $attendance = (float)$labouno;
 

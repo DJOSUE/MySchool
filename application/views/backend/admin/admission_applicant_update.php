@@ -4,7 +4,10 @@
     $allow_actions = is_student($applicant_id);
     foreach($applicant_info as $row): 
         $tags_applicant = json_decode($row['tags'], true)['tags_id'];
-
+        $status_info = $this->applicant->get_applicant_status_info($row['status']);
+        $type_info = $this->applicant->get_applicant_type_info($row['type_id']);
+        $birthday = date('m/d/Y', strtotime($row['birthday']));
+        
 ?>
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -68,19 +71,20 @@
                                                 </g>
                                             </svg>
                                         </div>
-                                        <div class="up-controls">
+                                        <div class="up-controls">                                            
                                             <div class="row">
                                                 <div class="col-lg-6">
                                                     <div class="value-pair">
                                                         <div><?= getPhrase('applicant_type');?>:</div>
-                                                        <div class="value badge badge-pill badge-info" style="background-color: <?= $row['applicant_type_color']?>;">
-                                                            <?=$row['applicant_type'];?>
+                                                        <div class="value badge badge-pill badge-info" style="background-color: <?= $type_info['color']?>;">
+                                                            <?=$type_info['name'];?>
                                                         </div>
                                                     </div>
                                                     <div class="value-pair">
                                                         <div><?= getPhrase('status');?>:</div>
-                                                        <div class="value badge badge-pill badge-primary" style="background-color: <?= $row['status_name_color']?>;">
-                                                            <?= $row['status_name'];?></div>
+                                                        <div class="value badge badge-pill badge-primary" style="background-color: <?= $status_info['color']?>;">
+                                                            <?= $status_info['name'];?>
+                                                        </div>
                                                     </div>                                                    
                                                 </div>
                                             </div>
@@ -100,7 +104,7 @@
                                                                 <select name="status_id" required="">
                                                                     <option value=""><?= getPhrase('select');?></option>
 
-                                                                    <?php $status = $this->db->get('v_applicant_status')->result_array();
+                                                                    <?php $status = $this->db->get_where('v_applicant_status', array('status_id <>' => '3'))->result_array();
                                                                         foreach($status as $item):
                                                                     ?>
                                                                     <option value="<?=$item['status_id']?>"
@@ -116,7 +120,7 @@
                                                         <div class="form-group label-floating is-select" style="border-color: #000 !important;">
                                                             <label class="control-label"><?= getPhrase('assigned_to');?></label>
                                                             <div class="select">
-                                                                <select name="assigned_to" required="">
+                                                                <select name="assigned_to">
                                                                     <option value=""><?= getPhrase('select');?></option>
 
                                                                     <?php $status = $this->db->get_where('admin', array('status' => 1, 'owner_status' => '3'))->result_array();
@@ -145,7 +149,7 @@
                                                             <input type='text' class="datepicker-here" data-position="top left"
                                                                 data-language='en' name="datetimepicker"
                                                                 data-multiple-dates-separator="/"
-                                                                value="<?= $row['birthday'];?>" />
+                                                                value="<?= $birthday;?>" />
                                                         </div>
                                                     </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">

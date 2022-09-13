@@ -8,6 +8,8 @@
         $full_name_encode = base64_encode(str_replace(" ","_",strtoupper($row['full_name'])));
         $return_url = base64_encode('admission_applicant/'.$applicant_id);
         $tags_applicant = json_decode($row['tags'], true)['tags_id'];
+        $status_info = $this->applicant->get_applicant_status_info($row['status']);
+        $type_info = $this->applicant->get_applicant_type_info($row['type_id']);
 ?>
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -17,24 +19,29 @@
             <div class="os-tabs-controls">
                 <ul class="navs navs-tabs upper">
                     <li class="navs-item">
-                        <a class="navs-links" href="<?= base_url();?>admin/admission_dashboard/">
-                            <i
-                                class="os-icon picons-thin-icon-thin-0482_gauge_dashboard_empty"></i><span><?= getPhrase('home');?></span></a>
+                        <a class="navs-links" href="<?php echo base_url();?>admin/admission_dashboard/">
+                            <i class="os-icon picons-thin-icon-thin-0482_gauge_dashboard_empty"></i>
+                            <span><?php echo getPhrase('dashboard');?></span></a>
+                    </li>
+                    <li class="navs-item">
+                        <a class="navs-links" href="<?php echo base_url();?>admin/admission_applicants/">
+                            <i class="os-icon picons-thin-icon-thin-0093_list_bullets"></i>
+                            <span><?php echo getPhrase('applicants');?></span></a>
                     </li>
                     <li class="navs-item active">
                         <a class="navs-links" href="<?= base_url();?>admin/admission_new_applicant/">
-                            <i
-                                class="os-icon picons-thin-icon-thin-0716_user_profile_add_new"></i><span><?= getPhrase('new_applicant');?></span></a>
+                            <i class="os-icon picons-thin-icon-thin-0716_user_profile_add_new"></i>
+                            <span><?= getPhrase('new_applicant');?></span></a>
                     </li>
                     <li class="navs-item">
                         <a class="navs-links" href="<?= base_url();?>admin/admission_new_student/">
-                            <i
-                                class="os-icon picons-thin-icon-thin-0706_user_profile_add_new"></i><span><?= getPhrase('new_student');?></span></a>
+                            <i class="os-icon picons-thin-icon-thin-0706_user_profile_add_new"></i>
+                            <span><?= getPhrase('new_student');?></span></a>
                     </li>
                     <li class="navs-item">
                         <a class="navs-links active" href="<?= base_url();?>admin/admission_applicant/">
-                            <i
-                                class="os-icon picons-thin-icon-thin-0704_users_profile_group_couple_man_woman"></i><span><?= getPhrase('applicant');?></span></a>
+                            <i class="os-icon picons-thin-icon-thin-0704_users_profile_group_couple_man_woman"></i>
+                            <span><?= getPhrase('applicant');?></span></a>
                     </li>
                 </ul>
             </div>
@@ -77,16 +84,16 @@
                                                     <div class="value-pair">
                                                         <div><?= getPhrase('applicant_type');?>:</div>
                                                         <div class="value badge badge-pill badge-info"
-                                                            style="background-color: <?= $row['applicant_type_color']?>;">
-                                                            <?=$row['applicant_type'];?>
+                                                            style="background-color: <?= $type_info['color']?>;">
+                                                            <?=$type_info['name'];?>
 
                                                         </div>
                                                     </div>
                                                     <div class="value-pair">
                                                         <div><?= getPhrase('status');?>:</div>
                                                         <div class="value badge badge-pill badge-primary"
-                                                            style="background-color: <?= $row['status_name_color']?>;">
-                                                            <?= $row['status_name'];?></div>
+                                                            style="background-color: <?= $status_info['color']?>;">
+                                                            <?= $status_info['name'];?></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -96,7 +103,7 @@
                                                 <h6 class="title"><?= getPhrase('personal_information');?>
                                                 </h6>
                                             </div>
-                                            <div class="ui-block-content">
+                                            <div id="div_tags" class="ui-block-content" >
                                                 <div class="row">
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <ul class="widget w-personal-info item-block">
@@ -133,7 +140,7 @@
                                                         </ul>
                                                     </div>
                                                 </div>
-                                                <hr/>
+                                                <hr />
                                                 <h6 class="title"><?= getPhrase('tags');?></h6>
                                                 <div class="row">
                                                     <?php 
@@ -147,22 +154,25 @@
                                                                 <div class="h7"><?= $tag['name'];?></div>
                                                             </div>
                                                             <div class="togglebutton">
-                                                                <label><input name="tag_<?=$tag_id?>" value="1" type="checkbox"  disabled
-                                                                        <?php if(in_array($tag_id, $tags_applicant)) echo "checked";?>></label>
+                                                                <label>
+                                                                    <input name="tag_<?=$tag_id?>" value="1" <?= $allow_actions == true ? "disabled" : ""?>
+                                                                        type="checkbox" onchange="update_tag(this, <?=$tag_id?>)"
+                                                                        <?php if(in_array($tag_id, $tags_applicant)) echo "checked";?>>
+                                                                </label>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <?php endforeach;?>
-                                                </div> 
+                                                </div>
                                             </div>
                                         </div>
                                         <div class=" ui-block-title row" style="border-style: none;">
                                             <div class="col-sm-4">
                                                 <div class="row" style="justify-content: flex-end;">
-                                                    
+
                                                     <?php if($is_international):?>
                                                     <div class="form-buttons">
-                                                        <button class="btn btn-rounded btn-primary"
+                                                        <button class="btn btn-rounded btn-primary" id="btn_show"
                                                             onclick="show_application()">
                                                             <?= getPhrase('view_application');?></button>
                                                     </div> &nbsp;&nbsp;&nbsp;&nbsp;
@@ -210,50 +220,6 @@
                                                     if($application_error != '')
                                                         echo getPhrase('application_was_not_found');
                                                 ?>
-
-                                                <?php if(is_array($application_process)):?>
-                                                <div class="edu-posts cta-with-media">
-                                                    <h6 class="title"><?= getPhrase('process');?></h6>
-                                                    <div class="table-responsive">
-                                                        <table class="table table-bordered">
-                                                            <thead style="text-align: center;">
-                                                                <tr style="background:#f2f4f8;">
-                                                                    <th>
-                                                                        <?= getPhrase('process');?>
-                                                                    </th>
-                                                                    <th>
-                                                                        <?= getPhrase('date_process');?>
-                                                                    </th>
-                                                                    <th>
-                                                                        <?= getPhrase('note');?>
-                                                                    </th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <?php foreach($application_process as $item):?>
-                                                                <tr>
-                                                                    <td class="text-center">
-                                                                        <center>
-                                                                            <?= strip_tags(html_entity_decode($item['process_name']));?>
-                                                                        </center>
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                        <center>
-                                                                            <?= strip_tags(html_entity_decode($item['date_process']));?>
-                                                                        </center>
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                        <center>
-                                                                            <?= strip_tags(html_entity_decode($item['note']));?>
-                                                                        </center>
-                                                                    </td>
-                                                                </tr>
-                                                                <?php endforeach;?>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                                <?php endif;?>
                                                 <?php if(is_array($application_documents)):?>
                                                 <br />
                                                 <br />
@@ -316,6 +282,52 @@
                                                     </div>
                                                 </div>
                                                 <?php endif;?>
+                                                <br />
+                                                <br />
+                                                <?php if(is_array($application_process)):?>
+                                                <div class="edu-posts cta-with-media">
+                                                    <h6 class="title"><?= getPhrase('process');?></h6>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered">
+                                                            <thead style="text-align: center;">
+                                                                <tr style="background:#f2f4f8;">
+                                                                    <th>
+                                                                        <?= getPhrase('process');?>
+                                                                    </th>
+                                                                    <th>
+                                                                        <?= getPhrase('date_process');?>
+                                                                    </th>
+                                                                    <th>
+                                                                        <?= getPhrase('note');?>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php foreach($application_process as $item):?>
+                                                                <tr>
+                                                                    <td class="text-center">
+                                                                        <center>
+                                                                            <?= strip_tags(html_entity_decode($item['process_name']));?>
+                                                                        </center>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <center>
+                                                                            <?= strip_tags(html_entity_decode($item['date_process']));?>
+                                                                        </center>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <center>
+                                                                            <?= strip_tags(html_entity_decode($item['note']));?>
+                                                                        </center>
+                                                                    </td>
+                                                                </tr>
+                                                                <?php endforeach;?>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <?php endif;?>
+
                                             </div>
                                         </div>
                                         <?php endif;?>
@@ -328,7 +340,7 @@
                                                     <?php if(!$allow_actions):?>
                                                     <div class="form-buttons">
                                                         <button class="btn btn-rounded btn-primary"
-                                                        onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_task_add/<?= $row['applicant_id'].'/applicant/'.$return_url;?>');">
+                                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_task_add/<?= $row['applicant_id'].'/applicant/'.$return_url;?>');">
                                                             <?= getPhrase('add_task');?></button>
                                                     </div> &nbsp;&nbsp;&nbsp;&nbsp;
                                                     <?php endif;?>
@@ -396,12 +408,13 @@
                                                                     </td>
                                                                     <td class="row-actions">
                                                                         <a href="<?php echo base_url();?>admin/task_info/<?= $item['task_code'];?>"
-                                                                            class="grey" data-toggle="tooltip" data-placement="top"
+                                                                            class="grey" data-toggle="tooltip"
+                                                                            data-placement="top"
                                                                             data-original-title="<?php echo getPhrase('view');?>">
                                                                             <i
                                                                                 class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible"></i>
                                                                         </a>
-                                                                        <?php if($user_id == $item['created_by'] && !$allow_actions):?>                                                                        
+                                                                        <?php if($user_id == $item['created_by'] && !$allow_actions):?>
                                                                         <a href="javascript:void(0);" class="grey"
                                                                             data-toggle="tooltip" data-placement="top"
                                                                             data-original-title="<?= getPhrase('add_message');?>"
@@ -519,7 +532,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>                                        
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -575,7 +588,37 @@
 <?php endforeach;?>
 
 <script>
-function show_application() {
-    document.getElementById("application_view").style.display = 'block';
-}
+    function show_application() 
+    {
+        var current = document.getElementById("application_view").style.display;
+        if (current == 'block') {
+            document.getElementById("application_view").style.display = 'none';
+            document.getElementById("btn_show").textContent = '<?= getPhrase('show_application');?>';
+        } else {
+            document.getElementById("application_view").style.display = 'block';
+            document.getElementById("btn_show").textContent = '<?= getPhrase('hide_application');?>';
+        }
+    }
+
+    function update_tag(checkboxElem, tag_id)
+    {
+        var isSelected = false;
+
+        if (checkboxElem.checked) {
+            isSelected = true;
+        } else {
+            isSelected = false;            
+        }
+
+        const loading = '<img src="<?= '/'.PATH_PUBLIC_ASSETS_IMAGES_FILES.'loader-1.gif';?>" />'
+        $.ajax({
+            url: '<?php echo base_url();?>admin/admission_applicant_update_tags/' + <?=$applicant_id;?> + '/' + tag_id + '/' + isSelected,
+            beforeSend: function() {
+                $('#div_tags :input').attr('disabled', true);
+            },
+            success: function(response) {
+                $('#div_tags :input').attr('disabled', false);
+            }
+        });
+    }
 </script>

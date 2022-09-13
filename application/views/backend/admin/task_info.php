@@ -14,23 +14,34 @@
                 <ul class="navs navs-tabs upper">
                     <li class="navs-item">
                         <a class="navs-links" href="<?php echo base_url();?>admin/task_dashboard/">
-                            <i
-                                class="os-icon picons-thin-icon-thin-0482_gauge_dashboard_empty"></i><span><?php echo getPhrase('dashboard');?></span></a>
+                            <i class="os-icon picons-thin-icon-thin-0482_gauge_dashboard_empty"></i>
+                            <span><?php echo getPhrase('dashboard');?></span>
+                        </a>
+                    </li>
+                    <li class="navs-item">
+                        <a class="navs-links" href="<?php echo base_url();?>admin/task_list/">
+                            <i class="os-icon picons-thin-icon-thin-0093_list_bullets"></i>
+                            <span><?php echo getPhrase('task_list');?></span>
+                        </a>
                     </li>
                     <li class="navs-item">
                         <a class="navs-links" href="<?php echo base_url();?>admin/task_applicant/">
-                            <i
-                                class="os-icon picons-thin-icon-thin-0716_user_profile_add_new"></i><span><?php echo getPhrase('task_applicants');?></span></a>
+                            <i class="os-icon picons-thin-icon-thin-0716_user_profile_add_new"></i>
+                            <span><?php echo getPhrase('task_applicants');?></span>
+                        </a>
                     </li>
                     <li class="navs-item">
                         <a class="navs-links" href="<?php echo base_url();?>admin/task_student/">
                             <i
-                                class="os-icon picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i><span><?php echo getPhrase('task_students');?></span></a>
+                                class="os-icon picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i>
+                            <span><?php echo getPhrase('task_students');?></span>
+                        </a>
                     </li>
                     <li class="navs-item">
                         <a class="navs-links active" href="#">
-                            <i
-                                class="os-icon picons-thin-icon-thin-0100_to_do_list_reminder_done"></i><span><?php echo getPhrase('task_info');?></span></a>
+                            <i class="os-icon picons-thin-icon-thin-0100_to_do_list_reminder_done"></i>
+                            <span><?php echo getPhrase('task_info');?></span>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -150,10 +161,10 @@
                                                             onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_task_add_message/<?= $task_code;?>');">
                                                             <?= getPhrase('add_commentary');?></button>
                                                     </div> &nbsp;&nbsp;&nbsp;&nbsp;
-                                                    <?php endif;?>                                                    
+                                                    <?php endif;?>
                                                 </div>
                                             </div>
-                                        </div>                                        
+                                        </div>
                                         <br />
                                         <div class="ui-block">
                                             <div class="ui-block-title">
@@ -261,9 +272,9 @@
                             <div class="eduappgt-sticky-sidebar">
                                 <div class="sidebar__inner">
                                     <div class="ui-block paddingtel">
-                                        <div class="ui-block-content">                                            
+                                        <div class="ui-block-content">
                                             <div class="help-support-block">
-                                                <h3 class="title"><?= getPhrase('quick_links');?></h3>                                                
+                                                <h3 class="title"><?= getPhrase('quick_links');?></h3>
                                                 <ul class="help-support-list">
 
                                                 </ul>

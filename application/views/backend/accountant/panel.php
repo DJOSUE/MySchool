@@ -331,7 +331,7 @@
                                                 </div>
                                                 <div class="list">
                                                 <?php $date = date('Y-m-d');
-                                                $events = $this->db->get_where('events', array('start > ' => $date.' '.'00:00:00', 'start <' => $date.' '.'23:59:59')); ?>
+                                                $events = $this->db->get_where('events', array('start >=' => $date.' '.'00:00:00', 'start <=' => $date.' '.'23:59:59')); ?>
                                                     <div id="accordion-1" role="tablist" aria-multiselectable="true" class="day-event" data-month="12" data-day="2">
                                                     <?php  
                                                         if($events->num_rows() > 0):

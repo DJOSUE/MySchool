@@ -125,8 +125,8 @@
                                             <ul>
                                                 <?php  
                                                     $var = 0;
-                                                    $examss = $this->db->get_where('v_class_units', array( 'class_id' => $class_id))->result_array();
-                                                    foreach($examss as $exam):
+                                                    $exams = $this->db->get_where('v_class_units', array( 'class_id' => $class_id))->result_array();
+                                                    foreach($exams as $exam):
                                                     $var++;
                                                 ?>
                                                 <li class='<?php if($exam['unit_id'] == $unit_id) echo "act";?>'><a

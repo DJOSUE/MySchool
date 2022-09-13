@@ -21,7 +21,7 @@
             $this->load->database();
             $this->load->library('session');
             $this->output->set_header('Last-Modified: ' . gmdate("D, d M Y H:i:s") . ' GMT');
-            $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+            $this->output->set_header('Cache-Control: no-cache, must-revalidate, post-check=0, pre-check=0');
             $this->output->set_header('Pragma: no-cache');
             $this->output->set_header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
             
@@ -2905,10 +2905,10 @@
         }
     
         //Classes functions.
-        function grados($param1 = '', $param2 = '', $param3 = '')
+        function academic($param1 = '', $param2 = '', $param3 = '')
         {
             $this->isAdmin();
-            $page_data['page_name']  = 'grados';
+            $page_data['page_name']  = 'academic';
             $page_data['page_title'] = getPhrase('classes');
             $this->load->view('backend/index', $page_data);
         }
@@ -3495,8 +3495,9 @@
 
         /** Admission Module */
         // Admission Dashboard
-        function admission_dashboard(){
-            $this->isAdmin();
+        function admission_dashboard()
+        {
+            $this->isAdmin('admission_module');
 
             $name       = "";
             $country_id = "_blank";
@@ -3517,10 +3518,50 @@
             $this->load->view('backend/index', $page_data);
         }
 
+        function admission_applicants($param1 = '')
+        {
+            $this->isAdmin('admission_module');
+
+            if($param1 != '')
+            {
+                $array      = explode('|',base64_decode($param1));
+                
+                $name       = "";
+                $country_id = "";
+                $status_id  = $array[1];
+                $type_id    = $array[0];
+            }
+            else
+            {
+                $name       = "";
+                $country_id = "";
+                $status_id  = "";
+                $type_id    = "";
+            }
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') 
+            {
+                $country_id = $this->input->post('country_id');
+                $status_id  = $this->input->post('status_id');
+                $type_id    = $this->input->post('type_id');
+                $name       = $this->input->post('name');
+                $search     = true;
+            }
+
+            $page_data['country_id'] = $country_id;
+            $page_data['status_id']  = $status_id;
+            $page_data['type_id']    = $type_id;
+            $page_data['search']     = $search;
+            $page_data['name']       = $name;
+            $page_data['page_name']  = 'admission_applicants';
+            $page_data['page_title'] =  getPhrase('admission_applicants');
+            $this->load->view('backend/index', $page_data);
+        }
+
         //Create Student function.
         function admission_new_applicant($param1 = '', $param2 = '')
         {
-            $this->isAdmin();
+            $this->isAdmin('admission_module');
             $page_data['page_name']  = 'admission_new_applicant';
             $page_data['page_title'] = getPhrase('admissions');
             $this->load->view('backend/index', $page_data);
@@ -3529,7 +3570,7 @@
         //Create Student function.
         function admission_new_student($data = '', $param2 = '')
         {
-            $this->isAdmin();
+            $this->isAdmin('admission_module');
             // If is convert of applicant to student
             $page_data['data']  = $data;
             $page_data['page_name']  = 'admission_new_student';
@@ -3540,7 +3581,7 @@
         // Create Student function.
         function admission_applicant($applicant_id = '', $param2 = '')
         {
-            $this->isAdmin();
+            $this->isAdmin('admission_module');
             $page_data['applicant_id'] = $applicant_id;
             $page_data['page_name']    = 'admission_applicant';
             $page_data['page_title']   = getPhrase('admission_applicant');
@@ -3550,7 +3591,7 @@
         // 
         function admission_applicant_update($applicant_id = '', $param2 = '')
         {
-            $this->isAdmin();
+            $this->isAdmin('admission_module');
             $page_data['applicant_id'] = $applicant_id;
             $page_data['page_name']    = 'admission_applicant_update';
             $page_data['page_title']   = getPhrase('admission_applicant_update');
@@ -3560,22 +3601,23 @@
 
         function applicant($action, $applicant_id = '', $return_url = '')
         {
-            $this->isAdmin();
+            $this->isAdmin('admission_module');
 
             if($return_url == '')
             {
-                $return_url = 'admission_dashboard';
+                $return_url = 'admission_applicants';
             }
 
             $message = '';
             switch ($action) {
                 case 'register':
-                    $this->applicant->register();
+                    $id = $this->applicant->register();
+                    $return_url = 'admission_applicant/'.$id;
                     $message =  getPhrase('successfully_added');
                     break;
                 case 'update':
                     $this->applicant->update($applicant_id);
-                    $return_url .= '/'.$applicant_id;
+                    $return_url = 'admission_applicant/'.$applicant_id;
                     $message =  getPhrase('successfully_updated');
                     break;
                 
@@ -3590,7 +3632,7 @@
 
         function admission_search($search_key)
         {
-            $this->isAdmin();
+            $this->isAdmin('admission_module');
             $token = $this->generate_token();
 
             $search_value = base64_encode($search_key);
@@ -3613,6 +3655,7 @@
                     $html_string  = '<div class="table-responsive">';
                     $html_string .= '<table class="table table-bordered">';
                     $html_string .= '<thead>';
+
                     $html_string .= '<tr style="background:#f2f4f8; height:35px;">';
                     $html_string .= '<th style="text-align: center;">';
                     $html_string .= getPhrase('full_name');
@@ -3621,12 +3664,15 @@
                     $html_string .= '<th style="text-align: center;">';
                     $html_string .= getPhrase('gender');;
                     $html_string .= '</th>';
+
                     $html_string .= '<th style="text-align: center;">';
                     $html_string .= getPhrase('birthdate');;
                     $html_string .= '</th>';
+
                     $html_string .= '<th style="text-align: center;">';
                     $html_string .= getPhrase('phone');;
                     $html_string .= '</th>';
+
                     $html_string .= '<th style="text-align: center;">';
                     $html_string .= getPhrase('country');;
                     $html_string .= '</th>';
@@ -3634,12 +3680,19 @@
                     $html_string .= '<th style="text-align: center;">';
                     $html_string .= getPhrase('email');
                     $html_string .= '</th>';
+
                     $html_string .= '<th style="text-align: center;">';
                     $html_string .= getPhrase('status_application');;
                     $html_string .= '</th>';
+
+                    $html_string .= '<th style="text-align: center;">';
+                    $html_string .= getPhrase('payment_type');;
+                    $html_string .= '</th>';
+
                     $html_string .= '<th style="text-align: center;">';
                     $html_string .= getPhrase('created_at');
                     $html_string .= '</th>';
+
                     $html_string .= '<th style="text-align: center;">';
                     $html_string .= getPhrase('action');
                     $html_string .= '</th>';
@@ -3657,6 +3710,9 @@
                         $applicant_id     = $this->db->get_where('applicant' , array('email' => $email ))->result_array();
 
                         if(count($applicant_id) == 0 ){
+
+                            $encode = base64_encode($row['email']);
+
                             $html_string .= '<tr style="height:25px;">';
                             $html_string .= '<td><center>';
                             $html_string .= '<label name="full_name_'.$row['user_id'].'">';
@@ -3669,16 +3725,13 @@
                             $html_string .= $row['gender'];
                             $html_string .= '</label>';
                             $html_string .= '</center></td>';
+
                             $html_string .= '<td><center>';
-                            $html_string .= '<label name="birthdate'.$row['user_id'].'">';
-                            $html_string .= $row['birthdate'];
+                            $html_string .= '<label name="birthday'.$row['user_id'].'">';
+                            $html_string .= date('m/d/Y', strtotime($row['birthday']));
                             $html_string .= '</label>';
                             $html_string .= '</center></td>';
-                            $html_string .= '<td><center>';
-                            $html_string .= '<label name="country'.$row['user_id'].'">';
-                            $html_string .= $row['country'];
-                            $html_string .= '</label>';
-                            $html_string .= '</center></td>';
+
                             $html_string .= '<td><center>';
                             $html_string .= '<label name="phone'.$row['user_id'].'">';
                             $html_string .= $row['phone'];
@@ -3686,22 +3739,37 @@
                             $html_string .= '</center></td>';
 
                             $html_string .= '<td><center>';
-                            $html_string .= '<label name="status_name_'.$row['user_id'].'">';
-                            $html_string .= $row['status_name'];
+                            $html_string .= '<label name="country'.$row['user_id'].'">';
+                            $html_string .= $row['country'];
                             $html_string .= '</label>';
                             $html_string .= '</center></td>';
+
                             $html_string .= '<td><center>';
                             $html_string .= '<label name="email_'.$row['user_id'].'">';
                             $html_string .= $email;
                             $html_string .= '</label>';
                             $html_string .= '</center></td>';
+
+                            $html_string .= '<td><center>';
+                            $html_string .= '<label name="status_name_'.$row['user_id'].'">';
+                            $html_string .= $row['status_name'];
+                            $html_string .= '</label>';
+                            $html_string .= '</center></td>';                            
+
+
+                            $html_string .= '<td><center>';
+                            $html_string .= '<label name="created_at_'.$row['user_id'].'">';
+                            $html_string .= ($row['payment_type'] == null ? '' : ( $row['payment_type'] == 1 ? 'PayPal' : 'Manual'));
+                            $html_string .= '</label>';
+                            $html_string .= '</center></td>';
+
                             $html_string .= '<td><center>';
                             $html_string .= '<label name="created_at_'.$row['user_id'].'">';
                             $html_string .= $row['created_at'];
                             $html_string .= '</label>';
                             $html_string .= '</center></td>';
-                            $html_string .= '<td><center>';
-                            $encode = base64_encode($row['email']);
+
+                            $html_string .= '<td><center>';                            
                             $html_string .= '<a class="text-center" href="/admin/admission_import_student/'.$encode.'">';
                             $html_string .= '<i class="picons-thin-icon-thin-0086_import_file_load"></i>';
                             $html_string .= '</a>';
@@ -3730,12 +3798,12 @@
 
         function admission_import_student($encode)
         {
-            $this->isAdmin();
+            $this->isAdmin('admission_module');
 
             $email = base64_decode($encode);
             $token = $this->generate_token();
 
-            $url_app = ADMISSION_PLATFORM_URL.'student_list?auth_token='.$token.'&search_string='.$encode;
+            $url_app = ADMISSION_PLATFORM_URL.'student_list?auth_token='.$token.'&search_string='.$encode.'&search_field=email';
 
             $ch_app = curl_init($url_app);
             curl_setopt($ch_app, CURLOPT_HTTPGET, true);
@@ -3754,17 +3822,23 @@
 
                     $country_id = $this->db->get_where('countries' , array('name' => $student['country'] ))->row()->country_id;
 
-                    $_POST['first_name']    = $student['first_name'];
-                    $_POST['last_name']     = $student['last_name'];
-                    $_POST['birthday']      = $student['birthday'];
-                    $_POST['email']         = $student['email'];
-                    $_POST['phone']         = $student['phone'];
-                    $_POST['gender']        = $gender;
-                    $_POST['address']       = $student['address'];
-                    $_POST['country_id']    = $country_id;
-                    $_POST['type_id']       = '1'; // 1 = international
-                    $_POST['is_imported']   = '1'; // 1 = international
+                    $status = $student['payment_type'] > 0 ? 2 : 0;
 
+                    $_POST['first_name']        = $student['first_name'];
+                    $_POST['last_name']         = $student['last_name'];
+                    $_POST['datetimepicker']    = $student['birthday'];
+                    $_POST['email']             = $student['email'];
+                    $_POST['phone']             = $student['phone'];
+                    $_POST['gender']            = $gender;
+                    $_POST['address']           = $student['address'];
+                    $_POST['country_id']        = $country_id;
+                    $_POST['admission_id']      = $student['user_id']; 
+                    $_POST['type_id']           = '1'; // 1 = international
+                    $_POST['is_imported']       = '1'; 
+                    
+                    if($status > 0)
+                        $_POST['status_id']     = 2; 
+                    
                     $this->applicant('register');
                 }
             }
@@ -3777,11 +3851,19 @@
 
         function admission_applicant_interaction($action, $applicant_id = '', $interaction_id = '', $return_url = '')
         {
+            $this->isAdmin('admission_module');
+
             $message = '';
             switch ($action) {
                 case 'add':
-                    if($return_url != '')
-                        $return_url = 'admin/admission_dashboard';
+                    if($return_url == '')
+                    {
+                        if($applicant_id != '')
+                            $return_url = 'admin/admission_applicant/'.$applicant_id;
+                        else
+                            $return_url = 'admin/admission_applicants';
+                    }
+
                     $this->applicant->add_interaction();
                     $message =  getPhrase('successfully_added');
 
@@ -3794,12 +3876,12 @@
                         if($status_id_old != $status_id_new)
                         {
                             $this->applicant->update_status($applicant_id, $status_id_new);
-                        }
+                        }                       
                     }
 
                     break;
                 case 'update':
-                    if($return_url != '')
+                    if($return_url == '')
                         $return_url = 'admin/admission_applicant/'.$applicant_id;
                     $this->applicant->update_interaction($interaction_id);
                     $message =  getPhrase('successfully_added');
@@ -3815,28 +3897,34 @@
 
         function admission_applicant_convert($applicant_id)
         {
+            $this->isAdmin('admission_module');
+
             $applicant = $this->db->get_where('applicant' , array('applicant_id' => $applicant_id))->row();
 
-            
+            $birthday = date('m/d/Y', strtotime($applicant->birthday));
 
-            $data['first_name'] = $applicant->first_name;
-            $data['last_name']  = $applicant->last_name;
-            $data['birthday']   = $applicant->birthday;
-            $data['email']      = $applicant->email;
-            $data['phone']      = $applicant->phone;
-            $data['gender']     = $applicant->gender;
-            $data['address']    = $applicant->address;
-            $data['country_id'] = $applicant->country_id;
-            $data['applicant_id'] = $applicant_id;
+            $data['first_name']     = $applicant->first_name;
+            $data['last_name']      = $applicant->last_name;
+            $data['birthday']       = $birthday;
+            $data['email']          = $applicant->email;
+            $data['phone']          = $applicant->phone;
+            $data['gender']         = $applicant->gender;
+            $data['address']        = $applicant->address;
+            $data['country_id']     = $applicant->country_id;
+            $data['referral_by']    = $applicant->referral_by;
+            $data['applicant_id']   = $applicant_id;
 
+            // echo '<pre>';
             // var_dump($data);
+            // echo '</pre>';
+            
             
             $this->admission_new_student($data);
         }
 
         function admission_applicant_document_api($document_id, $user_id)
         {
-            $this->isAdmin();
+            $this->isAdmin('admission_module');
             $page_data['document_id']  = str_replace('==','',$document_id);
             $page_data['user_id']      = $user_id;
             $page_data['page_name']    = 'admission_applicant_document_api';
@@ -3846,6 +3934,8 @@
 
         function admission_applicant_send_message_api($email, $message_thread_code)
         {
+            $this->isAdmin('admission_module');
+
             $message = html_escape($this->input->post( 'message' ));
 
             $email = base64_decode($email);
@@ -3861,6 +3951,13 @@
             $response_app = json_decode($response_json_app, true);
 
             echo $response_app;
+        }
+
+        function admission_applicant_update_tags($applicant_id, $tag_id, $selected)
+        {
+            $this->isAdmin('admission_module');
+
+            $this->applicant->update_tag($applicant_id, $tag_id, $selected);
         }
 
         /** Reports Module */
@@ -3889,8 +3986,8 @@
         // task Dashboard
         function task_dashboard()
         {
-            $this->isAdmin();
-            
+            $this->isAdmin('task_module');
+
             if($_SERVER['REQUEST_METHOD'] === 'POST')
             {   
                 $department_id  = $this->input->post('department_id');                
@@ -3917,9 +4014,52 @@
             $this->load->view('backend/index', $page_data);
         }
 
+        function task_list($param1 = '')
+        {
+            $this->isAdmin('task_module');
+
+            if($param1 != '')
+            {
+                $array      = explode('|',base64_decode($param1));
+
+                $status_id      = $array[0] != '-' ? $array[0] : '';
+                $priority_id    = $array[1] != '-' ? $array[1] : '';
+                $assigned_me    = 0;
+                $department_id  = "";
+            }
+            else
+            {
+                $department_id  = "";
+                $priority_id    = "";
+                $status_id      = "";
+                $assigned_me    = 1;
+            }
+            
+            if($_SERVER['REQUEST_METHOD'] === 'POST')
+            {   
+                $category_id    = $this->input->post('category_id');                
+                $priority_id    = $this->input->post('priority_id');
+                $status_id      = $this->input->post('status_id');
+                $text           = $this->input->post('text');
+                $assigned_me    = $this->input->post('assigned_me');  
+                $search         = true;              
+            }
+
+            $page_data['department_id'] = $department_id;
+            $page_data['category_id']   = $category_id;
+            $page_data['priority_id']   = $priority_id;
+            $page_data['status_id']     = $status_id;
+            $page_data['text']          = $text;
+            $page_data['search']        = $search;
+            $page_data['assigned_me']   = $assigned_me;
+            $page_data['page_name']     = 'task_list';
+            $page_data['page_title']    =  getPhrase('task_list');
+            $this->load->view('backend/index', $page_data);
+        }
+
         function task_applicant()
         {
-            $this->isAdmin();
+            $this->isAdmin('task_module');
             
             if($_SERVER['REQUEST_METHOD'] === 'POST')
             {   
@@ -3949,7 +4089,7 @@
 
         function task_student()
         {
-            $this->isAdmin();
+            $this->isAdmin('task_module');
             
             if($_SERVER['REQUEST_METHOD'] === 'POST')
             {   
@@ -3979,7 +4119,7 @@
 
         function task_info($task_code = '', $param2 = '')
         {
-            $this->isAdmin();
+            $this->isAdmin('task_module');
             $page_data['task_code']    = $task_code;
             $page_data['page_name']    = 'task_info';
             $page_data['page_title']   = getPhrase('task_info');
@@ -3989,7 +4129,7 @@
 
         function task($action, $task_id = '', $return_url = '')
         {
-            $this->isAdmin();
+            $this->isAdmin('task_module');
 
             $message = '';
             switch ($action) {
@@ -4026,6 +4166,8 @@
 
         function task_message($action, $task_code = '', $task_message_id = '', $return_url = '')
         {
+            $this->isAdmin('task_module');
+
             if($return_url == '')
             {
                 $return_url = 'admin/task_info/'.$task_code;
@@ -4097,13 +4239,18 @@
             $this->session->unset_userdata('program_id');
         }
 
-        //Check Admin session.
-        function isAdmin()
+        //Check Admin session and access. 
+        function isAdmin($permission_for = '')
         {
             if ($this->session->userdata('admin_login') != 1 )
             {
                 $this->session->set_userdata('last_page', current_url());
                 redirect(base_url(), 'refresh');
+            }
+
+            if($permission_for != '')
+            {
+                check_permission($permission_for);
             }
         }
 

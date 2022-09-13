@@ -75,7 +75,10 @@
                             <div class="row">
                                 <?php 
                                     $student_info = $this->crud->get_student_info($student_id);
-                                    $exams         = $this->crud->get_exams();
+                                    $student_enrollment = $this->crud->get_current_enrollment($student_id);
+                                    $exams         = $this->crud->get_exam_by_class($class_id);
+
+                                    if(count($student_enrollment) > 0):
                                     foreach ($student_info as $row1):
                                 ?>
                                 <div class="col-sm-12">
@@ -89,6 +92,7 @@
                                                     <tr>
                                                         <th><?php echo getPhrase('subject');?></th>
                                                         <th><?php echo getPhrase('teacher');?></th>
+                                                        <th><?php echo getPhrase('attendance');?></th>
                                                         <th><?php echo getPhrase('mark');?></th>
                                                         <th><?php echo getPhrase('grade');?></th>
                                                         <th><?php echo getPhrase('gpa');?></th>
@@ -146,7 +150,7 @@
                                                             if($labonueve   == '' ) { $labonueve    = '-'; }  
                                                             if($labodiez    == '' ) { $labodiez     = '-'; }
 
-                                                            if(is_numeric($average->labuno)     && $average->labuno != '' ) { $count++; } 
+                                                            // if(is_numeric($average->labuno)     && $average->labuno != '' ) { $count++; } 
                                                             if(is_numeric($average->labdos)     && $average->labdos != '' ) { $count++; }  
                                                             if(is_numeric($average->labtres)    && $average->labtres != '' ) { $count++; }  
                                                             if(is_numeric($average->labcuatro)  && $average->labcuatro != '' ) { $count++; }  
@@ -157,7 +161,7 @@
                                                             if(is_numeric($average->labnueve)   && $average->labnueve != '' ) { $count++; }  
                                                             if(is_numeric($average->labdiez)    && $average->labdiez != '' ) { $count++; }                                                            
                                                             
-                                                            $labototal      = (float)$labouno + (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
+                                                            $labototal      = (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
                                             
                                                             $mark = $count > 0 ? round(($labototal/$count), (int)$roundPrecision) : '-';
                                                     ?>
@@ -167,6 +171,16 @@
                                                         </td>
                                                         <td>
                                                             <?= $row_average['teacher_name'];?>
+                                                        </td>
+                                                        <td>
+                                                            <?php if(is_numeric($labouno) && ($labouno < $min || $labouno == 0)):?>
+                                                            <a class="btn btn-rounded btn-sm btn-danger"
+                                                                style="color:white"><?php if($labouno == 0) echo '0'; else echo $labouno;?></a>
+                                                            <?php endif;?>
+                                                            <?php if(is_numeric($labouno) && ($labouno >= $min)):?>
+                                                            <a class="btn btn-rounded btn-sm btn-info"
+                                                                style="color:white"><?php echo $labouno;?></a>
+                                                            <?php endif;?>
                                                         </td>
                                                         <td>
                                                             <?php if(is_numeric($mark) && ($mark < $min || $mark == 0)):?>
@@ -203,7 +217,7 @@
                                 <div class="col-sm-12">
                                     <div class="element-box lined-primary">
                                         <h5 class="form-header"><?php echo getPhrase('marks');?><br>
-                                            <small><?php echo $row2['name'];?></small>
+                                            <small><?php echo $row2['unit_name'];?></small>
                                         </h5>
                                         <div class="table-responsive">
                                             <table class="table table-lightborder">
@@ -211,6 +225,7 @@
                                                     <tr>
                                                         <th><?php echo getPhrase('subject');?></th>
                                                         <th><?php echo getPhrase('teacher');?></th>
+                                                        <th><?php echo getPhrase('attendance');?></th>
                                                         <th><?php echo getPhrase('mark');?></th>
                                                         <th><?php echo getPhrase('grade');?></th>
                                                         <th><?php echo getPhrase('gpa');?></th>
@@ -274,7 +289,7 @@
                                                             if($labonueve   == '' ) { $labonueve    = '-'; }  
                                                             if($labodiez    == '' ) { $labodiez     = '-'; }
 
-                                                            if(is_numeric($average->labuno)     && $average->labuno != '' ) { $count++; } 
+                                                            // if(is_numeric($average->labuno)     && $average->labuno != '' ) { $count++; } 
                                                             if(is_numeric($average->labdos)     && $average->labdos != '' ) { $count++; }  
                                                             if(is_numeric($average->labtres)    && $average->labtres != '' ) { $count++; }  
                                                             if(is_numeric($average->labcuatro)  && $average->labcuatro != '' ) { $count++; }  
@@ -285,7 +300,7 @@
                                                             if(is_numeric($average->labnueve)   && $average->labnueve != '' ) { $count++; }  
                                                             if(is_numeric($average->labdiez)    && $average->labdiez != '' ) { $count++; }                                                            
                                                             
-                                                            $labototal      = (float)$labouno + (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
+                                                            $labototal      = (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
                                             
                                                             $mark = $count > 0 ? round(($labototal/$count), (int)$roundPrecision) : '-';
                                                     ?>
@@ -295,6 +310,16 @@
                                                         </td>
                                                         <td>
                                                             <?= $row3['teacher_name'];?>
+                                                        </td>
+                                                        <td>
+                                                            <?php if(is_numeric($labouno) && ($labouno < $min || $labouno == 0)):?>
+                                                            <a class="btn btn-rounded btn-sm btn-danger"
+                                                                style="color:white"><?php if($labouno == 0) echo '0'; else echo $labouno;?></a>
+                                                            <?php endif;?>
+                                                            <?php if(is_numeric($labouno) && ($labouno >= $min)):?>
+                                                            <a class="btn btn-rounded btn-sm btn-info"
+                                                                style="color:white"><?php echo $labouno;?></a>
+                                                            <?php endif;?>
                                                         </td>
                                                         <td>
                                                             <?php if(is_numeric($mark) && ($mark < $min || $mark == 0)):?>
@@ -321,17 +346,17 @@
                                                     <?php endforeach;?>
                                                 </tbody>
                                             </table>
-                                            <div class="form-buttons-w text-right">
+                                            <!-- <div class="form-buttons-w text-right">
                                                 <a target="_blank"
                                                     href="<?php echo base_url();?>admin/marks_print_view/<?php echo $student_id;?>/<?php echo $row2['unit_id'];?>"><button
                                                         class="btn btn-rounded btn-success" type="submit"><i
                                                             class="picons-thin-icon-thin-0333_printer"></i>
                                                         <?php echo getPhrase('print');?></button></a>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
-                                <?php endforeach; endforeach; ?>
+                                <?php endforeach; endforeach; endif;?>
                             </div>
                         </div>
                     </main>

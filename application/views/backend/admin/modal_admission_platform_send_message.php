@@ -21,7 +21,9 @@
         $message_thread_code = $message_thread[0]["message_thread_code"];
     }
 
-    $current_user_email = 'f1@americanone-esl.com';   
+    $current_user_email = 'f1@americanone-esl.com';  
+    
+    $allow_actions = !is_student($applicant_id);
 
     // echo '<pre>';
     // var_dump($message_thread_code);
@@ -62,12 +64,13 @@
         </section>
     </div>
     <div class="footer-chat">
+        <?php if($allow_actions): ?>
         <input type="text" id="message" class="write-message" placeholder="Type your message here"></input>
         <a href="javascript:void(0);" class="navs-links" data-toggle="tooltip" data-placement="top"
             data-original-title="<?= getPhrase('send_message');?>" onclick="sendMessage();">
             <i class="os-icon picons-thin-icon-thin-0317_send_post_paper_plane"></i>
         </a>
-
+        <?php endif;?>
     </div>
 </div>
 <script type="text/javascript">

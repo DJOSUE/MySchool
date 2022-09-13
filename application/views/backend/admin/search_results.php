@@ -7,7 +7,7 @@
         <div class="conty">
             <div class="header-spacer"></div>
             <div class="container">
-                <div class="">
+                <div class="row">
                     <div class="col">
                         <div class="ui-block">
                             <div class="ui-block-title">
@@ -75,7 +75,9 @@
                                 </div>
                             </div>
                             <?php endif;?>
-                        </div>
+                        </div>                        
+                    </div>
+                    <div class="col">
                         <div class="ui-block">
                             <div class="ui-block-title">
                                 <h6 class="title"><?= getPhrase('search_results_applicants');?></h6>
@@ -83,6 +85,7 @@
                             <?php 
 				                $query = base64_decode($search_key);
 				                $this->db->like('full_name' , str_replace("%20", " ", $query));
+                                $this->db->where_not_in('status', '3');
 					            $student_query = $this->db->get('v_applicants');
 					            if($student_query->num_rows() > 0):
 					            $students = $student_query->result_array();

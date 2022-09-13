@@ -3,15 +3,15 @@
 
     $user_id = $this->session->userdata('login_user_id');
 
-    if($category_id != '_blank')
+    if($category_id != '')
     {
         $this->db->where('category_id', $category_id);
     }
-    if($priority_id != '_blank')
+    if($priority_id != '')
     {
         $this->db->where('priority_id', $priority_id);
     }
-    if($status_id != '_blank')
+    if($status_id != '')
     {   
         $this->db->where('status_id', $status_id);
     }
@@ -22,11 +22,15 @@
     if($assigned_me == 1)
     {
         $this->db->where('assigned_to' , $user_id);
-    }
-    $this->db->where('user_type' , 'student');
+    }    
     $task_query = $this->db->get('task');
     $tasks = $task_query->result_array();
 ?>
+<style>
+    th {
+        cursor: pointer;
+    }
+</style>
 <div class="content-w">
     <?php include 'fancy.php';?>
     <div class="header-spacer"></div>
@@ -34,14 +38,14 @@
         <div class="os-tabs-w menu-shad">
             <div class="os-tabs-controls">
                 <ul class="navs navs-tabs upper">
-                <li class="navs-item">
+                    <li class="navs-item">
                         <a class="navs-links" href="<?php echo base_url();?>admin/task_dashboard/">
                             <i class="os-icon picons-thin-icon-thin-0482_gauge_dashboard_empty"></i>
                             <span><?php echo getPhrase('dashboard');?></span>
                         </a>
                     </li>
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/task_list/">
+                        <a class="navs-links active" href="<?php echo base_url();?>admin/task_list/">
                             <i class="os-icon picons-thin-icon-thin-0093_list_bullets"></i>
                             <span><?php echo getPhrase('task_list');?></span>
                         </a>
@@ -52,7 +56,7 @@
                             <span><?php echo getPhrase('task_applicants');?></span>
                         </a>
                     </li>
-                    <li class="navs-item active">
+                    <li class="navs-item">
                         <a class="navs-links" href="<?php echo base_url();?>admin/task_student/">
                             <i
                                 class="os-icon picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i>
@@ -77,30 +81,33 @@
                         <div class="row">
                             <div class="content-i">
                                 <div class="content-box">
-                                    <?php echo form_open(base_url() . 'admin/task_student/', array('class' => 'form m-b'));?>
+                                    <?php echo form_open(base_url() . 'admin/task_list/', array('class' => 'form m-b'));?>
                                     <div class="row" style="margin-top: -30px; border-radius: 5px;">
                                         <div class="col-sm-2">
                                             <div class="form-group label-floating is-select">
-                                                <label class="control-label"><?php echo getPhrase('department');?></label>
+                                                <label
+                                                    class="control-label"><?php echo getPhrase('department');?></label>
                                                 <div class="select">
-                                                    <select name="category_id" onchange="get_class_sections(this.value)">
-                                                        <option value="_blank"><?php echo getPhrase('select');?></option> 
-                                                        
+                                                    <select name="category_id"
+                                                        onchange="get_class_sections(this.value)">
+                                                        <option value=""><?php echo getPhrase('select');?>
+                                                        </option>
+
                                                         <?php
                                                         $departments = $this->task->get_departments();
                                                         foreach($departments as $row):                        
                                                         ?>
                                                         <optgroup label="<?= $row['name'];?>">
-                                                        <?php
+                                                            <?php
                                                         $categories = $this->task->get_categories($row['department_id']);
                                                         foreach($categories as $item):  
                                                         ?>
                                                             <option value="<?php echo $item['category_id'];?>"
-                                                            <?php if($category_id == $item['category_id']) echo "selected";?>>
-                                                            <?php echo $item['name'];?></option>
+                                                                <?php if($category_id == $item['category_id']) echo "selected";?>>
+                                                                <?php echo $item['name'];?></option>
 
-                                                        <?php endforeach;?>
-                                                        <?php endforeach;?>
+                                                            <?php endforeach;?>
+                                                            <?php endforeach;?>
                                                     </select>
                                                 </div>
                                             </div>
@@ -109,8 +116,10 @@
                                             <div class="form-group label-floating is-select">
                                                 <label class="control-label"><?php echo getPhrase('priority');?></label>
                                                 <div class="select">
-                                                    <select name="priority_id" onchange="get_class_sections(this.value)">
-                                                        <option value="_blank"><?php echo getPhrase('select');?></option>
+                                                    <select name="priority_id"
+                                                        onchange="get_class_sections(this.value)">
+                                                        <option value=""><?php echo getPhrase('select');?>
+                                                        </option>
                                                         <?php
                                                         $categories = $this->db->get('v_task_priorities')->result_array();
                                                         foreach($categories as $row):                        
@@ -128,7 +137,8 @@
                                                 <label class="control-label"><?php echo getPhrase('status');?></label>
                                                 <div class="select">
                                                     <select name="status_id">
-                                                        <option value="_blank"><?php echo getPhrase('select');?></option>
+                                                        <option value=""><?php echo getPhrase('select');?>
+                                                        </option>
                                                         <?php
                                                         $status = $this->db->get('v_task_status')->result_array();
                                                         foreach($status as $row):
@@ -142,7 +152,8 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-2">
-                                            <div class="form-group label-floating" style="border: 1px solid #EAEAF5; border-radius: 5px; background: white;">
+                                            <div class="form-group label-floating"
+                                                style="border: 1px solid #EAEAF5; border-radius: 5px; background: white;">
                                                 <label class="control-label"><?php echo getPhrase('text');?></label>
                                                 <input class="form-control" name="name" type="text" value="<?= $text?>">
                                             </div>
@@ -151,9 +162,10 @@
                                             <div class="description-toggle">
                                                 <div class="description-toggle-content">
                                                     <div class="h6"><?php echo getPhrase('assigned_to_me');?></div>
-                                                </div>          
+                                                </div>
                                                 <div class="togglebutton">
-                                                    <label><input name="assigned_me" value="1" type="checkbox" <?php if($assigned_me == 1) echo "checked";?>></label>
+                                                    <label><input name="assigned_me" value="1" type="checkbox"
+                                                            <?php if($assigned_me == 1) echo "checked";?>></label>
                                                 </div>
                                             </div>
                                         </div>
@@ -172,9 +184,9 @@
                         <div class="row">
                             <div class="table-responsive">
                                 <?php 
-                                    if($status_id != "_blank" || $priority_id != "_blank" || $department_id != "_blank"):
+                                    if($search == true || $status_id != "" || $priority_id != "" || $department_id != ""):
                                         if($task_query->num_rows() > 0):
-                                    ?>
+                                ?>
                                 <a href="#" id="btnExport" data-toggle="tooltip" data-placement="top"
                                     data-original-title="<?php echo getPhrase('download');?>">
                                     <button class="btn btn-info btn-sm btn-rounded">
@@ -193,8 +205,8 @@
                                             <th class="text-center"><?php echo getPhrase('priority')?></th>
                                             <th class="text-center"><?php echo getPhrase('assigned_to')?></th>
                                             <th class="text-center"><?php echo getPhrase('created_by')?></th>
-                                            <th class="text-center"><?php echo getPhrase('created_at')?></th>                                            
-                                            <th class="text-center"><?php echo getPhrase('updated_by')?></th>                                            
+                                            <th class="text-center"><?php echo getPhrase('created_at')?></th>
+                                            <th class="text-center"><?php echo getPhrase('updated_by')?></th>
                                             <th class="text-center"><?php echo getPhrase('options')?></th>
                                         </tr>
                                     </thead>
@@ -226,7 +238,7 @@
                                             </td>
                                             <td>
                                                 <center>
-                                                <?= $this->task->get_priority($row['priority_id']);?>
+                                                    <?= $this->task->get_priority($row['priority_id']);?>
                                                 </center>
                                             </td>
                                             <td>
@@ -273,9 +285,18 @@
                                                 <? endif;?>
                                             </td>
                                         </tr>
-                                        <?php endforeach; endif;?>
+                                        <?php endforeach;?>
                                     </tbody>
                                 </table>
+                                <?php else:?>
+                                <div class="bg-danger" style="border-radius: 10px">
+                                    <div class="container">
+                                        <div class="col-sm-12"><br><br>
+                                            <h3 class="text-white"> <?= getPhrase('no_results_found');?></h3><br><br>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endif;?>
                                 <?php endif;?>
                             </div>
                         </div>
@@ -285,9 +306,25 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $('th').click(function () {
+        var table = $(this).parents('table').eq(0)
+        var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+        this.asc = !this.asc
+        if (!this.asc) { rows = rows.reverse() }
+        for (var i = 0; i < rows.length; i++) { table.append(rows[i]) }
+    })
+    function comparer(index) {
+        return function (a, b) {
+            var valA = getCellValue(a, index), valB = getCellValue(b, index)
+            return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+        }
+    }
+    function getCellValue(row, index) { return $(row).children('td').eq(index).text() }
+</script>
 <script>
 $("#btnExport").click(function(e) {
-    var reportName = '<?php echo getPhrase('task_student').'_'.date('d-m-Y');?>';
+    var reportName = '<?php echo getPhrase('task_applicant').'_'.date('d-m-Y');?>';
     var a = document.createElement('a');
     var data_type = 'data:application/vnd.ms-excel;charset=utf-8';
     var table_html = $('#dvData')[0].outerHTML;

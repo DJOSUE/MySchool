@@ -343,7 +343,7 @@
                                                                     ")->result_array();
                                     
                                     // Math to get Average
-                                    $Total_Sum = array_sum($average[0]);
+                                    $Total_Sum = array_sum($average[0]) - $average[0][labuno];
                                     $count = 0;
                                     
                                     $labouno        = $average[0][labuno];

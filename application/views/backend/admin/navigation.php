@@ -54,7 +54,7 @@
                     </a>
                 </li>
                 <!-- Time Card Access -->
-                <?php if(has_permission('time_card')):?>
+                <?php if(has_permission('time_card_module')):?>
                 <li <?= in_array($page_name, $time_card_pages) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/time_card/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('time_card');?>">
@@ -65,7 +65,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Tasks -->
-                <?php if(has_permission('task')):?>
+                <?php if(has_permission('task_module')):?>
                 <li <?= in_array($page_name, $task_pages) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/task_dashboard/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('task_dashboard');?>">
@@ -76,7 +76,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Messages Access -->
-                <?php if(has_permission('messages')):?>
+                <?php if(has_permission('messages_module')):?>
                 <li <?= in_array($page_name, $message_pages) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/message/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('messages');?>">
@@ -96,7 +96,7 @@
                     </a>
                 </li>
                 <!-- Admissions Access -->
-                <?php if(has_permission('admissions')):?>
+                <?php if(has_permission('admission_module')):?>
                 <li <?= in_array($page_name, $admissions_pages) ? 'class="currentItem"': '';?>>
                     <a href="<?php echo base_url();?>admin/admission_dashboard/" data-toggle="tooltip"
                         data-placement="right" data-original-title="<?php echo getPhrase('admissions');?>">
@@ -107,7 +107,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Class Routine Access -->
-                <?php if(has_permission('schedules')):?>
+                <?php if(has_permission('schedule_teacher_module')):?>
                 <li <?= in_array($page_name, $routine_pages) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/class_routine_view/" data-toggle="tooltip"
                         data-placement="right" data-original-title="<?php echo getPhrase('class_routine');?>">
@@ -118,9 +118,9 @@
                 </li>
                 <?php endif;?>
                 <!-- Academic Access -->
-                <?php if(has_permission('academic')):?>
+                <?php if(has_permission('academic_module')):?>
                 <li <?= in_array($page_name, $academic_pages) ? 'class="currentItem"' : '';?>>
-                    <a href="<?php echo base_url();?>admin/grados/" data-toggle="tooltip" data-placement="right"
+                    <a href="<?php echo base_url();?>admin/academic/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('academic');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0680_pencil_ruller_drawing"></i>
@@ -129,7 +129,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Library Access -->
-                <?php if(has_permission('library')):?>
+                <?php if(has_permission('library_module')):?>
                 <li <?= (in_array($page_name, $library_pages)) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/library/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('library');?>">
@@ -140,7 +140,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Attendance Access -->
-                <?php if(has_permission('attendance')):?>
+                <?php if(has_permission('attendance_module')):?>
                 <li <? in_array($page_name, $attendance_pages) ? 'class="currentItem"' : '' ;?>>
                     <a href="<?php echo base_url();?>admin/teacher_attendance/" data-toggle="tooltip"
                         data-placement="right" data-original-title="<?php echo getPhrase('teacher_attendance');?>">
@@ -151,7 +151,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Calendar Access -->
-                <?php if(has_permission('calendar')):?>
+                <?php if(has_permission('calendar_module')):?>
                 <li <?= in_array($page_name, $calendar_pages) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/calendar/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('calendar');?>">
@@ -162,7 +162,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Polls Access -->
-                <?php if(has_permission('polls')):?>
+                <?php if(has_permission('polls_module')):?>
                 <li <?= in_array($page_name, $polls_pages) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/polls/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('polls');?>">
@@ -173,7 +173,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Notifications Access -->
-                <?php if(has_permission('notifications')):?>
+                <?php if(has_permission('notifications_module')):?>
                 <li <?php if($page_name == 'notify'):?>class="currentItem" <?php endif;?>>
                     <a href="<?php echo base_url();?>admin/notify/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('notifications');?>">
@@ -184,7 +184,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Behavior Access -->
-                <?php if(has_permission('behavior')):?>
+                <?php if(has_permission('behavior_module')):?>
                 <li <?php if($page_name == 'request_student' || $page_name == 'request' || $page_name == 'looking_report'):?>class="currentItem"
                     <?php endif;?>>
                     <a href="<?php echo base_url();?>admin/request_student/" data-toggle="tooltip"
@@ -196,7 +196,7 @@
                 </li>
                 <?php endif;?>
                 <!-- News Access -->
-                <?php if(has_permission('news')):?>
+                <?php if(has_permission('news_module')):?>
                 <li <?php if($page_name == 'news'):?>class="currentItem" <?php endif;?>>
                     <a href="<?php echo base_url();?>admin/news/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('news');?>">
@@ -207,7 +207,7 @@
                 </li>
                 <?php endif;?>
                 <!-- School Bus Access -->
-                <?php if(has_permission('school_bus')):?>
+                <?php if(has_permission('school_bus_module')):?>
                 <li <?php if($page_name == 'school_bus'):?>class="currentItem" <?php endif;?>>
                     <a href="<?php echo base_url();?>admin/school_bus/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('school_bus');?>">
@@ -218,7 +218,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Classrooms Access -->
-                <?php if(has_permission('classrooms')):?>
+                <?php if(has_permission('classrooms_module')):?>
                 <li <?php if($page_name == 'classroom'):?>class="currentItem" <?php endif;?>>
                     <a href="<?php echo base_url();?>admin/classrooms/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('classrooms');?>">
@@ -229,7 +229,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Payments Access -->
-                <?php if(has_permission('accounting')):?>
+                <?php if(has_permission('accounting_module')):?>
                 <li <?php if($page_name == 'invoice_details' || $page_name == 'payments' || $page_name == 'students_payments' || $page_name == 'expense' || $page_name == 'new_payment'):?>class="currentItem"
                     <?php endif;?>>
                     <a href="<?php echo base_url();?>admin/payments/" data-toggle="tooltip" data-placement="right"
@@ -241,7 +241,7 @@
                 </li>
                 <?php endif;?>
                 <!-- System Reports Access -->
-                <?php if(has_permission('system_reports')):?>
+                <?php if(has_permission('system_reports_module')):?>
                 <li <?php if(in_array($page_name, $reports_pages)):?>class="currentItem" <?php endif;?>>
                     <a href="<?php echo base_url();?>admin/reports_general/" data-toggle="tooltip"
                         data-placement="right" data-original-title="<?php echo getPhrase('system_reports');?>">
@@ -252,7 +252,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Academic Settings Access -->
-                <?php if(has_permission('academic_settings')):?>
+                <?php if(has_permission('academic_settings_module')):?>
                 <li <?php if($page_name == 'academic_settings' || $page_name == 'section' || $page_name == 'grade' || $page_name == 'semester' || $page_name == 'student_promotion' || $page_name == 'units' || $page_name == 'gpa' || $page_name == 'subjects'):?>class="currentItem"
                     <?php endif;?>>
                     <a href="<?php echo base_url();?>admin/academic_settings/" data-toggle="tooltip"
@@ -264,7 +264,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Settings Access -->
-                <?php if(has_permission('settings')):?>
+                <?php if(has_permission('settings_module')):?>
                 <li <?php if($page_name == 'system_settings' || $page_name == 'sms' || $page_name == 'email' || $page_name == 'translate' || $page_name == 'database'):?>class="currentItem"
                     <?php endif;?>>
                     <a href="<?php echo base_url();?>admin/system_settings/" data-toggle="tooltip"
@@ -306,7 +306,7 @@
                     </a>
                 </li>
                 <!-- Time Card Access -->
-                <?php if(has_permission('time_card')):?>
+                <?php if(has_permission('time_card_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/time_card/">
                         <div class="left-menu-icon">
@@ -317,7 +317,7 @@
                 </li>
                 <?php endif;?>
                  <!-- Tasks -->
-                 <?php if(has_permission('task')):?>
+                 <?php if(has_permission('task_module')):?>
                 <li <?= in_array($page_name, $task_pages) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/task_dashboard/" >
                         <div class="left-menu-icon">
@@ -328,7 +328,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Messages Access -->
-                <?php if(has_permission('messages')):?>
+                <?php if(has_permission('messages_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/message/">
                         <div class="left-menu-icon">
@@ -347,7 +347,7 @@
                     </a>
                 </li>
                 <!-- Admissions Access -->
-                <?php if(has_permission('admissions')):?>
+                <?php if(has_permission('admission_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/admission_dashboard/">
                         <div class="left-menu-icon">
@@ -358,7 +358,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Class Routine Access -->
-                <?php if(has_permission('schedules')):?>
+                <?php if(has_permission('schedule_teacher_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/class_routine_view/">
                         <div class="left-menu-icon">
@@ -369,9 +369,9 @@
                 </li>
                 <?php endif;?>
                 <!-- Academic Access -->
-                <?php if(has_permission('academic')):?>
+                <?php if(has_permission('academic_module')):?>
                 <li>
-                    <a href="<?php echo base_url();?>admin/grados/">
+                    <a href="<?php echo base_url();?>admin/academic/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0680_pencil_ruller_drawing"></i>
                         </div>
@@ -380,7 +380,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Library Access -->
-                <?php if(has_permission('library')):?>
+                <?php if(has_permission('library_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/library/">
                         <div class="left-menu-icon">
@@ -391,7 +391,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Attendance Access -->
-                <?php if(has_permission('attendance')):?>
+                <?php if(has_permission('attendance_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/teacher_attendance/">
                         <div class="left-menu-icon">
@@ -402,7 +402,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Calendar Access -->
-                <?php if(has_permission('calendar')):?>
+                <?php if(has_permission('calendar_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/calendar/">
                         <div class="left-menu-icon">
@@ -413,7 +413,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Polls Access -->
-                <?php if(has_permission('polls')):?>
+                <?php if(has_permission('polls_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/polls/">
                         <div class="left-menu-icon">
@@ -424,7 +424,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Notifications Access -->
-                <?php if(has_permission('notifications')):?>
+                <?php if(has_permission('notifications_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/notify/">
                         <div class="left-menu-icon">
@@ -435,7 +435,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Behavior Access -->
-                <?php if(has_permission('behavior')):?>
+                <?php if(has_permission('behavior_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/request_student/">
                         <div class="left-menu-icon">
@@ -446,7 +446,7 @@
                 </li>
                 <?php endif;?>
                 <!-- News Access -->
-                <?php if(has_permission('news')):?>
+                <?php if(has_permission('news_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/news/">
                         <div class="left-menu-icon">
@@ -457,7 +457,7 @@
                 </li>
                 <?php endif;?>
                 <!-- School Bus Access -->
-                <?php if(has_permission('school_bus')):?>
+                <?php if(has_permission('school_bus_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/school_bus/">
                         <div class="left-menu-icon">
@@ -468,7 +468,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Classrooms Access -->
-                <?php if(has_permission('classrooms')):?>
+                <?php if(has_permission('classrooms_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/classrooms/">
                         <div class="left-menu-icon">
@@ -479,7 +479,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Payments Access -->
-                <?php if(has_permission('accounting')):?>
+                <?php if(has_permission('accounting_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/payments/">
                         <div class="left-menu-icon">
@@ -490,7 +490,7 @@
                 </li>
                 <?php endif;?>
                 <!-- System Reports Access -->
-                <?php if(has_permission('system_reports')):?>
+                <?php if(has_permission('system_reports_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/reports_general/">
                         <div class="left-menu-icon">
@@ -501,7 +501,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Academic Settings Access -->
-                <?php if(has_permission('academic_settings')):?>
+                <?php if(has_permission('academic_settings_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/academic_settings/">
                         <div class="left-menu-icon">
@@ -512,7 +512,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Settings Access -->
-                <?php if(has_permission('settings')):?>
+                <?php if(has_permission('settings_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/system_settings/">
                         <div class="left-menu-icon">
@@ -563,7 +563,7 @@
                     </a>
                 </li>
                 <!-- Time Card -->
-                <?php if(has_permission('time_card')):?>
+                <?php if(has_permission('time_card_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/time_card/">
                         <div class="left-menu-icon">
@@ -574,7 +574,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Tasks -->
-                <?php if(has_permission('task')):?>
+                <?php if(has_permission('task_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/task_dashboard/">
                         <div class="left-menu-icon">
@@ -585,7 +585,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Messages Access -->
-                <?php if(has_permission('messages')):?>
+                <?php if(has_permission('messages_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/message/">
                         <div class="left-menu-icon">
@@ -604,7 +604,7 @@
                     </a>
                 </li>
                 <!-- Admissions Access -->
-                <?php if(has_permission('admissions')):?>
+                <?php if(has_permission('admission_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/admission_dashboard/">
                         <div class="left-menu-icon">
@@ -615,7 +615,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Class Routine Access -->
-                <?php if(has_permission('schedules')):?>
+                <?php if(has_permission('schedule_teacher_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/class_routine_view/">
                         <div class="left-menu-icon">
@@ -626,9 +626,9 @@
                 </li>
                 <?php endif;?>
                 <!-- Academic Access -->
-                <?php if(has_permission('academic')):?>
+                <?php if(has_permission('academic_module')):?>
                 <li>
-                    <a href="<?php echo base_url();?>admin/grados/">
+                    <a href="<?php echo base_url();?>admin/academic/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0680_pencil_ruller_drawing"></i>
                         </div>
@@ -637,7 +637,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Library Access -->
-                <?php if(has_permission('library')):?>
+                <?php if(has_permission('library_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/library/">
                         <div class="left-menu-icon">
@@ -648,7 +648,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Attendance Access -->
-                <?php if(has_permission('attendance')):?>
+                <?php if(has_permission('attendance_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/teacher_attendance/">
                         <div class="left-menu-icon">
@@ -659,7 +659,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Calendar Access -->
-                <?php if(has_permission('calendar')):?>
+                <?php if(has_permission('calendar_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/calendar/">
                         <div class="left-menu-icon">
@@ -670,7 +670,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Polls Access -->
-                <?php if(has_permission('polls')):?>
+                <?php if(has_permission('polls_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/polls/">
                         <div class="left-menu-icon">
@@ -681,7 +681,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Notifications Access -->
-                <?php if(has_permission('notifications')):?>
+                <?php if(has_permission('notifications_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/notify/">
                         <div class="left-menu-icon">
@@ -692,7 +692,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Behavior Access -->
-                <?php if(has_permission('behavior')):?>
+                <?php if(has_permission('behavior_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/request_student/">
                         <div class="left-menu-icon">
@@ -703,7 +703,7 @@
                 </li>
                 <?php endif;?>
                 <!-- News Access -->
-                <?php if(has_permission('news')):?>
+                <?php if(has_permission('news_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/news/">
                         <div class="left-menu-icon">
@@ -714,7 +714,7 @@
                 </li>
                 <?php endif;?>
                 <!-- School Bus Access -->
-                <?php if(has_permission('school_bus')):?>
+                <?php if(has_permission('school_bus_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/school_bus/">
                         <div class="left-menu-icon">
@@ -725,7 +725,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Classrooms Access -->
-                <?php if(has_permission('classrooms')):?>
+                <?php if(has_permission('classrooms_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/classrooms/">
                         <div class="left-menu-icon">
@@ -736,7 +736,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Payments Access -->
-                <?php if(has_permission('accounting')):?>
+                <?php if(has_permission('accounting_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/payments/">
                         <div class="left-menu-icon">
@@ -747,7 +747,7 @@
                 </li>
                 <?php endif;?>
                 <!-- System Reports Access -->
-                <?php if(has_permission('system_reports')):?>
+                <?php if(has_permission('system_reports_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/reports_general/">
                         <div class="left-menu-icon">
@@ -758,7 +758,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Academic Settings Access -->
-                <?php if(has_permission('academic_settings')):?>
+                <?php if(has_permission('academic_settings_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/academic_settings/">
                         <div class="left-menu-icon">
@@ -769,7 +769,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Settings Access -->
-                <?php if(has_permission('settings')):?>
+                <?php if(has_permission('settings_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>admin/system_settings/">
                         <div class="left-menu-icon">

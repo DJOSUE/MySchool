@@ -4,15 +4,16 @@
     $placement_weighting	= json_decode($this->academic->getInfo('placement_weighting'), true);
     $level_percent          =    $this->db->query('SELECT * FROM class WHERE percentage IS NOT NULL')->result_array(); 
 
-    $first_name = $data['first_name'];
-    $last_name  = $data['last_name'];
-    $birthday   = $data['birthday'];
-    $email      = $data['email'];
-    $phone      = $data['phone'];
-    $gender     = $data['gender'];
-    $address    = $data['address'];
-    $country_id = $data['country_id'];
-    $applicant_id = $data['applicant_id'];
+    $first_name     = $data['first_name'];
+    $last_name      = $data['last_name'];
+    $birthday       = $data['birthday'];
+    $email          = $data['email'];
+    $phone          = $data['phone'];
+    $genderCode     = $data['gender'];
+    $address        = $data['address'];
+    $country_id     = $data['country_id'];
+    $applicant_id   = $data['applicant_id'];
+    $referral_by    = $data['referral_by'];
 ?>
 
 <?php $running_year = $this->crud->getInfo('running_year');?>
@@ -25,18 +26,23 @@
                 <ul class="navs navs-tabs upper">
                     <li class="navs-item">
                         <a class="navs-links" href="<?php echo base_url();?>admin/admission_dashboard/">
-                            <i
-                                class="os-icon picons-thin-icon-thin-0482_gauge_dashboard_empty"></i><span><?php echo getPhrase('home');?></span></a>
+                            <i class="os-icon picons-thin-icon-thin-0482_gauge_dashboard_empty"></i>
+                            <span><?php echo getPhrase('dashboard');?></span></a>
+                    </li>
+                    <li class="navs-item">
+                        <a class="navs-links" href="<?php echo base_url();?>admin/admission_applicants/">
+                            <i class="os-icon picons-thin-icon-thin-0093_list_bullets"></i>
+                            <span><?php echo getPhrase('applicants');?></span></a>
                     </li>
                     <li class="navs-item">
                         <a class="navs-links" href="<?php echo base_url();?>admin/admission_new_applicant/">
-                            <i
-                                class="os-icon picons-thin-icon-thin-0716_user_profile_add_new"></i><span><?php echo getPhrase('new_applicant');?></span></a>
+                            <i class="os-icon picons-thin-icon-thin-0716_user_profile_add_new"></i>
+                            <span><?php echo getPhrase('new_applicant');?></span></a>
                     </li>
                     <li class="navs-item">
                         <a class="navs-links active" href="<?php echo base_url();?>admin/admission_new_student/">
-                            <i
-                                class="os-icon picons-thin-icon-thin-0706_user_profile_add_new"></i><span><?php echo getPhrase('new_student');?></span></a>
+                            <i class="os-icon picons-thin-icon-thin-0706_user_profile_add_new"></i>
+                            <span><?php echo getPhrase('new_student');?></span></a>
                     </li>
                 </ul>
             </div>
@@ -51,7 +57,7 @@
                                     <div class="ui-block-content">
                                         <?php echo form_open(base_url() . 'admin/student/admission/' , array('enctype' => 'multipart/form-data', 'autocomplete' => 'off'));?>
                                         <?php if($applicant_id > 0):?>
-                                        <input type="hidden" name="applicant_id" value="<?=$applicant_id;?>"/>
+                                        
                                         <?php endif;?>
                                         <div class="steps-w">
                                             <div class="step-triggers">
@@ -101,7 +107,7 @@
                                                                         <td style="text-align: center;">
                                                                             <center>
                                                                                 <input type="text" class="form-control"
-                                                                                    name="comment_placement" 
+                                                                                    name="comment_placement"
                                                                                     value="<?php echo $row['comment'];?>">
                                                                             </center>
                                                                         </td>
@@ -186,7 +192,7 @@
                                                                             foreach($genders as $gender):
                                                                         ?>
                                                                         <option value="<?= $gender['code']?>"
-                                                                            <?=$gender == $gender['code'] ? 'selected' : '' ;?>">
+                                                                            <?=$genderCode == $gender['code'] ? 'selected' : '' ;?>>
                                                                             <?= $gender['name']?>
                                                                         </option>
                                                                         <?php endforeach;?>
@@ -590,6 +596,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                    <div name="hide_items">
+                                                    <input type="hidden" name="applicant_id" value="<?=$applicant_id;?>" />
+                                                    <input type="hidden" name="referral_by" value="<?=$referral_by;?>" />
                                                     </div>
                                                     <div class="form-buttons-w text-right">
                                                         <button class="btn btn-rounded btn-success btn-lg" type="submit"

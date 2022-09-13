@@ -488,6 +488,7 @@ class User extends School
         $year       =   $p_year         == '' ? $this->runningYear      : $p_year;
         $semesterId =   $p_semesterId   == '' ? $this->runningSemester  : $p_semesterId;
         $quantity_score = intval($this->academic->getInfo('ap_quantity_score'));
+        $applicant_id = $this->input->post('applicant_id');
 
         $bytes = random_bytes(20);
         $password_token = bin2hex($bytes);
@@ -558,6 +559,13 @@ class User extends School
         $data['authorized_person'] = $this->input->post('auth_person');
         $data['authorized_phone']  = $this->input->post('auth_phone');
         $data['note']              = $this->input->post('note');
+
+        if(!empty($this->input->post('referral_by')))
+            $data['referral_by']  = html_escape($this->input->post('referral_by'));
+        
+        if($applicant_id > 0)
+            $data['applicant_id']  = $applicant_id;
+
         $this->db->insert('student', $data);
 
         $table      = 'student';
@@ -598,15 +606,15 @@ class User extends School
             $name = 'score'.$i;
             $data5[$name] = $this->input->post($name);
         }
-        
+
         $this->db->insert( 'pa_test', $data5 );
 
         move_uploaded_file($_FILES['userfile']['tmp_name'], PATH_STUDENT_IMAGE . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
 
         // Send Email of Confirmation
+        // $this->mail->accountConfirm('student', $student_id);
 
         // Update the Applicant status
-        $applicant_id = $this->input->post('applicant_id');
         if($applicant_id > 0)
         {
             $this->applicant->update_status($applicant_id, 3);

@@ -44,7 +44,7 @@
                                                 <div class="container-fluid grbg"><br>
                                                     <div class="col-sm- 12">
                                                         <div class="row">
-                                                            <?php if(has_permission('admins')) : ?>
+                                                            <?php if(has_permission('admin_users')) : ?>
                                                             <div
                                                                 class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                                                 <div class="ui-block" data-mh="friend-groups-item">
@@ -82,7 +82,7 @@
                                                                 </div>
                                                             </div>
                                                             <?php endif;?>
-                                                            <?php if(has_permission('teachers')) : ?>
+                                                            <?php if(has_permission('teacher_users')) : ?>
                                                             <div
                                                                 class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                                                 <div class="ui-block" data-mh="friend-groups-item">
@@ -108,7 +108,7 @@
                                                                 </div>
                                                             </div>
                                                             <?php endif;?>
-                                                            <?php if(has_permission('students')) : ?>
+                                                            <?php if(has_permission('student_users')) : ?>
                                                             <div
                                                                 class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                                                 <div class="ui-block" data-mh="friend-groups-item">
@@ -134,7 +134,7 @@
                                                                 </div>
                                                             </div>
                                                             <?php endif;?>
-                                                            <?php if(has_permission('parents')):?>
+                                                            <?php if(has_permission('parent_users')):?>
                                                             <div
                                                                 class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                                                 <div class="ui-block" data-mh="friend-groups-item">
@@ -160,7 +160,7 @@
                                                                 </div>
                                                             </div>
                                                             <?php endif;?>
-                                                            <?php if(has_permission('accountants')) : ?>
+                                                            <?php if(has_permission('accountant_users')) : ?>
                                                             <div
                                                                 class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                                                 <div class="ui-block" data-mh="friend-groups-item">
@@ -186,7 +186,7 @@
                                                                 </div>
                                                             </div>
                                                             <?php endif;?>
-                                                            <?php if(has_permission('librarians')) : ?>
+                                                            <?php if(has_permission('librarian_users')) : ?>
                                                             <div
                                                                 class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                                                 <div class="ui-block" data-mh="friend-groups-item">

@@ -30,7 +30,12 @@
                     <li class="navs-item">
                         <a class="navs-links active" href="<?php echo base_url();?>admin/admission_dashboard/">
                             <i
-                                class="os-icon picons-thin-icon-thin-0482_gauge_dashboard_empty"></i><span><?php echo getPhrase('home');?></span></a>
+                                class="os-icon picons-thin-icon-thin-0482_gauge_dashboard_empty"></i><span><?php echo getPhrase('dashboard');?></span></a>
+                    </li>
+                    <li class="navs-item">
+                        <a class="navs-links" href="<?php echo base_url();?>admin/admission_applicants/">
+                            <i
+                                class="os-icon picons-thin-icon-thin-0093_list_bullets"></i><span><?php echo getPhrase('applicants');?></span></a>
                     </li>
                     <li class="navs-item">
                         <a class="navs-links" href="<?php echo base_url();?>admin/admission_new_applicant/">
@@ -48,249 +53,39 @@
         <div class="container-fluid">
             <div class="content-i">
                 <div class="content-box">
-                    <div class="element-box-tp">
+                    <div class="element-box-tp">                        
+                        <?php $applicant_type = $this->applicant->get_applicant_types();
+                            foreach($applicant_type as $type):
+                        ?>
+                        <h5 class="form-header"><?= $type['name'];;?></h5>
                         <div class="row">
-                            <?php $applicant_type = $this->applicant->get_applicant_types();
-                                foreach($applicant_type as $type):
-                            ?>                            
-                            <div class="col col-xl-2 col-lg-4 col-md-4 col-sm-8 col-8">
-                                <div class="ui-block list" data-mh="friend-groups-item">
-                                    <div class="friend-item friend-groups">
-                                        <div class="friend-item-content">
-                                            <div class="friend-avatar">
-                                                <?php if($type['icon'] != ''):?>
-                                                <br/>
-                                                <i class="picons-thin-icon-thin-<?= $type['icon'];?>" style="font-size:45px; color: <?= $type['color'];?>;"></i>
-                                                <?php endif;?>
-                                                <h1 style="font-weight:bold;"><?= $this->applicant->applicant_total('type_id', $type['type_id'])?></h1>
-                                                <div class="author-content">
-                                                    <div class="country"><b> <?= $type['name'];?></b></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php endforeach;?>
-                            <?php $applicant_type = $this->db->get('v_applicant_status')->result_array();
-                                foreach($applicant_type as $type):
+                            <?php $applicant_status = $this->db->get('v_applicant_status')->result_array();
+                                foreach($applicant_status as $status):
+                                    $code_search = base64_encode($type['type_id'].'|'.$status['status_id']);
                             ?>
                             <div class="col col-xl-2 col-lg-4 col-md-4 col-sm-8 col-8">
                                 <div class="ui-block list" data-mh="friend-groups-item">
+                                    <a href="<?php echo base_url().'admin/admission_applicants/'.$code_search;?>">
                                     <div class="friend-item friend-groups">
                                         <div class="friend-item-content">
                                             <div class="friend-avatar">
-                                                <?php if($type['icon'] != ''):?>
+                                                <?php if($status['icon'] != ''):?>
                                                 <br/>
-                                                <i class="picons-thin-icon-thin-<?= $type['icon'];?>" style="font-size:45px; color: <?= $type['color'];?>;"></i>
+                                                <i class="picons-thin-icon-thin-<?= $status['icon'];?>" style="font-size:45px; color: <?= $status['color'];?>;"></i>
                                                 <?php endif;?>
-                                                <h1 style="font-weight:bold;"><?= $this->applicant->applicant_total('status', $type['status_id'])?></h1>
+                                                <h1 style="font-weight:bold;"><?= $this->applicant->applicant_total_type($type['type_id'],'status', $status['status_id'])?></h1>
                                                 <div class="author-content">
-                                                    <div class="country"><b> <?= $type['name'];?></b></div>
+                                                    <div class="country"><b> <?= $status['name'];?></b></div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    </a>
                                 </div>
                             </div>
                             <?php endforeach;?>
-                            
                         </div>
-
-                    </div>
-                    <br>
-                    <br>
-                    <div class="element-box-tp">
-                        <h5 class="form-header"><?php echo getPhrase('applicant_report');?></h5>
-                        <div class="row">
-                            <div class="content-i">
-                                <div class="content-box">
-                                    <?php echo form_open(base_url() . 'admin/admission_dashboard/', array('class' => 'form m-b'));?>
-                                    <div class="row" style="margin-top: -30px; border-radius: 5px;">
-                                        <div class="col-sm-3">
-                                            <div class="form-group label-floating" style="border: 1px solid #EAEAF5;border-radius: 5px; background: white;">
-                                                <label class="control-label"><?php echo getPhrase('name');?></label>
-                                                <input class="form-control" name="name" type="text" value="<?= $name?>">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="form-group label-floating is-select">
-                                                <label class="control-label"><?php echo getPhrase('country');?></label>
-                                                <div class="select">
-                                                    <select name="country_id" onchange="get_class_sections(this.value)">
-                                                        <option value=""><?php echo getPhrase('select');?></option>
-                                                        <?php
-                                                        $countries = $this->db->get('countries')->result_array();
-                                                        foreach($countries as $row):
-                                                    ?>
-                                                        <option value="<?php echo $row['country_id'];?>"
-                                                            <?php if($country_id == $row['country_id']) echo "selected";?>>
-                                                            <?php echo $row['name'];?></option>
-                                                        <?php endforeach;?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="form-group label-floating is-select">
-                                                <label class="control-label"><?php echo getPhrase('status');?></label>
-                                                <div class="select">
-                                                    <select name="status_id">
-                                                        <option value=""><?php echo getPhrase('select');?></option>
-                                                        <?php
-                                                        $status = $this->db->get('v_applicant_status')->result_array();
-                                                        foreach($status as $row):
-                                                            if($row['status_id'] != 3):
-                                                    ?>
-                                                        <option value="<?php echo $row['status_id'];?>"
-                                                            <?php if($status_id == $row['status_id']) echo "selected";?>>
-                                                            <?php echo $row['name'];?></option>
-                                                        <?php endif; endforeach;?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-2">
-                                            <div class="form-group">
-                                                <button class="btn btn-success btn-upper" style="margin-top:20px"
-                                                    type="submit"><span><?php echo getPhrase('search');?></span></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <?php echo form_close();?>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="table-responsive">
-                                <?php
-                                        if($name != "_blank" || $status_id != "_blank" || $country_id != "_blank"):
-                                            if($student_query->num_rows() > 0):
-                                    ?>
-                                <a href="#" id="btnExport" data-toggle="tooltip" data-placement="top"
-                                    data-original-title="<?php echo getPhrase('download');?>">
-                                    <button class="btn btn-info btn-sm btn-rounded">
-                                        <i class="picons-thin-icon-thin-0123_download_cloud_file_sync"
-                                            style="font-weight: 300; font-size: 25px;"></i>
-                                    </button>
-                                </a>
-
-                                <table class="table table-padded" id="dvData">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center"><?php echo getPhrase('first_name')?></th>
-                                            <th class="text-center"><?php echo getPhrase('last_name')?></th>
-                                            <th class="text-center"><?php echo getPhrase('country')?></th>
-                                            <th class="text-center"><?php echo getPhrase('email')?></th>
-                                            <th class="text-center"><?php echo getPhrase('phone')?></th>
-                                            <th class="text-center"><?php echo getPhrase('type')?></th>
-                                            <th class="text-center"><?php echo getPhrase('status')?></th>
-                                            <th class="text-center"><?php echo getPhrase('created_by')?></th>
-                                            <th class="text-center"><?php echo getPhrase('updated_by')?></th>
-                                            <th class="text-center"><?php echo getPhrase('assigned_to')?></th>
-                                            <th class="text-center"><?php echo getPhrase('options')?></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php $students = $student_query->result_array();
-                                            foreach($students as $row) :
-                                                $allow_actions = is_student($row['applicant_id']);
-                                        ?>
-                                        <tr style="height:25px;">
-                                            <td>
-                                                <center>
-                                                    <label style="width:55px; border: 1; text-align: center;">
-                                                        <?php echo ($row['first_name']);?>
-                                                    </label>
-                                                </center>
-                                            </td>
-                                            <td>
-                                                <center>
-                                                    <label style="width:55px; border: 1; text-align: center;">
-                                                        <?php echo ($row['last_name']);?>
-                                                    </label>
-                                                </center>
-                                            </td>
-                                            <td>
-                                                <center>
-                                                    <label style="width:55px; border: 1; text-align: center;">
-                                                        <?php echo ($row['country_name']);?>
-                                                    </label>
-                                                </center>
-                                            </td>
-                                            <td>
-                                                <center>
-                                                    <?php echo ($row['email']);?>
-                                                </center>
-                                            </td>
-                                            <td>
-                                                <center>
-                                                    <?php echo ($row['phone']);?>
-                                                </center>
-                                            </td>
-                                            <td>
-                                                <center>
-                                                    <div class="value badge badge-pill"
-                                                        style="background-color: <?= $row['applicant_type_color']?>;">
-                                                        <?php echo ($row['applicant_type']);?>
-                                                    </div>
-                                                </center>
-                                            </td>
-                                            <td>
-                                                <center>
-                                                    <div class="value badge badge-pill"
-                                                        style="background-color: <?= $row['status_color']?>;">
-                                                        <?php echo ($row['status_name']);?>
-                                                    </div>
-                                                </center>
-                                            </td>
-                                            <td>
-                                                <center>
-                                                    <?php echo ($row['created_by_name']);?>
-                                                </center>
-                                            </td>
-                                            <td>
-                                                <center>
-                                                    <?php echo ($row['updated_by_name']);?>
-                                                </center>
-                                            </td>
-                                            <td>
-                                                <center>
-                                                    <?php echo ($row['assigned_to_name']);?>
-                                                </center>
-                                            </td>
-                                            <td class="row-actions">
-                                                <a href="<?php echo base_url();?>admin/admission_applicant/<?= $row['applicant_id'];?>"
-                                                    class="grey" data-toggle="tooltip" data-placement="top"
-                                                    data-original-title="<?php echo getPhrase('view');?>">
-                                                    <i
-                                                        class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible"></i>
-                                                </a>
-                                                <?php if(!$allow_actions):?>
-                                                <a href="javascript:void(0);" class="grey" data-toggle="tooltip"
-                                                    data-placement="top"
-                                                    data-original-title="<?php echo getPhrase('add_interaction');?>"
-                                                    onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_admission_add_interaction/<?= $row['applicant_id'];?>');">
-                                                    <i class="os-icon picons-thin-icon-thin-0151_plus_add_new"></i>
-                                                </a>
-                                                <a href="javascript:void(0);" class="grey" data-toggle="tooltip"
-                                                    data-placement="top"
-                                                    data-original-title="<?php echo getPhrase('edit');?>"
-                                                    onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_admission_edit_applicant/<?=$row['applicant_id'];?>');">
-                                                    <i
-                                                        class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new"></i>
-                                                </a>
-                                                <? endif;?>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; endif;?>
-                                    </tbody>
-                                </table>
-                                <?php endif;?>
-                            </div>
-                        </div>
+                        <?php endforeach;?>
                     </div>
                 </div>
             </div>
@@ -298,18 +93,18 @@
     </div>
 </div>
 <script>
-$("#btnExport").click(function(e) {
-    var reportName = '<?php echo getPhrase('applicants').'_'.date('d-m-Y');?>';
-    var a = document.createElement('a');
-    var data_type = 'data:application/vnd.ms-excel;charset=utf-8';
-    var table_html = $('#dvData')[0].outerHTML;
-    table_html = table_html.replace(/<tfoot[\s\S.]*tfoot>/gmi, '');
-    var css_html =
-        '<style>td {border: 0.5pt solid #c0c0c0} .tRight { text-align:right} .tLeft { text-align:left} </style>';
-    a.href = data_type + ',' + encodeURIComponent('<html><head>' + css_html + '</' + 'head><body>' +
-        table_html + '</body></html>');
-    a.download = reportName + '.xls';
-    a.click();
-    e.preventDefault();
-});
+    $("#btnExport").click(function(e) {
+        var reportName = '<?php echo getPhrase('applicants').'_'.date('d-m-Y');?>';
+        var a = document.createElement('a');
+        var data_type = 'data:application/vnd.ms-excel;charset=utf-8';
+        var table_html = $('#dvData')[0].outerHTML;
+        table_html = table_html.replace(/<tfoot[\s\S.]*tfoot>/gmi, '');
+        var css_html =
+            '<style>td {border: 0.5pt solid #c0c0c0} .tRight { text-align:right} .tLeft { text-align:left} </style>';
+        a.href = data_type + ',' + encodeURIComponent('<html><head>' + css_html + '</' + 'head><body>' +
+            table_html + '</body></html>');
+        a.download = reportName + '.xls';
+        a.click();
+        e.preventDefault();
+    });
 </script>

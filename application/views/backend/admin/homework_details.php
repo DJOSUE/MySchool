@@ -5,17 +5,31 @@
         <div class="header-spacer"></div>
 	        <div class="os-tabs-w menu-shad">
 		        <div class="os-tabs-controls">
-		            <ul class="navs navs-tabs upper">
-			            <li class="navs-item">
-			                <a class="navs-links" href="<?php echo base_url();?>admin/homeworkroom/<?php echo $homework_code;?>/"><i class="os-icon picons-thin-icon-thin-0014_notebook_paper_todo"></i><span><?php echo getPhrase('homework_details');?></span></a>
-			            </li>
-			            <li class="navs-item">
-			                <a class="navs-links active" href="<?php echo base_url();?>admin/homework_details/<?php echo $homework_code;?>/"><i class="os-icon picons-thin-icon-thin-0100_to_do_list_reminder_done"></i><span><?php echo getPhrase('deliveries');?></span></a>
-			            </li>
-			            <li class="navs-item">
-			                <a class="navs-links" href="<?php echo base_url();?>admin/homework_edit/<?php echo $homework_code;?>/"><i class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new"></i><span><?php echo getPhrase('edit');?></span></a>
-			            </li>
-		            </ul>
+                <ul class="navs navs-tabs upper">
+                    <li class="navs-item">
+                        <a class="navs-links"
+                            href="<?php echo base_url();?>admin/homeworkroom/<?php echo $homework_code;?>/">
+                            <i class="os-icon picons-thin-icon-thin-0014_notebook_paper_todo"></i>
+                            <span><?php echo getPhrase('homework_details');?></span>
+                        </a>
+                    </li>
+                    <li class="navs-item">
+                        <a class="navs-links active"
+                            href="<?php echo base_url();?>admin/homework_details/<?php echo $homework_code;?>/"><i
+                                class="os-icon picons-thin-icon-thin-0100_to_do_list_reminder_done"></i>
+                            <span><?php echo getPhrase('deliveries');?></span>
+                        </a>
+                    </li>
+                    <?php if(has_permission('homework_management')):?>
+                    <li class="navs-item">
+                        <a class="navs-links"
+                            href="<?php echo base_url();?>admin/homework_edit/<?php echo $homework_code;?>/"><i
+                                class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new"></i>
+                            <span><?php echo getPhrase('edit');?></span>
+                        </a>
+                    </li>
+                    <?php endif; ?>
+                </ul>
 		        </div>
 	        </div>
             <div class="content-i">
@@ -76,16 +90,20 @@
 					                                <td width="7%">
                                                         <input class="form-control" required name="mark[]" type="text" value="<?php echo $row['mark'];?>">
                                                     </td>
+                                                    <?php if(has_permission('homework_management')):?>
                                                     <td width="7%">
                                                         <a class="btn btn-danger btn-sm" href="<?php echo base_url();?>admin/delete_delivery/<?php echo $row['id'];?>/<?php echo $homework_code;?>" onclick="return confirm('<?php echo getPhrase('confirm_delete');?>');"><i class="picons-thin-icon-thin-0057_bin_trash_recycle_delete_garbage_full" style="color:#fff"></i></a>
                                                     </td> 
+                                                    <?php endif; ?>
                                                 </tr>
                 	                            <?php endforeach;?>
                                             </tbody>
                                         </table>
+                                        <?php if(has_permission('homework_management')):?>
                                         <div class="form-buttons-w text-right">
                                             <button class="btn btn-rounded btn-success" type="submit"> <?php echo getPhrase('apply');?></button>
                                         </div>
+                                        <?php endif; ?>
                                     <?php echo form_close();?>
                                 </div>
 		                    </div>

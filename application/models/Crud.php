@@ -1808,7 +1808,7 @@ class Crud extends School
 
     function get_student_info($student_id) {
         $query = $this->db->get_where('student', array('student_id' => $student_id));
-        return $query->result_array();
+        return $query->row_array();
     }
 
      function create_post() 
@@ -1828,6 +1828,14 @@ class Crud extends School
         $docs_id            = $this->db->insert_id();
         move_uploaded_file($_FILES["file_name"]["tmp_name"], "public/uploads/forum/" . $_FILES["file_name"]["name"]);
         return $post_code;
+    }
+
+    function get_current_enrollment($student_id)
+    {
+        $class_id = $this->db->get_where('enroll', array('student_id' => $student_id, 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
+        $section_id = $this->db->get_where('enroll', array('student_id' => $student_id, 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->section_id;
+        return $this->db->get_where('v_enrollment' , array('student_id' => $student_id, 'class_id' => $class_id, 'section_id' => $section_id, 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->result_array();
+
     }
 
     function update_post($post_code) {
@@ -2152,6 +2160,11 @@ class Crud extends School
         return $query->result_array();
     }
 
+    function get_exam_by_class($class_id) {
+        $query = $this->db->get_where('v_class_units', array( 'class_id' => $class_id))->result_array();
+        return $query;
+    }
+
     function get_exam_info($exam_id) {
         $query = $this->db->get_where('exam', array('unit_id' => $exam_id));
         return $query->result_array();
@@ -2255,10 +2268,13 @@ class Crud extends School
     {
         $query = $this->db->get('gpa');
         $grades = $query->result_array();
-        foreach ($grades as $ro) {
-            if ($mark_obtained >= $ro['mark_from'] && $mark_obtained <= $ro['mark_upto'])
-                echo $ro['grade_point'];
+        foreach ($grades as $row) {
+            if ($mark_obtained >= $row['mark_from'] && $mark_obtained <= $row['mark_upto'])
+            {
+                $gpa = $row['gpa_point'];
+            }
         }
+        return $gpa;
     }
 
     function getInfo($type) {
@@ -3357,5 +3373,12 @@ class Crud extends School
         $data['user_type']   = $user_type;
         $data['user_id']     = $user_id;        
         $this->db->insert('login_as_logs', $data);
+    }
+
+    function get_student_program($student_id) 
+    {
+        $program_id = $this->db->get_where('student', array('student_id' => $student_id))->row()->program_id;
+        $name = $this->db->get_where('program', array('program_id' => $program_id))->row()->name;
+        return $name;
     }
 }

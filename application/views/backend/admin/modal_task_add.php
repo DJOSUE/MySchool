@@ -84,7 +84,7 @@
                         $priorities = $this->task->get_priorities();
                         foreach($priorities as $priority_row):
                         ?>
-                            <option value="<?= $status_row['priority_id']?>"
+                            <option value="<?= $priority_row['priority_id']?>"
                                 <?= $priority_row['priority_id'] == $row['priority_id'] ? 'selected': ''; ?>>
                                 <?= $priority_row['name']?>
                             </option>

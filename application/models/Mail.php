@@ -196,7 +196,7 @@ class Mail extends School
         $username   = $this->db->get_where($type, array($type.'_id' => $id))->row()->username;
         
         $email_sub    =  getPhrase('congratulations');
-        $email_msg   .=  getPhrase('hi')." <strong>".$user_name.",</strong><br><br>";
+        $email_msg    =  getPhrase('hi')." <strong>".$user_name.",</strong><br><br>";
         $email_msg   .=  getPhrase('your_account_has_been_approved_now_you_can_login')." <br><br>";
         $email_msg   .=  getPhrase('your_data_are_as_follows').":<br><br>";
         $email_msg   .=  "<strong>".getPhrase('name').":</strong> ".$user_name."<br/>";
