@@ -55,9 +55,9 @@
                             $user_info      = $this->crud->get_user_info($row['user_type'], $row['user_id']);
                             $status_info    = $this->task->get_status_info($row['status_id']);
                             $priority_info  = $this->task->get_priority_info($row['priority_id']);
-                            
+                            $description =   html_entity_decode(str_replace(array("\r", "\n"), '', $row['description']));
                             // echo '<pre>';
-                            // var_dump($user_info);
+                            // var_dump($row['user_type']);
                             // echo '</pre>';
                         ?>
                         <main class="col col-xl-9 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12">
@@ -93,17 +93,71 @@
                                                 <div class="col-lg-6">
                                                     <div class="value-pair">
                                                         <div><?= getPhrase('priority');?>:</div>
-                                                        <div class="value badge badge-pill badge-primary"
+                                                        <div class="value badge-status badge-pill badge-primary"
                                                             style="background-color: <?= $priority_info['color']?>;">
                                                             <?= $priority_info['name'];?>
                                                         </div>
                                                     </div>
                                                     <div class="value-pair">
-                                                        <div><?= getPhrase('status');?>:</div>
-                                                        <div class="value badge badge-pill badge-primary"
+                                                        <div><?= getPhrase('status_task');?>:</div>
+                                                        <div class="value badge-status badge-pill badge-primary"
                                                             style="background-color: <?= $status_info['color']?>;">
                                                             <?= $status_info['name'];?>
                                                         </div>
+                                                    </div>
+                                                    <div class="value-pair">
+                                                        <div><?= getPhrase('type_user');?>:</div>
+                                                        <div class="value badge-status badge-pill badge-primary">
+                                                            <?= $row['user_type'];?>
+                                                        </div>
+                                                    </div>
+                                                    <div class="value-pair">
+                                                        <div><?= getPhrase('user_status');?>:</div>
+                                                        <?php 
+                                                            $user_status_info = $this->task->get_user_status($row['user_type'], $row['user_id']);
+                                                        ?>
+                                                        <div class="value badge-status badge-pill badge-primary"
+                                                            style="background-color: <?= $user_status_info['color']?>;">
+                                                            <?= $user_status_info['name'];?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="ui-block">
+                                            <div class="ui-block-title">
+                                                <h6 class="title"><?= getPhrase('task_information');?>
+                                                </h6>
+                                            </div>
+                                            <div class="ui-block-content">
+                                                <div class="row">
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <ul class="widget w-personal-info item-block">
+                                                            <li>
+                                                                <span class="title"><?= getPhrase('title');?>:</span>
+                                                                <span class="text"><?= $row['title'];?></span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <ul class="widget w-personal-info item-block">
+                                                            <li>
+                                                                <span
+                                                                    class="title"><?= getPhrase('assigned_to');?>:</span>
+                                                                <span
+                                                                    class="text"><?= $this->crud->get_name('admin',$row['assigned_to']);?></span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <ul class="widget w-personal-info item-block">
+                                                            <li>
+                                                                <span
+                                                                    class="title"><?= getPhrase('description');?>:</span>
+                                                                <span class="text"><?= $description;?></span>
+                                                            </li>
+                                                        </ul>
+
                                                     </div>
                                                 </div>
                                             </div>

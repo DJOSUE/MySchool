@@ -7,14 +7,16 @@
     // Array Pages
     $task_pages         = array('task_dashboard', 'task_student', 'task_applicant', 'task_info');
     $message_pages      = array('message', 'group');
-    $admissions_pages   = array('admission_dashboard', 'admission_new_applicant', 'admission_applicant','admission_new_student');
+    $admissions_pages   = array('admission_dashboard', 'admission_applicants','admission_new_applicant', 'admission_applicant','admission_new_student');
     $routine_pages      = array('class_routine_view', 'teacher_routine');
     $library_pages      = array('library', 'book_request', 'update_book');
     $time_card_pages    = array('time_card', 'time_sheet', 'payment_period', 'worker_schedule', 'workers', 'worked_hours');
     $users_pages        = array('subject_marks', 'admin_update', 'admin_profile', 'librarian_update', 'librarian_profile', 'accountant_profile', 'accountant_update', 
                                 'parent_childs', 'parent_update', 'parent_profile', 'accountant', 'student_profile_report', 'student_profile_attendance', 'student_marks', 
                                 'student_invoices', 'student_update', 'student_portal', 'librarian', 'pending', 'teacher_subjects', 'teacher_schedules', 'users', 'admins', 
-                                'teachers', 'teacher_profile', 'teacher_update', 'parents', 'students', 'student_update_class', 'student_enrollments', 'student_past_marks');    
+                                'teachers', 'teacher_profile', 'teacher_update', 'parents', 'students', 'student_update_class', 'student_enrollments', 'student_past_marks',
+                                'student_placement_achievement'
+                            );    
     $academic_pages     = array('attendance', 'live', 'exam_room', 'exam_results', 'exam_edit', 'homework', 'homework_room', 'homework_edit', 'homework_details', 'meet', 
                                 'grados', 'upload_marks', 'study_material', 'cursos', 'subject_dashboard', 'forum_room', 'online_exams', 'edit_forum', 'forum', 'daily_marks', 
                                 'daily_marks_average');
@@ -26,8 +28,7 @@
 
     $polls_pages        = array('polls', 'view_poll', 'new_poll');
 
-    //  if($page_name == 'polls' || $page_name == '' || $page_name == 'new_poll')
-
+    $system_pages       = array('system_settings', 'system_security', 'system_sms', 'system_email', 'system_translate', 'system_database');
 
 ?>
 <div class="fixed-sidebar">
@@ -265,8 +266,7 @@
                 <?php endif;?>
                 <!-- Settings Access -->
                 <?php if(has_permission('settings_module')):?>
-                <li <?php if($page_name == 'system_settings' || $page_name == 'sms' || $page_name == 'email' || $page_name == 'translate' || $page_name == 'database'):?>class="currentItem"
-                    <?php endif;?>>
+                <li <?php if(in_array($page_name, $system_pages)):?>class="currentItem" <?php endif;?>>
                     <a href="<?php echo base_url();?>admin/system_settings/" data-toggle="tooltip"
                         data-placement="right" data-original-title="<?php echo getPhrase('settings');?>">
                         <div class="left-menu-icon">

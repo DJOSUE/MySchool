@@ -76,16 +76,24 @@
                                                 <div class="col-lg-6">
                                                     <div class="value-pair">
                                                         <div><?= getPhrase('applicant_type');?>:</div>
-                                                        <div class="value badge badge-pill badge-info" style="background-color: <?= $type_info['color']?>;">
+                                                        <div class="value badge-status badge-pill badge-info" style="background-color: <?= $type_info['color']?>;">
                                                             <?=$type_info['name'];?>
                                                         </div>
                                                     </div>
                                                     <div class="value-pair">
                                                         <div><?= getPhrase('status');?>:</div>
-                                                        <div class="value badge badge-pill badge-primary" style="background-color: <?= $status_info['color']?>;">
+                                                        <div class="value badge-status badge-pill badge-primary" style="background-color: <?= $status_info['color']?>;">
                                                             <?= $status_info['name'];?>
                                                         </div>
-                                                    </div>                                                    
+                                                    </div>
+                                                    <?php if($row['is_imported'] == 1) :?>
+                                                    <div class="value-pair">
+                                                        <div> </div>
+                                                        <div class="value badge-status badge-pill badge-primary">
+                                                            <?= getPhrase('imported');?>
+                                                        </div>
+                                                    </div>
+                                                    <?php endif;?>                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -102,9 +110,7 @@
                                                             <label class="control-label"><?= getPhrase('status');?></label>
                                                             <div class="select">
                                                                 <select name="status_id" required="">
-                                                                    <option value=""><?= getPhrase('select');?></option>
-
-                                                                    <?php $status = $this->db->get_where('v_applicant_status', array('status_id <>' => '3'))->result_array();
+                                                                    <?php $status = $this->applicant->get_applicant_status_update($row['status']);
                                                                         foreach($status as $item):
                                                                     ?>
                                                                     <option value="<?=$item['status_id']?>"

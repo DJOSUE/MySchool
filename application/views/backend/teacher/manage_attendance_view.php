@@ -136,7 +136,7 @@
         function select_section(class_id) 
         {
             $.ajax({
-                url: '<?php echo base_url(); ?>admin/get_sectionss/' + class_id,
+                url: '<?php echo base_url(); ?>admin/get_sections/' + class_id,
                 success:function (response)
                 {
                     jQuery('#section_holder').html(response);

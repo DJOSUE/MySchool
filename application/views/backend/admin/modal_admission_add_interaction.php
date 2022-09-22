@@ -20,7 +20,7 @@
                     <div class="select">
                         <select name="status_id" required="" style="width: 150px;">
                             <?php
-                        $status = $this->db->get('v_applicant_status')->result_array();
+                        $status = $this->applicant->get_applicant_status_update($row['status']);
                         foreach($status as $status_row):
                         ?>
                             <option value="<?= $status_row['status_id']?>"

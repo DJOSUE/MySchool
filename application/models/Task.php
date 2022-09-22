@@ -114,6 +114,22 @@ class Task extends School
         }
     }
 
+    public function get_user_status($type, $user_id)
+    {
+        switch ($type) {
+            case 'student':
+                $status_id = $this->db->get_where('student', array('student_id' => $user_id))->row()->student_session;
+                $status_info = $this->studentModel->get_status_info($status_id);
+                return $status_info;
+                break;
+            case 'applicant':
+                $status_id = $this->db->get_where('applicant', array('applicant_id' => $user_id))->row()->status;
+                $status_info = $this->applicant->get_applicant_status_info($status_id);
+                return $status_info;
+                break;
+        }
+    }
+
     function create()
     {
         $code = md5(date('d-m-Y H:i:s'));
@@ -160,6 +176,12 @@ class Task extends School
     {
         $data['updated_by']     = $this->session->userdata('login_user_id');
 
+        $task_code = $this->db->get_where('task' , array('task_id' => $task_id) )->row()->task_code;
+        $assigned_to_old = $this->db->get_where('task' , array('task_id' => $task_id) )->row()->assigned_to;
+        
+        $assigned_to_new = $this->input->post('assigned_to');
+
+
         if(!empty($this->input->post('title')))
             $data['title']     = ucfirst(html_escape($this->input->post('title')));
 
@@ -196,6 +218,18 @@ class Task extends School
         $table      = 'task';
         $action     = 'update';        
         $this->crud->save_log($table, $action, $task_id, $data);
+
+        if($assigned_to_new != '' && ($assigned_to_new != $assigned_to_old))
+        {
+            $user_name  = $this->crud->get_name('admin', $this->session->userdata('login_user_id'));
+            $assigned_name  = $this->crud->get_name('admin', $assigned_to_new);
+
+            // Create a new interaction
+            $_POST['login_user_id']  = $data['updated_by'];
+            $_POST['message']           = $user_name.' assigned to '.$assigned_name.' this task.';
+            
+            $this->add_message($task_code);
+        }
     }
 
     function update_status($task_code, $status_id)

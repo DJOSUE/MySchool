@@ -139,14 +139,14 @@
                                                         <?php echo getPhrase('update_class');?>
                                                     </a>
                                                 </li>
-												<li>
+												<!-- <li>
                                                     <i class="picons-thin-icon-thin-0133_arrow_right_next"
                                                         style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
                                                     <a
                                                         href="<?php echo base_url();?>admin/student_enrollments/<?php echo $student_id;?>/">
                                                         <?php echo getPhrase('student_enrollments');?>
                                                     </a>
-                                                </li>
+                                                </li> -->
                                                 <li>
                                                     <i class="picons-thin-icon-thin-0133_arrow_right_next"
                                                         style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
@@ -171,14 +171,14 @@
                                                         <?php echo getPhrase('old_marks');?>
                                                     </a>
                                                 </li>
-                                                <li>
+                                                <!-- <li>
                                                     <i class="picons-thin-icon-thin-0133_arrow_right_next"
                                                         style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
                                                     <a
                                                         href="<?php echo base_url();?>admin/student_profile_attendance/<?php echo $student_id;?>/">
                                                         <?php echo getPhrase('attendance');?>
                                                     </a>
-                                                </li>
+                                                </li> -->
                                                 <li>
                                                     <i class="picons-thin-icon-thin-0133_arrow_right_next"
                                                         style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;

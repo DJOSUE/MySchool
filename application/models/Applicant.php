@@ -61,6 +61,11 @@ class Applicant extends School
     {
         $data['updated_by']     = $this->session->userdata('login_user_id');
 
+        $assigned_to_old = $this->db->get_where('v_applicants' , array('applicant_id' => $applicant_id) )->row()->assigned_to;
+        
+        $assigned_to_new = $this->input->post('assigned_to');
+
+
         if(!empty($this->input->post('first_name')))
             $data['first_name']     = ucfirst(html_escape($this->input->post('first_name')));
 
@@ -114,13 +119,25 @@ class Applicant extends School
         }
 
         // echo$data['birthday'];
-
+        $this->db->reset_query();
         $this->db->where('applicant_id', $applicant_id);
         $this->db->update('applicant', $data);
 
         $table      = 'applicant';
         $action     = 'update';        
         $this->crud->save_log($table, $action, $applicant_id, $data);
+
+        if($assigned_to_new != '' && ($assigned_to_new != $assigned_to_old))
+        {
+            $user_name  = $this->crud->get_name('admin', $this->session->userdata('login_user_id'));
+            $assigned_name  = $this->crud->get_name('admin', $assigned_to_new);
+
+            // Create a new interaction
+            $_POST['applicant_id']  = $applicant_id;
+            $_POST['comment']       = $user_name.' assigned to '.$assigned_name.' this applicant';
+            
+            $this->applicant->add_interaction();
+        }
     }
 
     function update_tag($applicant_id, $tag_id, $selected)
@@ -251,6 +268,18 @@ class Applicant extends School
         $this->db->reset_query();
         $this->db->select('code as status_id, name, value_1 as color, value_2 as icon');
         $this->db->where('parameter_id', 'APPLSTATUS');
+        $query = $this->db->get('parameters')->result_array();;
+        
+        return $query;
+    }
+
+    // Get the list of the info pf the applicants
+    public function get_applicant_status_update($status_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('code as status_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'APPLSTATUS');
+        $this->db->like('value_4', $status_id);
         $query = $this->db->get('parameters')->result_array();;
         
         return $query;

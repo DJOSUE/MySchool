@@ -165,7 +165,7 @@
 
         function get_class_students(class_id) {
             $.ajax({
-                url: '<?php echo base_url(); ?>admin/get_class_stundets/' + class_id,
+                url: '<?php echo base_url(); ?>admin/get_class_students/' + class_id,
                 success: function (response)
                 {
                     jQuery('#students_holder').html(response);

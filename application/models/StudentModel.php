@@ -1,6 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Student extends School 
+class StudentModel extends School 
 {
     function add_interaction($student_id)
     {
@@ -43,5 +43,45 @@ class Student extends School
         $table      = 'student_interaction';
         $action     = 'update';
         $this->crud->save_log($table, $action, $interaction_id, $data);
+    }
+    
+    public function get_status()
+    {
+        $this->db->reset_query();
+        $this->db->select('code as status_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'STUDENTSTA');
+        $query = $this->db->get('parameters')->result_array();;
+        
+        return $query;
+    }
+
+    public function get_status_info($status_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('code as status_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'STUDENTSTA');
+        $this->db->where('code', $status_id);
+        $query = $this->db->get('parameters')->row_array();
+        
+        return $query;
+    }
+
+    public function get_programs()
+    {
+        $this->db->reset_query();
+        $this->db->select('program_id, name, color, icon');
+        $query = $this->db->get('program')->result_array();;
+        
+        return $query;
+    }
+
+    public function get_program_info($program_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('program_id, name, color, icon');
+        $this->db->where('program_id', $program_id);
+        $query = $this->db->get('program')->row_array();
+        
+        return $query;
     }
 }

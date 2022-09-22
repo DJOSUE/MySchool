@@ -3361,7 +3361,9 @@ class Crud extends School
         $data['table']      = $table;
         $data['action']     = $action;
         $data['table_id']   = $table_id;
-        $data['data']       = json_encode($info);        
+        $data['data']       = json_encode($info);
+        
+        $this->db->reset_query();
         $this->db->insert('logs', $data);
     }
 
@@ -3379,6 +3381,13 @@ class Crud extends School
     {
         $program_id = $this->db->get_where('student', array('student_id' => $student_id))->row()->program_id;
         $name = $this->db->get_where('program', array('program_id' => $program_id))->row()->name;
+        return $name;
+    }
+
+    function get_name_attribute($type = '', $id = '')
+    {
+        $query = $this->db->get_where(''.$type.'',array($type."_id" => $id))->row();
+        $name = $query->name;
         return $name;
     }
 }

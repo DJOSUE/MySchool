@@ -183,9 +183,8 @@
                         </div>
                         <div class="row">
                             <div class="table-responsive">
-                                <?php 
-                                    if($search == true || $status_id != "" || $priority_id != "" || $department_id != ""):
-                                        if($task_query->num_rows() > 0):
+                                <?php
+                                    if($task_query->num_rows() > 0):
                                 ?>
                                 <a href="#" id="btnExport" data-toggle="tooltip" data-placement="top"
                                     data-original-title="<?php echo getPhrase('download');?>">
@@ -207,6 +206,7 @@
                                             <th class="text-center"><?php echo getPhrase('created_by')?></th>
                                             <th class="text-center"><?php echo getPhrase('created_at')?></th>
                                             <th class="text-center"><?php echo getPhrase('updated_by')?></th>
+                                            <th class="text-center"><?php echo getPhrase('updated_at')?></th>
                                             <th class="text-center"><?php echo getPhrase('options')?></th>
                                         </tr>
                                     </thead>
@@ -261,6 +261,11 @@
                                                     <?= $this->crud->get_name('admin', $row['updated_by']);?>
                                                 </center>
                                             </td>
+                                            <td>
+                                                <center>
+                                                    <?= $row['updated_at'];?>
+                                                </center>
+                                            </td>
                                             <td class="row-actions">
                                                 <a href="<?php echo base_url();?>admin/task_info/<?= $row['task_code'];?>"
                                                     class="grey" data-toggle="tooltip" data-placement="top"
@@ -296,7 +301,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <?php endif;?>
                                 <?php endif;?>
                             </div>
                         </div>

@@ -577,25 +577,29 @@
         function admins($param1 = '' , $param2 = '')
         {
             $this->isAdmin();
+
+            $role = base64_decode($param1);
+            $is_numeric = is_numeric($role);
+
             if ($param1 == 'create') 
             {
                 $this->user->createAdmin();
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
                 redirect(base_url() . 'admin/admins/', 'refresh');
             }
-            if ($param1 == 'update') 
+            else if ($param1 == 'update') 
             {
                 $this->user->updateAdmin($param2);
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
                 redirect(base_url() . 'admin/admins/', 'refresh');
             }
-            if ($param1 == 'update_profile') 
+            else if ($param1 == 'update_profile') 
             {
                 $this->user->updateAdmin($param2);
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
                 redirect(base_url() . 'admin/admin_update/'.$param2.'/', 'refresh');
             }
-            if ($param1 == 'delete')
+            else if ($param1 == 'delete')
             {
                 $data['status']   = 0;
                 $this->db->where('admin_id', $param2);
@@ -609,6 +613,10 @@
                 // $this->db->delete('admin');
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
                 redirect(base_url() . 'admin/admins/', 'refresh');
+            }
+            else if ($is_numeric)
+            {
+                $page_data['owner_status']     = $role;
             }
             $page_data['page_name']     = 'admins';
             $page_data['page_title']    = getPhrase('admins');
@@ -908,112 +916,13 @@
             $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
             redirect(base_url().'admin/attendance/'.base64_encode($class_id.'-'.$section_id.'-'.$subject_id).'/'.$timestamp , 'refresh');
         }
-    
-        //Database tools function.
-        function database($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-            if($param1 == 'restore')
-            {
-                $this->crud->import_db();
-                $this->session->set_flashdata('flash_message' , getPhrase('restored'));
-                redirect(base_url() . 'admin/database/', 'refresh');
-            }
-            if($param1 == 'create')
-            {
-                $this->crud->create_backup();
-                $this->session->set_flashdata('flash_message' , getPhrase('backup_created'));
-                redirect(base_url() . 'admin/database/', 'refresh');
-            }
-            $page_data['page_name']                 = 'database';
-            $page_data['page_title']                = getPhrase('database');
-            $this->load->view('backend/index', $page_data);
-        }
-    
-        //SMS API's Settings function.
-        function sms($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-            if($param1 == 'update')
-            {
-                $this->crud->smsStatus();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/sms/', 'refresh');
-            }
-            if($param1 == 'msg91')
-            {
-                $this->crud->msg91();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/sms/', 'refresh');
-            }
-            if($param1 == 'clickatell')
-            {
-                $this->crud->clickatellSettings();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/sms/', 'refresh');
-            }
-            if($param1 == 'twilio') 
-            {
-                $this->crud->twilioSettings();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/sms/', 'refresh');
-            }
-            if($param1 == 'services') 
-            {
-                $this->crud->services();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/sms/', 'refresh');
-            }
-            $page_data['page_name']  = 'sms';
-            $page_data['page_title'] = getPhrase('sms');
-            $this->load->view('backend/index', $page_data);
-        }
-    
-        //Email settings function.
-        function email($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-            if($param1 == 'template')
-            {
-                $this->crud->emailTemplate($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/email/', 'refresh');
-            }
-            $page_data['page_name']  = 'email';
-            $page_data['current_email_template_id']  = 1;
-            $page_data['page_title'] = getPhrase('email_settings');
-            $this->load->view('backend/index', $page_data);
-        }
-    
+
         //View teacher report function.
         function view_teacher_report()
         {
             $this->isAdmin();
             $page_data['page_name']  = 'view_teacher_report';
             $page_data['page_title'] = getPhrase('teacher_report');
-            $this->load->view('backend/index', $page_data);
-        }
-        
-        //System translation function.
-        function translate($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-            if ($param1 == 'update') 
-            {
-                $page_data['edit_profile']  = $param2;
-            }
-            if ($param1 == 'update_language') 
-            {
-                $this->crud->updateLang($param2);
-            }
-            if ($param1 == 'add') 
-            {
-                $this->crud->createLang();
-                $this->session->set_flashdata('flash_message', getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/translate/', 'refresh');
-            }
-            $page_data['page_name']  = 'translate';
-            $page_data['page_title'] = getPhrase('translate');
             $this->load->view('backend/index', $page_data);
         }
         
@@ -2877,33 +2786,6 @@
             }
         }
     
-        //System settings function.
-        function system_settings($param1 = '', $param2 = '', $param3 = '')
-        {
-            $this->isAdmin();
-            if ($param1 == 'do_update') 
-            {
-                $this->crud->updateSettings();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/system_settings/', 'refresh');
-            }
-            if($param1 == 'skin')
-            {
-                $this->crud->updateSkins();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/system_settings/', 'refresh');
-            }
-            if($param1 == 'social')
-            {
-                $this->crud->updateSocial();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/system_settings/', 'refresh');
-            }
-            $page_data['page_name']  = 'system_settings';
-            $page_data['page_title'] = getPhrase('system_settings');
-            $this->load->view('backend/index', $page_data);
-        }
-    
         //Classes functions.
         function academic($param1 = '', $param2 = '', $param3 = '')
         {
@@ -3008,7 +2890,7 @@
             $info = base64_decode($data);
             $ex = explode("-",$info);
 
-            // <?php echo base64_encode($student_id.'-'.$class_id.'-'.$section_id.'-'.$year.'-'.$semester_id)
+            // <?= base64_encode($student_id.'-'.$class_id.'-'.$section_id.'-'.$year.'-'.$semester_id)
             
             $student_id = $ex[0];
             $class_id = $ex[1];
@@ -3448,7 +3330,7 @@
                         $return_url = base64_decode($return_url);
                     }
                     
-                    $this->student->add_interaction($student_id);
+                    $this->studentModel->add_interaction($student_id);
                     $message =  getPhrase('successfully_added');
                     break;
 
@@ -3456,7 +3338,7 @@
                     if($return_url == '')
                         $return_url = 'admin/student_portal/'.$student_id;
                     
-                    $this->student->update_interaction($interaction_id);
+                    $this->studentModel->update_interaction($interaction_id);
                     $message =  getPhrase('successfully_added');
                     break;
 
@@ -3470,12 +3352,12 @@
         } 
         
         // Student Placement Test
-        function placement_achievement($student_id, $param1='')
+        function student_placement_achievement($student_id, $param1='')
         {
             $this->isAdmin();
             
             $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
-            $page_data['page_name']  = 'placement_achievement';
+            $page_data['page_name']  = 'student_placement_achievement';
             $page_data['page_title'] =  getPhrase('placement_achievement');
             $page_data['student_id'] =  $student_id;
             $page_data['class_id']   =  $class_id;
@@ -3493,7 +3375,7 @@
             
         }
 
-        /** Admission Module */
+/*****Admission Module  ********************************************************************************************************************************/        
         // Admission Dashboard
         function admission_dashboard()
         {
@@ -3526,35 +3408,43 @@
             {
                 $array      = explode('|',base64_decode($param1));
                 
-                $name       = "";
-                $country_id = "";
-                $status_id  = $array[1];
-                $type_id    = $array[0];
+                $name        = "";
+                $country_id  = "";
+                $status_id   = $array[1];
+                $type_id     = $array[0];
+                $assigned_me = 0;
+                $tag_id      = "";
             }
             else
             {
-                $name       = "";
-                $country_id = "";
-                $status_id  = "";
-                $type_id    = "";
+                $name        = "";
+                $country_id  = "";
+                $status_id   = "";
+                $type_id     = "";
+                $assigned_me = 1;
+                $tag_id      = "";
             }
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') 
             {
-                $country_id = $this->input->post('country_id');
-                $status_id  = $this->input->post('status_id');
-                $type_id    = $this->input->post('type_id');
-                $name       = $this->input->post('name');
-                $search     = true;
+                $country_id  = $this->input->post('country_id');
+                $status_id   = $this->input->post('status_id');
+                $type_id     = $this->input->post('type_id');
+                $name        = $this->input->post('name');
+                $search      = true;
+                $assigned_me = $this->input->post('assigned_me'); 
+                $tag_id      = $this->input->post('tag_id'); 
             }
 
-            $page_data['country_id'] = $country_id;
-            $page_data['status_id']  = $status_id;
-            $page_data['type_id']    = $type_id;
-            $page_data['search']     = $search;
-            $page_data['name']       = $name;
-            $page_data['page_name']  = 'admission_applicants';
-            $page_data['page_title'] =  getPhrase('admission_applicants');
+            $page_data['country_id']  = $country_id;
+            $page_data['status_id']   = $status_id;
+            $page_data['type_id']     = $type_id;
+            $page_data['search']      = $search;
+            $page_data['name']        = $name;
+            $page_data['assigned_me'] = $assigned_me;
+            $page_data['tag_id']      = $tag_id;
+            $page_data['page_name']   = 'admission_applicants';
+            $page_data['page_title']  =  getPhrase('admission_applicants');
             $this->load->view('backend/index', $page_data);
         }
 
@@ -3586,6 +3476,16 @@
             $page_data['page_name']    = 'admission_applicant';
             $page_data['page_title']   = getPhrase('admission_applicant');
             $this->load->view('backend/index', $page_data);
+        }
+
+        // Create Student function.
+        function admission_applicant_form($param1 = '')
+        {
+            $this->isAdmin('admission_module');
+            $page_data['email']        = base64_decode($param1);
+            $page_data['page_name']    = 'admission_applicant_form';
+            $page_data['page_title']   = getPhrase('admission_applicant_form');
+            $this->load->view('backend/admin/admission_applicant_form',$page_data);
         }
 
         // 
@@ -3960,7 +3860,7 @@
             $this->applicant->update_tag($applicant_id, $tag_id, $selected);
         }
 
-        /** Reports Module */
+/*****Reports Module  ********************************************************************************************************************************/
         // task Dashboard
         function reports_students_all()
         {
@@ -3981,8 +3881,8 @@
             $page_data['page_title']    = getPhrase('reports_students_all');
             $this->load->view('backend/index', $page_data);
         }
-        
-        /** Task Module */
+
+/*****Task Module     ********************************************************************************************************************************/        
         // task Dashboard
         function task_dashboard()
         {
@@ -4124,7 +4024,6 @@
             $page_data['page_name']    = 'task_info';
             $page_data['page_title']   = getPhrase('task_info');
             $this->load->view('backend/index', $page_data);
-
         }
 
         function task($action, $task_id = '', $return_url = '')
@@ -4227,7 +4126,228 @@
             echo $options;
         }
 
-        /** Tools functions */
+/*****System module   ********************************************************************************************************************************/
+
+        /** System module */
+        //System settings function.
+        function system_settings($param1 = '', $param2 = '', $param3 = '')
+        {
+            $this->isAdmin();
+            if ($param1 == 'do_update') 
+            {
+                $this->crud->updateSettings();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/system_settings/', 'refresh');
+            }
+            if($param1 == 'skin')
+            {
+                $this->crud->updateSkins();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/system_settings/', 'refresh');
+            }
+            if($param1 == 'social')
+            {
+                $this->crud->updateSocial();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/system_settings/', 'refresh');
+            }
+            $page_data['page_name']  = 'system_settings';
+            $page_data['page_title'] = getPhrase('system_settings');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //System security function.
+        function system_security($param1 = '', $param2 = '')
+        {
+            $this->isAdmin('system_security');
+            
+            $page_data['page_name']    = 'system_security';
+            $page_data['page_title']   = getPhrase('security');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function role($action, $id = '', $return_url = '')
+        {
+            $this->isAdmin();
+
+            $message = '';
+
+            if($return_url == '')
+            {
+                $return_url = 'system_security/';
+            }
+
+            switch ($action) {
+                case 'create':
+                    $this->system->role_create();
+                    $message =  getPhrase('successfully_create');
+                    break;
+                case 'update':
+                    $this->system->role_update($id);
+                    $message =  getPhrase('successfully_updated');
+                    break;
+                case 'delete':
+                    $this->system->role_delete($id);
+                    $message =  getPhrase('successfully_deleted');
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+
+            $this->session->set_flashdata('flash_message' , $message);
+            redirect(base_url() .'admin/'.$return_url, 'refresh');
+        }
+
+        function account_role($action, $id = '', $return_url = '')
+        {
+            $this->isAdmin();
+
+            $message = '';
+
+            if($return_url == '')
+            {
+                $return_url = 'system_security/';
+            }
+
+            switch ($action) {
+                case 'add':
+                    $this->system->account_role_add();
+                    $message =  getPhrase('successfully_added');
+                    break;
+                case 'update':
+                    $this->system->account_role_update($id);
+                    $message =  getPhrase('successfully_updated');
+                    break;
+                case 'delete':
+                    $this->system->account_role_delete($id);
+                    $message =  getPhrase('successfully_deleted');
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+
+            $this->session->set_flashdata('flash_message' , $message);
+            redirect(base_url() .'admin/'.$return_url, 'refresh');
+        }
+
+        //Database tools function.
+        function system_database($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            if($param1 == 'restore')
+            {
+                $this->crud->import_db();
+                $this->session->set_flashdata('flash_message' , getPhrase('restored'));
+                redirect(base_url() . 'admin/database/', 'refresh');
+            }
+            if($param1 == 'create')
+            {
+                $this->crud->create_backup();
+                $this->session->set_flashdata('flash_message' , getPhrase('backup_created'));
+                redirect(base_url() . 'admin/database/', 'refresh');
+            }
+            $page_data['page_name']                 = 'system_database';
+            $page_data['page_title']                = getPhrase('database');
+            $this->load->view('backend/index', $page_data);
+        }
+    
+        //SMS API's Settings function.
+        function system_sms($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            if($param1 == 'update')
+            {
+                $this->crud->smsStatus();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/sms/', 'refresh');
+            }
+            if($param1 == 'msg91')
+            {
+                $this->crud->msg91();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/sms/', 'refresh');
+            }
+            if($param1 == 'clickatell')
+            {
+                $this->crud->clickatellSettings();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/sms/', 'refresh');
+            }
+            if($param1 == 'twilio') 
+            {
+                $this->crud->twilioSettings();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/sms/', 'refresh');
+            }
+            if($param1 == 'services') 
+            {
+                $this->crud->services();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/sms/', 'refresh');
+            }
+            $page_data['page_name']  = 'system_sms';
+            $page_data['page_title'] = getPhrase('sms');
+            $this->load->view('backend/index', $page_data);
+        }
+    
+        //Email settings function.
+        function system_email($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            if($param1 == 'template')
+            {
+                $this->crud->emailTemplate($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/email/', 'refresh');
+            }
+            $page_data['page_name']  = 'system_email';
+            $page_data['current_email_template_id']  = 1;
+            $page_data['page_title'] = getPhrase('email_settings');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //System translation function.
+        function system_translate($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            if ($param1 == 'update') 
+            {
+                $page_data['edit_profile']  = $param2;
+            }
+            if ($param1 == 'update_language') 
+            {
+                $this->crud->updateLang($param2);
+            }
+            if ($param1 == 'add') 
+            {
+                $this->crud->createLang();
+                $this->session->set_flashdata('flash_message', getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/translate/', 'refresh');
+            }
+            $page_data['page_name']  = 'system_translate';
+            $page_data['page_title'] = getPhrase('translate');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function system_parameters($param1 = '', $param2 = '')
+        {
+            $this->isAdmin('system_parameters');
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') 
+            {
+                $parameter_id  = $this->input->post('parameter_id'); 
+            }
+            
+            $page_data['parameter_id'] = $parameter_id;
+            $page_data['page_name']    = 'system_parameters';
+            $page_data['page_title']   = getPhrase('parameters');
+            $this->load->view('backend/index', $page_data);
+        }
+
+/*****Tools functions ********************************************************************************************************************************/
+
         // unset Admin cookies
         function unset_admin(){
             $this->session->unset_userdata('admin_login');
@@ -4341,7 +4461,7 @@
         }
 
         //Get Students by sectionId function of the current semester.
-        function get_class_stundets($section_id = '')
+        function get_class_students($section_id = '')
         {
             $year       =   $this->runningYear;
             $SemesterId =   $this->runningSemester;
@@ -4413,7 +4533,7 @@
         }
 
         //Get Sections by ClassId in dropdown function.
-        function get_sectionss($class_id = '')
+        function get_sections($class_id = '')
         {
             $sections = $this->db->get_where('section' , array('class_id' => $class_id))->result_array();
             foreach ($sections as $row) 
@@ -4421,5 +4541,72 @@
                 echo '<option value="' . $row['section_id'] . '">' . $row['name'] . '</option>';
             }
         }
+
+        function get_role_access($role_id)
+        {
+            $access = $this->db->get_where('account_role' , array('role_id' => $role_id))->result_array();
+
+            $html_string  = '<div class="table-responsive">';
+            $html_string .= '<table class="table table-bordered">';
+            $html_string .= '<thead>';
+
+            $html_string .= '<tr style="background:#f2f4f8; height:35px;">';
+            $html_string .= '<th style="text-align: center;">';
+            $html_string .= getPhrase('name');
+            $html_string .= '</th>';
+            
+            $html_string .= '<th style="text-align: center;">';
+            $html_string .= getPhrase('permissions');;
+            $html_string .= '</th>';
+
+            $html_string .= '<th style="text-align: center;">';
+            $html_string .= getPhrase('action');
+            $html_string .= '</th>';
+            $html_string .= '</tr>';
+            $html_string .= '</thead>';
+            $html_string .= '<tbody>';
+
+            foreach ($access as $row) 
+            {
+                $html_string .= '<tr style="height:25px;">';
+                $html_string .= '<td><center>';
+                $html_string .= '<label name="type_'.$row['role_id'].'">';
+                $html_string .= $row['type'];
+                $html_string .= '</label>';
+                $html_string .= '</center></td>';
+                
+                $html_string .= '<td><center>';
+                $html_string .= '<label name="permissions_'.$row['role_id'].'">';
+                $html_string .= $row['permissions'] == 1 ? getPhrase('has_access') : getPhrase('has_no_access');
+                $html_string .= '</label>';
+                $html_string .= '</center></td>';
+
+                $link = "'".base_url().'modal/popup/modal_system_account_role_edit/'.$row['account_role_id']."'";
+
+                $html_string .= '<td class="row-actions">';
+                $html_string .= '<a href="javascript:void(0);" class="grey"  onclick="showAjaxModal('.$link.')">';
+                $html_string .= '<i class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new"></i>';
+                $html_string .= '</a>';
+
+                $text = "'".getPhrase('confirm_delete')."'";
+
+                $html_string .= '<a class="grey" onclick="return confirm('.$text.')" href="'.base_url().'admin/account_role/delete/'.$row['account_role_id'].'">';
+                $html_string .= '<i class="os-icon picons-thin-icon-thin-0056_bin_trash_recycle_delete_garbage_empty"></i>';
+                $html_string .= '</a>';                
+                $html_string .= '</td>';
+
+                $html_string .= '</tr>';
+            }
+
+            $html_string .= '</tbody>';
+            $html_string .= '</table>';
+            $html_string .= '</div>';
+
+            echo $html_string;
+            // echo '<pre>';
+            // var_dump($access);
+            // echo '</pre>';
+        }
+
         //End of Admin.php content. 
     }

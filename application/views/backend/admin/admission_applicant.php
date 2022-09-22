@@ -10,6 +10,7 @@
         $tags_applicant = json_decode($row['tags'], true)['tags_id'];
         $status_info = $this->applicant->get_applicant_status_info($row['status']);
         $type_info = $this->applicant->get_applicant_type_info($row['type_id']);
+        $assigned_to = $this->crud->get_name('admin', $row['assigned_to']);
 ?>
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -83,7 +84,7 @@
                                                 <div class="col-lg-6">
                                                     <div class="value-pair">
                                                         <div><?= getPhrase('applicant_type');?>:</div>
-                                                        <div class="value badge badge-pill badge-info"
+                                                        <div class="value badge-status badge-pill badge-info"
                                                             style="background-color: <?= $type_info['color']?>;">
                                                             <?=$type_info['name'];?>
 
@@ -91,10 +92,19 @@
                                                     </div>
                                                     <div class="value-pair">
                                                         <div><?= getPhrase('status');?>:</div>
-                                                        <div class="value badge badge-pill badge-primary"
+                                                        <div class="value badge-status badge-pill badge-primary"
                                                             style="background-color: <?= $status_info['color']?>;">
-                                                            <?= $status_info['name'];?></div>
+                                                            <?= $status_info['name'];?>
+                                                        </div>
                                                     </div>
+                                                    <?php if($row['is_imported'] == 1) :?>
+                                                    <div class="value-pair">
+                                                        <div> </div>
+                                                        <div class="value badge-status badge-pill badge-primary">
+                                                            <?= getPhrase('imported');?>
+                                                        </div>
+                                                    </div>
+                                                    <?php endif;?>
                                                 </div>
                                             </div>
                                         </div>
@@ -119,6 +129,10 @@
                                                             <li>
                                                                 <span class="title"><?= getPhrase('address');?>:</span>
                                                                 <span class="text"><?= $row['address'];?></span>
+                                                            </li>
+                                                            <li>
+                                                                <span class="title"><?= getPhrase('assigned_to');?>:</span>
+                                                                <span class="text"><?= $assigned_to;?></span>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -169,8 +183,12 @@
                                         <div class=" ui-block-title row" style="border-style: none;">
                                             <div class="col-sm-4">
                                                 <div class="row" style="justify-content: flex-end;">
-
                                                     <?php if($is_international):?>
+                                                    <div class="form-buttons">
+                                                        <button class="btn btn-rounded btn-primary" id="btn_show_form"
+                                                            onclick="window.open('/admin/admission_applicant_form/<?=base64_encode($row['email'])?>', '_blank'); return false;">
+                                                            <?= getPhrase('view_application_form');?></button>
+                                                    </div> &nbsp;&nbsp;&nbsp;&nbsp;
                                                     <div class="form-buttons">
                                                         <button class="btn btn-rounded btn-primary" id="btn_show"
                                                             onclick="show_application()">

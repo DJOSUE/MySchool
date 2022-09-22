@@ -1,6 +1,7 @@
 <?php
 
     $running_year = $this->crud->getInfo('running_year');
+    $user_id = $this->session->userdata('login_user_id');
 
     if($country_id != '')
     {
@@ -14,10 +15,22 @@
     {
         $this->db->where('status', $status_id);
     }
+    else
+    {
+        $this->db->where('status <>', '3');
+    }
     if($name != '')
     {
         $this->db->like('full_name' , str_replace("%20", " ", $name));
     }
+    if($tag_id != '')
+    {
+        $this->db->like('tags',$tag_id, 'both');
+    }
+    if($assigned_me == 1)
+    {
+        $this->db->where('assigned_to' , $user_id);
+    }  
     $student_query = $this->db->get('v_applicants');
     $students = $student_query->result_array();
 
@@ -36,24 +49,24 @@
             <div class="os-tabs-controls">
                 <ul class="navs navs-tabs upper">
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/admission_dashboard/">
+                        <a class="navs-links" href="<?= base_url();?>admin/admission_dashboard/">
                             <i class="os-icon picons-thin-icon-thin-0482_gauge_dashboard_empty"></i>
-                            <span><?php echo getPhrase('dashboard');?></span></a>
+                            <span><?= getPhrase('dashboard');?></span></a>
                     </li>
                     <li class="navs-item">
-                        <a class="navs-links active" href="<?php echo base_url();?>admin/admission_applicants/">
+                        <a class="navs-links active" href="<?= base_url();?>admin/admission_applicants/">
                             <i class="os-icon picons-thin-icon-thin-0093_list_bullets"></i>
-                            <span><?php echo getPhrase('applicants');?></span></a>
+                            <span><?= getPhrase('applicants');?></span></a>
                     </li>
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/admission_new_applicant/">
+                        <a class="navs-links" href="<?= base_url();?>admin/admission_new_applicant/">
                             <i class="os-icon picons-thin-icon-thin-0716_user_profile_add_new"></i>
-                            <span><?php echo getPhrase('new_applicant');?></span></a>
+                            <span><?= getPhrase('new_applicant');?></span></a>
                     </li>
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/admission_new_student/">
+                        <a class="navs-links" href="<?= base_url();?>admin/admission_new_student/">
                             <i class="os-icon picons-thin-icon-thin-0706_user_profile_add_new"></i>
-                            <span><?php echo getPhrase('new_student');?></span></a>
+                            <span><?= getPhrase('new_student');?></span></a>
                     </li>
                 </ul>
             </div>
@@ -62,83 +75,112 @@
             <div class="content-i">
                 <div class="content-box">
                     <div class="element-box-tp">
-                        <h5 class="form-header"><?php echo getPhrase('applicant_report');?></h5>
+                        <h5 class="form-header"><?= getPhrase('applicant_report');?></h5>
                         <div class="row">
                             <div class="content-i">
                                 <div class="content-box">
-                                    <?php echo form_open(base_url() . 'admin/admission_applicants/', array('class' => 'form m-b'));?>
+                                    <?= form_open(base_url() . 'admin/admission_applicants/', array('class' => 'form m-b'));?>
                                     <div class="row" style="margin-top: -30px; border-radius: 5px;">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-2">
                                             <div class="form-group label-floating"
                                                 style="border: 1px solid #EAEAF5;border-radius: 5px; background: white;">
-                                                <label class="control-label"><?php echo getPhrase('name');?></label>
+                                                <label class="control-label"><?= getPhrase('name');?></label>
                                                 <input class="form-control" name="name" type="text" value="<?= $name?>">
                                             </div>
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-2">
                                             <div class="form-group label-floating is-select">
-                                                <label class="control-label"><?php echo getPhrase('country');?></label>
+                                                <label class="control-label"><?= getPhrase('country');?></label>
                                                 <div class="select">
                                                     <select name="country_id" onchange="get_class_sections(this.value)">
-                                                        <option value=""><?php echo getPhrase('select');?></option>
+                                                        <option value=""><?= getPhrase('select');?></option>
                                                         <?php
                                                         $countries = $this->db->get('countries')->result_array();
                                                         foreach($countries as $row):
                                                     ?>
-                                                        <option value="<?php echo $row['country_id'];?>"
+                                                        <option value="<?= $row['country_id'];?>"
                                                             <?php if($country_id == $row['country_id']) echo "selected";?>>
-                                                            <?php echo $row['name'];?></option>
+                                                            <?= $row['name'];?></option>
                                                         <?php endforeach;?>
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-2">
                                             <div class="form-group label-floating is-select">
-                                                <label class="control-label"><?php echo getPhrase('type');?></label>
+                                                <label class="control-label"><?= getPhrase('type');?></label>
                                                 <div class="select">
                                                     <select name="type_id">
-                                                        <option value=""><?php echo getPhrase('select');?></option>
+                                                        <option value=""><?= getPhrase('select');?></option>
                                                         <?php
                                                         $type = $this->db->get('v_applicant_type')->result_array();
                                                         foreach($type as $row):
                                                     ?>
-                                                        <option value="<?php echo $row['type_id'];?>"
+                                                        <option value="<?= $row['type_id'];?>"
                                                             <?php if($type_id == $row['type_id']) echo "selected";?>>
-                                                            <?php echo $row['name'];?></option>
+                                                            <?= $row['name'];?></option>
                                                         <?php endforeach;?>
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-2">
                                             <div class="form-group label-floating is-select">
-                                                <label class="control-label"><?php echo getPhrase('status');?></label>
+                                                <label class="control-label"><?= getPhrase('status');?></label>
                                                 <div class="select">
                                                     <select name="status_id">
-                                                        <option value=""><?php echo getPhrase('select');?></option>
+                                                        <option value=""><?= getPhrase('select');?></option>
                                                         <?php
                                                         $status = $this->db->get('v_applicant_status')->result_array();
                                                         foreach($status as $row):
                                                             if($row['status_id'] != 3):
                                                     ?>
-                                                        <option value="<?php echo $row['status_id'];?>"
+                                                        <option value="<?= $row['status_id'];?>"
                                                             <?php if($status_id == $row['status_id']) echo "selected";?>>
-                                                            <?php echo $row['name'];?></option>
+                                                            <?= $row['name'];?></option>
                                                         <?php endif; endforeach;?>
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <div class="col-sm-2">
+                                            <div class="form-group label-floating is-select">
+                                                <label class="control-label"><?= getPhrase('tags');?></label>
+                                                <div class="select">
+                                                    <select name="tag_id">
+                                                        <option value=""><?= getPhrase('select');?></option>
+                                                        <?php
+                                                        $tags = $this->applicant->get_tags();
+                                                        foreach($tags as $tag):
+                                                            
+                                                    ?>
+                                                        <option value = "<?= $tag['tag_id'];?>"
+                                                            <?php if($tag_id == $tag['tag_id']) echo "selected";?>>
+                                                            <?= $tag['name'];?></option>
+                                                        <?php  endforeach;?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="description-toggle">
+                                                <div class="description-toggle-content">
+                                                    <div class="h6"><?= getPhrase('assigned_to_me');?></div>
+                                                </div>
+                                                <div class="togglebutton">
+                                                    <label><input name="assigned_me" value="1" type="checkbox"
+                                                            <?php if($assigned_me == 1) echo "checked";?>></label>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-sm-2">
                                             <div class="form-group">
                                                 <button class="btn btn-success btn-upper" style="margin-top:20px"
-                                                    type="submit"><span><?php echo getPhrase('search');?></span></button>
+                                                    type="submit"><span><?= getPhrase('search');?></span></button>
                                             </div>
                                         </div>
                                     </div>
-                                    <?php echo form_close();?>
+                                    <?= form_close();?>
 
                                 </div>
                             </div>
@@ -146,11 +188,10 @@
                         <div class="row">
                             <div class="table-responsive">
                                 <?php
-                                if( $search == true || $name != '' || $type_id != "" || $status_id != "" || $country_id != ""):
                                     if($student_query->num_rows() > 0):
                                     ?>
                                 <a href="#" id="btnExport" data-toggle="tooltip" data-placement="top"
-                                    data-original-title="<?php echo getPhrase('download');?>">
+                                    data-original-title="<?= getPhrase('download');?>">
                                     <button class="btn btn-info btn-sm btn-rounded">
                                         <i class="picons-thin-icon-thin-0123_download_cloud_file_sync"
                                             style="font-weight: 300; font-size: 25px;"></i>
@@ -161,17 +202,19 @@
                                 <table class="table table-padded" id="dvData">
                                     <thead>
                                         <tr>
-                                            <th class="text-center"><?php echo getPhrase('first_name')?></th>
-                                            <th class="text-center"><?php echo getPhrase('last_name')?></th>
-                                            <th class="text-center"><?php echo getPhrase('country')?></th>
-                                            <th class="text-center"><?php echo getPhrase('email')?></th>
-                                            <th class="text-center"><?php echo getPhrase('phone')?></th>
-                                            <th class="text-center"><?php echo getPhrase('type')?></th>
-                                            <th class="text-center"><?php echo getPhrase('status')?></th>
-                                            <th class="text-center"><?php echo getPhrase('created_by')?></th>
-                                            <th class="text-center"><?php echo getPhrase('updated_by')?></th>
-                                            <th class="text-center"><?php echo getPhrase('assigned_to')?></th>
-                                            <th class="text-center"><?php echo getPhrase('options')?></th>
+                                            <th class="text-center"><?= getPhrase('first_name')?></th>
+                                            <th class="text-center"><?= getPhrase('last_name')?></th>
+                                            <th class="text-center"><?= getPhrase('country')?></th>
+                                            <th class="text-center"><?= getPhrase('email')?></th>
+                                            <th class="text-center"><?= getPhrase('phone')?></th>
+                                            <th class="text-center"><?= getPhrase('type')?></th>
+                                            <th class="text-center"><?= getPhrase('status')?></th>
+                                            <th class="text-center"><?= getPhrase('created_by')?></th>
+                                            <th class="text-center"><?= getPhrase('created_at')?></th>
+                                            <th class="text-center"><?= getPhrase('updated_by')?></th>
+                                            <th class="text-center"><?= getPhrase('updated_at')?></th>
+                                            <th class="text-center"><?= getPhrase('assigned_to')?></th>
+                                            <th class="text-center"><?= getPhrase('options')?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -183,39 +226,39 @@
                                             <td>
                                                 <center>
                                                     <label style="width:55px; border: 1; text-align: center;">
-                                                        <?php echo ($row['first_name']);?>
+                                                        <?= ($row['first_name']);?>
                                                     </label>
                                                 </center>
                                             </td>
                                             <td>
                                                 <center>
                                                     <label style="width:55px; border: 1; text-align: center;">
-                                                        <?php echo ($row['last_name']);?>
+                                                        <?= ($row['last_name']);?>
                                                     </label>
                                                 </center>
                                             </td>
                                             <td>
                                                 <center>
                                                     <label style="width:55px; border: 1; text-align: center;">
-                                                        <?php echo ($row['country_name']);?>
+                                                        <?= ($row['country_name']);?>
                                                     </label>
                                                 </center>
                                             </td>
                                             <td>
                                                 <center>
-                                                    <?php echo ($row['email']);?>
+                                                    <?= ($row['email']);?>
                                                 </center>
                                             </td>
                                             <td>
                                                 <center>
-                                                    <?php echo ($row['phone']);?>
+                                                    <?= ($row['phone']);?>
                                                 </center>
                                             </td>
                                             <td>
                                                 <center>
                                                     <div class="value badge badge-pill"
                                                         style="background-color: <?= $row['applicant_type_color']?>;">
-                                                        <?php echo ($row['applicant_type']);?>
+                                                        <?= ($row['applicant_type']);?>
                                                     </div>
                                                 </center>
                                             </td>
@@ -223,43 +266,53 @@
                                                 <center>
                                                     <div class="value badge badge-pill"
                                                         style="background-color: <?= $row['status_color']?>;">
-                                                        <?php echo ($row['status_name']);?>
+                                                        <?= ($row['status_name']);?>
                                                     </div>
                                                 </center>
                                             </td>
                                             <td>
                                                 <center>
-                                                    <?php echo ($row['created_by_name']);?>
+                                                    <?= ($row['created_by_name']);?>
                                                 </center>
                                             </td>
                                             <td>
                                                 <center>
-                                                    <?php echo ($row['updated_by_name']);?>
+                                                    <?= ($row['created_at']);?>
                                                 </center>
                                             </td>
                                             <td>
                                                 <center>
-                                                    <?php echo ($row['assigned_to_name']);?>
+                                                    <?= ($row['updated_by_name']);?>
+                                                </center>
+                                            </td>
+                                            <td>
+                                                <center>
+                                                    <?= ($row['updated_at']);?>
+                                                </center>
+                                            </td>
+                                            <td>
+                                                <center>
+                                                    <?= ($row['assigned_to_name']);?>
                                                 </center>
                                             </td>
                                             <td class="row-actions">
-                                                <a href="<?php echo base_url();?>admin/admission_applicant/<?= $row['applicant_id'];?>"
+                                                <a href="<?= base_url();?>admin/admission_applicant/<?= $row['applicant_id'];?>"
                                                     class="grey" data-toggle="tooltip" data-placement="top"
-                                                    data-original-title="<?php echo getPhrase('view');?>">
+                                                    data-original-title="<?= getPhrase('view');?>">
                                                     <i
                                                         class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible"></i>
                                                 </a>
                                                 <?php if(!$allow_actions):?>
                                                 <a href="javascript:void(0);" class="grey" data-toggle="tooltip"
                                                     data-placement="top"
-                                                    data-original-title="<?php echo getPhrase('add_interaction');?>"
-                                                    onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_admission_add_interaction/<?= $row['applicant_id'];?>');">
+                                                    data-original-title="<?= getPhrase('add_interaction');?>"
+                                                    onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_admission_add_interaction/<?= $row['applicant_id'];?>');">
                                                     <i class="os-icon picons-thin-icon-thin-0151_plus_add_new"></i>
                                                 </a>
                                                 <a href="javascript:void(0);" class="grey" data-toggle="tooltip"
                                                     data-placement="top"
-                                                    data-original-title="<?php echo getPhrase('edit');?>"
-                                                    onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_admission_edit_applicant/<?=$row['applicant_id'];?>');">
+                                                    data-original-title="<?= getPhrase('edit');?>"
+                                                    onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_admission_edit_applicant/<?=$row['applicant_id'];?>');">
                                                     <i
                                                         class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new"></i>
                                                 </a>
@@ -277,7 +330,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <?php endif;?>
                                 <?php endif;?>
                             </div>
                         </div>
@@ -305,7 +357,7 @@
 </script>
 <script>
 $("#btnExport").click(function(e) {
-    var reportName = '<?php echo getPhrase('applicants').'_'.date('d-m-Y');?>';
+    var reportName = '<?= getPhrase('applicants').'_'.date('d-m-Y');?>';
     var a = document.createElement('a');
     var data_type = 'data:application/vnd.ms-excel;charset=utf-8';
     var table_html = $('#dvData')[0].outerHTML;
