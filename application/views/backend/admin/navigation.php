@@ -30,6 +30,8 @@
 
     $system_pages       = array('system_settings', 'system_security', 'system_sms', 'system_email', 'system_translate', 'system_database');
 
+    $helpdesk_pages     = array('helpdesk_dashboard', 'helpdesk_ticket_list', 'helpdesk_ticket_info');
+
 ?>
 <div class="fixed-sidebar">
     <div class="fixed-sidebar-left sidebar--small" id="sidebar-left">
@@ -271,6 +273,17 @@
                         data-placement="right" data-original-title="<?php echo getPhrase('settings');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0051_settings_gear_preferences"></i>
+                        </div>
+                    </a>
+                </li>
+                <?php endif;?>
+                <!-- Settings Access -->
+                <?php if(has_permission('helpdesk_module')):?>
+                <li <?php if(in_array($page_name, $helpdesk_pages)):?>class="currentItem" <?php endif;?>>
+                    <a href="<?php echo base_url();?>admin/helpdesk_dashboard/" data-toggle="tooltip"
+                        data-placement="right" data-original-title="<?php echo getPhrase('help_desk');?>">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0309_support_help_talk_call"></i>
                         </div>
                     </a>
                 </li>

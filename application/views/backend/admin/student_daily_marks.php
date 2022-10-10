@@ -35,8 +35,7 @@
                                     $student_enrollment = $this->crud->get_current_enrollment($student_id);
                                     $exams         = $this->crud->get_exam_by_class($class_id);
 
-                                    if(count($student_enrollment) > 0):
-                                    foreach ($student_info as $row1):
+                                    if(count($student_enrollment) > 0):                                    
                                 ?>
                                 <div class="col-sm-12">
                                     <div class="element-box lined-primary">
@@ -313,7 +312,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <?php endforeach; endforeach; endif;?>
+                                <?php endforeach; endif;?>
                             </div>
                         </div>
                     </main>

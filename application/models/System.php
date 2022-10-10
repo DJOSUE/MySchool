@@ -60,6 +60,18 @@ class System extends School
         return $insert_id;
     }
 
+    function get_role_info($role_id)
+    {
+        $role = $this->db->get_where('roles', array('role_id' => $role_id))->result_array();
+        return $role;
+    }
+
+    function get_role_name($role_id)
+    {
+        $role = $this->db->get_where('roles', array('role_id' => $role_id))->row_array();
+        return $role['name'];
+    }
+
     function account_role_add()
     {
         $data['role_id']        = html_escape($this->input->post('role_id'));
@@ -117,4 +129,5 @@ class System extends School
         $query =  $this->db->query("SELECT DISTINCT(parameter_id) FROM `parameters`")->result_array();
         return $query;
     }
+
 }

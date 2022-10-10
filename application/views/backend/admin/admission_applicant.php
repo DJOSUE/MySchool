@@ -9,7 +9,7 @@
         $return_url = base64_encode('admission_applicant/'.$applicant_id);
         $tags_applicant = json_decode($row['tags'], true)['tags_id'];
         $status_info = $this->applicant->get_applicant_status_info($row['status']);
-        $type_info = $this->applicant->get_applicant_type_info($row['type_id']);
+        $type_info = $this->applicant->get_type_info($row['type_id']);
         $assigned_to = $this->crud->get_name('admin', $row['assigned_to']);
 ?>
 <div class="content-w">

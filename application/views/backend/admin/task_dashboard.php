@@ -83,7 +83,7 @@
                                                         <?= $this->task->task_total('status_id', $item['status_id'])?>
                                                     </h1>
                                                     <div class="author-content">
-                                                        <div class="country"><b> <?= $item['name'];?></b></div>
+                                                        <div class="country text-font-12"><b> <?= $item['name'];?></b></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -115,7 +115,7 @@
                                                         <?= $this->task->task_total('priority_id', $item['priority_id'])?>
                                                     </h1>
                                                     <div class="author-content">
-                                                        <div class="country"><b> <?= $item['name'];?></b></div>
+                                                        <div class="country text-font-12"><b> <?= $item['name'];?></b></div>
                                                     </div>
                                                 </div>
                                             </div>

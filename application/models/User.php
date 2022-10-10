@@ -55,11 +55,11 @@ class User extends School
             {
                 return 'success';                  
             }
-            $applicant_query = $this->db->get_where('applicant', $credential);
-            if ($applicant_query->num_rows() > 0) 
-            {
-                return 'success';                  
-            } 
+            // $applicant_query = $this->db->get_where('applicant', $credential);
+            // if ($applicant_query->num_rows() > 0) 
+            // {
+            //     return 'success';                  
+            // } 
         }
     }
     
@@ -493,6 +493,8 @@ class User extends School
         $bytes = random_bytes(20);
         $password_token = bin2hex($bytes);
 
+        $user_name  = $this->crud->get_name('admin', $this->session->userdata('login_user_id'));
+
         //Generate the student_code if is blank
         $student_code = $this->input->post('student_code');
         if(empty($student_code)){
@@ -510,7 +512,8 @@ class User extends School
         $data['since']             = $this->crud->getDateFormat();
         $data['phone']             = $this->input->post('phone');
         $data['sex']               = $this->input->post('gender');
-        $data['password']          = "NO_CONFIRM";// sha1($this->input->post('password'));
+        // $data['password']          = "NO_CONFIRM";// sha1($this->input->post('password'));
+        $data['password']          = sha1($this->input->post('password'));
         $data['password_token']    = $password_token;
         $data['address']           = $this->input->post('address');
         $data['country_id']        = $this->input->post('country_id');
@@ -570,11 +573,10 @@ class User extends School
 
         $table      = 'student';
         $action     = 'insert';
-        $insert_id  = $this->db->insert_id();
-        $this->crud->save_log($table, $action, $insert_id, $data);
+        $student_id = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $student_id, $data);
 
         // Enroll
-        $student_id = $this->db->insert_id();
         $data4['student_id']       = $student_id;
         $data4['enroll_code']      = substr(md5(rand(0, 1000000)), 0, 7);
         $data4['class_id']         = $this->input->post('class_id');
@@ -583,16 +585,21 @@ class User extends School
             $data4['section_id']   = $this->input->post('section_id');
         }
         
-        $data4['roll']             = $this->input->post('roll');
+        $data4['roll']             = $this->input->post('student_code');
         $data4['date_added']       = strtotime(date("Y-m-d H:i:s"));
         $data4['year']             = $year;
         $data4['semester_id']      = $semesterId;
 
         $subjects = $this->input->post('subject_id');
 
-        foreach ( $subjects as $key )  {
+        foreach ( $subjects as $key )  
+        {
             $data4['subject_id']     = $key;
-            $this->db->insert( 'enroll', $data4 );
+            
+            $table      = 'student';
+            $action     = 'insert';            
+            $enroll_id  = $this->db->insert( 'enroll', $data4 );
+            $this->crud->save_log($table, $action, $enroll_id, $data);
         }
 
         //Register the Placement Test
@@ -618,6 +625,16 @@ class User extends School
         if($applicant_id > 0)
         {
             $this->applicant->update_status($applicant_id, 3);
+
+            //Create a automatic interaction            
+            $_POST['comment']       = $user_name.' convert the applicant to student.';
+            $this->studentModel->add_interaction($student_id, 'automatic');
+        }
+        else
+        {
+            //Create a automatic interaction            
+            $_POST['comment']       = $user_name.' register this student.';
+            $this->studentModel->add_interaction($student_id, 'automatic');
         }
         
         return $student_id;

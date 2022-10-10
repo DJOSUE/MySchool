@@ -5,7 +5,7 @@
     foreach($applicant_info as $row): 
         $tags_applicant = json_decode($row['tags'], true)['tags_id'];
         $status_info = $this->applicant->get_applicant_status_info($row['status']);
-        $type_info = $this->applicant->get_applicant_type_info($row['type_id']);
+        $type_info = $this->applicant->get_type_info($row['type_id']);
         $birthday = date('m/d/Y', strtotime($row['birthday']));
         
 ?>

@@ -14,7 +14,12 @@
     $country_id     = $data['country_id'];
     $applicant_id   = $data['applicant_id'];
     $referral_by    = $data['referral_by'];
+    $type_id        = $data['type_id'] ;
+    $program_id     = $data['program_id'];
 ?>
+
+<link rel="stylesheet" href="/public/style/picker/picker.min.css">
+<script type="text/javascript" src="/public/style/picker/picker.min.js"></script>
 
 <?php $running_year = $this->crud->getInfo('running_year');?>
 <div class="content-w">
@@ -62,23 +67,23 @@
                                         <div class="steps-w">
                                             <div class="step-triggers">
                                                 <a class="step-trigger active"
-                                                    href="#stepContent0"><?php echo getPhrase('placement_test');?></a>
+                                                    href="#stepContent1"><?php echo getPhrase('placement_test');?></a>
                                                 <a class="step-trigger"
-                                                    href="#stepContent1"><?php echo getPhrase('student_details');?></a>
-                                                <a class="step-trigger"
-                                                    href="#stepContent2"><?php echo getPhrase('parent_details');?></a>
+                                                    href="#stepContent2"><?php echo getPhrase('student_details');?></a>
+                                                <!-- <a class="step-trigger"
+                                                    href="#stepContent2"><?php echo getPhrase('parent_details');?></a> -->
                                                 <a class="step-trigger"
                                                     href="#stepContent3"><?php echo getPhrase('complementary_data');?></a>
                                             </div>
                                             <div class="step-contents">
-                                                <div class="step-content active" id="stepContent0">
+                                                <div class="step-content active" id="stepContent1">
                                                     <div class="row">
                                                         <div class="table-responsive">
                                                             <table class="table table-bordered">
                                                                 <thead>
                                                                     <tr style="background:#f2f4f8;">
                                                                         <?php for ($i=1; $i <= $quantity_score; $i++):
-															$name = 'score'.$i;?>
+															            $name = 'score'.$i;?>
                                                                         <th class="text-center">
                                                                             <?= $ap_test_names[$name] ?>
                                                                         </th>
@@ -92,11 +97,11 @@
                                                                 <tbody>
                                                                     <tr>
                                                                         <?php for ($i=1; $i <= $quantity_score; $i++):
-															$name = 'score'.$i;?>
+															            $name = 'score'.$i;?>
                                                                         <td class="text-center">
                                                                             <center>
                                                                                 <input type="number" name="<?= $name;?>"
-                                                                                    id="<?= $name;?>" placeholder="-"
+                                                                                    id="<?= $name;?>" value="0"
                                                                                     max="<?= $placement_weighting[$name] ?>"
                                                                                     required
                                                                                     style="width:85px; border: 1; text-align: center;">
@@ -118,11 +123,11 @@
                                                     </div>
                                                     <div class="form-buttons-w text-right">
                                                         <a class="btn btn-rounded btn-success btn-lg step-trigger-btn"
-                                                            href="#stepContent1"
+                                                            href="#stepContent2"
                                                             onclick="get_level()"><?php echo getPhrase('next');?></a>
                                                     </div>
                                                 </div>
-                                                <div class="step-content" id="stepContent1">
+                                                <div class="step-content" id="stepContent2">
                                                     <div class="row div-center text-center">
                                                         <div class="info-box"
                                                             style="background-color: #f2f4f8; color:#000">
@@ -138,19 +143,42 @@
                                                     <br />
                                                     <div class="row">
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                            <div class="form-group label-floating is-select">
+                                                                <label
+                                                                    class="control-label"><?php echo getPhrase('program');?></label>
+                                                                <div class="select">
+                                                                    <select name="program_id" required <?= $type_id != 2 && $type_id != '' ? 'disabled' : '' ?>>
+                                                                        <?php 
+                                                                            $programs = $this->db->get('program')->result_array();
+                                                                            foreach($programs as $program):
+                                                                        ?>
+                                                                        <option value="<?php echo $program['program_id'];?>"
+                                                                                <?= $program['program_id'] == $program_id ? 'selected' : '' ?>>
+                                                                            <?php echo $program['name'];?>
+                                                                        </option>
+                                                                        <?php endforeach;?>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        </div>
+                                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                             <div class="form-group label-floating">
                                                                 <label
                                                                     class="control-label"><?php echo getPhrase('first_name');?></label>
-                                                                <input class="form-control" name="first_name"
+                                                                <input class="form-control" name="first_name" id="first_name"
                                                                     type="text" required="" value="<?=$first_name;?>">
+                                                                <small><span id="first_name_error"></span></small>
                                                             </div>
                                                         </div>
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                             <div class="form-group label-floating">
                                                                 <label
                                                                     class="control-label"><?php echo getPhrase('last_name');?></label>
-                                                                <input class="form-control" name="last_name" type="text"
+                                                                <input class="form-control" name="last_name" id="last_name" type="text"
                                                                     required="" value="<?=$last_name;?>">
+                                                                <small><span id="last_name_error"></span></small>
                                                             </div>
                                                         </div>
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -160,7 +188,11 @@
                                                                 <input type='text' class="datepicker-here"
                                                                     data-position="bottom left" data-language='en'
                                                                     name="datetimepicker"
-                                                                    data-multiple-dates-separator="/" />
+                                                                    id="datetimepicker"
+                                                                    value="<?=$birthday?>"
+                                                                    data-multiple-dates-separator="/" 
+                                                                    />
+                                                                <small><span id="birthday_error"></span></small>
                                                             </div>
                                                         </div>
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -176,8 +208,9 @@
                                                             <div class="form-group label-floating">
                                                                 <label
                                                                     class="control-label"><?php echo getPhrase('phone');?></label>
-                                                                <input class="form-control" name="phone" type="text"
+                                                                <input class="form-control" name="phone" id="phone" type="text"
                                                                     value="<?=$phone;?>">
+                                                                <small><span id="phone_error"></span></small>
                                                             </div>
                                                         </div>
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -185,7 +218,7 @@
                                                                 <label
                                                                     class="control-label"><?php echo getPhrase('gender');?></label>
                                                                 <div class="select">
-                                                                    <select name="gender" required="">
+                                                                    <select name="gender" id="gender" required="">
                                                                         <option value="">
                                                                             <?php echo getPhrase('select');?></option>
                                                                         <?php $genders = $this->db->get('gender')->result_array();
@@ -197,6 +230,7 @@
                                                                         </option>
                                                                         <?php endforeach;?>
                                                                     </select>
+                                                                    <small><span id="gender_error"></span></small>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -214,16 +248,18 @@
                                                             <div class="form-group label-floating">
                                                                 <label
                                                                     class="control-label"><?php echo getPhrase('password');?></label>
-                                                                <input class="form-control" name="password" required=""
+                                                                <input class="form-control" name="password" id="password" required=""
                                                                     autocomplete="false" type="password">
+                                                                <small><span id="password_error"></span></small>
                                                             </div>
                                                         </div>
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                             <div class="form-group label-floating">
                                                                 <label
                                                                     class="control-label"><?php echo getPhrase('address');?></label>
-                                                                <input class="form-control" name="address" type="text"
+                                                                <input class="form-control" name="address" id="address" type="text"
                                                                     value="<?=$address;?>">
+                                                                <small><span id="address_error"></span></small>
                                                             </div>
                                                         </div>
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -244,6 +280,7 @@
                                                                             <?php echo $country['name'];?></option>
                                                                         <?php endforeach;?>
                                                                     </select>
+                                                                    <small><span id="country_error"></span></small>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -252,7 +289,8 @@
                                                                 <label
                                                                     class="control-label"><?php echo getPhrase('roll');?></label>
                                                                 <input class="form-control" name="student_code"
-                                                                    type="text">
+                                                                    type="text" require="">
+                                                                <small><span id="roll_error"></span></small>
                                                             </div>
                                                         </div>
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -272,6 +310,7 @@
                                                                             <?php echo $class['name'];?></option>
                                                                         <?php endforeach;?>
                                                                     </select>
+                                                                    <small><span id="class_error"></span></small>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -283,9 +322,8 @@
                                                                     <select name="section_id"
                                                                         id="section_selector_holder"
                                                                         onchange="get_class_section_subjects(this.value);">
-                                                                        <option value="">
-                                                                            <?php echo getPhrase('select');?></option>
                                                                     </select>
+                                                                    <small><span id="section_error"></span></small>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -294,70 +332,32 @@
                                                                 <label
                                                                     class="control-label"><?php echo getPhrase('subject');?></label>
                                                                 <div>
-                                                                    <select name="subject_id[]"
+                                                                    <select name="subject_id[]" onchange="validate(this)"
                                                                         id="subject_selector_holder" multiple
                                                                         class="selectpicker form-control" title="">
-
                                                                     </select>
+                                                                    <small><span id="subject_error"></span></small>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                            <div class="form-group label-floating is-select">
-                                                                <label
-                                                                    class="control-label"><?php echo getPhrase('transport');?></label>
-                                                                <div class="select">
-                                                                    <select name="transport_id">
-                                                                        <option value="">
-                                                                            <?php echo getPhrase('select');?></option>
-                                                                        <?php 
-        											                $bus = $this->db->get('transport')->result_array();
-                  											        foreach($bus as $trans):
-               											        ?>
-                                                                        <option
-                                                                            value="<?php echo $trans['transport_id'];?>">
-                                                                            <?php echo $trans['route_name'];?></option>
-                                                                        <?php endforeach;?>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                            <div class="form-group label-floating is-select">
-                                                                <label
-                                                                    class="control-label"><?php echo getPhrase('program');?></label>
-                                                                <div class="select">
-                                                                    <select name="program_id" required>
-                                                                        <option value="">
-                                                                            <?php echo getPhrase('select');?></option>
-                                                                        <?php 
-        	                  										$classroom = $this->db->get('program')->result_array();
-                  											        foreach($classroom as $room):
-               											        ?>
-                                                                        <option
-                                                                            value="<?php echo $room['program_id'];?>">
-                                                                            <?php echo $room['name'];?></option>
-                                                                        <?php endforeach;?>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
                                                         <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
                                                             <div class="form-group">
                                                                 <label
                                                                     class="control-label"><?php echo getPhrase('photo');?></label>
                                                                 <input class="form-control" placeholder=""
                                                                     name="userfile" type="file">
+                                                                <small><span id="photo_error"></span></small>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="form-buttons-w text-right">
-                                                        <a class="btn btn-rounded btn-success btn-lg step-trigger-btn"
-                                                            href="#stepContent2"><?php echo getPhrase('next');?></a>
+                                                        <a class="btn btn-rounded btn-success btn-lg" style="color: #fff;"
+                                                            onclick="validate_form()"><?php echo getPhrase('next');?></a>
+                                                        <a class="btn btn-rounded btn-success btn-lg step-trigger-btn" id="stepContent3" style="display: none;"
+                                                            href="#stepContent3"><?php echo getPhrase('next');?></a>
                                                     </div>
                                                 </div>
-                                                <div class="step-content" id="stepContent2">
+                                                <!-- <div class="step-content" id="stepContent2">
                                                     <div class="row">
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                             <div class="description-toggle">
@@ -525,7 +525,7 @@
                                                         <a class="btn btn-rounded btn-success btn-lg step-trigger-btn"
                                                             href="#stepContent3"><?php echo getPhrase('next');?></a>
                                                     </div>
-                                                </div>
+                                                </div> -->
                                                 <div class="step-content" id="stepContent3">
                                                     <div class="row">
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -602,7 +602,8 @@
                                                     <input type="hidden" name="referral_by" value="<?=$referral_by;?>" />
                                                     </div>
                                                     <div class="form-buttons-w text-right">
-                                                        <button class="btn btn-rounded btn-success btn-lg" type="submit"
+                                                        <button class="btn btn-rounded btn-success btn-lg" type="submit" 
+                                                            
                                                             id="sub_form"><?php echo getPhrase('register');?></button>
                                                     </div>
                                                 </div>
@@ -622,195 +623,274 @@
 </div>
 
 <script>
-function get_level() {
 
-    const weighting = <?=json_encode($placement_weighting)?>;
+    function validate_form()
+    {
+        
+        var valid = true;
+        var obj_fn = document.getElementById("first_name");
+        var obj_ln = document.getElementById("last_name");
+        var obj_em = document.getElementById("student_email");
+        var obj_ph = document.getElementById("phone");
+        var obj_ad = document.getElementById("address");
+        var obj_un = document.getElementById("user_student");
+        var obj_pw = document.getElementById("password");
+        var obj_cl = document.getElementById("class_id");
 
-    var average = [];
+        $("span[id*='_error']").html("");
+        var text = "<b style='color:#ff214f'><?php echo getPhrase('please_fill_out_this_field');?></b>";
 
-    for (let i = 0; i < <?= $quantity_score ?>; i++) {
-        name = 'score' + (i + 1);
-        value = document.getElementById(name).value;
-        average[i] = (value / weighting[name]);
+        if(obj_fn.value == '')
+        {            
+            valid = false;
+            obj_fn.focus();            
+            $("#first_name_error").html(text);
+            
+        }
+        else if(obj_ln.value == '')
+        {            
+            valid = false;
+            obj_ln.focus();
+            $("#last_name_error").html(text);
+        }
+        else if(obj_em.value == '')
+        {            
+            valid = false;
+            obj_em.focus();
+            $("#email_result_student").html(text);
+        }
+        else if(obj_ph.value == '')
+        {            
+            valid = false;
+            obj_ph.focus();
+            $("#phone_error").html(text);
+        }
+        else if(obj_ad.value == '')
+        {            
+            valid = false;
+            obj_ad.focus();
+            $("#address_error").html(text);
+        }
+        else if(obj_un.value == '')
+        {            
+            valid = false;
+            obj_un.focus();
+            $("#result_student").html(text);
+        }
+        else if(obj_pw.value == '')
+        {            
+            valid = false;
+            obj_pw.focus();
+            $("#password_error").html(text);
+        }
+        else if(obj_cl.value == '')
+        {            
+            valid = false;
+            obj_cl.focus();
+            $("#class_error").html(text);
+        }
+
+        if(valid)
+        {
+            document.getElementById('stepContent3').click();
+        }
+        
     }
 
-    var result = Math.round((eval(average.join('+')) / average.length) * 100);
+    $('#ex-multiselect-limit').picker({limit: 2});
 
-    if (result >= 0 && result <= 20) {
-        document.getElementById("suggested_level").innerHTML = "BEGINNERS";
-    } else if (result >= 21 && result <= 40) {
-        document.getElementById("suggested_level").innerHTML = "BASIC";
-    } else if (result >= 41 && result <= 60) {
-        document.getElementById("suggested_level").innerHTML = "INTERMEDIATE";
-    } else if (result >= 61 && result <= 80) {
-        document.getElementById("suggested_level").innerHTML = "ADVANCED";
-    } else if (result >= 81 && result <= 100) {
-        document.getElementById("suggested_level").innerHTML = "EXPERT I";
+    function get_level() {
+        
+        const weighting = <?=json_encode($placement_weighting)?>;
+
+        var average = [];
+
+        for (let i = 0; i < <?= $quantity_score ?>; i++) {
+            name = 'score' + (i + 1);
+            value = document.getElementById(name).value;
+            average[i] = (value / weighting[name]);
+        }
+
+        var result = Math.round((eval(average.join('+')) / average.length) * 100);
+
+        if (result >= 0 && result <= 20) {
+            document.getElementById("suggested_level").innerHTML = "BEGINNERS";
+        } else if (result >= 21 && result <= 40) {
+            document.getElementById("suggested_level").innerHTML = "BASIC";
+        } else if (result >= 41 && result <= 60) {
+            document.getElementById("suggested_level").innerHTML = "INTERMEDIATE";
+        } else if (result >= 61 && result <= 80) {
+            document.getElementById("suggested_level").innerHTML = "ADVANCED";
+        } else if (result >= 81 && result <= 100) {
+            document.getElementById("suggested_level").innerHTML = "EXPERT I";
+        }
     }
-}
 
-$(document).ready(function() {
-    var query;
-    $("#user_student").keyup(function(e) {
-        query = $("#user_student").val();
-        $("#result_student").queue(function(n) {
-            $.ajax({
-                type: "POST",
-                url: '<?php echo base_url();?>register/search_user',
-                data: "c=" + query,
-                dataType: "html",
-                error: function() {
-                    alert("¡Error!");
-                },
-                success: function(data) {
-                    if (data == "success") {
-                        texto =
-                            "<b style='color:#ff214f'><?php echo getPhrase('already_exist');?></b>";
-                        $("#result_student").html(texto);
-                        $('#sub_form').attr('disabled', 'disabled');
-                    } else {
-                        texto = "";
-                        $("#result_student").html(texto);
-                        $('#sub_form').removeAttr('disabled');
+    $(document).ready(function() {
+        var query;
+        $("#user_student").keyup(function(e) {
+            query = $("#user_student").val();
+            $("#result_student").queue(function(n) {
+                $.ajax({
+                    type: "POST",
+                    url: '<?php echo base_url();?>register/search_user',
+                    data: "c=" + query,
+                    dataType: "html",
+                    error: function() {
+                        alert("¡Error!");
+                    },
+                    success: function(data) {
+                        if (data == "success") {
+                            texto =
+                                "<b style='color:#ff214f'><?php echo getPhrase('already_exist');?></b>";
+                            $("#result_student").html(texto);
+                            $('#sub_form').attr('disabled', 'disabled');
+                        } else {
+                            texto = "";
+                            $("#result_student").html(texto);
+                            $('#sub_form').removeAttr('disabled');
+                        }
+                        n();
                     }
-                    n();
-                }
+                });
             });
         });
     });
-});
 
-$(document).ready(function() {
-    var query;
-    $("#parent_username").keyup(function(e) {
-        query = $("#parent_username").val();
-        $("#result").queue(function(n) {
-            $.ajax({
-                type: "POST",
-                url: '<?php echo base_url();?>register/search_user',
-                data: "c=" + query,
-                dataType: "html",
-                error: function() {
-                    alert("¡Error!");
-                },
-                success: function(data) {
-                    if (data == "success") {
-                        texto =
-                            "<b style='color:#ff214f'><?php echo getPhrase('already_exist');?></b>";
-                        $("#result").html(texto);
-                        $('#sub_form').attr('disabled', 'disabled');
-                    } else {
-                        texto = "";
-                        $("#result").html(texto);
-                        $('#sub_form').removeAttr('disabled');
+    $(document).ready(function() {
+        var query;
+        $("#parent_username").keyup(function(e) {
+            query = $("#parent_username").val();
+            $("#result").queue(function(n) {
+                $.ajax({
+                    type: "POST",
+                    url: '<?php echo base_url();?>register/search_user',
+                    data: "c=" + query,
+                    dataType: "html",
+                    error: function() {
+                        alert("¡Error!");
+                    },
+                    success: function(data) {
+                        if (data == "success") {
+                            texto =
+                                "<b style='color:#ff214f'><?php echo getPhrase('already_exist');?></b>";
+                            $("#result").html(texto);
+                            $('#sub_form').attr('disabled', 'disabled');
+                        } else {
+                            texto = "";
+                            $("#result").html(texto);
+                            $('#sub_form').removeAttr('disabled');
+                        }
+                        n();
                     }
-                    n();
-                }
+                });
             });
         });
     });
-});
 
-$(document).ready(function() {
-    var query;
-    $("#parent_email").keyup(function(e) {
-        query = $("#parent_email").val();
-        $("#email_result_parent").queue(function(n) {
-            $.ajax({
-                type: "POST",
-                url: '<?php echo base_url();?>register/search_email',
-                data: "c=" + query,
-                dataType: "html",
-                error: function() {
-                    alert("¡Error!");
-                },
-                success: function(data) {
-                    if (data == "success") {
-                        texto =
-                            "<b style='color:#ff214f'><?php echo getPhrase('email_already_exist');?></b>";
-                        $("#email_result_parent").html(texto);
-                        $('#sub_form').attr('disabled', 'disabled');
-                    } else {
-                        texto = "";
-                        $("#email_result_parent").html(texto);
-                        $('#sub_form').removeAttr('disabled');
+    $(document).ready(function() {
+        var query;
+        $("#parent_email").keyup(function(e) {
+            query = $("#parent_email").val();
+            $("#email_result_parent").queue(function(n) {
+                $.ajax({
+                    type: "POST",
+                    url: '<?php echo base_url();?>register/search_email',
+                    data: "c=" + query,
+                    dataType: "html",
+                    error: function() {
+                        alert("¡Error!");
+                    },
+                    success: function(data) {
+                        if (data == "success") {
+                            texto =
+                                "<b style='color:#ff214f'><?php echo getPhrase('email_already_exist');?></b>";
+                            $("#email_result_parent").html(texto);
+                            $('#sub_form').attr('disabled', 'disabled');
+                        } else {
+                            texto = "";
+                            $("#email_result_parent").html(texto);
+                            $('#sub_form').removeAttr('disabled');
+                        }
+                        n();
                     }
-                    n();
-                }
+                });
             });
         });
     });
-});
 
-$(document).ready(function() {
-    var query;
-    $("#student_email").keyup(function(e) {
-        query = $("#student_email").val();
-        $("#email_result_student").queue(function(n) {
-            $.ajax({
-                type: "POST",
-                url: '<?php echo base_url();?>register/search_email',
-                data: "c=" + query,
-                dataType: "html",
-                error: function() {
-                    alert("¡Error!");
-                },
-                success: function(data) {
-                    if (data == "success") {
-                        texto =
-                            "<b style='color:#ff214f'><?php echo getPhrase('email_already_exist');?></b>";
-                        $("#email_result_student").html(texto);
-                        $('#sub_form').attr('disabled', 'disabled');
-                    } else {
-                        texto = "";
-                        $("#email_result_student").html(texto);
-                        $('#sub_form').removeAttr('disabled');
+    $(document).ready(function() {
+        var query;
+        $("#student_email").keyup(function(e) {
+            query = $("#student_email").val();
+            $("#email_result_student").queue(function(n) {
+                $.ajax({
+                    type: "POST",
+                    url: '<?php echo base_url();?>register/search_email',
+                    data: "c=" + query,
+                    dataType: "html",
+                    error: function() {
+                        alert("¡Error!");
+                    },
+                    success: function(data) {
+                        if (data == "success") {
+                            texto =
+                                "<b style='color:#ff214f'><?php echo getPhrase('email_already_exist');?></b>";
+                            $("#email_result_student").html(texto);
+                            $('#sub_form').attr('disabled', 'disabled');
+                        } else {
+                            texto = "";
+                            $("#email_result_student").html(texto);
+                            $('#sub_form').removeAttr('disabled');
+                        }
+                        n();
                     }
-                    n();
-                }
+                });
             });
         });
     });
-});
 
-function get_class_sections(class_id) {
-    console.log(class_id);
+    function get_class_sections(class_id) {
+        
+        $.ajax({
+            <?php if($program_id === '1'):?>
+                url: '<?php echo base_url();?>admin/get_class_section_international/' + class_id,
+            <?php else: ?>
+                url: '<?php echo base_url();?>admin/get_class_section/' + class_id,
+            <?php endif;?>
 
-    $.ajax({
-        url: '<?php echo base_url();?>admin/get_class_section/' + class_id,
-        success: function(response) {
-            jQuery('#section_selector_holder').html(response);
+            success: function(response) {
+                jQuery('#section_selector_holder').html(response);
+            }
+        });
+    }
+
+    function get_class_section_subjects(section_id) {
+
+        console.log(section_id);
+
+        var class_id = document.getElementById("class_id").value;
+        $.ajax({
+            url: '<?php echo base_url();?>admin/get_class_section_subjects/' + class_id + '/' +
+                section_id, //+ '/' + year + '/' + period ,
+            success: function(response) {
+                jQuery('#subject_selector_holder').html(response).selectpicker('refresh');
+                $('#subject_selector_holder').selectpicker({maxOptions:2});
+            }
+        });
+    }
+
+    $('#check').click(function() {
+        if ($('#check').is(':checked') == true) {
+            $("#new_parent").show(500);
+            $("#initial").hide(500);
+        } else {
+            $("#new_parent").hide(500);
+            $("#initial").show(500);
         }
     });
-}
-
-function get_class_section_subjects(section_id) {
-
-    console.log(section_id);
-
-    var class_id = document.getElementById("class_id").value;
-    // var year = document.getElementById("year_id").value;
-    // var period = document.getElementById("period_id").value;
+    $("#new_parent").hide();
 
 
-
-    $.ajax({
-        url: '<?php echo base_url();?>admin/get_class_section_subjects/' + class_id + '/' +
-            section_id, //+ '/' + year + '/' + period ,
-        success: function(response) {
-            jQuery('#subject_selector_holder').html(response).selectpicker('refresh');
-        }
-    });
-}
-
-$('#check').click(function() {
-    if ($('#check').is(':checked') == true) {
-        $("#new_parent").show(500);
-        $("#initial").hide(500);
-    } else {
-        $("#new_parent").hide(500);
-        $("#initial").show(500);
-    }
-});
-$("#new_parent").hide();
 </script>
+

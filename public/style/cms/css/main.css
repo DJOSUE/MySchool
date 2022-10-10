@@ -27389,9 +27389,12 @@ table {
     margin-right: 0px;
     float: right;
 }
-.menu-left-selected-text {
-    border-bottom: 2px solid #000099;
-}
-.menu-left-selected-icon {
+.menu_left_selected_text {
     color: #000099 !important;
+}
+.menu_left_selected_icon {
+    color: #000099 !important;
+}
+.text-font-12 {
+    font-size: 12pt !important
 }

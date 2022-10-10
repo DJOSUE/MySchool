@@ -1,6 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Task extends School 
+class Ticket extends School 
 {    
     private $runningYear = '';
     private $runningSemester = '';
@@ -18,7 +18,7 @@ class Task extends School
     {
         $this->db->reset_query();
         $this->db->select('level_1 as department_id, name, value_1 as color, value_2 as icon');
-        $this->db->where('parameter_id', 'TASKCATEGO');
+        $this->db->where('parameter_id', 'TICKETCATEGORY');
         $this->db->where('code', '0');
         $query = $this->db->get('parameters')->result_array();
         return $query;
@@ -28,7 +28,7 @@ class Task extends School
     {
         $this->db->reset_query();
         $this->db->select('code as category_id, name, value_1 as color, value_2 as icon');
-        $this->db->where('parameter_id', 'TASKCATEGO');
+        $this->db->where('parameter_id', 'TICKETCATEGORY');
         $this->db->where('level_1', $department);
         $this->db->where('code >', $department);
         $query = $this->db->get('parameters')->result_array();        
@@ -38,16 +38,24 @@ class Task extends School
     public function get_category_info($category_id)
     {
         $this->db->reset_query();
-        $this->db->select('code as category_id, name, value_1 as color, value_2 as icon');
-        $this->db->where('parameter_id', 'TASKCATEGO');
+        $this->db->select('code as category_id, name, value_1 as color, value_2 as icon, value_3 as default_user');
+        $this->db->where('parameter_id', 'TICKETCATEGORY');
         $this->db->where('code', $category_id);
         $query = $this->db->get('parameters')->row_array();
         return $query;
     }
 
-    public function get_category($category_id)
+    public function get_category_default_user($category_id)
     {
-        $query = $this->db->get_where('v_task_categories', array('category_id' => $category_id))->row();
+        $this->db->reset_query();
+        $query = $this->db->get_where('parameters', array('parameter_id' => 'TICKETCATEGORY', 'code' => $category_id))->row();
+        return $query->value_3;
+    }
+
+    public function get_category_name($category_id)
+    {
+        $this->db->reset_query();
+        $query = $this->db->get_where('parameters', array('parameter_id' => 'TICKETCATEGORY', 'code' => $category_id))->row();
         return $query->name;
     }
 
@@ -55,7 +63,7 @@ class Task extends School
     {
         $this->db->reset_query();
         $this->db->select('code as priority_id, name, value_1 as color, value_2 as icon');
-        $this->db->where('parameter_id', 'TASKPRIORI');
+        $this->db->where('parameter_id', 'TICKETPRIORITY');
         $query = $this->db->get('parameters')->result_array();
         return $query;
     }
@@ -64,15 +72,16 @@ class Task extends School
     {
         $this->db->reset_query();
         $this->db->select('code as priority_id, name, value_1 as color, value_2 as icon');
-        $this->db->where('parameter_id', 'TASKPRIORI');
+        $this->db->where('parameter_id', 'TICKETPRIORITY');
         $this->db->where('code', $priority_id);
         $query = $this->db->get('parameters')->row_array();
         return $query;
     }
 
-    public function get_priority($priority_id)
+    public function get_priority_name($priority_id)
     {
-        $query = $this->db->get_where('parameters', array('parameter_id' => 'TASKPRIORI', 'code' => $priority_id))->row();
+        $this->db->reset_query();
+        $query = $this->db->get_where('parameters', array('parameter_id' => 'TICKETPRIORITY', 'code' => $priority_id))->row();
         return $query->name;
     }
 
@@ -80,7 +89,7 @@ class Task extends School
     {
         $this->db->reset_query();
         $this->db->select('code as status_id, name, value_1 as color, value_2 as icon');
-        $this->db->where('parameter_id', 'TASKSTATUS');
+        $this->db->where('parameter_id', 'TICKETSTATUS');
         $query = $this->db->get('parameters')->result_array();
         return $query;
     }
@@ -89,21 +98,21 @@ class Task extends School
     {
         $this->db->reset_query();
         $this->db->select('code as category_id, name, value_1 as color, value_2 as icon');
-        $this->db->where('parameter_id', 'TASKSTATUS');
+        $this->db->where('parameter_id', 'TICKETSTATUS');
         $this->db->where('code', $status_id);
         $query = $this->db->get('parameters')->row_array();
         return $query;
     }
     
-    public function get_status($status_id)
+    public function get_status_name($status_id)
     {
-        $query = $this->db->get_where('parameters', array('parameter_id' => 'TASKSTATUS', 'code' => $status_id))->row();
+        $query = $this->db->get_where('parameters', array('parameter_id' => 'TICKETSTATUS', 'code' => $status_id))->row();
         return $query->name;
     }
 
-    public function is_task_closed($status_id)
+    public function is_ticket_closed($status_id)
     {
-        $query = $this->db->get_where('parameters', array('parameter_id' => 'TASKSTATUS', 'code' => $status_id))->row();
+        $query = $this->db->get_where('parameters', array('parameter_id' => 'TICKETSTATUS', 'code' => $status_id))->row();
         
         // 3 = student
         if($query->value_3 == '1'){
@@ -114,57 +123,48 @@ class Task extends School
         }
     }
 
-    public function get_user_status($type, $user_id)
-    {
-        switch ($type) {
-            case 'student':
-                $status_id = $this->db->get_where('student', array('student_id' => $user_id))->row()->student_session;
-                $status_info = $this->studentModel->get_status_info($status_id);
-                return $status_info;
-                break;
-            case 'applicant':
-                $status_id = $this->db->get_where('applicant', array('applicant_id' => $user_id))->row()->status;
-                $status_info = $this->applicant->get_applicant_status_info($status_id);
-                return $status_info;
-                break;
-        }
-    }
-
     function create()
     {
         $code = md5(date('d-m-Y H:i:s'));
-        $data['created_by']     = $this->session->userdata('login_user_id');
-        $data['title']          = html_escape($this->input->post('title'));
-        $data['task_code']      = $code;
-        $data['category_id']    = html_escape($this->input->post('category_id'));
-        $data['status_id']      = html_escape($this->input->post('status_id'));
-        $data['priority_id']    = html_escape($this->input->post('priority_id'));
-        $data['description']    = html_escape($this->input->post('description'));
-        $data['user_type']      = html_escape($this->input->post('user_type'));
-        $data['user_id']        = html_escape($this->input->post('user_id'));
+        $data['ticket_code']        = $code;
+        $data['created_by']         = $this->session->userdata('login_user_id');
+        $data['created_by_type']    = get_table_user($this->session->userdata('role_id'));
+        $data['category_id']        = html_escape($this->input->post('category_id'));
+        $data['status_id']          = html_escape($this->input->post('status_id'));
+        $data['priority_id']        = html_escape($this->input->post('priority_id'));
+        $data['description']        = html_escape($this->input->post('description'));
 
         if(!empty($this->input->post('assigned_to')))
         {
             $data['assigned_to'] = html_escape($this->input->post('assigned_to'));
         }
+        else
+        {
+            $data['assigned_to'] = $this->get_category_default_user($data['category_id']);
+        }
 
-        if($this->task->is_task_closed($this->input->post('status_id')))
+        if(!empty($this->input->post('title')))
+        {
+            $data['title']      = html_escape($this->input->post('title'));
+        }
+
+        if($this->ticket->is_ticket_closed($this->input->post('status_id')))
         {
             $data['assigned_to'] =  $this->session->userdata('login_user_id');
         }
         
-        if($_FILES['task_file']['name'] != '')
+        if($_FILES['ticket_file']['name'] != '')
         {
             $md5 = md5(date('d-m-Y H:i:s'));
 
-            $data['task_file']  = $md5.str_replace(' ', '', $_FILES['task_file']['name']); 
-            move_uploaded_file($_FILES['task_file']['tmp_name'], PATH_TASK_FILES . $md5.str_replace(' ', '', $_FILES['task_file']['name']));
+            $data['ticket_file']  = $md5.str_replace(' ', '', $_FILES['ticket_file']['name']); 
+            move_uploaded_file($_FILES['ticket_file']['tmp_name'], PATH_TICKET_FILES . $md5.str_replace(' ', '', $_FILES['ticket_file']['name']));
         }
 
-        $this->db->insert('task', $data);
+        $this->db->insert('ticket', $data);
 
-        $table      = 'task';
-        $action     = 'insert';
+        $table      = 'ticket';
+        $action     = 'ticket';
         $insert_id  = $this->db->insert_id();
         $this->crud->save_log($table, $action, $insert_id, $data);
 
@@ -172,12 +172,13 @@ class Task extends School
 
     }
 
-    function update($task_id)
+    function update($ticket_id)
     {
         $data['updated_by']     = $this->session->userdata('login_user_id');
+        $data['updated_by_type']    = get_table_user($this->session->userdata('role_id'));
 
-        $task_code = $this->db->get_where('task' , array('task_id' => $task_id) )->row()->task_code;
-        $assigned_to_old = $this->db->get_where('task' , array('task_id' => $task_id) )->row()->assigned_to;
+        $ticket_code = $this->db->get_where('ticket' , array('ticket_id' => $ticket_id) )->row()->ticket_code;
+        $assigned_to_old = $this->db->get_where('ticket' , array('ticket_id' => $ticket_id) )->row()->assigned_to;
         
         $assigned_to_new = $this->input->post('assigned_to');
 
@@ -204,20 +205,20 @@ class Task extends School
         if(!empty($this->input->post('assigned_to')))
             $data['assigned_to']    = html_escape($this->input->post('assigned_to'));
         
-        if($_FILES['task_file']['name'] != '')
+        if($_FILES['ticket_file']['name'] != '')
         {
             $md5 = md5(date('d-m-Y H:i:s'));
 
-            $data['task_file']  = $md5.str_replace(' ', '', $_FILES['task_file']['name']); 
-            move_uploaded_file($_FILES['task_file']['tmp_name'], PATH_TASK_FILES . $md5.str_replace(' ', '', $_FILES['task_file']['name']));
+            $data['ticket_file']  = $md5.str_replace(' ', '', $_FILES['ticket_file']['name']); 
+            move_uploaded_file($_FILES['ticket_file']['tmp_name'], PATH_TICKET_FILES . $md5.str_replace(' ', '', $_FILES['ticket_file']['name']));
         }
 
-        $this->db->where('task_id', $task_id);
-        $this->db->update('task', $data);
+        $this->db->where('ticket_id', $ticket_id);
+        $this->db->update('ticket', $data);
 
-        $table      = 'task';
+        $table      = 'ticket';
         $action     = 'update';        
-        $this->crud->save_log($table, $action, $task_id, $data);
+        $this->crud->save_log($table, $action, $ticket_id, $data);
 
         if($assigned_to_new != '' && ($assigned_to_new != $assigned_to_old))
         {
@@ -226,32 +227,32 @@ class Task extends School
 
             // Create a new interaction
             $_POST['login_user_id']  = $data['updated_by'];
-            $_POST['message']           = $user_name.' assigned to '.$assigned_name.' this task.';
+            $_POST['message']           = $user_name.' assigned to '.$assigned_name.' this ticket.';
             
-            $this->add_message($task_code);
+            $this->add_message($ticket_code);
         }
     }
 
-    function update_status($task_code, $status_id)
+    function update_status($ticket_code, $status_id)
     {
         $data['updated_by']     = $this->session->userdata('login_user_id');
         $data['status_id']   = $status_id;
-        $this->db->where('task_code', $task_code);
-        $this->db->update('task', $data);
+        $this->db->where('ticket_code', $ticket_code);
+        $this->db->update('ticket', $data);
 
-        $table      = 'task';
+        $table      = 'ticket';
         $action     = 'update';
-        $this->crud->save_log($table, $action, $task_code, $data);
+        $this->crud->save_log($table, $action, $ticket_code, $data);
 
         return true;
     }
 
-    function add_message($task_code, $type = "")
+    function add_message($ticket_code, $type = "")
     {
         $md5 = md5(date('d-m-Y H:i:s'));
         $table_user = get_table_user($this->session->userdata('role_id'));
 
-        $current_status = $this->db->get_where('task' , array('task_code' => $task_code))->row()->status_id;
+        $current_status = $this->db->get_where('ticket' , array('ticket_code' => $ticket_code))->row()->status_id;
         
         if($type != 'automatic')
         {
@@ -265,20 +266,20 @@ class Task extends School
         }
         
 
-        $data['task_code']      = $task_code;
+        $data['ticket_code']    = $ticket_code;
         $data['message']        = html_escape($this->input->post('message'));
         $data['current_status'] = $current_status;
 
 
-        if($_FILES['message_file']['name'] != '')
+        if($_FILES['file_name']['name'] != '')
         {
-            $data['message_file']  = $md5.str_replace(' ', '', $_FILES['message_file']['name']); 
-            move_uploaded_file($_FILES['message_file']['tmp_name'], PATH_TASK_FILES . $md5.str_replace(' ', '', $_FILES['message_file']['name']));
+            $data['file_name']  = $md5.str_replace(' ', '', $_FILES['file_name']['name']); 
+            move_uploaded_file($_FILES['file_name']['tmp_name'], PATH_TICKET_FILES . $md5.str_replace(' ', '', $_FILES['file_name']['name']));
         }
 
-        $this->db->insert('task_message', $data);
+        $this->db->insert('ticket_message', $data);
 
-        $table      = 'task_message';
+        $table      = 'ticket_message';
         $action     = 'insert';
         $insert_id  = $this->db->insert_id();
         $this->crud->save_log($table, $action, $insert_id, $data);
@@ -286,57 +287,57 @@ class Task extends School
         return $insert_id;
     }
 
-    function update_message($task_message_id)
+    function update_message($ticket_message_id)
     {
         $md5 = md5(date('d-m-Y H:i:s'));
         $data['message']      = html_escape($this->input->post('message'));
 
-        if($_FILES['message_file']['name'] != '')
+        if($_FILES['file_name']['name'] != '')
         {
-            $data['message_file']  = $md5.str_replace(' ', '', $_FILES['message_file']['name']); 
-            move_uploaded_file($_FILES['message_file']['tmp_name'], PATH_TASK_FILES . $md5.str_replace(' ', '', $_FILES['message_file']['name']));
+            $data['file_name']  = $md5.str_replace(' ', '', $_FILES['file_name']['name']); 
+            move_uploaded_file($_FILES['file_name']['tmp_name'], PATH_TICKET_FILES . $md5.str_replace(' ', '', $_FILES['file_name']['name']));
         }
-        $this->db->where('task_message_id', $task_message_id);
-        $this->db->update('task_message', $data);
+        $this->db->where('ticket_message_id', $ticket_message_id);
+        $this->db->update('ticket_message', $data);
 
-        $table      = 'task_message';
+        $table      = 'ticket_message';
         $action     = 'update';
-        $this->crud->save_log($table, $action, $task_message_id, $data);
+        $this->crud->save_log($table, $action, $ticket_message_id, $data);
     }
     
-    public function get_task($task_id)
+    public function get_ticket($ticket_id)
     {
-        $task_info = $this->db->get_where('task' , array('task_id' => $task_id) )->row_array();
-        return $task_info;        
+        $ticket_info = $this->db->get_where('ticket' , array('ticket_id' => $ticket_id) )->row_array();
+        return $ticket_info;        
     }
 
-    public function get_task_code($task_id)
+    public function get_ticket_code($ticket_id)
     {
-        $task_code = $this->db->get_where('task' , array('task_id' => $task_id) )->row()->task_code;
-        return $task_code;        
+        $ticket_code = $this->db->get_where('ticket' , array('ticket_id' => $ticket_id) )->row()->ticket_code;
+        return $ticket_code;        
     }
 
     //** Get numbers for dashboard */
-    function task_total($field, $field_id)
+    function ticket_total($field, $field_id)
     {
         $this->db->where($field, $field_id);
-        $applicant_query = $this->db->get('task');
+        $applicant_query = $this->db->get('ticket');
         return $applicant_query->num_rows();
     }
 
-    function task_total_created_by($field, $field_id, $created_by)
+    function ticket_total_created_by($field, $field_id, $created_by)
     {
         $this->db->where($field, $field_id);
         $this->db->where('created_by', $created_by);
-        $applicant_query = $this->db->get('task');
+        $applicant_query = $this->db->get('ticket');
         return $applicant_query->num_rows();
     }
 
-    function task_total_assigned_to($field, $field_id, $assigned_to)
+    function ticket_total_assigned_to($field, $field_id, $assigned_to)
     {
         $this->db->where($field, $field_id);
         $this->db->where('assigned_to', $assigned_to);
-        $applicant_query = $this->db->get('task');
+        $applicant_query = $this->db->get('ticket');
         return $applicant_query->num_rows();
     }
 }

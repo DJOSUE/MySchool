@@ -225,9 +225,10 @@
                                         <tr style="height:25px;">
                                             <td>
                                                 <center>
-                                                    <label style="width:55px; border: 1; text-align: center;">
+                                                    <a href="<?= base_url();?>admin/admission_applicant/<?= $row['applicant_id'];?>"
+                                                        class="grey">
                                                         <?= ($row['first_name']);?>
-                                                    </label>
+                                                    </a>
                                                 </center>
                                             </td>
                                             <td>

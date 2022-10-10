@@ -2,11 +2,16 @@
 
 class StudentModel extends School 
 {
-    function add_interaction($student_id)
+    function add_interaction($student_id, $type = '')
     {
         $md5 = md5(date('d-m-Y H:i:s'));
 
-        $data['created_by'] = $this->session->userdata('login_user_id');
+        if($type != 'automatic')
+            $data['created_by']   = $this->session->userdata('login_user_id');
+        else
+            $data['created_by']   = DEFAULT_USER;
+
+        
         $data['student_id'] = $student_id;
         $data['comment']    = html_escape($this->input->post('comment'));
 

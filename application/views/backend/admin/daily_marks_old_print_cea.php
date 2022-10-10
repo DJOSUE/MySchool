@@ -19,9 +19,9 @@
 ?>
 <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500" rel="stylesheet" type="text/css">
 <link
-    href="<?php echo base_url();?>public/style/cms/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css"
+    href="<?= base_url();?>public/style/cms/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css"
     rel="stylesheet">
-<link href="<?php echo base_url();?>public/style/cms/css/main.css?version=3.3" rel="stylesheet">
+<link href="<?= base_url();?>public/style/cms/css/main.css?version=3.3" rel="stylesheet">
 <style>
 * {
     -webkit-print-color-adjust: exact !important;
@@ -40,29 +40,28 @@
                             <div class="info-1">
                                 <div class="rcard-logo-w">
                                     <img alt=""
-                                        src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('logo');?>">
+                                        src="<?= base_url();?>public/uploads/<?= $this->crud->getInfo('logo');?>">
                                 </div>
-                                <div class="company-name"><?php echo $exam_name;?></div>
-                                <div class="company-address"><?php echo getPhrase('marks');?></div>
+                                <div class="company-name"><?= $exam_name;?></div>                                
                             </div>
                             <div class="info-2">
                                 <div class="rcard-profile">
-                                    <img alt="" src="<?php echo $this->crud->get_image_url('student', $student_id);?>">
+                                    <img alt="" src="<?= $this->crud->get_image_url('student', $student_id);?>">
                                 </div>
-                                <div class="company-name"><?php echo $this->crud->get_name('student' , $student_id);?>
+                                <div class="company-name"><?= $this->crud->get_name('student' , $student_id);?>
                                 </div>
                                 <div class="company-address">
-                                    <?php echo getPhrase('roll');?>:
-                                    <?php echo $this->db->get_where('enroll', array('student_id' => $student_id))->row()->roll;?>
+                                    <?= getPhrase('roll');?>:
+                                    <?= $this->db->get_where('enroll', array('student_id' => $student_id))->row()->roll;?>
                                     <br />
                                     <?= $class_name;?>
                                     <br />
-                                    <?php echo $this->db->get_where('section' , array('section_id' => $section_id))->row()->name;?>
+                                    <?= $this->db->get_where('section' , array('section_id' => $section_id))->row()->name;?>
                                 </div>
                             </div>
                         </div>
                         <div class="rcard-heading">
-                            <h5><?php echo $year.' - '.$this->db->get_where('semesters', array('semester_id' => $semester_id))->row()->name;?></h5>
+                            <h5><?= getPhrase('marks');?></h5>
                         </div>
                         <br/>
                         <br/>
@@ -70,13 +69,13 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th class="text-center"><?php echo getPhrase('year')?></th>
-                                        <th class="text-center"><?php echo getPhrase('semester')?></th>
-                                        <th class="text-center"><?php echo getPhrase('class')?></th>
-                                        <th class="text-center"><?php echo getPhrase('attendance')?></th>
-                                        <th class="text-center"><?php echo getPhrase('mark')?></th>
-                                        <th class="text-center"><?php echo getPhrase('grade')?></th>
-                                        <th class="text-center"><?php echo getPhrase('gpa')?></th>
+                                        <th class="text-center"><?= getPhrase('year')?></th>
+                                        <th class="text-center"><?= getPhrase('semester')?></th>
+                                        <th class="text-center"><?= getPhrase('class')?></th>
+                                        <th class="text-center"><?= getPhrase('attendance')?></th>
+                                        <th class="text-center"><?= getPhrase('mark')?></th>
+                                        <th class="text-center"><?= getPhrase('grade')?></th>
+                                        <th class="text-center"><?= getPhrase('gpa')?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -153,11 +152,11 @@
                                             
                                     ?>
                                     <tr>
-                                        <td><?php echo $enroll['year'];?></td>
-                                        <td><?php echo $enroll['semester_name'];?></td>
-                                        <td><?php echo $enroll['class_name'];?></td>
-                                        <td class="text-center"><?php echo $attendance;?></td>
-                                        <td class="text-center"><?php echo $mark;?></td>
+                                        <td><?= $enroll['year'];?></td>
+                                        <td><?= $enroll['semester_name'];?></td>
+                                        <td><?= $enroll['class_name'];?></td>
+                                        <td class="text-center"><?= $attendance;?></td>
+                                        <td class="text-center"><?= $mark;?></td>
                                         <td><?= $grade = $this->crud->get_grade($mark);?></td>
                                         <td><?= $gpa = $this->crud->get_gpa($mark);?></td>
                                     </tr>
@@ -168,17 +167,17 @@
                         <div class="rcard-footer">
                             <div class="rcard-logo">
                                 <img alt=""
-                                    src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('logo');?>"><span><?php echo $system_name;?></span>
+                                    src="<?= base_url();?>public/uploads/<?= $this->crud->getInfo('logo');?>"><span><?= $system_name;?></span>
                             </div>
                             <div class="rcard-info">
-                                <span><?php echo $system_email;?></span><span><?php echo $phone;?></span>
+                                <span><?= $system_email;?></span><span><?= $phone;?></span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <button class="btn btn-info btn-rounded"
-                onclick="printDiv('print_area')"><?php echo getPhrase('print');?></button>
+                onclick="printDiv('print_area')"><?= getPhrase('print');?></button>
         </div>
     </div>
 </div>

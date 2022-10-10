@@ -41,12 +41,13 @@
                             <?php
                         $status = $this->applicant->get_applicant_status_update($row['status']);
                         foreach($status as $status_row):
+                            if($status_row['status_id'] != 3):
                         ?>
                             <option value="<?= $status_row['status_id']?>"
                                 <?= $status_row['status_id'] == $row['status'] ? 'selected': ''; ?>>
                                 <?= $status_row['name']?>
                             </option>
-                            <?php endforeach;?>
+                            <?php endif; endforeach;?>
                         </select>
                     </div>
                 </div>

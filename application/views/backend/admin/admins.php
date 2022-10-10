@@ -1,7 +1,5 @@
 <?php
 
-    
-
     $can_edit_admin = has_permission('can_edit_admin');
     $can_add_admin = has_permission('can_add_admin');
     $is_super_admin = is_super_admin();
@@ -37,8 +35,7 @@
                                     <div class="ae-content-w grbg">
                                         <div class="top-header top-header-favorit">
                                             <div class="top-header-thumb">
-                                                <img src="<?= base_url();?>public/uploads/bglogin.jpg"
-                                                    class="bgcover">
+                                                <img src="<?= base_url();?>public/uploads/bglogin.jpg" class="bgcover">
                                                 <div class="top-header-author">
                                                     <div class="author-thumb">
                                                         <img src="<?= base_url();?>public/uploads/<?= $this->crud->getInfo('logo');?>"
@@ -113,11 +110,12 @@
                                                                             </li>
                                                                             <?php endif;?>
                                                                             <?php if(has_permission('login_as_admin')):?>
-                                                                                <li>
-                                                                                    <a href="<?= base_url();?>admin/login_as/admin/<?= $row['admin_id'];?>/">
+                                                                            <li>
+                                                                                <a
+                                                                                    href="<?= base_url();?>admin/login_as/admin/<?= $row['admin_id'];?>/">
                                                                                     <?= getPhrase('login_as');?>
                                                                                 </a>
-                                                                                </li>
+                                                                            </li>
                                                                             <?php endif;?>
                                                                         </ul>
                                                                     </div>
@@ -141,16 +139,9 @@
                                                                                 <?php  echo $row['email'];?><br>
                                                                                 <b><i
                                                                                         class="picons-thin-icon-thin-0701_user_profile_avatar_man_male"></i></b>
-                                                                                <?php if($row['owner_status'] == 1):?>
-                                                                                <span class="badge badge-success"
-                                                                                    class="px10"><?= getPhrase('super_admin');?></span>
-                                                                                <?php elseif($row['owner_status'] == 2):?>
-                                                                                <span class="badge badge-info"
-                                                                                    class="px10"><?= getPhrase('admin');?></span>                                                                                
-                                                                                <?php else:?>
                                                                                 <span class="badge badge-primary"
-                                                                                    class="px10"><?= getPhrase('advisor');?></span>
-                                                                                <?php endif;?>
+                                                                                    class="px10"><?= $this->system->get_role_name($row['owner_status']);?>
+                                                                                </span>
                                                                             </p>
                                                                         </div>
                                                                     </div>
@@ -259,7 +250,7 @@
                                         <?php
                                         $genders = $this->db->get('gender')->result_array();
                                         foreach($genders as $gender):
-                                        ?>                                                        
+                                        ?>
                                         <option value="<?= $gender['code']?>"><?= $gender['name']?></option>
                                         <?php endforeach;?>
                                     </select>

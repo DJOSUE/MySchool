@@ -1,11 +1,8 @@
 <?php 
     $this->db->reset_query();
-    $this->db->where('task_code' , $task_code);
-    $task_query = $this->db->get('task');
-    $tasks = $task_query->result_array();
-
-    
-
+    $this->db->where('ticket_code' , $ticket_code);
+    $ticket_query = $this->db->get('ticket');
+    $tickets = $ticket_query->result_array();
 ?>
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -15,34 +12,27 @@
             <div class="os-tabs-controls">
                 <ul class="navs navs-tabs upper">
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/task_dashboard/">
+                        <a class="navs-links" href="<?php echo base_url();?>admin/helpdesk_dashboard/">
                             <i class="os-icon picons-thin-icon-thin-0482_gauge_dashboard_empty"></i>
                             <span><?php echo getPhrase('dashboard');?></span>
                         </a>
                     </li>
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/task_list/">
+                        <a class="navs-links" href="<?php echo base_url();?>admin/helpdesk_ticket_list/">
                             <i class="os-icon picons-thin-icon-thin-0093_list_bullets"></i>
-                            <span><?php echo getPhrase('task_list');?></span>
+                            <span><?php echo getPhrase('ticket_list');?></span>
                         </a>
                     </li>
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/task_applicant/">
-                            <i class="os-icon picons-thin-icon-thin-0716_user_profile_add_new"></i>
-                            <span><?php echo getPhrase('task_applicants');?></span>
-                        </a>
-                    </li>
-                    <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/task_student/">
-                            <i
-                                class="os-icon picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i>
-                            <span><?php echo getPhrase('task_students');?></span>
+                        <a class="navs-links" href="<?php echo base_url();?>admin/helpdesk_tutorial/">
+                            <i class="os-icon picons-thin-icon-thin-0273_video_multimedia_movie"></i>
+                            <span><?php echo getPhrase('video_tutorial');?></span>
                         </a>
                     </li>
                     <li class="navs-item">
                         <a class="navs-links active" href="#">
                             <i class="os-icon picons-thin-icon-thin-0100_to_do_list_reminder_done"></i>
-                            <span><?php echo getPhrase('task_info');?></span>
+                            <span><?php echo getPhrase('ticket_info');?></span>
                         </a>
                     </li>
                 </ul>
@@ -53,44 +43,21 @@
                 <div class="content-box">
                     <div class="row">
                         <?php 
-                        foreach ($tasks as $row):
-                            $user_info      = $this->crud->get_user_info($row['user_type'], $row['user_id']);
-                            $status_info    = $this->task->get_status_info($row['status_id']);
-                            $priority_info  = $this->task->get_priority_info($row['priority_id']);
-                            $description    =   html_entity_decode(str_replace(array("\r", "\n"), '', $row['description']));
-                            $allow_actions  = $this->task->is_task_closed($row['status_id']);
+                        foreach ($tickets as $row):
+                            $user_info      = $this->crud->get_user_info($row['created_by_type'], $row['created_by']);
+                            $status_info    = $this->ticket->get_status_info($row['status_id']);
+                            $priority_info  = $this->ticket->get_priority_info($row['priority_id']);
+                            $description    = html_entity_decode(str_replace(array("\r", "\n"), '', $row['description']));
+                            $allow_actions  = $this->ticket->is_ticket_closed($row['status_id']);
+
                             // echo '<pre>';
-                            // var_dump($row['user_type']);
-                            // echo '</pre>';
+                            // var_dump($row['created_by_type']);
+                            // echo '</pre>';                            
                         ?>
                         <main class="col col-xl-9 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12">
                             <div id="newsfeed-items-grid">
                                 <div class="ui-block paddingtel">
-                                    <div class="user-profile">
-                                        <div class="up-head-w"
-                                            style="background-image:url(<?= base_url();?>public/uploads/bglogin.jpg)">
-                                            <div class="up-main-info">
-                                                <div class="user-avatar-w">
-                                                    <div class="user-avatar">
-                                                        <img alt=""
-                                                            src="<?= $this->crud->get_image_url($row['user_type'], $row['user_id']);?>"
-                                                            style="background-color:#fff;">
-                                                    </div>
-                                                </div>
-                                                <h3 class="text-white"><?= $user_info['first_name'];?>
-                                                    <?= $user_info['last_name'];?></h3>
-                                            </div>
-                                            <svg class="decor" width="842px" height="219px" viewBox="0 0 842 219"
-                                                preserveAspectRatio="xMaxYMax meet" version="1.1"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                <g transform="translate(-381.000000, -362.000000)" fill="#FFFFFF">
-                                                    <path class="decor-path"
-                                                        d="M1223,362 L1223,581 L381,581 C868.912802,575.666667 1149.57947,502.666667 1223,362 Z">
-                                                    </path>
-                                                </g>
-                                            </svg>
-                                        </div>
+                                    <div class="user-profile">                                        
                                         <div class="up-controls">
                                             <div class="row">
                                                 <div class="col-lg-6">
@@ -102,37 +69,10 @@
                                                         </div>
                                                     </div>
                                                     <div class="value-pair">
-                                                        <div><?= getPhrase('status_task');?>:</div>
+                                                        <div><?= getPhrase('status_ticket');?>:</div>
                                                         <div class="value badge-status badge-pill badge-primary"
                                                             style="background-color: <?= $status_info['color']?>;">
                                                             <?= $status_info['name'];?>
-                                                        </div>
-                                                    </div>                                                    
-                                                    <div class="value-pair">
-                                                        <div><?= getPhrase('type_user');?>:</div>
-                                                        <div class="value badge-status badge-pill badge-primary">
-                                                            <?= $row['user_type'];?>
-                                                        </div>
-                                                        <?php if($row['user_type'] == 'applicant') :
-                                                            $applicant = $this->db->get_where('applicant', array('applicant_id' => $row['user_id']))->row_array();
-                                                            $status_applicant =  $this->applicant->get_type_info($applicant['type_id']);
-                                                        ?>
-                                                            <br>
-                                                            <div class="value badge-status badge-pill badge-primary"
-                                                                style="background-color: <?= $status_applicant['color']?>;">
-                                                                <?=$status_applicant['name']; ?>
-                                                            </div>
-                                                        <?endif;?>
-                                                    </div>
-                                                    
-                                                    <div class="value-pair">
-                                                        <div><?= getPhrase('user_status');?>:</div>
-                                                        <?php 
-                                                            $user_status_info = $this->task->get_user_status($row['user_type'], $row['user_id']);
-                                                        ?>
-                                                        <div class="value badge-status badge-pill badge-primary"
-                                                            style="background-color: <?= $user_status_info['color']?>;">
-                                                            <?= $user_status_info['name'];?>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -140,7 +80,7 @@
                                         </div>
                                         <div class="ui-block">
                                             <div class="ui-block-title">
-                                                <h6 class="title"><?= getPhrase('task_information');?>
+                                                <h6 class="title"><?= getPhrase('ticket_information');?>
                                                 </h6>
                                             </div>
                                             <div class="ui-block-content">
@@ -194,10 +134,6 @@
                                                                 <span class="title"><?= getPhrase('email');?>:</span>
                                                                 <span class="text"><?= $user_info['email'];?></span>
                                                             </li>
-                                                            <li>
-                                                                <span class="title"><?= getPhrase('address');?>:</span>
-                                                                <span class="text"><?= $user_info['address'];?></span>
-                                                            </li>
                                                         </ul>
                                                     </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -205,15 +141,6 @@
                                                             <li>
                                                                 <span class="title"><?= getPhrase('phone');?>:</span>
                                                                 <span class="text"><?= $user_info['phone'];?></span>
-                                                            </li>
-                                                            <li>
-                                                                <span class="title"><?= getPhrase('birthday');?>:</span>
-                                                                <span class="text"><?= $user_info['birthday'];?></span>
-                                                            </li>
-                                                            <li>
-                                                                <span class="title"><?= getPhrase('gender');?>:</span>
-                                                                <span
-                                                                    class="text"><?= $this->crud->get_gender_user($user_info['gender']);?></span>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -226,7 +153,7 @@
                                                     <?php if(!$allow_actions):?>
                                                     <div class="form-buttons">
                                                         <button class="btn btn-rounded btn-primary"
-                                                            onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_task_add_message/<?= $task_code;?>');">
+                                                            onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_ticket_add_message/<?= $ticket_code;?>');">
                                                             <?= getPhrase('add_commentary');?></button>
                                                     </div> &nbsp;&nbsp;&nbsp;&nbsp;
                                                     <?php endif;?>
@@ -267,7 +194,7 @@
                                                             </thead>
                                                             <tbody>
                                                                 <?php 
-                                                                $interactions = $this->db->get_where('task_message', array('task_code' => $task_code))->result_array();
+                                                                $interactions = $this->db->get_where('ticket_message', array('ticket_code' => $ticket_code))->result_array();
                                                                 
                                                                 // echo '<pre>';
                                                                 // var_dump($interactions);
@@ -289,7 +216,7 @@
                                                                     </td>
                                                                     <td class="text-center">
                                                                         <center>
-                                                                            <?= $this->task->get_status_info($item['current_status'])['name'];?>
+                                                                            <?= $this->ticket->get_status_info($item['current_status'])['name'];?>
                                                                         </center>
                                                                     </td>
                                                                     <td class="text-center">
@@ -317,15 +244,15 @@
                                                                         <a href="javascript:void(0);" class="grey"
                                                                             data-toggle="tooltip" data-placement="top"
                                                                             data-original-title="<?= getPhrase('view');?>"
-                                                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_task_view_message/<?=$item['task_message_id'];?>');">
+                                                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_ticket_view_message/<?=$item['ticket_message_id'];?>');">
                                                                             <i
                                                                                 class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible"></i>
                                                                         </a>
-                                                                        <?php if($user_id == $item['created_by'] && !$allow_actions):?>
+                                                                        <?php if($created_by == $item['created_by'] && !$allow_actions):?>
                                                                         <a href="javascript:void(0);" class="grey"
                                                                             data-toggle="tooltip" data-placement="top"
                                                                             data-original-title="<?= getPhrase('edit');?>"
-                                                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_task_update_message/<?=$item['task_message_id'];?>');">
+                                                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_ticket_update_message/<?=$item['ticket_message_id'];?>');">
                                                                             <i
                                                                                 class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new"></i>
                                                                         </a>
@@ -356,20 +283,20 @@
                                                         <i class="picons-thin-icon-thin-0133_arrow_right_next menu_left_selected_icon"
                                                             style="font-size:20px;"></i> &nbsp;&nbsp;&nbsp;
                                                         <a class="menu_left_selected_text"
-                                                            href="<?= base_url();?>admin/task_info/<?= $task_code;?>/">
-                                                            <?= getPhrase('task_information');?>
+                                                            href="<?= base_url();?>admin/helpdesk_ticket_info/<?= $ticket_code;?>/">
+                                                            <?= getPhrase('ticket_information');?>
                                                         </a>
                                                     </li>
-                                                    <?php if(!$allow_actions):?>
+                                                    <!-- <?php if(!$allow_actions):?>
                                                     <li>
                                                         <i class="picons-thin-icon-thin-0133_arrow_right_next"
                                                             style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
                                                         <a
-                                                            href="<?= base_url();?>admin/task_update/<?= $task_code;?>/">
-                                                            <?= getPhrase('update_task');?>
+                                                            href="<?= base_url();?>admin/ticket_update/<?= $ticket_code;?>/">
+                                                            <?= getPhrase('update_ticket');?>
                                                         </a>
                                                     </li>
-                                                    <?php endif;?>
+                                                    <?php endif;?> -->
                                                 </ul>
                                             </div>
                                         </div>

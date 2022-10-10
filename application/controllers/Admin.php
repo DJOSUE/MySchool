@@ -1038,7 +1038,7 @@
             $future_class_id    = $this->input->post('future_class_id');
             $future_section_id  = $this->input->post('future_section_id');
     
-            $current_subjects = $this->db->get_where( 'subject', array( 'class_id' => $current_class_id, 'section_id' => $current_section_id  ) )->result_array();
+            $current_subjects = $this->db->get_where( 'subject', array( 'class_id' => $current_class_id, 'section_id' => $current_section_id, 'year' => $this->runningYear, 'semester_id' => $this->runningSemester) )->result_array();
         
             $current_subject_ids = array();
             $future_subject_ids = array();
@@ -1050,8 +1050,12 @@
             }
     
             $result = array_diff($current_subject_ids, $future_subject_ids);
+
+            // echo '<pre>';
+            // var_dump($result);
+            // echo '</pre>';
     
-            if(($current_class_id != $future_class_id || $current_section_id != $future_class_id) && count($result) > 0){
+            if(($current_class_id != $future_class_id || $current_section_id != $future_section_id) && count($result) > 0){
 
                 foreach ($current_subjects as $item) {
                     
@@ -1079,10 +1083,11 @@
                     $this->crud->save_log($table, $action, $update_id, $data);
                     
                     $this->db->reset_query();
+                    
                     // Update Marks
                     $data1['class_id']   = $future_class_id;
                     $data1['section_id'] = $future_section_id;
-                    $data['subject_id'] = $future_subject_id;
+                    $data1['subject_id'] = $future_subject_id;
 
                     $this->db->where('student_id', $student_id );
                     $this->db->where('class_id', $current_class_id);
@@ -1095,12 +1100,15 @@
                     $action     = 'update';
                     $update_id  = $student_id.'-'.$current_class_id.'-'.$current_section_id.'-'.$current_subject_id;
 
-                    if($this->useDailyMarks){
+                    if($this->useDailyMarks)
+                    {
                         $this->db->update('mark_daily', $data1 );
                         $table      = 'mark_daily';
                         $this->crud->save_log($table, $action, $update_id, $data1);
 
-                    }else{
+                    }
+                    else
+                    {
                         $this->db->update('mark', $data1 );
                         $table      = 'mark';
                         $this->crud->save_log($table, $action, $update_id, $data1);
@@ -1111,10 +1119,11 @@
                 $this->session->set_flashdata( 'flash_message', getPhrase( 'successfully_updated' ) );
             }
             else {
+                
                 $this->session->set_flashdata( 'flash_message', getPhrase( 'error' ) );
             }
     
-            $this->crud_model->clear_cache();
+            $this->crud->clear_cache();
             redirect( base_url() . 'admin/student_update_class/'. $student_id.'/', 'refresh' );
         }
 
@@ -1205,7 +1214,7 @@
             $this->isAdmin();
             
             if($this->useDailyMarks){
-                $page_data['page_name']  = 'student_past_daily_marks_a';
+                $page_data['page_name']  = 'student_past_daily_marks';
                 $page_data['page_title'] =  getPhrase('student_past_daily_marks');
                 $page_data['student_id'] =  $student_id;
                 $this->load->view('backend/index', $page_data);
@@ -1215,6 +1224,45 @@
                 $page_data['page_title'] =  getPhrase('student_past_marks');
                 $page_data['student_id'] =  $student_id;
                 $this->load->view('backend/index', $page_data);
+            }
+        }
+
+        function student_print_marks_past_cea($data = '', $param1='')
+        {
+            $this->isAdmin();
+            
+            if($this->useDailyMarks)
+            {
+                $page_data['page_name']  = 'student_print_daily_marks_past_cea';
+                $page_data['page_title'] =  getPhrase('student_print_marks_past_cea');
+                $page_data['data'] =  $data;
+                $this->load->view('backend/admin/student_print_daily_marks_past_cea', $page_data);
+                
+            } 
+            else {
+                $page_data['page_name']  = 'student_past_marks';
+                $page_data['page_title'] =  getPhrase('student_past_marks');
+                $page_data['data'] =  $data;
+                $this->load->view('backend/admin/student_print_daily_marks_past_cea', $page_data);
+            }
+        }
+
+        function student_print_marks_past($data = '', $param1='')
+        {
+            $this->isAdmin();
+            
+            if($this->useDailyMarks)
+            {
+                $page_data['page_name']  = 'student_print_daily_marks_past';
+                $page_data['page_title'] =  getPhrase('student_print_marks_past');
+                $page_data['data'] =  $data;
+                $this->load->view('backend/admin/student_print_daily_marks_past_cea', $page_data);
+            } 
+            else {
+                $page_data['page_name']  = 'student_past_marks';
+                $page_data['page_title'] =  getPhrase('student_past_marks');
+                $page_data['data'] =  $data;
+                $this->load->view('backend/admin/student_print_daily_marks_past_cea', $page_data);
             }
         }
     
@@ -3304,15 +3352,6 @@
             redirect( base_url(), 'refresh' );
         }
         
-        // Help View
-        function help(){
-            $this->isAdmin();
-    
-            $page_data['page_name']  = 'help';
-            $page_data['page_title'] = getPhrase( 'help' ); 
-            $this->load->view( 'backend/index', $page_data );
-        }
-
         /** Student Module */
         // 
         function admission_student_interaction($action, $student_id = '', $interaction_id = '', $return_url = '')
@@ -3802,7 +3841,7 @@
             $applicant = $this->db->get_where('applicant' , array('applicant_id' => $applicant_id))->row();
 
             $birthday = date('m/d/Y', strtotime($applicant->birthday));
-
+            
             $data['first_name']     = $applicant->first_name;
             $data['last_name']      = $applicant->last_name;
             $data['birthday']       = $birthday;
@@ -3813,6 +3852,8 @@
             $data['country_id']     = $applicant->country_id;
             $data['referral_by']    = $applicant->referral_by;
             $data['applicant_id']   = $applicant_id;
+            $data['type_id']        = $applicant->type_id;
+            $data['program_id']     = $applicant->program_id;
 
             // echo '<pre>';
             // var_dump($data);
@@ -4026,6 +4067,15 @@
             $this->load->view('backend/index', $page_data);
         }
 
+        function task_update($task_code = '', $param2 = '')
+        {
+            $this->isAdmin('task_module');
+            $page_data['task_code']    = $task_code;
+            $page_data['page_name']    = 'task_update';
+            $page_data['page_title']   = getPhrase('task_update');
+            $this->load->view('backend/index', $page_data);
+        }
+
         function task($action, $task_id = '', $return_url = '')
         {
             $this->isAdmin('task_module');
@@ -4052,6 +4102,12 @@
                 case 'update':
                     $this->task->update($task_id);
                     $message =  getPhrase('successfully_updated');
+
+                    if($return_url == '')
+                    {
+                        $task_code = $this->task->get_task_code($task_id);
+                        $return_url = 'task_info/'.$task_code;
+                    }
                     break;
                 
                 default:
@@ -4086,12 +4142,10 @@
             $message = '';
             switch ($action) {
                 case 'add':
-                    $this->task->add_message($task_code);
-                    $message =  getPhrase('successfully_added');
 
                     if($task_code != '')
                     {
-                        $status_id_old = $this->db->get_where('task' , array('task_code' => $task_code))->row()->status;
+                        $status_id_old = $this->db->get_where('task' , array('task_code' => $task_code))->row()->status_id;
         
                         $status_id_new = $this->input->post('status_id');
         
@@ -4100,6 +4154,9 @@
                             $this->task->update_status($task_code, $status_id_new);
                         }
                     }
+
+                    $this->task->add_message($task_code);
+                    $message =  getPhrase('successfully_added');
 
                     break;
                 case 'update':                    
@@ -4127,8 +4184,7 @@
         }
 
 /*****System module   ********************************************************************************************************************************/
-
-        /** System module */
+       
         //System settings function.
         function system_settings($param1 = '', $param2 = '', $param3 = '')
         {
@@ -4346,6 +4402,194 @@
             $this->load->view('backend/index', $page_data);
         }
 
+/*****HelpDesk functions *****************************************************************************************************************************/
+        // ticket Dashboard
+        function helpdesk_dashboard()
+        {
+            $this->isAdmin('helpdesk_module');
+
+            if($_SERVER['REQUEST_METHOD'] === 'POST')
+            {   
+                $department_id  = $this->input->post('department_id');                
+                $priority_id    = $this->input->post('priority_id');
+                $status_id      = $this->input->post('status_id');
+                $text           = $this->input->post('text');
+                $assigned_me    = $this->input->post('assigned_me');                
+            }
+            else
+            {    
+                $department_id  = "_blank";
+                $priority_id    = "_blank";
+                $status_id      = "_blank";
+                $assigned_me = 1;
+            }
+
+            $page_data['department_id'] = $department_id;
+            $page_data['priority_id']   = $priority_id;
+            $page_data['status_id']     = $status_id;
+            $page_data['text']          = $text;
+            $page_data['assigned_me']   = $assigned_me;
+            $page_data['page_name']     = 'helpdesk_dashboard';
+            $page_data['page_title']    =  getPhrase('help_desk_dashboard');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function helpdesk_ticket_list($param1 = '')
+        {
+            $this->isAdmin('helpdesk_module');
+
+            if($param1 != '')
+            {
+                $array      = explode('|',base64_decode($param1));
+
+                $status_id      = $array[0] != '-' ? $array[0] : '';
+                $priority_id    = $array[1] != '-' ? $array[1] : '';
+                $assigned_me    = $array[2] != '-' ? $array[2] : 0;
+                $department_id  = "";
+            }
+            else
+            {
+                $department_id  = "";
+                $priority_id    = "";
+                $status_id      = "";
+                $assigned_me    = 1;
+            }
+            
+            if($_SERVER['REQUEST_METHOD'] === 'POST')
+            {   
+                $category_id    = $this->input->post('category_id');                
+                $priority_id    = $this->input->post('priority_id');
+                $status_id      = $this->input->post('status_id');
+                $text           = $this->input->post('text');
+                $assigned_me    = $this->input->post('assigned_me');  
+                $search         = true;              
+            }
+
+            $page_data['department_id'] = $department_id;
+            $page_data['category_id']   = $category_id;
+            $page_data['priority_id']   = $priority_id;
+            $page_data['status_id']     = $status_id;
+            $page_data['text']          = $text;
+            $page_data['search']        = $search;
+            $page_data['assigned_me']   = $assigned_me;
+            $page_data['page_name']     = 'helpdesk_ticket_list';
+            $page_data['page_title']    =  getPhrase('helpdesk_ticket_list');
+            $this->load->view('backend/index', $page_data);
+
+            // echo '<pre>';
+            // var_dump($array);
+            // echo '</pre>';
+        }
+
+        function helpdesk_ticket_info($ticket_code = '', $param2 = '')
+        {
+            $this->isAdmin('helpdesk_module');
+            $page_data['ticket_code']   = $ticket_code;
+            $page_data['page_name']     = 'helpdesk_ticket_info';
+            $page_data['page_title']    = getPhrase('ticket_info');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function helpdesk_ticket($action, $ticket_id = '', $return_url = '')
+        {
+            $this->isAdmin('helpdesk_module');
+
+            $message = '';
+            switch ($action) {
+                case 'register':
+                    
+                    $ticket_id = $this->ticket->create();
+                    $message =  getPhrase('successfully_added');
+
+                    if($return_url == '')
+                    {
+                        $ticket_code = $this->ticket->get_ticket_code($ticket_id);
+                        $return_url = 'helpdesk_ticket_info/'.$ticket_code;
+                    }
+                    break;
+
+                case 'update':
+                    $this->ticket->update($ticket_id);
+                    $message =  getPhrase('successfully_updated');
+
+                    if($return_url == '')
+                    {
+                        $ticket_code = $this->ticket->get_ticket_code($ticket_id);
+                        $return_url = 'helpdesk_ticket_info/'.$ticket_code;
+                    }
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+
+            $this->session->set_flashdata('flash_message' , $message);
+            redirect(base_url() .'admin/'.$return_url, 'refresh');
+        }
+
+        function ticket_message($action, $ticket_code = '', $ticket_message_id = '', $return_url = '')
+        {
+            $this->isAdmin('helpdesk_module');
+
+            if($return_url == '')
+            {
+                $return_url = 'admin/helpdesk_ticket_info/'.$ticket_code;
+            }
+            else
+            {
+                if(base64_decode($return_url, true ))
+                {
+                    $return_url = 'admin/'.base64_decode($return_url);
+                }
+                else
+                {
+                    $return_url = 'admin/'.$return_url;
+                }
+            }
+
+            $message = '';
+
+            switch ($action) {
+                case 'add':
+
+                    if($ticket_code != '')
+                    {
+                        $status_id_old = $this->db->get_where('ticket' , array('ticket_code' => $ticket_code))->row()->status_id;
+        
+                        $status_id_new = $this->input->post('status_id');
+        
+                        if($status_id_old != $status_id_new)
+                        {
+                            $this->ticket->update_status($ticket_code, $status_id_new);
+                        }
+                    }
+
+                    $this->ticket->add_message($ticket_code);
+                    $message =  getPhrase('successfully_added');
+
+                    break;
+                case 'update':                    
+                    $this->ticket->update_message($ticket_message_id);
+                    $message =  getPhrase('successfully_updated');
+
+                default:
+                    # code...
+                    break;
+            }
+
+            $this->session->set_flashdata('flash_message' , $message);
+            redirect(base_url() . $return_url, 'refresh');
+        }
+        
+        function helpdesk_tutorial(){
+            $this->isAdmin();
+    
+            $page_data['page_name']  = 'helpdesk_tutorial';
+            $page_data['page_title'] = getPhrase( 'video_tutorial' ); 
+            $this->load->view( 'backend/index', $page_data );
+        }
+
 /*****Tools functions ********************************************************************************************************************************/
 
         // unset Admin cookies
@@ -4389,6 +4633,24 @@
         }
 
         //Get sections by classId function.
+        function get_class_section_international($class_id = '', $pYear = '', $pSemesterId = '')
+        {
+            $year       =   $pYear == '' ? $this->runningYear : $pYear;
+            $SemesterId =   $pSemesterId == '' ? $this->runningSemester : $pSemesterId;
+            
+            $sections = $this->db->get_where('section' , array('class_id' => $class_id, 'year' => $year, 'semester_id' => $SemesterId))->result_array();
+            echo '<option value="">' . getPhrase('select') . '</option>';
+            foreach ($sections as $row) 
+            {
+                $text = strtolower($row['name']);
+
+                if(strpos($text, 'saturday') === false)
+                {
+                    echo '<option value="' . $row['section_id'] . '">' . $row['name'] . '</option>';
+                }
+            }
+        }
+
         function get_class_section($class_id = '', $pYear = '', $pSemesterId = '')
         {
             $year       =   $pYear == '' ? $this->runningYear : $pYear;

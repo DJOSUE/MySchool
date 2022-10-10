@@ -36,6 +36,7 @@
               								    <div class="col-lg-6">
               								        <div class="value-pair">
               								            <div><?php echo getPhrase('account_type');?>:</div>
+														
               								            <?php if($row['owner_status'] == 1):?>
               								                <div class="value badge badge-pill badge-success"><?php echo getPhrase('super_admin');?></div>
 														<?php elseif($row['owner_status'] == 1):?>

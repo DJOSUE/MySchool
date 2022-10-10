@@ -75,7 +75,7 @@
                                                 <?php endif;?>
                                                 <h1 style="font-weight:bold;"><?= $this->applicant->applicant_total_type($type['type_id'],'status', $status['status_id'])?></h1>
                                                 <div class="author-content">
-                                                    <div class="country"><b> <?= $status['name'];?></b></div>
+                                                    <div class="country text-font-12"><b> <?= $status['name'];?></b></div>
                                                 </div>
                                             </div>
                                         </div>

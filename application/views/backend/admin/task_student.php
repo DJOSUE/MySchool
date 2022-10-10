@@ -210,9 +210,12 @@
                                         ?>
                                         <tr style="height:25px;">
                                             <td>
-                                                <center>
-                                                    <?= ($row['title']);?>
-                                                </center>
+                                                <a href="<?php echo base_url();?>admin/task_info/<?= $row['task_code'];?>"
+                                                    class="grey">
+                                                    <center>
+                                                        <?= ($row['title']);?>
+                                                    </center>
+                                                </a>
                                             </td>
                                             <td>
                                                 <center>
@@ -231,7 +234,11 @@
                                             </td>
                                             <td>
                                                 <center>
-                                                <?= $this->task->get_priority($row['priority_id']);?>
+                                                    <?php $priority_info = $this->task->get_priority_info($row['priority_id']);?>
+                                                    <div class="value badge badge-pill badge-primary"
+                                                        style="background-color: <?= $priority_info['color']?>;">
+                                                        <?= $priority_info['name'];?>
+                                                    </div>
                                                 </center>
                                             </td>
                                             <td>

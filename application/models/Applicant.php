@@ -27,6 +27,9 @@ class Applicant extends School
         $data['country_id']     = html_escape($this->input->post('country_id'));
         $data['type_id']        = html_escape($this->input->post('type_id'));
 
+        $type_info = $this->applicant->get_type_info($data['type_id']);
+        $data['program_id']        = $type_info['program_id'];
+
         if(!empty($this->input->post('is_imported')))
         {
             $data['is_imported'] = $this->input->post('is_imported');
@@ -62,8 +65,10 @@ class Applicant extends School
         $data['updated_by']     = $this->session->userdata('login_user_id');
 
         $assigned_to_old = $this->db->get_where('v_applicants' , array('applicant_id' => $applicant_id) )->row()->assigned_to;
-        
         $assigned_to_new = $this->input->post('assigned_to');
+
+        $status_id_old = $this->db->get_where('v_applicants' , array('applicant_id' => $applicant_id) )->row()->status;
+        $status_id_new = html_escape($this->input->post('status_id'));
 
 
         if(!empty($this->input->post('first_name')))
@@ -136,7 +141,13 @@ class Applicant extends School
             $_POST['applicant_id']  = $applicant_id;
             $_POST['comment']       = $user_name.' assigned to '.$assigned_name.' this applicant';
             
-            $this->applicant->add_interaction();
+            $this->applicant->add_interaction('automatic');
+        }
+
+        if($status_id_new != '' && ($status_id_new != $status_id_old))
+        {
+            // Add automatic interaction
+            $this->add_interaction_update_status($applicant_id, $status_id_new);
         }
     }
 
@@ -186,14 +197,33 @@ class Applicant extends School
         $action     = 'update';
         $this->crud->save_log($table, $action, $applicant_id, $data);
 
+        // Add automatic interaction
+        $this->add_interaction_update_status($applicant_id, $status_id);
+
         return true;
     }
 
-    function add_interaction()
+    function add_interaction_update_status($applicant_id, $status_id)
+    {
+        $user_name  = $this->crud->get_name('admin', $this->session->userdata('login_user_id'));
+        $status_info = $this->get_applicant_status_info($status_id);
+
+        // Create a new interaction
+        $_POST['applicant_id']  = $applicant_id;
+        $_POST['comment']       = $user_name.' update the status to: '.$status_info['name'].'.';
+        
+        $this->applicant->add_interaction('automatic');
+    }
+
+    function add_interaction($type = '')
     {
         $md5 = md5(date('d-m-Y H:i:s'));
 
-        $data['created_by']   = $this->session->userdata('login_user_id');
+        if($type != 'automatic')
+            $data['created_by']   = $this->session->userdata('login_user_id');
+        else
+            $data['created_by']   = DEFAULT_USER;
+
         $data['applicant_id'] = $this->input->post('applicant_id');
         $data['comment']      = html_escape($this->input->post('comment'));
 
@@ -244,17 +274,17 @@ class Applicant extends School
     public function get_applicant_types()
     {
         $this->db->reset_query();
-        $this->db->select('code as type_id, name, value_1 as color, value_2 as icon');
+        $this->db->select('code as type_id, name, value_1 as color, value_2 as icon, value_4 as program_id');
         $this->db->where('parameter_id', 'TYPEAPPLIC');
         $query = $this->db->get('parameters')->result_array();;
         
         return $query;
     }
 
-    public function get_applicant_type_info($type_id)
+    public function get_type_info($type_id)
     {
         $this->db->reset_query();
-        $this->db->select('code as type_id, name, value_1 as color, value_2 as icon');
+        $this->db->select('code as type_id, name, value_1 as color, value_2 as icon, value_4 as program_id');
         $this->db->where('parameter_id', 'TYPEAPPLIC');
         $this->db->where('code', $type_id);
         $query = $this->db->get('parameters')->row_array();
@@ -295,7 +325,6 @@ class Applicant extends School
         
         return $query;
     }
-
 
     public function get_agent_list()
     {

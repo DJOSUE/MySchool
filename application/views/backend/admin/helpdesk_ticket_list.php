@@ -1,4 +1,7 @@
 <?php 
+    $is_helpdesk_admin = has_permission('helpdesk_admin_module');
+    $is_helpdesk_team  = has_permission('helpdesk_team');
+
     $this->db->reset_query();
 
     $user_id = $this->session->userdata('login_user_id');
@@ -19,12 +22,21 @@
     {
         $this->db->like('description' , str_replace("%20", " ", $text));
     }
-    if($assigned_me == 1)
+
+    if($is_helpdesk_team || $is_helpdesk_admin)
     {
-        $this->db->where('assigned_to' , $user_id);
-    }    
-    $task_query = $this->db->get('task');
-    $tasks = $task_query->result_array();
+        if($assigned_me == 1)
+        {
+            $this->db->where('assigned_to' , $user_id);
+        }    
+    }
+    else
+    {
+        $this->db->where('created_by' , $user_id);
+    }
+
+    $ticket_query = $this->db->get('ticket');
+    $tickets = $ticket_query->result_array();
 ?>
 <style>
 th {
@@ -39,28 +51,21 @@ th {
             <div class="os-tabs-controls">
                 <ul class="navs navs-tabs upper">
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/task_dashboard/">
+                        <a class="navs-links" href="<?php echo base_url();?>admin/helpdesk_dashboard/">
                             <i class="os-icon picons-thin-icon-thin-0482_gauge_dashboard_empty"></i>
                             <span><?php echo getPhrase('dashboard');?></span>
                         </a>
                     </li>
                     <li class="navs-item">
-                        <a class="navs-links active" href="<?php echo base_url();?>admin/task_list/">
+                        <a class="navs-links active" href="<?php echo base_url();?>admin/helpdesk_ticket_list/">
                             <i class="os-icon picons-thin-icon-thin-0093_list_bullets"></i>
-                            <span><?php echo getPhrase('task_list');?></span>
+                            <span><?php echo getPhrase('ticket_list');?></span>
                         </a>
                     </li>
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/task_applicant/">
-                            <i class="os-icon picons-thin-icon-thin-0716_user_profile_add_new"></i>
-                            <span><?php echo getPhrase('task_applicants');?></span>
-                        </a>
-                    </li>
-                    <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/task_student/">
-                            <i
-                                class="os-icon picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i>
-                            <span><?php echo getPhrase('task_students');?></span>
+                        <a class="navs-links" href="<?php echo base_url();?>admin/helpdesk_tutorial/">
+                            <i class="os-icon picons-thin-icon-thin-0273_video_multimedia_movie"></i>
+                            <span><?php echo getPhrase('video_tutorial');?></span>
                         </a>
                     </li>
                 </ul>
@@ -77,11 +82,11 @@ th {
                         // var_dump($department_id);
                         // echo '</pre>';
                         ?>
-                        <h5 class="form-header"><?php echo getPhrase('task_list');?></h5>
+                        <h5 class="form-header"><?php echo getPhrase('ticket_list');?></h5>
                         <div class="row">
                             <div class="content-i">
                                 <div class="content-box">
-                                    <?php echo form_open(base_url() . 'admin/task_list/', array('class' => 'form m-b'));?>
+                                    <?php echo form_open(base_url() . 'admin/helpdesk_ticket_list/', array('class' => 'form m-b'));?>
                                     <div class="row" style="margin-top: -30px; border-radius: 5px;">
                                         <div class="col-sm-2">
                                             <div class="form-group label-floating is-select">
@@ -94,12 +99,12 @@ th {
                                                         </option>
 
                                                         <?php
-                                                        $departments = $this->task->get_departments();
+                                                        $departments = $this->ticket->get_departments();
                                                         foreach($departments as $row):                        
                                                         ?>
                                                         <optgroup label="<?= $row['name'];?>">
                                                             <?php
-                                                        $categories = $this->task->get_categories($row['department_id']);
+                                                        $categories = $this->ticket->get_categories($row['department_id']);
                                                         foreach($categories as $item):  
                                                         ?>
                                                             <option value="<?php echo $item['category_id'];?>"
@@ -121,12 +126,12 @@ th {
                                                         <option value=""><?php echo getPhrase('select');?>
                                                         </option>
                                                         <?php
-                                                        $categories = $this->db->get('v_task_priorities')->result_array();
-                                                        foreach($categories as $row):                        
+                                                        $priorities = $this->ticket->get_priorities();
+                                                        foreach($priorities as $priority):                        
                                                     ?>
-                                                        <option value="<?php echo $row['priority_id'];?>"
-                                                            <?php if($priority_id == $row['priority_id']) echo "selected";?>>
-                                                            <?php echo $row['name'];?></option>
+                                                        <option value="<?php echo $priority['priority_id'];?>"
+                                                            <?php if($priority_id == $priority['priority_id']) echo "selected";?>>
+                                                            <?php echo $priority['name'];?></option>
                                                         <?php endforeach;?>
                                                     </select>
                                                 </div>
@@ -140,12 +145,12 @@ th {
                                                         <option value=""><?php echo getPhrase('select');?>
                                                         </option>
                                                         <?php
-                                                        $status = $this->db->get('v_task_status')->result_array();
-                                                        foreach($status as $row):
+                                                        $statuses = $this->ticket->get_statuses();
+                                                        foreach($statuses as $status):
                                                     ?>
-                                                        <option value="<?php echo $row['status_id'];?>"
-                                                            <?php if($status_id == $row['status_id']) echo "selected";?>>
-                                                            <?php echo $row['name'];?></option>
+                                                        <option value="<?php echo $status['status_id'];?>"
+                                                            <?php if($status_id == $status['status_id']) echo "selected";?>>
+                                                            <?php echo $status['name'];?></option>
                                                         <?php endforeach;?>
                                                     </select>
                                                 </div>
@@ -155,9 +160,10 @@ th {
                                             <div class="form-group label-floating"
                                                 style="border: 1px solid #EAEAF5; border-radius: 5px; background: white;">
                                                 <label class="control-label"><?php echo getPhrase('text');?></label>
-                                                <input class="form-control" name="name" type="text" value="<?= $text?>">
+                                                <input class="form-control" name="text" type="text" value="<?= $text?>">
                                             </div>
                                         </div>
+                                        <?php if($is_helpdesk_team):?>
                                         <div class="col-sm-2">
                                             <div class="description-toggle">
                                                 <div class="description-toggle-content">
@@ -169,22 +175,32 @@ th {
                                                 </div>
                                             </div>
                                         </div>
+                                        <?php endif; ?>
                                         <div class="col-sm-2">
                                             <div class="form-group">
                                                 <button class="btn btn-success btn-upper" style="margin-top:20px"
-                                                    type="submit"><span><?php echo getPhrase('search');?></span></button>
+                                                    type="submit">
+                                                    <span><?php echo getPhrase('search');?></span>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
                                     <?php echo form_close();?>
-
+                                    <div class="col-sm-2">
+                                            <div class="form-group">
+                                                <button class="btn btn-primary btn-upper" style="margin-top:20px"
+                                                    onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_ticket_add/');">
+                                                    <span>+<?php echo getPhrase('new');?></span>
+                                                </button>
+                                            </div>
+                                        </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="table-responsive">
                                 <?php
-                                    if($task_query->num_rows() > 0):
+                                    if($ticket_query->num_rows() > 0):
                                 ?>
                                 <a href="#" id="btnExport" data-toggle="tooltip" data-placement="top"
                                     data-original-title="<?php echo getPhrase('download');?>">
@@ -199,7 +215,7 @@ th {
                                         <tr>
                                             <th class="text-center"><?php echo getPhrase('title')?></th>
                                             <th class="text-center"><?php echo getPhrase('category')?></th>
-                                            <th class="text-center"><?php echo getPhrase('user')?></th>
+                                            
                                             <th class="text-center"><?php echo getPhrase('status')?></th>
                                             <th class="text-center"><?php echo getPhrase('priority')?></th>
                                             <th class="text-center"><?php echo getPhrase('assigned_to')?></th>
@@ -212,40 +228,28 @@ th {
                                     </thead>
                                     <tbody>
                                         <?php 
-                                            foreach($tasks as $row) :
-                                                $allow_actions = $this->task->is_task_closed($row['status_id']);
+                                            foreach($tickets as $row) :
+                                                $allow_actions = $this->ticket->is_ticket_closed($row['status_id']);
                                         ?>
                                         <tr style="height:25px;">
                                             <td>
-                                                <a href="<?php echo base_url();?>admin/task_info/<?= $row['task_code'];?>"
-                                                    class="grey">
-                                                    <center>
-                                                        <?= ($row['title']);?>
-                                                    </center>
-                                                </a>
-                                            </td>
-                                            <td>
                                                 <center>
-                                                    <?= $this->task->get_category($row['category_id']);?>
+                                                    <?= ($row['title']);?>
                                                 </center>
                                             </td>
                                             <td>
                                                 <center>
-                                                    <?= $this->crud->get_name($row['user_type'], $row['user_id']);?>
+                                                    <?= $this->ticket->get_category_name($row['category_id']);?>
                                                 </center>
                                             </td>
                                             <td>
                                                 <center>
-                                                    <?= $this->task->get_status($row['status_id']);?>
+                                                    <?= $this->ticket->get_status_name($row['status_id']);?>
                                                 </center>
                                             </td>
-                                            <td>                                                
+                                            <td>
                                                 <center>
-                                                    <?php $priority_info = $this->task->get_priority_info($row['priority_id']);?>
-                                                    <div class="value badge badge-pill badge-primary"
-                                                        style="background-color: <?= $priority_info['color']?>;">
-                                                        <?= $priority_info['name'];?>
-                                                    </div>
+                                                    <?= $this->ticket->get_priority_name($row['priority_id']);?>
                                                 </center>
                                             </td>
                                             <td>
@@ -255,7 +259,7 @@ th {
                                             </td>
                                             <td>
                                                 <center>
-                                                    <?= $this->crud->get_name('admin', $row['created_by']);?>
+                                                    <?= $this->crud->get_name($row['created_by_type'], $row['created_by']);?>
                                                 </center>
                                             </td>
                                             <td>
@@ -265,7 +269,7 @@ th {
                                             </td>
                                             <td>
                                                 <center>
-                                                    <?= $this->crud->get_name('admin', $row['updated_by']);?>
+                                                    <?= $row['updated_by'] != '' ? $this->crud->get_name($row['updated_by_type'], $row['updated_by']) : '';?>
                                                 </center>
                                             </td>
                                             <td>
@@ -274,7 +278,7 @@ th {
                                                 </center>
                                             </td>
                                             <td class="row-actions">
-                                                <a href="<?php echo base_url();?>admin/task_info/<?= $row['task_code'];?>"
+                                                <a href="<?php echo base_url();?>admin/helpdesk_ticket_info/<?= $row['ticket_code'];?>"
                                                     class="grey" data-toggle="tooltip" data-placement="top"
                                                     data-original-title="<?php echo getPhrase('view');?>">
                                                     <i
@@ -284,13 +288,13 @@ th {
                                                 <a href="javascript:void(0);" class="grey" data-toggle="tooltip"
                                                     data-placement="top"
                                                     data-original-title="<?php echo getPhrase('add_interaction');?>"
-                                                    onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_task_add_message/<?= $row['task_code'].'/task_applicant/';?>');">
+                                                    onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_ticket_add_message/<?= $row['ticket_code'].'/ticket_applicant/';?>');">
                                                     <i class="os-icon picons-thin-icon-thin-0151_plus_add_new"></i>
                                                 </a>
                                                 <a href="javascript:void(0);" class="grey" data-toggle="tooltip"
                                                     data-placement="top"
                                                     data-original-title="<?php echo getPhrase('edit');?>"
-                                                    onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_task_edit/<?=$row['task_code'].'/task_applicant/';?>');">
+                                                    onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_ticket_edit/<?=$row['ticket_code'].'/ticket_applicant/';?>');">
                                                     <i
                                                         class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new"></i>
                                                 </a>
@@ -344,7 +348,7 @@ function getCellValue(row, index) {
 </script>
 <script>
 $("#btnExport").click(function(e) {
-    var reportName = '<?php echo getPhrase('task_applicant').'_'.date('d-m-Y');?>';
+    var reportName = '<?php echo getPhrase('ticket_applicant').'_'.date('d-m-Y');?>';
     var a = document.createElement('a');
     var data_type = 'data:application/vnd.ms-excel;charset=utf-8';
     var table_html = $('#dvData')[0].outerHTML;
