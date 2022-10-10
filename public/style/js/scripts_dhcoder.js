@@ -7,7 +7,7 @@
 
     function showAjaxModal(url)
     {
-        jQuery('#exampleModal .modal-body').html('<div class="text-center tp200"><img src="<?php echo base_url();?>public/assets/images/preloader.gif" /></div>');
+        jQuery('#exampleModal .modal-body').html('<div class="text-center tp200"><img src="/public/assets/images/preloader.gif" /></div>');
         jQuery('#exampleModal').modal('show', {backdrop: 'true'});
         $.ajax({
             url: url,
@@ -249,7 +249,7 @@
     
     function get_class_students(class_id) {
         $.ajax({
-            url: rootAppURI+'admin/get_class_stundets/' + class_id,
+            url: rootAppURI+'admin/get_class_students/' + class_id,
             success: function (response)
             {
                 jQuery('#students_holder').html(response);
@@ -330,7 +330,7 @@
         });
     }
     
-    if(uriseg == 'general_reports')
+    if(uriseg == 'reports_general')
     {
         var female    = $("#female").val();
         var male      = $("#male").val();
@@ -455,7 +455,7 @@
        	}
     }
     
-    if(uriseg == 'new_student')
+    if(uriseg == 'admission_new_student')
     {
         $(document).ready(function(){         
             var query;          

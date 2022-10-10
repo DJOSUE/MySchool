@@ -110,6 +110,12 @@ class Payment extends School
             $data['creation_timestamp'] = $this->crud->getDateFormat();
             $data['year']               = $this->runningYear;
             $this->db->insert('invoice', $data);
+
+            $table      = 'invoice';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $data);
+
             $invoice_id = $this->db->insert_id();
             $data2['invoice_id']        = $invoice_id;
             $data2['student_id']        = $id;
@@ -122,6 +128,11 @@ class Payment extends School
             $data2['month']             = date('M');
             $data2['year']              = $this->runningYear;
             $this->db->insert('payment' , $data2);
+
+            $table      = 'payment';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $data2);
         }
     }
     
@@ -137,6 +148,12 @@ class Payment extends School
         $data['creation_timestamp'] = $this->crud->getDateFormat();
         $data['year']               = $this->runningYear;
         $this->db->insert('invoice', $data);
+
+        $table      = 'invoice';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
         $invoice_id = $this->db->insert_id();
         $data2['invoice_id']        =   $invoice_id;
         $data2['student_id']        =   $this->input->post('student_id');
@@ -150,6 +167,11 @@ class Payment extends School
         $data2['year']              =  $this->runningYear;
         $data2['semester_id']       =  $this->runningSemester;
         $this->db->insert('payment' , $data2);
+
+        $table      = 'payment';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data2);
 
         $student_name     = $this->crud->get_name('student', $this->input->post('student_id'));
         $student_email    = $this->db->get_where('student', array('student_id' => $this->input->post('student_id')))->row()->email;
@@ -275,11 +297,14 @@ class Payment extends School
 
     public function paypalSuccess()
     {
+        $ipn_response = '';
+        
         foreach ($_POST as $key => $value) 
         {
             $value = urlencode(stripslashes($value));
             $ipn_response .= "\n$key=$value";
         }
+
         $data['payment_details']   = $ipn_response;
         $data['payment_timestamp'] = strtotime(date("m/d/Y"));
         $data['payment_method']    = 'paypal';
@@ -297,6 +322,11 @@ class Payment extends School
         $data2['student_id']   =   $this->db->get_where('invoice' , array('invoice_id' => $data2['invoice_id']))->row()->student_id;
         $data2['amount']       =   $this->db->get_where('invoice' , array('invoice_id' => $data2['invoice_id']))->row()->amount;
         $this->db->insert('payment' , $data2);
+
+        $table      = 'payment';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data2);
     }
     
     

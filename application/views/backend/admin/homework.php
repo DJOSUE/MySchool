@@ -57,8 +57,7 @@
                     </li>
                     <?php if($useDailyMarks): ?>
                     <li class="navs-item">
-                        <a class="navs-links"
-                            href="<?php echo base_url();?>admin/daily_marks/<?php echo $data;?>/"><i
+                        <a class="navs-links" href="<?php echo base_url();?>admin/daily_marks/<?php echo $data;?>/"><i
                                 class="os-icon picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i><span><?php echo getPhrase('marks');?></span></a>
                     </li>
                     <li class="navs-item">
@@ -68,11 +67,10 @@
                     </li>
                     <?php else: ?>
                     <li class="navs-item">
-                        <a class="navs-links"
-                            href="<?php echo base_url();?>admin/upload_marks/<?php echo $data;?>/"><i
+                        <a class="navs-links" href="<?php echo base_url();?>admin/upload_marks/<?php echo $data;?>/"><i
                                 class="os-icon picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i><span><?php echo getPhrase('marks');?></span></a>
                     </li>
-                    <?php endif; ?> 
+                    <?php endif; ?>
                     <li class="navs-item">
                         <a class="navs-links" href="<?php echo base_url();?>admin/meet/<?php echo $data;?>/"><i
                                 class="os-icon picons-thin-icon-thin-0591_presentation_video_play_beamer"></i><span><?php echo getPhrase('live');?></span></a>
@@ -95,12 +93,16 @@
                                 <div class="element-box-tp">
                                     <h6 class="element-header">
                                         <?php echo getPhrase('homework');?>
-                                        <div style="margin-top:auto;float:right;"><a href="javascript:void(0);"
-                                                data-target="#new_homework" data-toggle="modal"
-                                                class="text-white btn btn-control btn-grey-lighter btn-success"><i
-                                                    class="picons-thin-icon-thin-0001_compose_write_pencil_new"></i>
+                                        <?php if(has_permission('homework_management')):?>
+                                        <div style="margin-top:auto;float:right;">
+                                            <a href="javascript:void(0);" data-target="#new_homework"
+                                                data-toggle="modal"
+                                                class="text-white btn btn-control btn-grey-lighter btn-success">
+                                                <i class="picons-thin-icon-thin-0001_compose_write_pencil_new"></i>
                                                 <div class="ripple-container"></div>
-                                            </a></div>
+                                            </a>
+                                        </div>
+                                        <?php endif;?>
                                     </h6>
                                     <div class="table-responsive">
                                         <table class="table table-padded">
@@ -146,15 +148,18 @@
                                                         <a class="grey"
                                                             href="<?php echo base_url();?>admin/homeworkroom/<?php echo $hm['homework_code'];?>"
                                                             data-toggle="tooltip" data-placement="top"
-                                                            data-original-title="<?php echo getPhrase('view_homework');?>"><i
-                                                                class="picons-thin-icon-thin-0043_eye_visibility_show_visible"></i></a>
-                                                        <a class="grey" data-toggle="tooltip"
-                                                            data-placement="top"
+                                                            data-original-title="<?php echo getPhrase('view_homework');?>">
+                                                            <i class="picons-thin-icon-thin-0043_eye_visibility_show_visible"></i>
+                                                        </a>
+                                                        <?php if(has_permission('homework_management')):?>
+                                                        <a class="grey" data-toggle="tooltip" data-placement="top"
                                                             data-original-title="<?php echo getPhrase('delete');?>"
                                                             class="danger"
                                                             href="<?php echo base_url(); ?>admin/homework/delete/<?php echo $hm['homework_code']; ?>/<?php echo $data;?>/"
-                                                            onClick="return confirm('<?php echo getPhrase('confirm_delete');?>')"><i
-                                                                class="picons-thin-icon-thin-0056_bin_trash_recycle_delete_garbage_empty"></i></a>
+                                                            onClick="return confirm('<?php echo getPhrase('confirm_delete');?>')">
+                                                            <i class="picons-thin-icon-thin-0056_bin_trash_recycle_delete_garbage_empty"></i>
+                                                        </a>
+                                                        <?php endif; ?>
                                                     </td>
                                                 </tr>
                                                 <?php endforeach;?>

@@ -282,6 +282,12 @@
                 $notify['status'] = 1;
                 $this->db->where('id', html_escape($_GET['id']));
                 $this->db->update('notification', $notify);
+
+                $table      = 'notification';
+                $action     = 'update';
+                $update_id  = html_escape($_GET['id']);
+                $this->crud->save_log($table, $action, $update_id, $notify);
+
             }
             $page_data['page_name']  = 'calendar';
             $page_data['page_title'] = getPhrase('calendar');
@@ -423,6 +429,11 @@
                 $notify['status'] = 1;
                 $this->db->where('id', html_escape($_GET['id']));
                 $this->db->update('notification', $notify);
+
+                $table      = 'notification';
+                $action     = 'update';
+                $update_id  = html_escape($_GET['id']);
+                $this->crud->save_log($table, $action, $update_id, $notify);
             }
 
             if($this->useDailyMarks){
@@ -554,6 +565,11 @@
                 $notify['status'] = 1;
                 $this->db->where('id', html_escape($_GET['id']));
                 $this->db->update('notification', $notify);
+                
+                $table      = 'notification';
+                $action     = 'update';
+                $update_id  = html_escape($_GET['id']);
+                $this->crud->save_log($table, $action, $update_id, $notify);
             }
             $page_data['page_name']  = 'panel';
             $page_data['page_title'] = getPhrase('dashboard');
@@ -655,6 +671,11 @@
                 $notify['status'] = 1;
                 $this->db->where('id', html_escape($_GET['id']));
                 $this->db->update('notification', $notify);
+
+                $table      = 'notification';
+                $action     = 'update';
+                $update_id  = html_escape($_GET['id']);
+                $this->crud->save_log($table, $action, $update_id, $notify);
             }
             $info = base64_decode($student_id);
             $ex = explode('-', $info);
@@ -762,6 +783,11 @@
                 $notify['status'] = 1;
                 $this->db->where('id', html_escape($_GET['id']));
                 $this->db->update('notification', $notify);
+
+                $table      = 'notification';
+                $action     = 'update';
+                $update_id  = html_escape($_GET['id']);
+                $this->crud->save_log($table, $action, $update_id, $notify);
             }
             if ($param1 == 'send_new') 
             {
@@ -797,6 +823,11 @@
                 $notify['status'] = 1;
                 $this->db->where('id', html_escape($_GET['id']));
                 $this->db->update('notification', $notify);
+
+                $table      = 'notification';
+                $action     = 'update';
+                $update_id  = html_escape($_GET['id']);
+                $this->crud->save_log($table, $action, $update_id, $notify);
             }
             $data['page_name']              = 'study_material';
             $data['data']                   = $task;
@@ -814,6 +845,11 @@
                 $notify['status'] = 1;
                 $this->db->where('id', html_escape($_GET['id']));
                 $this->db->update('notification', $notify);
+
+                $table      = 'notification';
+                $action     = 'update';
+                $update_id  = html_escape($_GET['id']);
+                $this->crud->save_log($table, $action, $update_id, $notify);
             }
             if ($param1 == "request")
             {
@@ -847,6 +883,11 @@
                 $notify['status'] = 1;
                 $this->db->where('id', html_escape($_GET['id']));
                 $this->db->update('notification', $notify);
+
+                $table      = 'notification';
+                $action     = 'update';
+                $update_id  = html_escape($_GET['id']);
+                $this->crud->save_log($table, $action, $update_id, $notify);
             }
             $page_data['homework_code'] = $param1;
             $page_data['page_name']   = 'homework_room'; 
@@ -972,6 +1013,11 @@
                 $notify['status'] = 1;
                 $this->db->where('id', html_escape($_GET['id']));
                 $this->db->update('notification', $notify);
+
+                $table      = 'notification';
+                $action     = 'update';
+                $update_id  = html_escape($_GET['id']);
+                $this->crud->save_log($table, $action, $update_id, $notify);
             }
             if ($param1 == "create")
             {

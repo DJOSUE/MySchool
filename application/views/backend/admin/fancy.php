@@ -287,7 +287,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo base_url();?>admin/help/">
+                                    <a href="<?php echo base_url();?>admin/helpdesk_tutorial/">
                                         <i class="picons-thin-icon-thin-0308_support_help"></i>
                                         <span><?php echo getPhrase('help');?></span>
                                     </a>
@@ -447,7 +447,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="<?php echo base_url();?>admin/help/">
+                        <a href="<?php echo base_url();?>admin/helpdesk_tutorial/">
                             <i class="picons-thin-icon-thin-0308_support_help"></i>
                             <span><?php echo getPhrase('help');?></span>
                         </a>

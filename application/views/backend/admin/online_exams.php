@@ -25,7 +25,8 @@
                         style="width:60px;">
                 </div>
                 <h3 class="cta-header"><?php echo $row['name'];?> -
-                    <small><?php echo getPhrase('online_exams');?></small></h3>
+                    <small><?php echo getPhrase('online_exams');?></small>
+                </h3>
                 <small
                     style="font-size:0.90rem; color:#fff;"><?php echo $this->db->get_where('class', array('class_id' => $class_id))->row()->name;?>
                     "<?php echo $this->db->get_where('section', array('section_id' => $section_id))->row()->name;?>"</small>
@@ -59,8 +60,7 @@
                     </li>
                     <?php if($useDailyMarks): ?>
                     <li class="navs-item">
-                        <a class="navs-links"
-                            href="<?php echo base_url();?>admin/daily_marks/<?php echo $data;?>/"><i
+                        <a class="navs-links" href="<?php echo base_url();?>admin/daily_marks/<?php echo $data;?>/"><i
                                 class="os-icon picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i><span><?php echo getPhrase('marks');?></span></a>
                     </li>
                     <li class="navs-item">
@@ -70,11 +70,10 @@
                     </li>
                     <?php else: ?>
                     <li class="navs-item">
-                        <a class="navs-links"
-                            href="<?php echo base_url();?>admin/upload_marks/<?php echo $data;?>/"><i
+                        <a class="navs-links" href="<?php echo base_url();?>admin/upload_marks/<?php echo $data;?>/"><i
                                 class="os-icon picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i><span><?php echo getPhrase('marks');?></span></a>
                     </li>
-                    <?php endif; ?> 
+                    <?php endif; ?>
                     <li class="navs-item">
                         <a class="navs-links" href="<?php echo base_url();?>admin/meet/<?php echo $data;?>/"><i
                                 class="os-icon picons-thin-icon-thin-0591_presentation_video_play_beamer"></i><span><?php echo getPhrase('live');?></span></a>
@@ -97,12 +96,15 @@
                                 <div class="element-box-tp">
                                     <h6 class="element-header">
                                         <?php echo getPhrase('online_exams');?>
+                                        <?php if(has_permission('online_exams_management')):?>
                                         <div style="margin-top:auto;float:right;"><a
                                                 href="<?php echo base_url();?>admin/new_exam/<?php echo $data;?>/"
                                                 class="text-white btn btn-control btn-grey-lighter btn-success"><i
                                                     class="picons-thin-icon-thin-0001_compose_write_pencil_new"></i>
                                                 <div class="ripple-container"></div>
-                                            </a></div>
+                                            </a>
+                                        </div>
+                                        <?php endif;?>
                                     </h6>
                                     <div class="table-responsive">
                                         <table class="table table-padded">
@@ -130,23 +132,31 @@
                                                     <td class="bolder">
                                                         <a href="<?php echo base_url();?>admin/examroom/<?php echo $row['online_exam_id'];?>"
                                                             class="btn btn-success btn-sm">
-                                                            <?php echo getPhrase('details');?></a><br>
+                                                            <?php echo getPhrase('details');?>
+                                                        </a>
+                                                        <br>
+                                                        <?php if(has_permission('online_exams_management')):?>
                                                         <?php if ($row['status'] == 'pending'): ?>
                                                         <a href="<?php echo base_url();?>admin/manage_online_exam_status/<?php echo $row['online_exam_id'];?>/published/<?php echo $data;?>/"
                                                             onclick="return confirm('<?php echo getPhrase('confirm_publish');?>')"
-                                                            class="btn btn-info btn-sm"><?php echo getPhrase('publish_exam');?></a><br>
+                                                            class="btn btn-info btn-sm"><?php echo getPhrase('publish_exam');?>
+                                                        </a><br>
                                                         <?php elseif ($row['status'] == 'published'): ?>
                                                         <a href="<?php echo base_url();?>admin/manage_online_exam_status/<?php echo $row['online_exam_id'];?>/expired/<?php echo $data;?>/"
                                                             onclick="return confirm('<?php echo getPhrase('confirm_expired');?>')"
                                                             class="btn btn-primary btn-sm">
-                                                            <?php echo getPhrase('mark_as_expired');?></a><br>
+                                                            <?php echo getPhrase('mark_as_expired');?>
+                                                        </a><br>
                                                         <?php elseif($row['status'] == 'expired'): ?>
                                                         <a href="javascript:void(0);" class="btn btn-warning btn-sm">
-                                                            <?php echo getPhrase('expired');?></a><br>
+                                                            <?php echo getPhrase('expired');?>
+                                                        </a><br>
                                                         <?php endif; ?>
                                                         <a class="btn btn-danger btn-sm"
                                                             onClick="return confirm('<?php echo getPhrase('confirm_delete');?>')"
-                                                            href="<?php echo base_url();?>admin/online_exams/delete/<?php echo $row['online_exam_id'];?>/<?php echo $data;?>/"><?php echo getPhrase('delete');?></a>
+                                                            href="<?php echo base_url();?>admin/online_exams/delete/<?php echo $row['online_exam_id'];?>/<?php echo $data;?>/"><?php echo getPhrase('delete');?>
+                                                        </a>
+                                                        <?php endif; ?>
                                                     </td>
                                                 </tr>
                                                 <?php endforeach;?>

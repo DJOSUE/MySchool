@@ -7,14 +7,12 @@
     $phone              =   $this->crud->getInfo('phone');
 
 	$class_name		 	= 	$this->db->get_where('class' , array('class_id' => $class_id))->row()->name;
-    $section_id         =   $this->db->get_where('enroll' , array('student_id' => $student_id))->row()->section_id;
-	
+    $section_id         =   $this->db->get_where('enroll' , array('student_id' => $student_id, 'year' => $running_year, 'semester_id' => $running_semester))->row()->section_id;
 
-	
 ?>
     <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500" rel="stylesheet" type="text/css">
-    <link href="<?php echo base_url();?>public/style/cms/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
-    <link href="<?php echo base_url();?>public/style/cms/css/main.css?version=3.3" rel="stylesheet">
+    <link href="<?= base_url();?>public/style/cms/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="<?= base_url();?>public/style/cms/css/main.css?version=3.3" rel="stylesheet">
     <style>
         * {
             -webkit-print-color-adjust: exact !important;   /* Chrome, Safari */
@@ -30,50 +28,32 @@
                             <div class="infos">
                                 <div class="info-1">
                                     <div class="rcard-logo-w">
-                                        <img alt="" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('logo');?>">
+                                        <img alt="" src="<?= base_url();?>public/uploads/<?= $this->crud->getInfo('logo');?>">
                                     </div>
-                                    <div class="company-name"><?php echo $exam_name;?></div>
-                                    <div class="company-address"><?php echo getPhrase('marks');?></div>
+                                    <div class="company-name"><?= $exam_name;?></div>
+                                    <div class="company-address"><?= getPhrase('marks');?></div>
                                 </div>
                                 <div class="info-2">
                                     <div class="rcard-profile">
-                                        <img alt="" src="<?php echo $this->crud->get_image_url('student', $student_id);?>">
+                                        <img alt="" src="<?= $this->crud->get_image_url('student', $student_id);?>">
                                     </div>
-                                    <div class="company-name"><?php echo $this->crud->get_name('student' , $student_id);?></div>
+                                    <div class="company-name"><?= $this->crud->get_name('student' , $student_id);?></div>
                                     <div class="company-address">
-                                        <?php echo getPhrase('roll');?>: <?php echo $this->db->get_where('enroll', array('student_id' => $student_id))->row()->roll;?><br/><?php echo $this->db->get_where('class', array('class_id' => $class_id))->row()->name;?><br/><?php echo $this->db->get_where('section' , array('section_id' => $section_id))->row()->name;?>
+                                        <?= $running_year .' - '. $this->db->get_where('semesters', array('semester_id' => $running_semester))->row()->name;?><br/>
+                                        <?= $this->db->get_where('class', array('class_id' => $class_id))->row()->name;?><br/>
+                                        <?= $this->db->get_where('section' , array('section_id' => $section_id))->row()->name;?>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="rcard-heading">
-                                
-                            </div>
-                            <div class="row" style="padding-left: 20px;">
-                                <?php                              
-                                $attendance = $this->db->query("SELECT ROUND((SUM(labuno)/COUNT(IF(labuno = '-' or labuno is null,null,'1'))), $roundPrecision) AS 'labuno'
-                                                                FROM mark_daily 
-                                                                WHERE student_id = '$student_id'
-                                                                AND class_id = '$class_id'
-                                                                AND section_id = '$section_id'
-                                                                AND year = '$running_year'
-                                                                AND semester_id = '$running_semester'
-                                                            ")->first_row();
-                                                                                        
-                                echo getPhrase('attendance').': ';
-                                if($attendance->labuno != '')
-                                    echo $attendance->labuno;
-                                else 
-                                    echo '0';
-                                ?>
                             </div>
                             <br/>
                             <div class="rcard-table table-responsive">
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th class="text-center"><?php echo getPhrase('subject');?></th>
-                                            <th class="text-center"><?php echo getPhrase('teacher');?></th>
-                                            <th class="text-center"><?php echo getPhrase('mark');?></th>
+                                            <th class="text-center"><?= getPhrase('subject');?></th>
+                                            <th class="text-center"><?= getPhrase('teacher');?></th>
+                                            <th class="text-center"><?= getPhrase('attendance');?></th>
+                                            <th class="text-center"><?= getPhrase('mark');?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -129,7 +109,7 @@
                                             if($labonueve   == '' ) { $labonueve    = '-'; }  
                                             if($labodiez    == '' ) { $labodiez     = '-'; }
 
-                                            if(is_numeric($average->labuno)     && $average->labuno != '' ) { $count++; } 
+                                            // if(is_numeric($average->labuno)     && $average->labuno != '' ) { $count++; } 
                                             if(is_numeric($average->labdos)     && $average->labdos != '' ) { $count++; }  
                                             if(is_numeric($average->labtres)    && $average->labtres != '' ) { $count++; }  
                                             if(is_numeric($average->labcuatro)  && $average->labcuatro != '' ) { $count++; }  
@@ -140,7 +120,7 @@
                                             if(is_numeric($average->labnueve)   && $average->labnueve != '' ) { $count++; }  
                                             if(is_numeric($average->labdiez)    && $average->labdiez != '' ) { $count++; }                                                            
                                             
-                                            $labototal      = (float)$labouno + (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
+                                            $labototal      = (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
                             
                                             $mark = $count > 0 ? round(($labototal/$count), (int)$roundPrecision) : '-';
 
@@ -148,36 +128,79 @@
                                                 $mark_total += $mark;
                                                 $count_total++; 
                                             }
+
+                                            if($labouno != '-'){
+                                                $labouno_total += $labouno;
+                                            }
                                     ?>
                                         <tr>
-                                            <td><?php echo $row3['subject_name'];?></td>
-                                            <td><?php echo $row3['teacher_name'];?></td>
-                                            <td class="text-center"><?php echo $mark;?></td>                                            
+                                            <td><?= $row3['subject_name'];?></td>
+                                            <td><?= $row3['teacher_name'];?></td>
+                                            <td class="text-center"><?= $labouno.'%';?></td>
+                                            <td class="text-center"> <?= $this->crud->get_grade($mark);?></td>                                            
                                         </tr>
-                                    <?php endforeach; ?>
+                                    <?php endforeach; 
+                                        $final_mark = ($count_total > 0 ? round(($mark_total/$count_total), (int)$roundPrecision) : '-');
+                                        $final_attendance = ($count_total > 0 ? round(($labouno_total/$count_total), (int)$roundPrecision) : '-');
+
+                                        //$final_gpa = 
+                                    ?>
                                         <tr>
-                                            <td></td>
-                                            <td><?= getPhrase('total');?></td>
-                                            <?php                                                
-                                                $final_mark = ($count_total > 0 ? round(($mark_total/$count_total), (int)$roundPrecision) : '-');
-                                            ?>
-                                            <td class="text-center"><?= $final_mark;?></td>
+                                            <td colspan="2" class="text-center">
+                                                <span><?= $gpa = getPhrase('grade_point_average').' : '.$this->crud->get_gpa($final_mark);?></span>
+                                            </td>
+                                            <td colspan="2" class="text-center">
+                                                <span><?= $gpa = getPhrase('average_attendance').' : '.$final_attendance.'%';?></span>
+                                            </td>
                                         </tr>                                        
                                     </tbody>
                                 </table>
                             </div>
+                            <br/>
+                            <div>
+                                <p>
+                                    <b><?= getPhrase('grading_system')?>:</b> American One English Schools uses a grading system based on a 4.0 scale. The following letter grade/point correlation will be used to calculate the student’s overall GPA.
+                                </p>
+                            </div>
+                            <div class="rcard-table table-responsive" style="max-width: 200px;">                                
+                                <table class="table">
+                                    <thead>
+                                        <?php $grading_system = $this->db->get('v_grading_system')->result_array();
+                                            foreach($grading_system as $item):
+                                        ?>
+                                        <tr>
+                                            <td>
+                                                <?= $item['grade_point'];?>
+                                            </td>
+                                            <td>
+                                                <?= $item['name'];?>
+                                            </td>
+                                            <td>
+                                                <?= $item['gpa_point'];?>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach;?>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div>
+                                <p>
+                                    A student must receive at least a B- in each course and an overall GPA of 2.6 to move up to the next level.
+                                    <b>Note:</b> that Attendance is not included in criteria for progression to the next level.
+                                </p>
+                            </div>
                             <div class="rcard-footer">
                                 <div class="rcard-logo">
-                                    <img alt="" src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('logo');?>"><span><?php echo $system_name;?></span>
+                                    <img alt="" src="<?= base_url();?>public/uploads/<?= $this->crud->getInfo('logo');?>"><span><?= $system_name;?></span>
                                 </div>
                                 <div class="rcard-info">
-                                    <span><?php echo $system_email;?></span><span><?php echo $phone;?></span>
+                                    <span><?= $system_email;?></span><span><?= $phone;?></span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-info btn-rounded" onclick="printDiv('print_area')"><?php echo getPhrase('print');?></button>
+                <button class="btn btn-info btn-rounded" onclick="printDiv('print_area')"><?= getPhrase('print');?></button>
             </div>
         </div>
     </div>

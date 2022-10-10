@@ -13,7 +13,7 @@ if (!function_exists('check_permission')) {
     }
 }
 
-if ( ! function_exists('has_permission'))
+if (!function_exists('has_permission'))
 {
     function has_permission($permission_for, $role_id = ''){
         $CI	=&	get_instance();
@@ -43,7 +43,7 @@ if ( ! function_exists('has_permission'))
     } 
 }
 
-if ( ! function_exists('is_super_admin'))
+if (!function_exists('is_super_admin'))
 {
     function is_super_admin($admin_id = ''){
         $CI	=&	get_instance();
@@ -67,7 +67,7 @@ if ( ! function_exists('is_super_admin'))
 }
 
 
-if ( ! function_exists('academic_option_visible'))
+if (!function_exists('academic_option_visible'))
 {
     function option_visible($option){
         $CI	=&	get_instance();
@@ -84,7 +84,7 @@ if ( ! function_exists('academic_option_visible'))
     } 
 }
 
-if ( ! function_exists('menu_option_visible'))
+if (!function_exists('menu_option_visible'))
 {
     function menu_option_visible($option){
         $CI	=&	get_instance();
@@ -101,7 +101,7 @@ if ( ! function_exists('menu_option_visible'))
     } 
 }
 
-if ( ! function_exists('compress'))
+if (!function_exists('compress'))
 {
     function compress($source, $destination, $quality){
         $info = getimagesize($source);
@@ -119,4 +119,88 @@ if ( ! function_exists('compress'))
     
         return $destination;
     } 
+}
+
+if (!function_exists('is_student'))
+{
+    function is_student($applicant_id)
+    {
+        $CI	=&	get_instance();
+		$CI->load->database();
+
+        $query = $CI->db->get_where('applicant', array('applicant_id' => $applicant_id))->row();
+        
+        // 3 = student
+        if($query->status == 3){
+            return true;
+        }
+        else{
+            return false;
+        }
+    } 
+}
+
+if (!function_exists('is_international'))
+{
+    function is_international($applicant_id)
+    {
+        $CI	=&	get_instance();
+		$CI->load->database();
+
+        $query = $CI->db->get_where('applicant', array('applicant_id' => $applicant_id))->row();
+        
+        // 3 = student
+        if($query->type_id == 1){
+            return true;
+        }
+        else{
+            return false;
+        }
+    } 
+}
+
+if (!function_exists('generate_token'))
+{
+    function generate_token()
+    {
+        $url = ADMISSION_PLATFORM_URL.'login?email=victor.ochoa@americanone-esl.com&password=victor.ochoa';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response_json = curl_exec($ch);
+        curl_close($ch);
+        $response=json_decode($response_json, true);
+
+        return $response['token'];
+    } 
+}
+
+if (!function_exists('get_table_user'))
+{
+    function get_table_user($role_id)
+    {
+        $CI	=&	get_instance();
+		$CI->load->database();
+
+        $query = $CI->db->get_where('roles', array('role_id' => $role_id))->row();
+        return $query->table;
+    } 
+}
+
+if(!function_exists('calculate_age'))
+{
+    function calculate_age($birthDate)
+    {
+        $birthDate = str_replace("-", "-", $birthDate);
+
+		//explode the date to get month, day and year
+		$birthDate = explode("/", $birthDate);
+                
+		//get age from date or birthdate
+		$age = (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md")
+		? ((date("Y") - $birthDate[2]) - 1)
+		: (date("Y") - $birthDate[2]));
+        
+		return $age;
+    }
 }

@@ -6,8 +6,10 @@
 
     $student_info = $this->db->get_where('student' , array('student_id' => $student_id))->result_array(); 
     foreach($student_info as $row):
-    $class_id = $this->db->get_where('enroll', array('student_id' => $row['student_id'], 'year' => $running_year))->row()->class_id;
-    $section_id = $this->db->get_where('enroll', array('student_id' => $row['student_id'], 'year' => $running_year))->row()->section_id;
+        $class_id = $this->db->get_where('enroll', array('student_id' => $student_id, 'year' => $running_year, 'semester_id' => $running_semester))->row()->class_id;
+        $section_id = $this->db->get_where('enroll', array('student_id' => $student_id, 'year' => $running_year, 'semester_id' => $running_semester))->row()->section_id;
+        $status_info = $this->studentModel->get_status_info($row['student_session']);
+        $program_info = $this->studentModel->get_program_info($row['program_id']);
 ?>
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -24,59 +26,16 @@
                         <div id="newsfeed-items-grid">
                             <div class="ui-block paddingtel">
                                 <div class="user-profile">
-                                    <div class="up-head-w"
-                                        style="background-image:url(<?php echo base_url();?>public/uploads/bglogin.jpg)">
-                                        <div class="up-main-info">
-                                            <div class="user-avatar-w">
-                                                <div class="user-avatar">
-                                                    <img alt=""
-                                                        src="<?php echo $this->crud->get_image_url('student', $row['student_id']);?>"
-                                                        style="background-color:#fff;">
-                                                </div>
-                                            </div>
-                                            <h3 class="text-white"><?php echo $row['first_name'];?>
-                                                <?php echo $row['last_name'];?></h3>
-                                            <h5 class="up-sub-header">@<?php echo $row['username'];?></h5>
-                                        </div>
-                                        <svg class="decor" width="842px" height="219px" viewBox="0 0 842 219"
-                                            preserveAspectRatio="xMaxYMax meet" version="1.1"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            xmlns:xlink="http://www.w3.org/1999/xlink">
-                                            <g transform="translate(-381.000000, -362.000000)" fill="#FFFFFF">
-                                                <path class="decor-path"
-                                                    d="M1223,362 L1223,581 L381,581 C868.912802,575.666667 1149.57947,502.666667 1223,362 Z">
-                                                </path>
-                                            </g>
-                                        </svg>
-                                    </div>
-                                    <div class="up-controls">
-                                        <div class="row">
-                                            <div class="col-lg-6">
-                                                <div class="value-pair">
-                                                    <div><?php echo getPhrase('account_type');?>:</div>
-                                                    <div class="value badge badge-pill badge-primary">
-                                                        <?php echo getPhrase('student');?></div>
-                                                </div>
-                                                <div class="value-pair">
-                                                    <div><?php echo getPhrase('member_since');?>:</div>
-                                                    <div class="value"><?php echo $row['since'];?>.</div>
-                                                </div>
-                                                <div class="value-pair">
-                                                    <div><?php echo getPhrase('roll');?>:</div>
-                                                    <div class="value">
-                                                        <?php echo $this->db->get_where('enroll', array('student_id' => $row['student_id']))->row()->roll;?>.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <?php include 'student_area_header.php';?>
                                 </div>
                             </div>
                             <div class="row">
                                 <?php 
                                     $student_info = $this->crud->get_student_info($student_id);
-                                    $exams         = $this->crud->get_exams();
-                                    foreach ($student_info as $row1):
+                                    $student_enrollment = $this->crud->get_current_enrollment($student_id);
+                                    $exams         = $this->crud->get_exam_by_class($class_id);
+
+                                    if(count($student_enrollment) > 0):                                    
                                 ?>
                                 <div class="col-sm-12">
                                     <div class="element-box lined-primary">
@@ -89,6 +48,7 @@
                                                     <tr>
                                                         <th><?php echo getPhrase('subject');?></th>
                                                         <th><?php echo getPhrase('teacher');?></th>
+                                                        <th><?php echo getPhrase('attendance');?></th>
                                                         <th><?php echo getPhrase('mark');?></th>
                                                         <th><?php echo getPhrase('grade');?></th>
                                                         <th><?php echo getPhrase('gpa');?></th>
@@ -97,6 +57,7 @@
                                                 <tbody>
                                                 <?php 
                                                         $enrollment_average = $this->db->get_where('v_enrollment' , array('student_id' => $student_id, 'class_id' => $class_id, 'section_id' => $section_id, 'year' => $running_year, 'semester_id' => $running_semester))->result_array();
+                                                        
                                                         foreach ($enrollment_average as $row_average): 
                                                             $subject_id = $row_average['subject_id'];
                                                             $average = $this->db->query("SELECT ROUND((SUM(labuno)/COUNT(IF(labuno = '-' or labuno is null,null,'1'))), $roundPrecision) AS 'labuno',
@@ -145,7 +106,7 @@
                                                             if($labonueve   == '' ) { $labonueve    = '-'; }  
                                                             if($labodiez    == '' ) { $labodiez     = '-'; }
 
-                                                            if(is_numeric($average->labuno)     && $average->labuno != '' ) { $count++; } 
+                                                            // if(is_numeric($average->labuno)     && $average->labuno != '' ) { $count++; } 
                                                             if(is_numeric($average->labdos)     && $average->labdos != '' ) { $count++; }  
                                                             if(is_numeric($average->labtres)    && $average->labtres != '' ) { $count++; }  
                                                             if(is_numeric($average->labcuatro)  && $average->labcuatro != '' ) { $count++; }  
@@ -156,7 +117,7 @@
                                                             if(is_numeric($average->labnueve)   && $average->labnueve != '' ) { $count++; }  
                                                             if(is_numeric($average->labdiez)    && $average->labdiez != '' ) { $count++; }                                                            
                                                             
-                                                            $labototal      = (float)$labouno + (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
+                                                            $labototal      = (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
                                             
                                                             $mark = $count > 0 ? round(($labototal/$count), (int)$roundPrecision) : '-';
                                                     ?>
@@ -166,6 +127,16 @@
                                                         </td>
                                                         <td>
                                                             <?= $row_average['teacher_name'];?>
+                                                        </td>
+                                                        <td>
+                                                            <?php if(is_numeric($labouno) && ($labouno < $min || $labouno == 0)):?>
+                                                            <a class="btn btn-rounded btn-sm btn-danger"
+                                                                style="color:white"><?php if($labouno == 0) echo '0'; else echo $labouno;?></a>
+                                                            <?php endif;?>
+                                                            <?php if(is_numeric($labouno) && ($labouno >= $min)):?>
+                                                            <a class="btn btn-rounded btn-sm btn-info"
+                                                                style="color:white"><?php echo $labouno;?></a>
+                                                            <?php endif;?>
                                                         </td>
                                                         <td>
                                                             <?php if(is_numeric($mark) && ($mark < $min || $mark == 0)):?>
@@ -202,7 +173,7 @@
                                 <div class="col-sm-12">
                                     <div class="element-box lined-primary">
                                         <h5 class="form-header"><?php echo getPhrase('marks');?><br>
-                                            <small><?php echo $row2['name'];?></small>
+                                            <small><?php echo $row2['unit_name'];?></small>
                                         </h5>
                                         <div class="table-responsive">
                                             <table class="table table-lightborder">
@@ -210,6 +181,7 @@
                                                     <tr>
                                                         <th><?php echo getPhrase('subject');?></th>
                                                         <th><?php echo getPhrase('teacher');?></th>
+                                                        <th><?php echo getPhrase('attendance');?></th>
                                                         <th><?php echo getPhrase('mark');?></th>
                                                         <th><?php echo getPhrase('grade');?></th>
                                                         <th><?php echo getPhrase('gpa');?></th>
@@ -219,9 +191,12 @@
                                                 <tbody>
                                                     <?php 
                                                         $enrollment = $this->db->get_where('v_enrollment' , array('student_id' => $student_id, 'class_id' => $class_id, 'section_id' => $section_id, 'year' => $running_year, 'semester_id' => $running_semester))->result_array();
+
                                                         foreach ($enrollment as $row3): 
                                                             $subject_id = $row3['subject_id'];
                                                             $unit_id = $row2['unit_id'];
+
+
 
                                                             $average = $this->db->query("SELECT ROUND((SUM(labuno)/COUNT(IF(labuno = '-' or labuno is null,null,'1'))), $roundPrecision) AS 'labuno',
                                                                                                 ROUND((SUM(labdos)/COUNT(IF(labdos = '-' or labdos is null,null,'1'))), $roundPrecision) AS 'labdos',
@@ -270,7 +245,7 @@
                                                             if($labonueve   == '' ) { $labonueve    = '-'; }  
                                                             if($labodiez    == '' ) { $labodiez     = '-'; }
 
-                                                            if(is_numeric($average->labuno)     && $average->labuno != '' ) { $count++; } 
+                                                            // if(is_numeric($average->labuno)     && $average->labuno != '' ) { $count++; } 
                                                             if(is_numeric($average->labdos)     && $average->labdos != '' ) { $count++; }  
                                                             if(is_numeric($average->labtres)    && $average->labtres != '' ) { $count++; }  
                                                             if(is_numeric($average->labcuatro)  && $average->labcuatro != '' ) { $count++; }  
@@ -281,7 +256,7 @@
                                                             if(is_numeric($average->labnueve)   && $average->labnueve != '' ) { $count++; }  
                                                             if(is_numeric($average->labdiez)    && $average->labdiez != '' ) { $count++; }                                                            
                                                             
-                                                            $labototal      = (float)$labouno + (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
+                                                            $labototal      = (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
                                             
                                                             $mark = $count > 0 ? round(($labototal/$count), (int)$roundPrecision) : '-';
                                                     ?>
@@ -291,6 +266,16 @@
                                                         </td>
                                                         <td>
                                                             <?= $row3['teacher_name'];?>
+                                                        </td>
+                                                        <td>
+                                                            <?php if(is_numeric($labouno) && ($labouno < $min || $labouno == 0)):?>
+                                                            <a class="btn btn-rounded btn-sm btn-danger"
+                                                                style="color:white"><?php if($labouno == 0) echo '0'; else echo $labouno;?></a>
+                                                            <?php endif;?>
+                                                            <?php if(is_numeric($labouno) && ($labouno >= $min)):?>
+                                                            <a class="btn btn-rounded btn-sm btn-info"
+                                                                style="color:white"><?php echo $labouno;?></a>
+                                                            <?php endif;?>
                                                         </td>
                                                         <td>
                                                             <?php if(is_numeric($mark) && ($mark < $min || $mark == 0)):?>
@@ -317,130 +302,21 @@
                                                     <?php endforeach;?>
                                                 </tbody>
                                             </table>
-                                            <div class="form-buttons-w text-right">
+                                            <!-- <div class="form-buttons-w text-right">
                                                 <a target="_blank"
                                                     href="<?php echo base_url();?>admin/marks_print_view/<?php echo $student_id;?>/<?php echo $row2['unit_id'];?>"><button
                                                         class="btn btn-rounded btn-success" type="submit"><i
                                                             class="picons-thin-icon-thin-0333_printer"></i>
                                                         <?php echo getPhrase('print');?></button></a>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
-                                <?php endforeach; endforeach; ?>
+                                <?php endforeach; endif;?>
                             </div>
                         </div>
                     </main>
-                    <div class="col col-xl-3 order-xl-1 col-lg-12 order-lg-2 col-md-12 col-sm-12 col-12 ">
-                        <div class="eduappgt-sticky-sidebar">
-                            <div class="sidebar__inner">
-                                <div class="ui-block paddingtel">
-                                    <div class="ui-block-content">
-                                        <div class="widget w-about">
-                                            <a href="javascript:void(0);" class="logo"><img
-                                                    src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('logo');?>"></a>
-                                            <ul class="socials">
-                                                <li><a class="socialDash fb"
-                                                        href="<?php echo $this->crud->getInfo('facebook');?>"><i
-                                                            class="fab fa-facebook-square" aria-hidden="true"></i></a>
-                                                </li>
-                                                <li><a class="socialDash tw"
-                                                        href="<?php echo $this->crud->getInfo('twitter');?>"><i
-                                                            class="fab fa-twitter" aria-hidden="true"></i></a></li>
-                                                <li><a class="socialDash yt"
-                                                        href="<?php echo $this->crud->getInfo('youtube');?>"><i
-                                                            class="fab fa-youtube" aria-hidden="true"></i></a></li>
-                                                <li><a class="socialDash ig"
-                                                        href="<?php echo $this->crud->getInfo('instagram');?>"><i
-                                                            class="fab fa-instagram" aria-hidden="true"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="ui-block paddingtel">
-                                    <div class="ui-block-content">
-                                        <div class="help-support-block">
-                                            <h3 class="title"><?php echo getPhrase('quick_links');?></h3>
-                                            <ul class="help-support-list">
-                                                <li>
-                                                    <i class="picons-thin-icon-thin-0133_arrow_right_next"
-                                                        style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
-                                                    <a
-                                                        href="<?php echo base_url();?>admin/student_portal/<?php echo $student_id;?>/">
-                                                        <?php echo getPhrase('personal_information');?>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <i class="picons-thin-icon-thin-0133_arrow_right_next"
-                                                        style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
-                                                    <a
-                                                        href="<?php echo base_url();?>admin/student_update/<?php echo $student_id;?>/">
-                                                        <?php echo getPhrase('update_information');?>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <i class="picons-thin-icon-thin-0133_arrow_right_next"
-                                                        style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
-                                                    <a
-                                                        href="<?php echo base_url();?>admin/student_update_class/<?php echo $student_id;?>/">
-                                                        <?php echo getPhrase('update_class');?>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <i class="picons-thin-icon-thin-0133_arrow_right_next"
-                                                        style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
-                                                    <a
-                                                        href="<?php echo base_url();?>admin/student_enrollments/<?php echo $student_id;?>/">
-                                                        <?php echo getPhrase('student_enrollments');?>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <i class="picons-thin-icon-thin-0133_arrow_right_next"
-                                                        style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
-                                                    <a
-                                                        href="<?php echo base_url();?>admin/student_invoices/<?php echo $student_id;?>/">
-                                                        <?php echo getPhrase('payments_history');?>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <i class="picons-thin-icon-thin-0133_arrow_right_next"
-                                                        style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
-                                                    <a
-                                                        href="<?php echo base_url();?>admin/student_marks/<?php echo $student_id;?>/">
-                                                        <?php echo getPhrase('marks');?>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <i class="picons-thin-icon-thin-0133_arrow_right_next"
-                                                        style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
-                                                    <a
-                                                        href="<?php echo base_url();?>admin/student_past_marks/<?php echo $student_id;?>/">
-                                                        <?php echo getPhrase('old_marks');?>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <i class="picons-thin-icon-thin-0133_arrow_right_next"
-                                                        style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
-                                                    <a
-                                                        href="<?php echo base_url();?>admin/student_profile_attendance/<?php echo $student_id;?>/">
-                                                        <?php echo getPhrase('attendance');?>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <i class="picons-thin-icon-thin-0133_arrow_right_next"
-                                                        style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
-                                                    <a
-                                                        href="<?php echo base_url();?>admin/student_profile_report/<?php echo $student_id;?>/">
-                                                        <?php echo getPhrase('behavior');?>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <?php include 'student_area_menu.php';?>
                 </div>
             </div>
         </div>

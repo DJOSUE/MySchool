@@ -35,6 +35,12 @@
                         <?php if($this->session->userdata('success_recovery') == '1'):?>
                             <div class="alert alert-success text-center text-bold"><?php echo getPhrase('password_reset');?></div>
                         <?php endif;?>
+                        <?php if($this->session->userdata('success_new_password') == '1'):?>
+                            <div class="alert alert-success text-center text-bold"><?php echo getPhrase('success_set_new_password');?></div>
+                        <?php endif;?>
+                        <?php if($this->session->userdata('error_new_password') == '1'):?>
+                            <div class="alert alert-success text-center text-bold"><?php echo getPhrase('token_expired');?></div>
+                        <?php endif;?>
                         <?php if($this->session->userdata('failedf') == '1'):?>
                             <div class="alert alert-danger text-center text-bold"><?php echo getPhrase('social_error');?></div>
                         <?php endif;?>

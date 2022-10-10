@@ -117,7 +117,7 @@
                                             if($labodiez    == '' ) { $labodiez     = '-'; }
 
                                             // Calculate the average 
-                                            if(is_numeric($labouno)     && $labouno != '-' ) { $count++; } 
+                                            // if(is_numeric($labouno)     && $labouno != '-' ) { $count++; } 
                                             if(is_numeric($labodos)     && $labodos != '-' ) { $count++; }  
                                             if(is_numeric($labotres)    && $labotres != '-' ) { $count++; }  
                                             if(is_numeric($labocuatro)  && $labocuatro != '-' ) { $count++; }  
@@ -128,7 +128,7 @@
                                             if(is_numeric($labonueve)   && $labonueve != '-' ) { $count++; }  
                                             if(is_numeric($labodiez)    && $labodiez != '-') { $count++; }
 
-                                            $labototal      = (float)$labouno + (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
+                                            $labototal      = (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
                                             
                                             $mark = $count > 0 ? round(($labototal/$count), (int)$roundPrecision) : '-';
                             		    ?>

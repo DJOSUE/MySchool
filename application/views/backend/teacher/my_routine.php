@@ -50,7 +50,7 @@
                             	                foreach($routines as $row2):
                 	                        ?>
 						                    <td style="text-align:center"> 
-                                                <?php echo '<b>'.getPhrase('classroom').'</b>: '.$this->db->get_where('dormitory', array('dormitory_id' => $row2['classroom_id']))->row()->name.'.<br>'.$row2['time_start'].":".$row2['time_start_min']." " ."<b>".$row2['amstart']."</b>". ' - ' . $row2['time_end'].":".$row2['time_end_min']." "."<b>".$row2['amend']."</b>";?>
+                                                <?php echo '<b>'.getPhrase('classroom').'</b>: '.$this->db->get_where('class_room', array('classroom_id' => $row2['classroom_id']))->row()->name.'.<br>'.$row2['time_start'].":".$row2['time_start_min']." " ."<b>".$row2['amstart']."</b>". ' - ' . $row2['time_end'].":".$row2['time_end_min']." "."<b>".$row2['amend']."</b>";?>
                                                 <br><b><?php echo $this->crud->get_subject_name_by_id($row2['subject_id']);?></b><br><small><?php echo $this->crud->get_name('teacher', $this->session->userdata('login_user_id'));?></small>
                                             </td>
     					                    <?php endforeach;?>

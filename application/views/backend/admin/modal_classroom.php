@@ -1,5 +1,5 @@
 <?php   
-    $edit_data = $this->db->get_where('dormitory' , array('dormitory_id' => $param2) )->result_array();
+    $edit_data = $this->db->get_where('class_room' , array('classroom_id' => $param2) )->result_array();
     foreach($edit_data as $row):
 ?>    
     <div class="modal-body">
@@ -7,7 +7,7 @@
             <h6 class="title" style="color:white"><?php echo getPhrase('update');?></h6>
         </div>
         <div class="ui-block-content">
-            <?php echo form_open(base_url() . 'admin/classrooms/update/'.$row['dormitory_id'], array('enctype' => 'multipart/form-data')); ?>
+            <?php echo form_open(base_url() . 'admin/classrooms/update/'.$row['classroom_id'], array('enctype' => 'multipart/form-data')); ?>
                 <div class="row">
                     <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
                         <div class="form-group label-floating">

@@ -44,7 +44,7 @@
                                                 <div class="container-fluid grbg"><br>
                                                     <div class="col-sm- 12">
                                                         <div class="row">
-                                                            <?php if(has_permission('admins')) : ?>
+                                                            <?php if(has_permission('admin_users')) : ?>
                                                             <div
                                                                 class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                                                 <div class="ui-block" data-mh="friend-groups-item">
@@ -82,7 +82,49 @@
                                                                 </div>
                                                             </div>
                                                             <?php endif;?>
-                                                            <?php if(has_permission('teachers')) : ?>
+                                                            <?php if(has_permission('advisor_users')) : ?>
+                                                            <div
+                                                                class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                                                                <div class="ui-block" data-mh="friend-groups-item">
+                                                                    <div class="friend-item friend-groups">
+                                                                        <div class="friend-item-content">
+                                                                            <?php if($admin_type == 1):?>
+                                                                            <div class="more">
+                                                                                <i
+                                                                                    class="icon-feather-more-horizontal"></i>
+                                                                                <ul class="more-dropdown">
+                                                                                    <li><a data-toggle="modal"
+                                                                                            data-target="#access_admin"
+                                                                                            href="javascript:void(0);"><?php echo getPhrase('permissions');?></a>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+                                                                            <?php endif;?>
+                                                                            <div class="friend-avatar">
+                                                                                <div class="author-thumb">
+                                                                                    <img src="<?php echo base_url();?>public/uploads/icons/admins.svg"
+                                                                                        width="110px"
+                                                                                        style="background-color:#fff;padding:15px; border-radius:0px;">
+                                                                                </div>
+                                                                                <div class="author-content">
+                                                                                    <a href="<?php echo base_url().'admin/admins/'.base64_encode('3');?>"
+                                                                                        class="h5 author-name"><?php echo getPhrase('advisors');?></a>
+                                                                                    <div class="country">
+                                                                                        <?php 
+
+                                                                                        $this->db->where('owner_status', '3');
+                                                                                        $this->db->from('admin');
+                                                                                        echo $this->db->count_all_results();?>
+                                                                                        <?php echo getPhrase('advisors');?>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <?php endif;?>
+                                                            <?php if(has_permission('teacher_users')) : ?>
                                                             <div
                                                                 class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                                                 <div class="ui-block" data-mh="friend-groups-item">
@@ -108,7 +150,7 @@
                                                                 </div>
                                                             </div>
                                                             <?php endif;?>
-                                                            <?php if(has_permission('students')) : ?>
+                                                            <?php if(has_permission('student_users')) : ?>
                                                             <div
                                                                 class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                                                 <div class="ui-block" data-mh="friend-groups-item">
@@ -134,7 +176,7 @@
                                                                 </div>
                                                             </div>
                                                             <?php endif;?>
-                                                            <?php if(has_permission('parents')):?>
+                                                            <?php if(has_permission('parent_users')):?>
                                                             <div
                                                                 class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                                                 <div class="ui-block" data-mh="friend-groups-item">
@@ -160,7 +202,7 @@
                                                                 </div>
                                                             </div>
                                                             <?php endif;?>
-                                                            <?php if(has_permission('accountants')) : ?>
+                                                            <?php if(has_permission('accountant_users')) : ?>
                                                             <div
                                                                 class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                                                 <div class="ui-block" data-mh="friend-groups-item">
@@ -186,7 +228,7 @@
                                                                 </div>
                                                             </div>
                                                             <?php endif;?>
-                                                            <?php if(has_permission('librarians')) : ?>
+                                                            <?php if(has_permission('librarian_users')) : ?>
                                                             <div
                                                                 class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                                                 <div class="ui-block" data-mh="friend-groups-item">
@@ -269,6 +311,24 @@
             </div>
             <div class="modal-body">
                 <div class="ui-block-content">
+                    <div class="row">
+                        <div class="input-group">
+                            <div class="select">
+                                <select name="role_id" required="" style="width: 150px;">
+                                    <?php
+                                $roles = $this->db->get('roles')->result_array();
+                                foreach($roles as $role):
+                                ?>
+                                    <option value="<?= $role['status_id']?>"
+                                        <?= $role['role_id'] == $row['role_id'] ? 'selected': ''; ?>>
+                                        <?= $role['name']?>
+                                    </option>
+                                    <?php endforeach;?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
                     <div class="row">
                         <div class="col-sm-3">
                             <div class="checkbox">

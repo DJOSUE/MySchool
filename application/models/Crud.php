@@ -63,6 +63,11 @@ class Crud extends School
         $data['semester_id']  = $this->runningSemester;
         $this->db->insert('students_request', $data);
 
+        $table      = 'students_request';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
         $notify['notify'] = "<strong>". $this->crud->get_name('student', $this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('absence_request');
         $admins = $this->db->get('admin')->result_array();
         foreach($admins as $row)
@@ -76,6 +81,11 @@ class Crud extends School
             $notify['original_id'] = $this->session->userdata('login_user_id');
             $notify['original_type'] = $this->session->userdata('login_type');
             $this->db->insert('notification', $notify);
+
+            $table      = 'notification';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $notify);
         }
     }
     
@@ -92,6 +102,11 @@ class Crud extends School
         $data['semester_id']  = $this->runningSemester;
         $this->db->insert('students_request', $data);
 
+        $table      = 'students_request';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
         $notify['notify'] = "<strong>". $this->session->userdata('name')."</strong>". " ". getPhrase('absence_request')." <b>".$this->db->get_where('student', array('student_id' => $this->input->post('student_id')))->row()->name."</b>";
         $admins = $this->db->get('admin')->result_array();
         foreach($admins as $row)
@@ -105,6 +120,11 @@ class Crud extends School
             $notify['original_id'] = $this->session->userdata('login_user_id');
             $notify['original_type'] = $this->session->userdata('login_type');
             $this->db->insert('notification', $notify);
+
+            $table      = 'notification';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $notify);
         }
     }
     
@@ -161,6 +181,12 @@ class Crud extends School
         $notify['original_id'] = $this->session->userdata('login_user_id');
         $notify['original_type'] = $this->session->userdata('login_type');
         $this->db->insert('notification', $notify);
+        
+        $table      = 'notification';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $notify);
+
         $data['status'] = 1;
         $this->db->update('teacher_request', $data, array('request_id' => $requestId));
     }
@@ -178,6 +204,12 @@ class Crud extends School
         $notify['original_id']   = $this->session->userdata('login_user_id');
         $notify['original_type'] = $this->session->userdata('login_type');
         $this->db->insert('notification', $notify);
+
+        $table      = 'notification';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $notify);
+
         $data['status']          = 2;
         $this->db->update('teacher_request', $data, array('request_id' => $requestId));
     }
@@ -198,6 +230,12 @@ class Crud extends School
         $notify['original_id']   = $this->session->userdata('login_user_id');
         $notify['original_type'] = $this->session->userdata('login_type');
         $this->db->insert('notification', $notify);
+
+        $table      = 'notification';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $notify);
+
     }
     
     public function rejectStudentRequest($requestId)
@@ -216,6 +254,11 @@ class Crud extends School
         $notify['original_id']      = $this->session->userdata('login_user_id');
         $notify['original_type']    = $this->session->userdata('login_type');
         $this->db->insert('notification', $notify);
+
+        $table      = 'notification';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $notify);
     }
     
     public function deletePermission($code)
@@ -233,7 +276,13 @@ class Crud extends School
         $data['timestamp']    = $this->crud->getDateFormat();
         $data['sender_type']  = $this->session->userdata('login_type');
         $data['sender_id']    = $this->session->userdata('login_user_id');
-        return $this->db->insert('report_message', $data);
+        $this->db->insert('report_message', $data);
+
+        $table      = 'report_message';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
     }
     
     public function updateReport($code)
@@ -263,6 +312,11 @@ class Crud extends School
             $data['user_type']     = $loginType;
             $data['activity_code'] = $code;
             $this->db->insert('readed',$data);
+
+            $table      = 'readed';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $data);
         }
     }
     
@@ -304,7 +358,13 @@ class Crud extends School
         $data['date2']               = $this->getDateFormat();
         $data['type']                = "video";
         $this->db->insert('news', $data);
-        return $news_code;
+
+        $table      = 'news';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+        
+        return $data['news_code'];
     }
     
     function update_panel_news($param2)
@@ -332,7 +392,12 @@ class Crud extends School
                 $attn_data['teacher_id']   = $row['teacher_id'];
                 $attn_data['year']         = $data['year'];
                 $attn_data['timestamp']    = $data['timestamp'];
-                $this->db->insert('teacher_attendance' , $attn_data);  
+                $this->db->insert('teacher_attendance' , $attn_data); 
+
+                $table      = 'teacher_attendance';
+                $action     = 'insert';
+                $insert_id  = $this->db->insert_id();
+                $this->crud->save_log($table, $action, $insert_id, $attn_data);
             }
         }
         return $data['timestamp'];
@@ -358,6 +423,11 @@ class Crud extends School
                 move_uploaded_file($_FILES["file_name"]["tmp_name"], "public/uploads/library/" . $_FILES["file_name"]["name"]);
                 $this->db->insert('book', $data);
 
+                $table      = 'book';
+                $action     = 'insert';
+                $insert_id  = $this->db->insert_id();
+                $this->crud->save_log($table, $action, $insert_id, $data);
+
                 $notify['notify'] = "<strong>". $this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('book_added')." <b>".$this->db->get_where('class', array('class_id' => $this->input->post('class_id')))->row()->name."</b>";
         
                 $students = $this->db->get_where('enroll', array('class_id' => $this->input->post('class_id')))->result_array();
@@ -373,6 +443,11 @@ class Crud extends School
                     $notify2['original_id'] = $this->session->userdata('login_user_id');
                     $notify2['original_type'] = $this->session->userdata('login_type');
                     $this->db->insert('notification', $notify2);
+
+                    $table      = 'notification';
+                    $action     = 'insert';
+                    $insert_id  = $this->db->insert_id();
+                    $this->crud->save_log($table, $action, $insert_id, $notify2);
                 }
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_uploaded'));
             } 
@@ -392,7 +467,12 @@ class Crud extends School
             $data['status']      = $this->input->post('status');
             $this->db->insert('book', $data);
 
-             $notify['notify'] = "<strong>". $this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('book_added')." <b>".$this->db->get_where('class', array('class_id' => $this->input->post('class_id')))->row()->name."</b>";
+            $table      = 'book';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $data);
+
+            $notify['notify'] = "<strong>". $this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('book_added')." <b>".$this->db->get_where('class', array('class_id' => $this->input->post('class_id')))->row()->name."</b>";
         
             $students = $this->db->get_where('enroll', array('class_id' => $this->input->post('class_id')))->result_array();
             foreach($students as $row1)
@@ -407,6 +487,11 @@ class Crud extends School
                 $notify2['original_id'] = $this->session->userdata('login_user_id');
                 $notify2['original_type'] = $this->session->userdata('login_type');
                 $this->db->insert('notification', $notify2);
+
+                $table      = 'notification';
+                $action     = 'insert';
+                $insert_id  = $this->db->insert_id();
+                $this->crud->save_log($table, $action, $insert_id, $notify2);
             }
             $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
         }
@@ -532,6 +617,11 @@ class Crud extends School
     {
         $data['name']   =   $this->input->post('name');
         $this->db->insert('expense_category' , $data);
+
+        $table      = 'expense_category';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
     }
     
     function delete_news($param2)
@@ -657,22 +747,51 @@ class Crud extends School
     
     function deleteClassroom($ClassroomId)
     {
-        $this->db->where('dormitory_id', $ClassroomId);
-        $this->db->delete('dormitory');
+        $this->db->where('class_id', $ClassroomId);
+        $this->db->delete('class_room');
+    }
+
+    function deleteProgram($ClassroomId)
+    {
+        $this->db->where('program_id', $ClassroomId);
+        $this->db->delete('program');
     }
     
     function updateClassroom($ClassroomId)
     {
         $data['name']           = $this->input->post('name');
-        $this->db->where('dormitory_id', $ClassroomId);
-        $this->db->update('dormitory', $data);
+        $this->db->where('room_id', $ClassroomId);
+        $this->db->update('class_room', $data);
+    }
+
+    function updateProgram($ClassroomId)
+    {
+        $data['name']           = $this->input->post('name');
+        $this->db->where('program_id', $ClassroomId);
+        $this->db->update('program', $data);
     }
     
     function createClassroom()
     {
         $data['name']           = $this->input->post('name');
         $data['number']         = $this->input->post('number');
-        $this->db->insert('dormitory', $data);
+        $this->db->insert('class_room', $data);
+
+        $table      = 'class_room';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+    }
+
+    function createProgram()
+    {
+        $data['name']           = $this->input->post('name');
+        $this->db->insert('program', $data);
+
+        $table      = 'program';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
     }
     
     function fetchStudents($class_id)
@@ -700,6 +819,11 @@ class Crud extends School
         $data['route']        = $this->input->post('route');
         $data['route_fare']        = $this->input->post('route_fare');
         $this->db->insert('transport', $data);
+
+        $table      = 'transport';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
     }
     
     function deleteExpense($expenseId)
@@ -734,6 +858,11 @@ class Crud extends School
         $data['month']               =   date('M');
         $data['year']                =   $this->runningYear;
         $this->db->insert('payment' , $data);
+
+        $table      = 'payment';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
     }
     
     function deleteBus($transportId)
@@ -838,6 +967,12 @@ class Crud extends School
             $notify['original_id'] = 0;
             $notify['original_type'] = $this->session->userdata('login_type');
             $this->db->insert('notification', $notify);
+
+            $table      = 'notification';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $notify);
+
         }
         foreach($parents as $row2)
         {
@@ -852,6 +987,11 @@ class Crud extends School
             $notify['year'] = $year;
             $notify['original_type'] = $this->session->userdata('login_type');
             $this->db->insert('notification', $notify);
+
+            $table      = 'notification';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $notify);
         }
         foreach($teachers as $row3)
         {
@@ -866,6 +1006,11 @@ class Crud extends School
             $notify['year'] = $year;
             $notify['original_type'] = $this->session->userdata('login_type');
             $this->db->insert('notification', $notify);
+
+            $table      = 'notification';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $notify);
         }
         foreach($accountant as $row4)
         {
@@ -880,6 +1025,11 @@ class Crud extends School
             $notify['original_id'] = 0;
             $notify['original_type'] = $this->session->userdata('login_type');
             $this->db->insert('notification', $notify);
+
+            $table      = 'notification';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $notify);
         }
         foreach($librarian as $row5)
         {
@@ -894,6 +1044,11 @@ class Crud extends School
             $notify['original_id'] = 0;
             $notify['original_type'] = $this->session->userdata('login_type');
             $this->db->insert('notification', $notify);
+
+            	$table      = 'notification';
+	$action     = 'insert';
+	$insert_id  = $this->db->insert_id();
+	$this->crud->save_log($table, $action, $insert_id, $notify);
         }    
     }
     
@@ -1653,7 +1808,7 @@ class Crud extends School
 
     function get_student_info($student_id) {
         $query = $this->db->get_where('student', array('student_id' => $student_id));
-        return $query->result_array();
+        return $query->row_array();
     }
 
      function create_post() 
@@ -1673,6 +1828,14 @@ class Crud extends School
         $docs_id            = $this->db->insert_id();
         move_uploaded_file($_FILES["file_name"]["tmp_name"], "public/uploads/forum/" . $_FILES["file_name"]["name"]);
         return $post_code;
+    }
+
+    function get_current_enrollment($student_id)
+    {
+        $class_id = $this->db->get_where('enroll', array('student_id' => $student_id, 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
+        $section_id = $this->db->get_where('enroll', array('student_id' => $student_id, 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->section_id;
+        return $this->db->get_where('v_enrollment' , array('student_id' => $student_id, 'class_id' => $class_id, 'section_id' => $section_id, 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->result_array();
+
     }
 
     function update_post($post_code) {
@@ -1997,6 +2160,11 @@ class Crud extends School
         return $query->result_array();
     }
 
+    function get_exam_by_class($class_id) {
+        $query = $this->db->get_where('v_class_units', array( 'class_id' => $class_id))->result_array();
+        return $query;
+    }
+
     function get_exam_info($exam_id) {
         $query = $this->db->get_where('exam', array('unit_id' => $exam_id));
         return $query->result_array();
@@ -2100,10 +2268,13 @@ class Crud extends School
     {
         $query = $this->db->get('gpa');
         $grades = $query->result_array();
-        foreach ($grades as $ro) {
-            if ($mark_obtained >= $ro['mark_from'] && $mark_obtained <= $ro['mark_upto'])
-                echo $ro['grade_point'];
+        foreach ($grades as $row) {
+            if ($mark_obtained >= $row['mark_from'] && $mark_obtained <= $row['mark_upto'])
+            {
+                $gpa = $row['gpa_point'];
+            }
         }
+        return $gpa;
     }
 
     function getInfo($type) {
@@ -2118,10 +2289,24 @@ class Crud extends School
     
     function get_name($type = '', $id = '')
     {
-        $first = $this->db->get_where(''.$type.'',array($type."_id" => $id))->row()->first_name;
-        $last = $this->db->get_where(''.$type.'',array($type."_id" => $id))->row()->last_name;
+        $query = $this->db->get_where(''.$type.'',array($type."_id" => $id))->row();
+        $first = $query->first_name;
+        $last = $query->last_name;
+        
         $name = $first." ".$last;
         return $name;
+    }
+
+    function get_user_info($type = '', $id = '')
+    {
+        $query = $this->db->get_where(''.$type.'',array($type."_id" => $id))->row_array();
+
+        return $query;
+    }
+
+    function get_gender_user($code = '') {
+        $query = $this->db->get_where('gender', array('code' => $code));
+        return $query->row()->name;        
     }
 
     function get_image_url($type = '', $id = '') 
@@ -3164,5 +3349,45 @@ class Crud extends School
         
         return false;
 
+    }
+
+    function save_log($table, $action, $table_id, $info)
+    {
+        $user_id    = $this->session->userdata('login_user_id');
+        $user_type  = $this->session->userdata('role_id');
+        
+        $data['user_id']    = $user_id;
+        $data['user_type']  = $user_type;
+        $data['table']      = $table;
+        $data['action']     = $action;
+        $data['table_id']   = $table_id;
+        $data['data']       = json_encode($info);
+        
+        $this->db->reset_query();
+        $this->db->insert('logs', $data);
+    }
+
+    function save_login_as_log($user_type, $user_id)
+    {
+        $admin_id    = $this->session->userdata('login_user_id');
+
+        $data['admin_id']    = $admin_id;
+        $data['user_type']   = $user_type;
+        $data['user_id']     = $user_id;        
+        $this->db->insert('login_as_logs', $data);
+    }
+
+    function get_student_program($student_id) 
+    {
+        $program_id = $this->db->get_where('student', array('student_id' => $student_id))->row()->program_id;
+        $name = $this->db->get_where('program', array('program_id' => $program_id))->row()->name;
+        return $name;
+    }
+
+    function get_name_attribute($type = '', $id = '')
+    {
+        $query = $this->db->get_where(''.$type.'',array($type."_id" => $id))->row();
+        $name = $query->name;
+        return $name;
     }
 }

@@ -128,6 +128,11 @@ class Teacher extends EduAppGT
             $notify['status'] = 1;
             $this->db->where('id', html_escape($_GET['id']));
             $this->db->update('notification', $notify);
+
+            $table      = 'notification';
+            $action     = 'update';
+            $update_id  = html_escape($_GET['id']);
+            $this->crud->save_log($table, $action, $update_id, $notify);
         }
         $page_data['page_name']  = 'panel';
         $page_data['page_title'] = getPhrase('dashboard');
@@ -276,6 +281,11 @@ class Teacher extends EduAppGT
             $notify['status'] = 1;
             $this->db->where('id', html_escape($_GET['id']));
             $this->db->update('notification', $notify);
+
+            $table      = 'notification';
+            $action     = 'update';
+            $update_id  = html_escape($_GET['id']);
+            $this->crud->save_log($table, $action, $update_id, $notify);
         }
         $page_data['code'] = $report_code;
         $page_data['page_name'] = 'view_report';
@@ -812,6 +822,11 @@ class Teacher extends EduAppGT
             $notify['status'] = 1;
             $this->db->where('id', html_escape($_GET['id']));
             $this->db->update('notification', $notify);
+
+            $table      = 'notification';
+            $action     = 'update';
+            $update_id  = html_escape($_GET['id']);
+            $this->crud->save_log($table, $action, $update_id, $notify);
         }
         if ($param1 == 'send_new') 
         {
@@ -854,6 +869,11 @@ class Teacher extends EduAppGT
             $notify['status'] = 1;
             $this->db->where('id', html_escape($_GET['id']));
             $this->db->update('notification', $notify);
+
+            $table      = 'notification';
+            $action     = 'update';
+            $update_id  = html_escape($_GET['id']);
+            $this->crud->save_log($table, $action, $update_id, $notify);
         }
         if ($param1 == "create")
         {
@@ -1130,6 +1150,11 @@ class Teacher extends EduAppGT
             $notify['status'] = 1;
             $this->db->where('id', html_escape($_GET['id']));
             $this->db->update('notification', $notify);
+
+            $table      = 'notification';
+            $action     = 'update';
+            $update_id  = html_escape($_GET['id']);
+            $this->crud->save_log($table, $action, $update_id, $notify);
         }
         $page_data['online_exam_id'] = $exam_code;
         $page_data['page_name'] = 'exam_results';
@@ -1167,6 +1192,11 @@ class Teacher extends EduAppGT
             $notify['status'] = 1;
             $this->db->where('id', html_escape($_GET['id']));
             $this->db->update('notification', $notify);
+
+            $table      = 'notification';
+            $action     = 'update';
+            $update_id  = html_escape($_GET['id']);
+            $this->crud->save_log($table, $action, $update_id, $notify);
         }
         if ($param1 == 'comment') 
         {
@@ -1274,6 +1304,12 @@ class Teacher extends EduAppGT
             $data['start_time'] = date("H:i");
             $data['pcinfo_in']  = $this->input->post( 'pcinfo_in' );
             $this->db->insert('time_sheet', $data);
+
+            $table      = 'time_sheet';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $data);
+
             $this->session->set_flashdata('flash_message', getPhrase('successfully_updated'));
         }
 

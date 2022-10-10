@@ -4686,7 +4686,20 @@ html {
         vertical-align: baseline;
         border-radius: 0.25rem;
     }
-    
+    .badge-status{
+        display: inline-block;
+        margin-top: 5px;
+        padding: 0.5em 0.4em;
+        font-size: 95%;
+        font-size: medium !important;
+        font-weight: 800;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.25rem;
+    }
     .badge:empty {
         display: none;
     }
@@ -27370,4 +27383,18 @@ table {
     width: 85%; 
     height: 80%; 
     position: absolute;
+}
+.action-right {
+    margin-left: auto;
+    margin-right: 0px;
+    float: right;
+}
+.menu_left_selected_text {
+    color: #000099 !important;
+}
+.menu_left_selected_icon {
+    color: #000099 !important;
+}
+.text-font-12 {
+    font-size: 12pt !important
 }

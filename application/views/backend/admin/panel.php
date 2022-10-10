@@ -5,7 +5,8 @@
             <div class="content-box">
                 <div class="conty">
                     <div class="row">
-                        <main class="col col-xl-6 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12">
+                        <main class="col col-xl-6 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12" >
+                            <?php if(has_permission('news_management')):?>
                             <div class="ui-block paddingtel">
                                 <div class="news-feed-form">
                                     <div class="tab-content">
@@ -208,6 +209,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <?php endif;?>
                             <div id="panel">
                                 <?php 
                                     $db = $this->db->query('SELECT description, publish_date, type,news_id FROM news UNION SELECT question,publish_date,type,id FROM polls ORDER BY publish_date DESC LIMIT 5')->result_array();
@@ -233,6 +235,7 @@
                                                         style="color: #0084ff;"><?php echo $this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->date." ".$this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->date2;?></time>
                                                 </div>
                                             </div>
+                                            <?php if(has_permission('news_management')):?>
                                             <div class="more">
                                                 <i class="icon-options"></i>
                                                 <ul class="more-dropdown">
@@ -244,6 +247,7 @@
                                                     </li>
                                                 </ul>
                                             </div>
+                                            <?php endif;?>
                                         </div>
                                         <?php if (file_exists('public/uploads/news_images/'.$news_code.'.jpg')):?>
                                         <hr>
@@ -788,6 +792,7 @@
                                                 </div>
                                             </div>
                                             <div class="list">
+                                                <?php if(has_permission('calendar_add')):?>
                                                 <div class="control-block-button">
                                                     <a href="<?php echo base_url();?>admin/calendar/"
                                                         class="btn btn-control bg-breez"
@@ -795,8 +800,9 @@
                                                         <i class="fa fa-plus text-white"></i>
                                                     </a>
                                                 </div>
+                                                <?php endif;?>
                                                 <?php $date = date('Y-m-d');
-                                                $events = $this->db->get_where('events', array('start > ' => $date.' '.'00:00:00', 'start <' => $date.' '.'23:59:59')); ?>
+                                                $events = $this->db->get_where('events', array('start >=' => $date.' '.'00:00:00', 'start <=' => $date.' '.'23:59:59')); ?>
                                                 <div id="accordion-1" role="tablist" aria-multiselectable="true"
                                                     class="day-event" data-month="12" data-day="2">
                                                     <?php  if($events->num_rows() > 0):?>

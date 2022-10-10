@@ -4,7 +4,7 @@
     $academic_pages     = array('attendance_report', 'online_exam_result', 'study_material', 'live', 'meet', 'homework_edit', 'subject_marks', 
                                 'forum', 'forum_room', 'subject', 'subject_dashboard', 'homework_room', 'homework', 'online_exams', 'subject_daily_marks', 
                                 'subject_daily_marks_all');
-    $marks_pages        = array('my_marks', 'my_daily_marks', 'my_daily_marks_old', 'my_past_marks', 'my_past_daily_marks', 'placement_achievement');
+    $marks_pages        = array('my_marks', 'my_daily_marks', 'my_daily_marks_old', 'my_past_marks', 'my_past_daily_marks', 'student_placement_achievement');
 ?>
 <div class="fixed-sidebar">
     <div class="fixed-sidebar-left sidebar--small" id="sidebar-left">

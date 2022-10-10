@@ -75,7 +75,7 @@
 														    </li>
 														    <li>
     															<span class="title"><?php echo getPhrase('classroom');?>:</span>
-	    														<span class="text"><?php echo $this->db->get_where('dormitory', array('dormitory_id' => $row['dormitory_id']))->row()->name;?></span>
+	    														<span class="text"><?php echo $this->db->get_where('class_room', array('classroom_id' => $row['classroom_id']))->row()->name;?></span>
 														    </li>
 													    </ul>
 												    </div>

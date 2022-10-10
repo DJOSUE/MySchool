@@ -19,7 +19,7 @@
 									    </div>
                 				        <div class="form-buttons-w text-center">
                   						    <a class="btn btn-rounded btn-primary btn-lg" href="<?php echo base_url();?>admin/generate/<?php echo $student_id;?>/<?php echo $pw;?>"><?php echo getPhrase('download');?></a>
-                  					        <a class="btn btn-rounded btn-success btn-lg" href="<?php echo base_url();?>admin/new_student/"><?php echo getPhrase('new_student');?></a>
+                  					        <a class="btn btn-rounded btn-success btn-lg" href="<?php echo base_url();?>admin/admission_new_student/"><?php echo getPhrase('new_student');?></a>
                 					    </div>			
           					        </div>
             		            </div>
