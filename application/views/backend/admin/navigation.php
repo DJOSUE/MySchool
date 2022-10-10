@@ -20,7 +20,7 @@
     $academic_pages     = array('attendance', 'live', 'exam_room', 'exam_results', 'exam_edit', 'homework', 'homework_room', 'homework_edit', 'homework_details', 'meet', 
                                 'grados', 'upload_marks', 'study_material', 'cursos', 'subject_dashboard', 'forum_room', 'online_exams', 'edit_forum', 'forum', 'daily_marks', 
                                 'daily_marks_average');
-    $reports_pages      = array('reports_general','reports_students', 'reports_attendance', 'reports_accounting', 'reports_tabulation', 'reports_tabulation_daily', 'report_marks');
+    $reports_pages      = array('reports_general','reports_students', 'reports_students_all', 'reports_attendance', 'reports_accounting', 'reports_tabulation', 'reports_tabulation_daily', 'report_marks');
 
     $attendance_pages   = array('teacher_report_view', 'teacher_attendance_view', 'teacher_attendance_report','teacher_attendance');
 

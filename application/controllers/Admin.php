@@ -346,28 +346,7 @@
             $this->load->view('backend/index', $page_data);
         }
     
-        //Students reports function.
-        function reports_students($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-            $page_data['class_id']      = html_escape($this->input->post('class_id'));
-            $page_data['section_id']    = html_escape($this->input->post('section_id'));
-            $page_data['subject_id']    = $this->input->post('subject_id');
-            $page_data['page_name']     = 'reports_students';
-            $page_data['page_title']    = getPhrase('students_report');
-            $this->load->view('backend/index', $page_data);
-        }
-    
-        //General reports function.
-        function reports_general($class_id = '', $section_id = '')
-        {
-            $this->isAdmin();
-            $page_data['page_name']     = 'reports_general';
-            $page_data['class_id']      = html_escape($this->input->post('class_id'));
-            $page_data['section_id']    = html_escape($this->input->post('section_id'));
-            $page_data['page_title']    = getPhrase('general_reports');
-            $this->load->view('backend/index', $page_data);
-        }
+
 
         //Manage birthdays function.
         function birthdays()
@@ -2463,123 +2442,6 @@
             $page_data['page_title'] = getPhrase('attendance');
             $this->load->view('backend/index', $page_data);
         }
-    
-        //Attendance report function.
-        function attendance_report($param1 = '', $param2 = '', $param3 = '', $param4 = '', $param5 = '') 
-        {
-            if($param1 == 'check')
-            {
-                $data['class_id']    = $this->input->post('class_id');
-                $data['subject_id']  = $this->input->post('subject_id');
-                $data['year']        = $this->input->post('year');
-                $data['month']       = $this->input->post('month');
-                $data['section_id']  = $this->input->post('section_id');
-                redirect(base_url().'admin/attendance_report/'.$data['class_id'].'/'.$data['section_id'].'/'.$data['subject_id'].'/'.$data['month'].'/'.$data['year'],'refresh');
-            }
-            $page_data['class_id']    = $param1;
-            $page_data['section_id']  = $param2;
-            $page_data['subject_id']  = $param3;
-            $page_data['month']       = $param4;
-            $page_data['year']        = $param5;
-            $page_data['page_name']   = 'attendance_report';
-            $page_data['page_title']  = getPhrase('attendance_report');
-            $this->load->view('backend/index',$page_data);
-        }
-        
-        //Tabulation report function.
-        function reports_tabulation($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-
-            $year_id = $this->input->post( 'year_id' );
-            if ($year_id == '') {
-                $year_id = $this->runningYear;
-            }
-
-            $semester_id = $this->input->post( 'semester_id' );
-            if ( $semester_id == '' ) {
-                $semester_id = $this->runningSemester;
-            }
-
-            $page_data['year_id']       = $year_id;
-            $page_data['semester_id']   = $semester_id;
-            $page_data['class_id']      = $this->input->post('class_id');
-            $page_data['section_id']    = $this->input->post('section_id');
-            $page_data['subject_id']    = $this->input->post('subject_id');
-
-            if($this->useDailyMarks){
-                $page_data['page_name']   = 'reports_tabulation_daily';
-                $page_data['page_title']  = getPhrase('tabulation_daily_report');
-                $this->load->view('backend/index', $page_data);
-            } 
-            else { 
-                $page_data['page_name']   = 'reports_tabulation';
-                $page_data['page_title']  = getPhrase('tabulation_report');
-                $this->load->view('backend/index', $page_data);
-            }
-        }
-        
-        //Accounting report function.
-        function reports_accounting($param1 = '', $param2 = '')
-        {
-          $this->isAdmin();
-          $page_data['page_name']   = 'reports_accounting';
-          $page_data['page_title']  = getPhrase('accounting_report');
-          $this->load->view('backend/index', $page_data);
-        }
-         
-        //Marks report function.
-        function reports_marks($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-            if($param1 == 'generate')
-            {
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-                redirect(base_url() . 'admin/reports_marks/', 'refresh');
-            }
-            $page_data['class_id']   = $this->input->post('class_id');
-            $page_data['section_id']   = $this->input->post('section_id');
-            $page_data['student_id']   = $this->input->post('student_id');
-            $page_data['unit_id']   = $this->input->post('unit_id');
-            $page_data['page_name']   = 'reports_marks';
-            $page_data['page_title']  = getPhrase('marks_report');
-            $this->load->view('backend/index', $page_data);
-        }
-    
-        //Report attendance view function.
-        function report_attendance_view($class_id = '' , $section_id = '', $month = '', $year = '') 
-        {
-            $this->isAdmin();
-            $page_data['class_id']   = $class_id;
-            $page_data['month']      = $month;
-            $page_data['year']       = $year;
-            $page_data['page_name']  = 'report_attendance_view';
-            $page_data['section_id'] = $section_id;
-            $page_data['page_title'] = getPhrase('attendance_report');
-            $this->load->view('backend/index', $page_data);
-        }
-    
-        //Manage behavior report function.
-        function create_report($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-            if($param1 == 'send')
-            {
-                $this->academic->createReport();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-                redirect(base_url() . 'admin/request_student/', 'refresh');
-            }
-            if($param1 == 'response')
-            {
-                $this->academic->reportResponse();
-            }
-            if($param1 == 'update')
-            {
-                $this->academic->updateReport($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/looking_report/'.$param2, 'refresh');
-            }
-        }
         
         //Calendar events function.
         function calendar($param1 = '', $param2 = '')
@@ -3902,7 +3764,147 @@
         }
 
 /*****Reports Module  ********************************************************************************************************************************/
-        // task Dashboard
+        
+        //General reports function.
+        function reports_general($class_id = '', $section_id = '')
+        {
+            $this->isAdmin();
+            $page_data['page_name']     = 'reports_general';
+            $page_data['class_id']      = html_escape($this->input->post('class_id'));
+            $page_data['section_id']    = html_escape($this->input->post('section_id'));
+            $page_data['page_title']    = getPhrase('general_reports');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //Students reports function.
+        function reports_students($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            $page_data['class_id']      = html_escape($this->input->post('class_id'));
+            $page_data['section_id']    = html_escape($this->input->post('section_id'));
+            $page_data['subject_id']    = $this->input->post('subject_id');
+            $page_data['page_name']     = 'reports_students';
+            $page_data['page_title']    = getPhrase('students_report');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //Attendance report function.
+        function attendance_report($param1 = '', $param2 = '', $param3 = '', $param4 = '', $param5 = '') 
+        {
+            if($param1 == 'check')
+            {
+                $data['class_id']    = $this->input->post('class_id');
+                $data['subject_id']  = $this->input->post('subject_id');
+                $data['year']        = $this->input->post('year');
+                $data['month']       = $this->input->post('month');
+                $data['section_id']  = $this->input->post('section_id');
+                redirect(base_url().'admin/attendance_report/'.$data['class_id'].'/'.$data['section_id'].'/'.$data['subject_id'].'/'.$data['month'].'/'.$data['year'],'refresh');
+            }
+            $page_data['class_id']    = $param1;
+            $page_data['section_id']  = $param2;
+            $page_data['subject_id']  = $param3;
+            $page_data['month']       = $param4;
+            $page_data['year']        = $param5;
+            $page_data['page_name']   = 'attendance_report';
+            $page_data['page_title']  = getPhrase('attendance_report');
+            $this->load->view('backend/index',$page_data);
+        }
+
+        //Marks report function.
+        function reports_marks($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            if($param1 == 'generate')
+            {
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'admin/reports_marks/', 'refresh');
+            }
+            $page_data['class_id']   = $this->input->post('class_id');
+            $page_data['section_id']   = $this->input->post('section_id');
+            $page_data['student_id']   = $this->input->post('student_id');
+            $page_data['unit_id']   = $this->input->post('unit_id');
+            $page_data['page_name']   = 'reports_marks';
+            $page_data['page_title']  = getPhrase('marks_report');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //Tabulation report function.
+        function reports_tabulation($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+
+            $year_id = $this->input->post( 'year_id' );
+            if ($year_id == '') {
+                $year_id = $this->runningYear;
+            }
+
+            $semester_id = $this->input->post( 'semester_id' );
+            if ( $semester_id == '' ) {
+                $semester_id = $this->runningSemester;
+            }
+
+            $page_data['year_id']       = $year_id;
+            $page_data['semester_id']   = $semester_id;
+            $page_data['class_id']      = $this->input->post('class_id');
+            $page_data['section_id']    = $this->input->post('section_id');
+            $page_data['subject_id']    = $this->input->post('subject_id');
+
+            if($this->useDailyMarks){
+                $page_data['page_name']   = 'reports_tabulation_daily';
+                $page_data['page_title']  = getPhrase('tabulation_daily_report');
+                $this->load->view('backend/index', $page_data);
+            } 
+            else { 
+                $page_data['page_name']   = 'reports_tabulation';
+                $page_data['page_title']  = getPhrase('tabulation_report');
+                $this->load->view('backend/index', $page_data);
+            }
+        }
+        
+        //Accounting report function.
+        function reports_accounting($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            $page_data['page_name']   = 'reports_accounting';
+            $page_data['page_title']  = getPhrase('accounting_report');
+            $this->load->view('backend/index', $page_data);
+        }
+    
+        //Report attendance view function.
+        function report_attendance_view($class_id = '' , $section_id = '', $month = '', $year = '') 
+        {
+            $this->isAdmin();
+            $page_data['class_id']   = $class_id;
+            $page_data['month']      = $month;
+            $page_data['year']       = $year;
+            $page_data['page_name']  = 'report_attendance_view';
+            $page_data['section_id'] = $section_id;
+            $page_data['page_title'] = getPhrase('attendance_report');
+            $this->load->view('backend/index', $page_data);
+        }
+    
+        //Manage behavior report function.
+        function create_report($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            if($param1 == 'send')
+            {
+                $this->academic->createReport();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'admin/request_student/', 'refresh');
+            }
+            if($param1 == 'response')
+            {
+                $this->academic->reportResponse();
+            }
+            if($param1 == 'update')
+            {
+                $this->academic->updateReport($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/looking_report/'.$param2, 'refresh');
+            }
+        }
+
         function reports_students_all()
         {
             $year_id = $this->input->post( 'year_id' );
