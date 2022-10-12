@@ -1354,6 +1354,73 @@ class Teacher extends EduAppGT
         $page_data['page_title'] = getPhrase( 'time_sheet' );
         $this->load->view( 'backend/index', $page_data );
     }
+
+    function add_daily_marks($student_id, $exam_id, $mark_date, $data){
+
+        $info = base64_decode($data);
+        $ex = explode('-', $info);
+        $class_id       = $ex[0];
+        $section_id     = $ex[1]; 
+        $subject_id     = $ex[2];
+
+        $exam_id_old = $this->db->get_where( 'exam', array( 'exam_id'=> $exam_id ) )->row()->exam_id_old;
+
+        if ($student_id != 'none') {
+
+            $data_insert['student_id']  = $student_id;
+            $data_insert['class_id']    = $class_id;
+            $data_insert['section_id']  = $section_id;
+            $data_insert['subject_id']  = $subject_id;
+            $data_insert['unit_id']     = $exam_id;
+            $data_insert['exam_id']     = $exam_id_old;
+            $data_insert['year']        = $this->runningYear;
+            $data_insert['semester_id'] = $this->runningSemester;
+            $data_insert['mark_date']   = $mark_date;
+
+            $this->db->insert( 'mark_daily', $data_insert );
+            $this->session->set_flashdata( 'flash_message',  getPhrase('successfully_added') );
+            
+        } else {
+            $students = $this->db->query("SELECT student_id FROM enroll 
+                                        WHERE class_id  = '$class_id'
+                                        AND section_id  = '$section_id'
+                                        AND subject_id  = '$subject_id'
+                                        AND year        = '$this->runningYear;'
+                                        AND semester_id = '$this->runningSemester;'
+                                        AND student_id NOT IN (
+                                            SELECT
+                                                student_id
+                                            FROM
+                                                `mark_daily`
+                                                WHERE class_id  = '$class_id'
+                                                AND section_id  = '$section_id'
+                                                AND subject_id  = '$subject_id'
+                                                AND unit_id     = '$exam_id'
+                                                AND year        = '$this->runningYear;'
+                                                AND semester_id = '$this->runningSemester;' 
+                                                AND mark_date   = '$mark_date'
+                                            )
+                                        GROUP BY student_id"
+            )->result_array();
+
+            foreach ($students as $item) {
+                $data_insert['student_id']  = $item['student_id'];
+                $data_insert['class_id']    = $class_id;
+                $data_insert['section_id']  = $section_id;
+                $data_insert['subject_id']  = $subject_id;
+                $data_insert['unit_id']     = $exam_id;
+                $data_insert['exam_id']     = $exam_id_old;
+                $data_insert['year']        = $this->runningYear;
+                $data_insert['semester_id'] = $this->runningSemester;;
+                $data_insert['mark_date']   = $mark_date;
+
+                $this->db->insert('mark_daily', $data_insert);
+            }
+        }
+        
+        $this->session->set_flashdata( 'flash_message', getPhrase( 'successfully_added' ) );
+        redirect( base_url().'teacher/update_daily_marks/'.$data, 'refresh' );
+    }
     
     //End of Teacher.php
 }

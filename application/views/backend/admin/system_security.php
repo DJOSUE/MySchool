@@ -1,6 +1,10 @@
 <?php
 
-$roles = $this->db->get_where('roles', array('role_id <>' => '1'))->result_array();
+    $this->db->reset_query();
+    $this->db->where_not_in('role_id', '1');
+    $this->db->order_by('table ASC, name ASC');
+    $roles = $this->db->get('roles')->result_array();
+
 
 ?>
 <div class="content-w">
@@ -177,10 +181,10 @@ $roles = $this->db->get_where('roles', array('role_id <>' => '1'))->result_array
                         <div class="input-group">
                             <div class="select">
                                 <select name="permissions" required="" style="width: 250px;">
-                                    <option value="0" <?= $row['permissions'] == 0 ? 'selected': ''; ?>>
+                                    <option value="0" >
                                         <?= getPhrase('forbid')?>
                                     </option>
-                                    <option value="1" <?= $row['permissions'] == 1 ? 'selected': ''; ?>>
+                                    <option value="1" selected>
                                         <?= getPhrase('allow')?>
                                     </option>
                                 </select>

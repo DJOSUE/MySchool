@@ -158,7 +158,7 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <?php echo form_open(base_url() . 'teacher/update_daily_marks/'.$unit_id.'/'.$ex[0].'/'.$ex[1].'/'.$ex[2].'/'.$date);?>
+                                    <?php echo form_open(base_url() . 'teacher/marks_update/'.$unit_id.'/'.$ex[0].'/'.$ex[1].'/'.$ex[2].'/'.$date);?>
                                     <div class="table-responsive">
                                         <table class="table table-bordered">
                                             <thead>

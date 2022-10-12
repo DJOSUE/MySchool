@@ -3,42 +3,7 @@
     <div class="header-spacer"></div>
     <div class="conty">
         <div class="os-tabs-w menu-shad">
-            <div class="os-tabs-controls">
-                <ul class="navs navs-tabs upper">
-                    <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/academic_settings/"><i
-                                class="os-icon picons-thin-icon-thin-0006_book_writing_reading_read_manual"></i><span><?php echo getPhrase('academic_settings'); ?></span></a>
-                    </li>
-                    <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/grade/"><i
-                                class="os-icon picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i><span><?php echo getPhrase('grades'); ?></span></a>
-                    </li>
-                    <li class="navs-item">
-                        <a class="navs-links active" href="<?php echo base_url();?>admin/gpa/"><i
-                                class="os-icon picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i><span><?php echo getPhrase('gpa_level'); ?></span></a>
-                    </li>
-                    <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/semesters/"><i
-                                class="os-icon picons-thin-icon-thin-0007_book_reading_read_bookmark"></i><span><?php echo getPhrase('semesters'); ?></span></a>
-                    </li>
-                    <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/units/"><i
-                                class="os-icon picons-thin-icon-thin-0007_book_reading_read_bookmark"></i><span><?php echo getPhrase('units'); ?></span></a>
-                    </li>
-                    <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/sections/"><i
-                                class="os-icon picons-thin-icon-thin-0002_write_pencil_new_edit"></i><span><?php echo getPhrase('sections'); ?></span></a>
-                    </li>
-                    <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/subjects/"><i
-                                class="os-icon picons-thin-icon-thin-0002_write_pencil_new_edit"></i><span><?php echo getPhrase('subject'); ?></span></a>
-                    </li>
-                    <!-- <li class="navs-item">
-                            <a class="navs-links" href="<?php echo base_url();?>admin/student_promotion/"><i
-                                    class="os-icon picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i><span><?php echo getPhrase('student_promotion'); ?></span></a>
-                        </li> -->
-                </ul>
-            </div>
+            <?php include 'academic_settings__nav.php'; ?>
         </div>
         <div class="content-i">
             <div class="content-box">

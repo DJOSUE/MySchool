@@ -49,73 +49,7 @@
         </div>
         <div class="os-tabs-w menu-shad">
             <div class="os-tabs-controls">
-                <ul class="navs navs-tabs upper">
-                    <li class="navs-item">
-                        <a class="navs-links"
-                            href="<?php echo base_url();?>teacher/subject_dashboard/<?php echo $data;?>/"><i
-                                class="os-icon picons-thin-icon-thin-0482_gauge_dashboard_empty"></i><span><?php echo getPhrase('dashboard');?></span></a>
-                    </li>
-                    <?php if($this->academic->getInfo('show_achievement_test') == 1) :?>
-                    <li class="navs-item">
-                        <a class="navs-links"
-                            href="<?php echo base_url();?>teacher/achievement_test/<?php echo $data;?>/"><i
-                                class="os-icon picons-thin-icon-thin-0658_cup_place_winner_award_prize_achievement"></i><span><?php echo getPhrase('achievement_test');?></span></a>
-                    </li>
-                    <?php endif; ?>
-                    <?php if($this->academic->getInfo('show_online_exams') == 1) :?>
-                    <li class="navs-item">
-                        <a class="navs-links"
-                            href="<?php echo base_url();?>teacher/online_exams/<?php echo $data;?>/"><i
-                                class="os-icon picons-thin-icon-thin-0207_list_checkbox_todo_done"></i><span><?php echo getPhrase('online_exams');?></span></a>
-                    </li>
-                    <?php endif; ?>
-                    <?php if($this->academic->getInfo('show_homework') == 1) :?>
-                    <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>teacher/homework/<?php echo $data;?>/"><i
-                                class="os-icon picons-thin-icon-thin-0004_pencil_ruler_drawing"></i><span><?php echo getPhrase('homework');?></span></a>
-                    </li>
-                    <?php endif; ?>
-                    <?php if($this->academic->getInfo('show_forum') == 1) :?>
-                    <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>teacher/forum/<?php echo $data;?>/"><i
-                                class="os-icon picons-thin-icon-thin-0281_chat_message_discussion_bubble_reply_conversation"></i><span><?php echo getPhrase('forum');?></span></a>
-                    </li>
-                    <?php endif; ?>
-                    <?php if($this->academic->getInfo('show_study_material') == 1) :?>
-                    <li class="navs-item">
-                        <a class="navs-links"
-                            href="<?php echo base_url();?>teacher/study_material/<?php echo $data;?>/"><i
-                                class="os-icon picons-thin-icon-thin-0003_write_pencil_new_edit"></i><span><?php echo getPhrase('study_material');?></span></a>
-                    </li>
-                    <?php endif; ?>
-                    <li class="navs-item">
-                        <a class="navs-links"
-                            href="<?php echo base_url();?>teacher/upload_marks/<?php echo $data;?>/"><i
-                                class="os-icon picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i><span><?php echo getPhrase('marks');?></span></a>
-                    </li>
-                    <?php if($useDailyMarks): ?>
-                    <li class="navs-item">
-                        <a class="navs-links"
-                            href="<?php echo base_url();?>teacher/daily_marks_average/<?php echo $data;?>/"><i
-                                class="os-icon picons-thin-icon-thin-0197_layout_grid_view"></i><span><?php echo getPhrase('daily_marks_average');?></span></a>
-                    </li>
-                    <li class="navs-item">
-                        <a class="navs-links active"
-                            href="<?php echo base_url();?>teacher/update_daily_marks/<?php echo $data;?>/"><i
-                                class="os-icon picons-thin-icon-thin-0256_input_box_text_edit"></i><span><?php echo getPhrase('update_daily_marks');?></span></a>
-                    </li>
-                    <?php endif; ?>
-                    <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>teacher/meet/<?php echo $data;?>/"><i
-                                class="os-icon picons-thin-icon-thin-0591_presentation_video_play_beamer"></i><span><?php echo getPhrase('live');?></span></a>
-                    </li>
-                    <?php if(!$useGradeAttendance):?>
-                    <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>teacher/attendance/<?php echo $data;?>/"><i
-                                class="os-icon picons-thin-icon-thin-0023_calendar_month_day_planner_events"></i><span><?php echo getPhrase('attendance');?></span></a>
-                    </li>
-                    <?php endif;?>
-                </ul>
+                <?php include 'subject__nav.php';?>
             </div>
         </div>
         <div class="content-i">
@@ -467,5 +401,35 @@
         }
 
     }
+
+    function add_daily_marks(data) {
+        var student_id = document.getElementById("student_id").value;
+        var unit_id = document.getElementById("unit_id").value;
+        var mark_date = document.getElementById("mark_date").value;
+        
+        console.log('entra');
+
+        if(unit_id == '' || mark_date == '' ){
+            Swal.fire({
+                icon: 'error',
+                title: '<?= getPhrase('error')?>',
+                text: 'You need select a unit and date.',
+            })
+        }else{
+            if(student_id=='')
+                student_id = 'none';
+
+            var URL = '<?php echo base_url();?>teacher/add_daily_marks/' + student_id + '/' + unit_id + '/' + mark_date + '/' + data;
+            console.log(URL);
+            
+            $.ajax({
+                url: URL,
+                success: function(response) {
+                    location.reload(); 
+                }
+            });
+        }
+    }
+       
 </script>
 <?php endforeach;?>

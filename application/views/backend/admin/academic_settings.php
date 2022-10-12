@@ -3,7 +3,7 @@
         <div class="header-spacer"></div>
         <div class="conty">
             <div class="os-tabs-w menu-shad">
-                <?php include 'academic_settings_nav.php'; ?>
+                <?php include 'academic_settings__nav.php'; ?>
             </div>
             <div class="content-i">
                 <div class="content-box">

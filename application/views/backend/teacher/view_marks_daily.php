@@ -60,15 +60,15 @@
                     <?php endforeach;?>
                     <?php 
                         $student_info = $this->crud->get_student_info($student_id);
-                        $exams         = $this->crud->get_exams();
-                        foreach ($student_info as $row1):
+                        $exams         = $this->crud->get_exam_by_class($class_id);
+
                         foreach ($exams as $row2):
                     ?>
                     <div class="col-sm-12">
                         <div class="element-box lined-primary">
                             <h5 class="form-header">
                                 <?php echo getPhrase('marks');?><br>
-                                <small><?php echo $row2['name'];?></small>
+                                <small><?php echo $row2['unit_name'];?></small>
                             </h5>
                             <div class="table-responsive">
                                 <table class="table table-lightborder">
@@ -86,6 +86,7 @@
                                         <?php 
                                             $section_id = $this->db->get_where('enroll' , array('student_id' => $student_id, 'year' => $running_year, 'semester_id' => $running_semester))->row()->section_id;
                                             $subjects = $this->db->get_where('v_enroll' , array('class_id' => $class_id, 'section_id' => $section_id, 'student_id' => $student_id, 'year' => $running_year, 'semester_id' => $running_semester))->result_array();
+
                                             foreach ($subjects as $row3): 
                                                 $subject_id = $row3['subject_id'];
                                                 $unit_id    = $row2['unit_id'];
@@ -199,7 +200,7 @@
                             </div>
                         </div>
                     </div>
-                    <?php endforeach; endforeach; ?>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </div>

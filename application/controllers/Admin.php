@@ -447,22 +447,6 @@
             $page_data['page_title'] =  getPhrase('your_notifications');
             $this->load->view('backend/index', $page_data);
         }
-
-        //Update academic settings function.
-        function academic_settings($param1 = '', $param2 = '', $param3 = '')
-        {
-            $this->isAdmin();
-            if ($param1 == 'do_update') 
-            {
-                $this->crud->updateAcademicSettings();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/academic_settings/', 'refresh');
-            }
-            $page_data['page_name']  = 'academic_settings';
-            $page_data['page_title'] = getPhrase('academic_settings');
-            $page_data['settings']   = $this->db->get('settings')->result_array();
-            $this->load->view('backend/index', $page_data);
-        }
         
         //Check if student exist function.
         function query() 
@@ -482,60 +466,7 @@
                 }
             }
         }
-        
-        //Grade Levels function.
-        function grade($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-            if ($param1 == 'create') 
-            {
-                $this->academic->createLevel();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-                redirect(base_url() . 'admin/grade/', 'refresh');
-            }
-            if ($param1 == 'update') 
-            {
-                $this->academic->updateLevel($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/grade/', 'refresh');
-            }
-            if ($param1 == 'delete') 
-            {
-                $this->academic->deleteLevel($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
-                redirect(base_url() . 'admin/grade/', 'refresh');
-            }
-            $page_data['page_name']  = 'grade';
-            $page_data['page_title'] = getPhrase('grades');
-            $this->load->view('backend/index', $page_data);
-        }
 
-        //GPA function.
-        function gpa($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-            if ($param1 == 'create') 
-            {
-                $this->academic->createGPA()();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-                redirect(base_url() . 'admin/gpa/', 'refresh');
-            }
-            if ($param1 == 'update') 
-            {
-                $this->academic->updateGPA()($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/gpa/', 'refresh');
-            }
-            if ($param1 == 'delete') 
-            {
-                $this->academic->deleteGPA()($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
-                redirect(base_url() . 'admin/gpa/', 'refresh');
-            }
-            $page_data['page_name']  = 'gpa';
-            $page_data['page_title'] = getPhrase('gpa');
-            $this->load->view('backend/index', $page_data);
-        }
     
         //All users and manage admin permissions function.
         function users($param1 = '' , $param2 = '')
@@ -2125,164 +2056,6 @@
             force_download($name, $data);
         }
 
-        //Manage school sections function.
-        function sections($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-            $class = $this->input->post('class_id');
-            if ($class == '')
-            {
-                $class = $this->db->get('class')->first_row()->class_id;
-            }
-            $year_id = $this->input->post('year_id');
-            if ($year_id == '')
-            {
-                $year_id = $this->runningYear;
-            }
-            $semester_id = $this->input->post('semester_id');
-            if ($semester_id == '')
-            {
-                $semester_id = $this->runningSemester;
-            }
-            
-            if ($param1 == 'create') 
-            {
-                $new_year_id = $this->input->post('new_year_id');
-                $new_semester_id = $this->input->post('new_semester_id');
-
-                $this->academic->createSection($new_year_id, $new_semester_id);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-                redirect(base_url() . 'admin/sections/' . $this->input->post('class_id') ."/", 'refresh');
-            }
-            if($param1 == 'update')
-            {
-                $this->academic->updateSection($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/sections/', 'refresh');
-            }
-            if ($param1 == 'delete') 
-            {
-                $this->academic->deleteSection($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
-                redirect(base_url() . 'admin/sections/' , 'refresh');
-            }
-            $page_data['page_name']     = 'section';
-            $page_data['page_title']    = getPhrase('sections');
-            $page_data['class_id']      = $class;
-            $page_data['year_id']       = $year_id;
-            $page_data['semester_id']   = $semester_id;
-            $this->load->view('backend/index', $page_data);    
-        }
-
-        //Manage school subjects function.
-        function subjects($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-
-            $class = $this->input->post('class_id');
-            if ($class == '')
-            {
-                $class = $this->db->get('class')->first_row()->class_id;
-            }
-
-            $year_id = $this->input->post('year_id');
-            if ($year_id == '')
-            {
-                $year_id = $this->runningYear;
-            }
-
-            $semester_id = $this->input->post('semester_id');
-            if ($semester_id == '')
-            {
-                $semester_id = $this->runningSemester;
-            }
-
-            $section_id = $this->input->post('section_id');
-
-            if ($param1 == 'create') 
-            {
-                $new_year_id = $this->input->post('new_year_id');
-                $new_semester_id = $this->input->post('new_semester_id');
-
-                $this->academic->createSubject($new_year_id, $new_semester_id);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-                redirect(base_url() . 'admin/subjects/' . $this->input->post('class_id') ."/", 'refresh');
-            }
-            if($param1 == 'update')
-            {
-                $this->academic->updateCourse($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/subjects/', 'refresh');
-            }
-            if ($param1 == 'delete') 
-            {
-                $this->academic->deleteCourse($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
-                redirect(base_url() . 'admin/subjects/' , 'refresh');
-            }
-            $page_data['page_name']     = 'subjects';
-            $page_data['page_title']    = getPhrase('subjects');
-            $page_data['class_id']      = $class;
-            $page_data['year_id']       = $year_id;
-            $page_data['section_id']    = $section_id;
-            $page_data['semester_id']   = $semester_id;
-            $this->load->view('backend/index', $page_data);    
-        }
-
-        //Manage units function.
-        function units($param1 = '', $param2 = '' , $param3 = '')
-        {
-            $this->isAdmin();
-            if ($param1 == 'create') 
-            {
-                $this->academic->createUnit();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-                redirect(base_url() . 'admin/units/', 'refresh');
-            }
-            if ($param1 == 'update') 
-            {
-                $this->academic->updateUnit($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/units/', 'refresh');
-            }
-            if ($param1 == 'delete') 
-            {
-                $this->academic->deleteUnit($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
-                redirect(base_url() . 'admin/units/', 'refresh');
-            }
-            $page_data['page_name']  = 'units';
-            $page_data['page_title'] = getPhrase('units');
-            $this->load->view('backend/index', $page_data);
-        }
-
-        //Manage semesters function.
-        function semesters($param1 = '', $param2 = '' , $param3 = '')
-        {
-            $this->isAdmin();
-            if ($param1 == 'create') 
-            {
-                $this->academic->createSemester();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-                redirect(base_url() . 'admin/semesters/', 'refresh');
-            }
-            if ($param1 == 'update') 
-            {
-                $this->academic->updateSemester($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/semesters/', 'refresh');
-            }
-            if ($param1 == 'delete') 
-            {
-                $this->academic->deleteSemester($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
-                redirect(base_url() . 'admin/semesters/', 'refresh');
-            }
-            $page_data['page_name']  = 'semester';
-            $page_data['page_title'] = getPhrase('units');
-            $this->load->view('backend/index', $page_data);
-        }
-
         //Update Book Function.
         function update_book($param1 = '', $param2 = '')
         {
@@ -3276,7 +3049,7 @@
             
         }
 
-/*****Admission Module  ********************************************************************************************************************************/        
+/*****Admission Module  ******************************************************************************************************************************/        
         // Admission Dashboard
         function admission_dashboard()
         {
@@ -3924,6 +3697,240 @@
             $page_data['page_title']    = getPhrase('reports_students_all');
             $this->load->view('backend/index', $page_data);
         }
+
+/*****Academic Settings Module     *******************************************************************************************************************/
+        
+        //Update academic settings function.
+        function academic_settings($param1 = '', $param2 = '', $param3 = '')
+        {
+            $this->isAdmin();
+            if ($param1 == 'do_update') 
+            {
+                $this->crud->updateAcademicSettings();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/academic_settings/', 'refresh');
+            }
+            $page_data['page_name']  = 'academic_settings';
+            $page_data['page_title'] = getPhrase('academic_settings');
+            $page_data['settings']   = $this->db->get('settings')->result_array();
+            $this->load->view('backend/index', $page_data);
+        }
+
+                
+        //Grade Levels function.
+        function academic_settings_grade($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            if ($param1 == 'create') 
+            {
+                $this->academic->createLevel();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'admin/academic_settings_grade/', 'refresh');
+            }
+            if ($param1 == 'update') 
+            {
+                $this->academic->updateLevel($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/academic_settings_grade/', 'refresh');
+            }
+            if ($param1 == 'delete') 
+            {
+                $this->academic->deleteLevel($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                redirect(base_url() . 'admin/academic_settings_grade/', 'refresh');
+            }
+            $page_data['page_name']  = 'academic_settings_grade';
+            $page_data['page_title'] = getPhrase('grades');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //GPA function.
+        function academic_settings_gpa($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            if ($param1 == 'create') 
+            {
+                $this->academic->createGPA()();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'admin/academic_settings_gpa/', 'refresh');
+            }
+            if ($param1 == 'update') 
+            {
+                $this->academic->updateGPA()($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/academic_settings_gpa/', 'refresh');
+            }
+            if ($param1 == 'delete') 
+            {
+                $this->academic->deleteGPA()($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                redirect(base_url() . 'admin/academic_settings_gpa/', 'refresh');
+            }
+            $page_data['page_name']  = 'academic_settings_gpa';
+            $page_data['page_title'] = getPhrase('gpa');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //Manage semesters function.
+        function academic_settings_semesters($param1 = '', $param2 = '' , $param3 = '')
+        {
+            $this->isAdmin();
+            if ($param1 == 'create') 
+            {
+                $this->academic->createSemester();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'admin/academic_settings_semesters/', 'refresh');
+            }
+            if ($param1 == 'update') 
+            {
+                $this->academic->updateSemester($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/academic_settings_semesters/', 'refresh');
+            }
+            if ($param1 == 'delete') 
+            {
+                $this->academic->deleteSemester($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                redirect(base_url() . 'admin/academic_settings_semesters/', 'refresh');
+            }
+            $page_data['page_name']  = 'academic_settings_semesters';
+            $page_data['page_title'] = getPhrase('units');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //Manage units function.
+        function academic_settings_units($param1 = '', $param2 = '' , $param3 = '')
+        {
+            $this->isAdmin();
+            if ($param1 == 'create') 
+            {
+                $this->academic->createUnit();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'admin/academic_settings_units/', 'refresh');
+            }
+            if ($param1 == 'update') 
+            {
+                $this->academic->updateUnit($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/academic_settings_units/', 'refresh');
+            }
+            if ($param1 == 'delete') 
+            {
+                $this->academic->deleteUnit($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                redirect(base_url() . 'admin/academic_settings_units/', 'refresh');
+            }
+            $page_data['page_name']  = 'academic_settings_units';
+            $page_data['page_title'] = getPhrase('units');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //Manage school sections function.
+        function academic_settings_sections($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            $class = $this->input->post('class_id');
+            if ($class == '')
+            {
+                $class = $this->db->get('class')->first_row()->class_id;
+            }
+            $year_id = $this->input->post('year_id');
+            if ($year_id == '')
+            {
+                $year_id = $this->runningYear;
+            }
+            $semester_id = $this->input->post('semester_id');
+            if ($semester_id == '')
+            {
+                $semester_id = $this->runningSemester;
+            }
+            
+            if ($param1 == 'create') 
+            {
+                $new_year_id = $this->input->post('new_year_id');
+                $new_semester_id = $this->input->post('new_semester_id');
+
+                $this->academic->createSection($new_year_id, $new_semester_id);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'admin/academic_settings_sections/' . $this->input->post('class_id') ."/", 'refresh');
+            }
+            if($param1 == 'update')
+            {
+                $this->academic->updateSection($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/academic_settings_sections/', 'refresh');
+            }
+            if ($param1 == 'delete') 
+            {
+                $this->academic->deleteSection($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                redirect(base_url() . 'admin/academic_settings_sections/' , 'refresh');
+            }
+            $page_data['page_name']     = 'academic_settings_sections';
+            $page_data['page_title']    = getPhrase('sections');
+            $page_data['class_id']      = $class;
+            $page_data['year_id']       = $year_id;
+            $page_data['semester_id']   = $semester_id;
+            $this->load->view('backend/index', $page_data);    
+        }
+
+        //Manage school subjects function.
+        function academic_settings_subjects($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+
+            $class = $this->input->post('class_id');
+            if ($class == '')
+            {
+                $class = $this->db->get('class')->first_row()->class_id;
+            }
+
+            $year_id = $this->input->post('year_id');
+            if ($year_id == '')
+            {
+                $year_id = $this->runningYear;
+            }
+
+            $semester_id = $this->input->post('semester_id');
+            if ($semester_id == '')
+            {
+                $semester_id = $this->runningSemester;
+            }
+
+            $section_id = $this->input->post('section_id');
+
+            if ($param1 == 'create') 
+            {
+                $new_year_id = $this->input->post('new_year_id');
+                $new_semester_id = $this->input->post('new_semester_id');
+
+                $this->academic->createSubject($new_year_id, $new_semester_id);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'admin/academic_settings_subjects/' . $this->input->post('class_id') ."/", 'refresh');
+            }
+            if($param1 == 'update')
+            {
+                $this->academic->updateCourse($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/academic_settings_subjects/', 'refresh');
+            }
+            if ($param1 == 'delete') 
+            {
+                $this->academic->deleteCourse($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                redirect(base_url() . 'admin/academic_settings_subjects/' , 'refresh');
+            }
+            $page_data['page_name']     = 'academic_settings_subjects';
+            $page_data['page_title']    = getPhrase('subjects');
+            $page_data['class_id']      = $class;
+            $page_data['year_id']       = $year_id;
+            $page_data['section_id']    = $section_id;
+            $page_data['semester_id']   = $semester_id;
+            $this->load->view('backend/index', $page_data);    
+        }
+
+
+
 
 /*****Task Module     ********************************************************************************************************************************/        
         // task Dashboard

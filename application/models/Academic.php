@@ -1049,7 +1049,7 @@ class Academic extends School
                                                                        'section_id'  => $section_id, 
                                                                        'subject_id'  => $subject_id,
                                                                        'unit_id'     => $exam_id,
-                                                                       'date'        => $date,
+                                                                       'mark_date'   => $date,
                                                                        'year'        => $this->runningYear,
                                                                        'semester_id' => $this->runningSemester
                                                   ))->result_array();
@@ -1128,8 +1128,8 @@ class Academic extends School
         return $info;
     }
     
-    public function updateDailyMarksBatch($datainfo, $student_id, $unit_id, $mark_date){
-
+    public function updateDailyMarksBatch($datainfo, $student_id, $unit_id, $mark_date)
+    {
         $info = base64_decode( $datainfo );
         $ex = explode( '-', $info );
 
@@ -1139,7 +1139,7 @@ class Academic extends School
         $data['year']        = $this->runningYear;
         $data['semester_id'] = $this->runningSemester;
 
-        $data['student_id'] = $student_id;
+        //$data['student_id'] = $student_id;
         $data['unit_id']    = $unit_id;
         $data['mark_date']  = $mark_date;
 
@@ -1252,7 +1252,7 @@ class Academic extends School
                                             AND subject_id  = '$ex[2]'
                                             AND year        = '$running_year'
                                             AND semester_id = '$running_semester'
-                                            AND date        = '$mark_date'
+                                            AND date   = '$mark_date'
                                             ORDER BY first_name asc
                                             ")->result_array();
         }
@@ -1369,12 +1369,12 @@ class Academic extends School
             if($this->useDailyMarks)
             {
                 $verify_data = array('unit_id' => $data['unit_id'], 'class_id' => $data['class_id'], 'section_id' => $data['section_id'],
-                                    'student_id' => $row['student_id'],'subject_id' => $data['subject_id'], 'year' => $data['year'], 'date' => $date);
+                                    'student_id' => $row['student_id'],'subject_id' => $data['subject_id'], 'year' => $data['year'], 'mark_date' => $date);
                 $query = $this->db->get_where('mark_daily' , $verify_data);
 
                 if($query->num_rows() < 1) 
                 {   
-                    $data['date']       = $date;
+                    $data['mark_date']  = $date;
                     $data['student_id'] = $row['student_id'];
                     
                     $this->db->insert('mark_daily' , $data);
@@ -1622,7 +1622,8 @@ class Academic extends School
         return $info;
     }
     
-    public function getClassCurrentUnit($class_id) {
+    public function getClassCurrentUnit($class_id)
+    {
         $query = $this->db->query("SELECT unit_id FROM v_class_units WHERE class_id='$class_id' AND is_current = 1 ORDER BY sequence ASC")->row()->unit_id;
 
         if($query == null){
