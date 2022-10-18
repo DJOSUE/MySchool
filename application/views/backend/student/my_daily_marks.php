@@ -45,10 +45,10 @@
                                         <tr>
                                             <th><?php echo getPhrase('subject');?></th>
                                             <th><?php echo getPhrase('teacher');?></th>
-                                            <th><?php echo getPhrase('attendance');?></th>
-                                            <th><?php echo getPhrase('mark');?></th>
-                                            <th><?php echo getPhrase('grade');?></th>
-                                            <th><?php echo getPhrase('gpa');?></th>
+                                            <th class="text-center"><?php echo getPhrase('attendance');?></th>
+                                            <th class="text-center"><?php echo getPhrase('mark');?></th>
+                                            <th class="text-center"><?php echo getPhrase('grade');?></th>
+                                            <th class="text-center"><?php echo getPhrase('gpa');?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -124,9 +124,14 @@
                                             $mark = $count > 0 ? round(($labototal/$count), (int)$roundPrecision) : '-';
 
 
-                                            // Totals                                            
-                                            $total_mark += $mark;
-                                            $total_count++;
+                                            if($mark != '-'){
+                                                $total_mark += $mark;
+                                                $total_count++; 
+                                            }
+
+                                            if($labouno != '-'){
+                                                $total_labuno += $labouno;
+                                            }
 
                                         ?>
                                         <tr>
@@ -139,7 +144,7 @@
                                                     width="25px" style="border-radius: 10px;margin-right:5px;">
                                                 <?php echo $item['teacher_name']; ?>
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 <?php if(($labouno < $min || $labouno == 0) && $labouno != '-'):?>
                                                 <a class="btn btn-rounded btn-sm btn-danger"
                                                     style="color:white"><?php if($labouno == 0) echo '0'; else echo $labouno;?></a>
@@ -149,7 +154,7 @@
                                                     style="color:white"><?php echo $labouno;?></a>
                                                 <?php endif;?>
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 <?php if(($mark < $min || $mark == 0) && $mark != '-'):?>
                                                 <a class="btn btn-rounded btn-sm btn-danger"
                                                     style="color:white"><?php if($mark == 0) echo '0'; else echo $mark;?></a>
@@ -159,10 +164,10 @@
                                                     style="color:white"><?php echo $mark;?></a>
                                                 <?php endif;?>
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 <?php echo $this->crud->get_grade($mark);?>
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 <?php echo $this->crud->get_gpa($mark);?>
                                             </td>    
                                         </tr>
@@ -175,18 +180,18 @@
                                             <td>
                                             </td>
                                             <td class="text-right">
-                                                <b><?= getPhrase('total');?></b>
+                                                <b><?= getPhrase('average');?></b>
                                             </td>
-                                            <td>
-                                                
+                                            <td class="text-center">
+                                                <?= $total_attendance; ?>
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 <?= $total_average; ?>
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 <?php echo $this->crud->get_grade($total_average);?>
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 <?php echo $this->crud->get_gpa($total_average);?>
                                             </td>
                                         </tr>
@@ -203,19 +208,19 @@
                         </div>
                     </div>
 
-                    <?php 
-        				//$student_info = $this->db->get_where('v_enroll' , array('student_id' => $student_id , 'class_id' => $class_id, 'year' => $running_year, 'semester_id' => $running_semester))->result_array();
+                    <?php         				
                         $student_info = $this->db->query("SELECT * FROM v_enroll 
-                                                                    WHERE student_id = '$student_id'
-                                                                    AND class_id = $class_id
-                                                                    AND year = '$running_year'
-                                                                    AND semester_id = '$running_semester'
-                                                                    LIMIT 1
-                                                                    ")->result_array();
+                                                                WHERE student_id = '$student_id'
+                                                                AND class_id = $class_id
+                                                                AND year = '$running_year'
+                                                                AND semester_id = '$running_semester'
+                                                                LIMIT 1
+                                                                ")->row_array();
 
-    				    $exams = $this->db->get_where('v_class_units', array('class_id' => $class_id))->result_array();
-
-    				    foreach ($student_info as $row1):
+                        $subjects = $this->db->get_where('v_enrollment' , array('class_id' => $class_id, 'section_id' => $section_id, 'student_id' => $student_id, 'year' => $running_year, 'semester_id' => $running_semester))->result_array();
+                        
+    				    $exams = $this->db->get_where('v_class_units', array('class_id' => $class_id))->result_array();   				    
+                        $section_id = $student_info['section_id'];
     				    foreach ($exams as $row2):
 				    ?>
                     <div class="col-sm-12">
@@ -237,7 +242,8 @@
                                     </thead>
                                     <tbody>
                                         <?php 
-                                			$subjects = $this->db->get_where('v_subject' , array('class_id' => $row1['class_id'], 'section_id' => $row1['section_id']))->result_array();
+                                			
+
                             			    foreach ($subjects as $row3): 
 
                                                 $subject_id = $row3['subject_id'];
@@ -292,7 +298,7 @@
                                             if($labodiez    == '' ) { $labodiez     = '-'; }
 
                                             // Calculate the average 
-                                            if(is_numeric($labouno)     && $labouno != '-' ) { $count++; } 
+                                            // if(is_numeric($labouno)     && $labouno != '-' ) { $count++; } 
                                             if(is_numeric($labodos)     && $labodos != '-' ) { $count++; }  
                                             if(is_numeric($labotres)    && $labotres != '-' ) { $count++; }  
                                             if(is_numeric($labocuatro)  && $labocuatro != '-' ) { $count++; }  
@@ -309,7 +315,7 @@
                             		    ?>
                                         <tr>
                                             <td>
-                                                <?php echo $row3['name'];?>
+                                                <?php echo $row3['subject_name'];?>
                                             </td>
                                             <td>
                                                 <img alt=""
@@ -349,7 +355,7 @@
                             </div>
                         </div>
                     </div>
-                    <?php endforeach; endforeach; ?>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </div>

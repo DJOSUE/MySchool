@@ -91,6 +91,7 @@
                                                     <tr>
                                                         <th class="text-center"><?php echo getPhrase('user');?></th>
                                                         <th class="text-center"><?php echo getPhrase('name');?></th>
+                                                        <th class="text-center"><?php echo getPhrase('answer');?></th>
                                                         <th class="text-center"><?php echo getPhrase('date');?></th>
                                                     </tr>
                                                 </thead>
@@ -122,6 +123,7 @@
                                                         <?php endif;?>
                                                         </td>
                                                         <td class="text-center"><?php echo $this->crud->get_name($arrays[0], $arrays[1]);?></td>
+                                                        <td  class="text-center"><?php echo $ro['answer'];?></td>
                                                         <td  class="text-center"><?php echo $ro['date'];?></td>
                                                     </tr>
                                                     <?php endforeach;?>

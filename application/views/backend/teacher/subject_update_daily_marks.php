@@ -69,7 +69,7 @@
                                 </div>
                                 <div class="edu-posts cta-with-media">
                                     <div style="padding:0% 0%">
-                                        <?php echo form_open(base_url() . 'teacher/update_daily_marks/'.$data, array('class' => 'form'));?>
+                                        <?php echo form_open(base_url() . 'teacher/subject_update_daily_marks/'.$data, array('class' => 'form'));?>
                                         <div class="row">
                                             <div class="col">
                                                 <div class="form-group label-floating is-select">
@@ -112,7 +112,7 @@
                                                         <select name="unit_id" id="unit_id">
                                                             <option value=""><?php echo getPhrase('select');?></option>
                                                             <?php 
-                                                                $exams = $this->db->get_where('v_class_units', array( 'class_id' => $class_id))->result_array();
+                                                                $exams = $this->crud->get_exam_by_class($class_id);
                                                                 foreach($exams as $row):
                                                             ?>
                                                             <option value="<?php echo $row['unit_id'];?>"

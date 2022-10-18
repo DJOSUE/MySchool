@@ -309,17 +309,7 @@
                         <?php 
                             $account_type = $this->session->userdata('role_id');
 
-                            switch ($account_type) {
-                                case '1':
-                                    echo getPhrase('super_admin');
-                                    break;
-                                case '2':
-                                    echo getPhrase('admin');
-                                    break;
-                                default:
-                                    echo getPhrase('advisor');
-                                    break;
-                            }
+                            echo $this->system->get_role_name($account_type);
                         ?>
                         
                     </span>

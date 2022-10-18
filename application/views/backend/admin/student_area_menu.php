@@ -50,7 +50,7 @@
                                     style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
                                 <a
                                     href="<?= base_url();?>admin/student_update_class/<?= $student_id;?>/">
-                                    <?= getPhrase('update_class');?>
+                                    <?= getPhrase('change_level');?>
                                 </a>
                             </li>
                             <li <?= $page_name == 'student_enrollments' ? 'class="menu-left-selected-icon"' : ''?>>
@@ -90,17 +90,17 @@
                                     style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
                                 <a
                                     href="<?= base_url();?>admin/student_past_marks/<?= $student_id;?>/">
-                                    <?= getPhrase('old_marks');?>
+                                    <?= getPhrase('past_marks');?>
                                 </a>
                             </li>
-                            <!-- <li <?= $page_name == 'student_profile_attendance' ? 'class="menu-left-selected-icon"' : ''?>>
+                            <li <?= $page_name == 'student_profile_attendance' ? 'class="menu-left-selected-icon"' : ''?>>
                                 <i class="picons-thin-icon-thin-0133_arrow_right_next"
                                     style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
                                 <a
                                     href="<?= base_url();?>admin/student_profile_attendance/<?= $student_id;?>/">
                                     <?= getPhrase('attendance');?>
                                 </a>
-                            </li> -->
+                            </li>
                             <li <?= $page_name == 'student_profile_report' ? 'class="menu-left-selected-icon"' : ''?>>
                                 <i class="picons-thin-icon-thin-0133_arrow_right_next"
                                     style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;

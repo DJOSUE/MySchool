@@ -12,6 +12,11 @@
         $type_info = $this->applicant->get_type_info($row['type_id']);
         $assigned_to = $this->crud->get_name('admin', $row['assigned_to']);
 ?>
+<style>
+    th {
+        cursor: pointer;
+    }
+</style>
 <div class="content-w">
     <?php include 'fancy.php';?>
     <div class="header-spacer"></div>
@@ -490,19 +495,26 @@
                                                             </thead>
                                                             <tbody>
                                                                 <?php 
-                                                                $interactions = $this->db->get_where('v_applicant_interaction', array('applicant_id' => $applicant_id))->result_array();
-                                                                
-                                                                // echo '<pre>';
-                                                                // var_dump($interactions);
-                                                                // echo '</pre>';
+                                                                $this->db->reset_query();
+                                                                $this->db->where('applicant_id', $applicant_id);
+                                                                $this->db->order_by('created_at', 'ASC');
+                                                                $interactions = $this->db->get('v_applicant_interaction')->result_array();
 
                                                                 foreach ($interactions as $item):
                                                             ?>
                                                                 <tr>
                                                                     <td class="text-center">
-                                                                        <center>
-                                                                            <?= strip_tags(html_entity_decode($item['comment']));?>
-                                                                        </center>
+                                                                        <?php
+                                                                            $html_text = strip_tags(html_entity_decode($item['comment']));
+                                                                            if(strlen($html_text) > 100)
+                                                                            {
+                                                                                echo substr($html_text, 0, 100).'...';
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                echo $html_text;
+                                                                            }                                                                            
+                                                                        ?>
                                                                     </td>
                                                                     <td class="text-center">
                                                                         <center>
@@ -639,4 +651,20 @@
             }
         });
     }
+</script>
+<script type="text/javascript">
+    $('th').click(function () {
+        var table = $(this).parents('table').eq(0)
+        var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+        this.asc = !this.asc
+        if (!this.asc) { rows = rows.reverse() }
+        for (var i = 0; i < rows.length; i++) { table.append(rows[i]) }
+    })
+    function comparer(index) {
+        return function (a, b) {
+            var valA = getCellValue(a, index), valB = getCellValue(b, index)
+            return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+        }
+    }
+    function getCellValue(row, index) { return $(row).children('td').eq(index).text() }
 </script>

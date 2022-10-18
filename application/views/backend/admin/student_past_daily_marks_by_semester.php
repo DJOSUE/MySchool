@@ -42,7 +42,7 @@
                                         $semester_id = $enroll['semester_id'];
                                 ?>
                                 <div class="col-sm-12">
-                                    <div class="element-box lined-primary">                                        
+                                    <div class="element-box lined-primary">
                                         <h5 class="form-header"><?= $enroll['class_name'];?><br>
                                             <small><?= $enroll['year'].' - '.$enroll['semester_name'].' - '.$enroll['section_name'];?></small>
                                         </h5>
@@ -52,15 +52,20 @@
                                                     <tr>
                                                         <th><?php echo getPhrase('subject');?></th>
                                                         <th><?php echo getPhrase('teacher');?></th>
-                                                        <th><?php echo getPhrase('mark');?></th>
-                                                        <th><?php echo getPhrase('grade');?></th>
-                                                        <th><?php echo getPhrase('gpa');?></th>
+                                                        <th class="text-center"><?php echo getPhrase('attendance');?>
+                                                        </th>
+                                                        <th class="text-center"><?php echo getPhrase('mark');?></th>
+                                                        <th class="text-center"><?php echo getPhrase('grade');?></th>
+                                                        <th class="text-center"><?php echo getPhrase('gpa');?></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php 
                                                         $enrollment = $this->db->get_where('v_enrollment' , array('student_id' => $student_id, 'class_id' => $class_id, 'section_id' => $section_id, 'year' => $year, 'semester_id' => $semester_id))->result_array();                                                        
                                                         
+                                                        $labouno_total = 0;
+                                                        $count_total   = 0; 
+                                                        $mark_total    = 0;
                                                         foreach ($enrollment as $row3): 
                                                             $subject_id = $row3['subject_id'];                                                            
 
@@ -85,7 +90,6 @@
 
                                                             // Calculate the average 
                                                             $count = 0;
-                                                            $Total_Sum = array_sum($average);
 
                                                             $labouno        = $average->labuno;
                                                             $labodos        = $average->labdos;
@@ -124,6 +128,15 @@
                                                             $labototal      = (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
                                             
                                                             $mark = $count > 0 ? round(($labototal/$count), (int)$roundPrecision) : '-';
+
+                                                            if($mark != '-'){
+                                                                $mark_total += $mark;
+                                                                $count_total++; 
+                                                            }
+                
+                                                            if($labouno != '-'){
+                                                                $labouno_total += $labouno;
+                                                            }
                                                     ?>
                                                     <tr>
                                                         <td>
@@ -132,7 +145,17 @@
                                                         <td>
                                                             <?= $row3['teacher_name'];?>
                                                         </td>
-                                                        <td>
+                                                        <td class="text-center">
+                                                            <?php if(is_numeric($labouno) && ($labouno < $min || $labouno == 0)):?>
+                                                            <a class="btn btn-rounded btn-sm btn-danger"
+                                                                style="color:white"><?php if($labouno == 0) echo '0'; else echo $labouno;?></a>
+                                                            <?php endif;?>
+                                                            <?php if(is_numeric($labouno) && ($labouno >= $min)):?>
+                                                            <a class="btn btn-rounded btn-sm btn-info"
+                                                                style="color:white"><?php echo $labouno;?></a>
+                                                            <?php endif;?>
+                                                        </td>
+                                                        <td class="text-center">
                                                             <?php if(is_numeric($mark) && ($mark < $min || $mark == 0)):?>
                                                             <a class="btn btn-rounded btn-sm btn-danger"
                                                                 style="color:white"><?php if($mark == 0) echo '0'; else echo $mark;?></a>
@@ -142,22 +165,65 @@
                                                                 style="color:white"><?php echo $mark;?></a>
                                                             <?php endif;?>
                                                         </td>
-                                                        <td>
+                                                        <td class="text-center">
                                                             <?= $grade = $this->crud->get_grade($mark);?>
                                                         </td>
-                                                        <td>
+                                                        <td class="text-center">
                                                             <?= $grade = $this->crud->get_gpa($mark);?>
                                                         </td>
                                                     </tr>
-                                                    <?php endforeach;?>
+                                                    <?php  endforeach; 
+                                                        $final_mark = ($count_total > 0 ? round(($mark_total/$count_total), (int)$roundPrecision) : '-');
+                                                        $final_attendance = ($count_total > 0 ? round(($labouno_total/$count_total), (int)$roundPrecision) : '-');
+
+                                                        //$final_gpa = 
+                                                    ?>
+                                                    <tr>
+                                                        <th colspan="2" class="text-right">
+                                                            <b><?= getPhrase('average');?></b>
+                                                        </th>
+                                                        <th class="text-center">
+                                                            <?php if(is_numeric($final_attendance) && ($final_attendance < $min || $final_attendance == 0)):?>
+                                                            <a class="btn btn-rounded btn-sm btn-danger"
+                                                                style="color:white"><?php if($final_attendance == 0) echo '0'; else echo $final_attendance;?></a>
+                                                            <?php endif;?>
+                                                            <?php if(is_numeric($final_attendance) && ($final_attendance >= $min)):?>
+                                                            <a class="btn btn-rounded btn-sm btn-info"
+                                                                style="color:white"><?php echo $final_attendance;?></a>
+                                                            <?php endif;?>
+                                                        </th>
+                                                        <th class="text-center">
+                                                            <?php if(is_numeric($final_mark) && ($final_mark < $min || $final_mark == 0)):?>
+                                                            <a class="btn btn-rounded btn-sm btn-danger"
+                                                                style="color:white"><?php if($final_mark == 0) echo '0'; else echo $final_mark;?></a>
+                                                            <?php endif;?>
+                                                            <?php if(is_numeric($final_mark) && ($final_mark >= $min)):?>
+                                                            <a class="btn btn-rounded btn-sm btn-info"
+                                                                style="color:white"><?php echo $final_mark;?></a>
+                                                            <?php endif;?>
+                                                        </th>
+                                                        <th class="text-center">
+                                                            <?= $grade = $this->crud->get_grade($final_mark);?>
+                                                        </th>
+                                                        <th class="text-center">
+                                                            <?= $grade = $this->crud->get_gpa($final_mark);?>
+                                                        </th>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                             <div class="form-buttons-w text-right">
                                                 <a target="_blank"
-                                                    href="<?php echo base_url();?>admin/marks_old_print_view/<?php echo base64_encode($student_id.'-'.$class_id.'-'.$section_id.'-'.$year.'-'.$semester_id);?>"><button
-                                                        class="btn btn-rounded btn-success" type="submit"><i
-                                                            class="picons-thin-icon-thin-0333_printer"></i>
-                                                        <?php echo getPhrase('print');?></button></a>
+                                                    href="<?php echo base_url();?>admin/student_print_marks_past_cea/<?php echo base64_encode($student_id.'-'.$class_id.'-'.$section_id.'-'.$year.'-'.$semester_id);?>"><button
+                                                        class="btn btn-rounded btn-success" type="submit">
+                                                        <i class="picons-thin-icon-thin-0333_printer"></i>
+                                                        <?php echo getPhrase('print_CEA');?></button>
+                                                </a>
+                                                <a target="_blank"
+                                                    href="<?php echo base_url();?>admin/student_print_marks_past/<?php echo base64_encode($student_id.'-'.$class_id.'-'.$section_id.'-'.$year.'-'.$semester_id);?>"><button
+                                                        class="btn btn-rounded btn-success" type="submit">
+                                                        <i class="picons-thin-icon-thin-0333_printer"></i>
+                                                        <?php echo getPhrase('print');?></button>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>

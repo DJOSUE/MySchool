@@ -284,8 +284,9 @@
         });
     
         function get_class_students(section_id) {
+            console.log('DAVID');
             $.ajax({
-                url: '<?php echo base_url();?>admin/get_class_studentss/' + section_id ,
+                url: '<?php echo base_url();?>admin/get_class_students/' + section_id ,
                 success: function(response)
                 {
                     jQuery('#student_selection_holder').html(response);

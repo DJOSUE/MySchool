@@ -57,7 +57,7 @@
                                             <ul>
                                                 <?php  
                     				                $var = 0;
-                    				                $examss = $this->db->get_where('v_class_units', array( 'class_id' => $class_id))->result_array();
+                    				                $examss = $this->crud->get_exam_by_class($class_id);
                     				                foreach($examss as $exam):
                     				                $var++;
                     				            ?>

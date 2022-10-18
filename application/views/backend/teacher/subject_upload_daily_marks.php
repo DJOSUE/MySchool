@@ -80,12 +80,12 @@
                                             <ul>
                                                 <?php  
                     				                $var = 0;
-                    				                $examss = $this->db->get_where('v_class_units', array( 'class_id' => $class_id))->result_array();
+                    				                $examss = $this->crud->get_exam_by_class($class_id); // db->get_where('v_class_units', array( 'class_id' => $class_id))->result_array();
                     				                foreach($examss as $exam):
                     				                $var++;
                     				            ?>
                                                 <li class="<?php if($exam['unit_id'] == $unit_id) echo "act";?>"><a
-                                                        href="<?php echo base_url();?>teacher/upload_marks/<?php echo $data.'/'.$exam['unit_id'];?>/"><i
+                                                        href="<?php echo base_url();?>teacher/subject_upload_marks/<?php echo $data.'/'.$exam['unit_id'];?>/"><i
                                                             class="os-icon picons-thin-icon-thin-0023_calendar_month_day_planner_events"></i><?php echo $exam['unit_name'];?></a>
                                                 </li>
                                                 <?php endforeach;?>

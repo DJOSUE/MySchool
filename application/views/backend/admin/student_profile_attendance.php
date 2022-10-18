@@ -1,10 +1,14 @@
 <?php 
-    $min = $this->db->get_where('academic_settings' , array('type' =>'minium_mark'))->row()->description;
+    
     $running_year = $this->crud->getInfo('running_year');
+
+    $min = $this->db->get_where('academic_settings' , array('type' =>'minium_mark'))->row()->description;
     $student_info = $this->db->get_where('student' , array('student_id' => $student_id))->result_array(); 
+
     foreach($student_info as $row):
-    $class_id = $this->db->get_where('enroll', array('student_id' => $row['student_id']))->row()->class_id;
-    $section_id = $this->db->get_where('enroll', array('student_id' => $row['student_id']))->row()->section_id;
+
+        $class_id = $this->db->get_where('enroll', array('student_id' => $row['student_id']))->row()->class_id;
+        $section_id = $this->db->get_where('enroll', array('student_id' => $row['student_id']))->row()->section_id;
 ?>
     <div class="content-w"> 
         <?php include 'fancy.php';?>
@@ -58,7 +62,7 @@
                                                     </div>
 						                        </div>  
 						                        <div class="col-sm-5">    
-						                            <div class="form-group label-floating is-select">
+						                            <!-- <div class="form-group label-floating is-select">
                                                         <label class="control-label"><?php echo getPhrase('subject');?></label>
                                                         <div class="select">
                                                             <select name="subject_id" required="">
@@ -71,7 +75,7 @@
                     				                            <?php endforeach;?>
                                                             </select>
                                                         </div>
-                                                    </div>
+                                                    </div> -->
 						                        </div>   
                                                 <input type="hidden" name="year" value="<?php echo $running_year;?>">        
 						                        <div class="col-sm-2">                 
@@ -98,35 +102,57 @@
                                                     <?php
                                                         $days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
                                                         for ($i = 1; $i <= $days; $i++) {
+                                                            $date = $year.'/'.$month.'/'.$i;
+                                                            $datetime = strtotime($date);
+                                                            $day_name = date('D', $datetime);
                                                     ?>                    
-                                                    <th class="text-center"> <?php echo $i; ?> </th>                    
+                                                    <th class="text-center"> <?php echo $day_name.'<br/>'.$i; ?> </th>                    
                                                     <?php } ?>
                                                 </tr> 
                                             </thead>                  
-                                            <tbody>                    
-                                                <tr>                      
-                                                    <td><img alt="" src="<?php echo $this->crud->get_image_url('student', $student_id);?>" width="20px" style="border-radius:20px;margin-right:5px;"> <?php echo $this->crud->get_name('student', $student_id); ?> </td>    
-                                                    <?php
-                                                        $status = 0;
-                                                        for ($i = 1; $i <= $days; $i++) {
-                                                        $timestamp = strtotime($i . '-' . $month . '-' . $year);
-                                                        $this->db->group_by('timestamp');
-                                                        $attendance = $this->db->get_where('attendance', array('subject_id' => $subject_id,'section_id' => $section_id, 'class_id' => $class_id, 'year' => $running_year, 'timestamp' => $timestamp, 'student_id' => $student_id))->result_array();
-                                                        foreach ($attendance as $row1): $month_dummy = date('d', $row1['timestamp']);
-                                                        if ($i == $month_dummy) $status = $row1['status'];
-                                                        endforeach; ?>
-                                                    <td class="text-center">
-                                                    <?php if ($status == 1) { ?>
-                                                        <div class="status-pilli green" data-title="<?php echo getPhrase('present');?>" data-toggle="tooltip"></div>
-                                                    <?php  } if($status == 2)  { ?>
-                                                        <div class="status-pilli red" data-title="<?php echo getPhrase('absent');?>" data-toggle="tooltip"></div>
-                                                    <?php  } if($status == 3)  { ?>
-                                                        <div class="status-pilli yellow" data-title="<?php echo getPhrase('late');?>" data-toggle="tooltip"></div>
-                                                    <?php  } $status =0;?>
-                                                    </td>                      
-                                                    <?php } ?>
-                                                </tr>                                      
-                                            </tbody>                
+                                            <tbody>
+                                            <tr>
+                                                <td><img alt=""
+                                                        src="<?php echo $this->crud->get_image_url('student', $student_id);?>"
+                                                        width="20px" style="border-radius:20px;margin-right:5px;">
+                                                    <?php echo $this->crud->get_name('student', $student_id); ?>
+                                                </td>
+                                                <?php
+                                                    $status = 0;
+                                                    for ($i = 1; $i <= $days; $i++) {                                                        
+                                                        $date = ($year . '-' . $month . '-' . $i);                                                        
+                                                        $attendance = $this->db->get_where('v_mark_daily_attendance', array('year' => $running_year, 'date' => $date, 'student_id' => $student_id))->result_array();
+                                                        
+                                                        // echo '<pre>';
+                                                        // var_dump($date);
+                                                        // echo '</pre>';
+
+
+                                                        $attendanceValue = -1;
+                                                        foreach ($attendance as $row1): 
+                                                            $attendanceValue = (($row1['attendance'] > -1)? $row1['attendance'] : -1 );
+                                                            break;
+                                                        endforeach; 
+                                                        
+                                                ?>
+                                                <td class="text-center">
+                                                    <?php if ($attendanceValue == 100) { ?>
+                                                    <div class="status-pilli green"
+                                                        data-title="<?= getPhrase('present');?>"
+                                                        data-toggle="tooltip"></div>
+                                                    <?php  } else if($attendanceValue > 0)  { ?>
+                                                    <div class="status-pilli yellow"
+                                                        data-title="<?= getPhrase('late');?>"
+                                                        data-toggle="tooltip"></div>
+                                                    <?php  } else if($attendanceValue == 0)  { ?>
+                                                    <div class="status-pilli red"
+                                                        data-title="<?= getPhrase('absent');?>"
+                                                        data-toggle="tooltip"></div>
+                                                    <?php  } $attendanceValue = -1;?>
+                                                </td>
+                                                <?php } ?>
+                                            </tr>
+                                        </tbody>                
                                         </table>             
                                     </div>           
                                 </div>  

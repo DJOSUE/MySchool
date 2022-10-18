@@ -18,7 +18,7 @@
                                 <div class="video-player">
                                     <div id="container" style="width:100%;height:83vh"></div>
                                 </div>
-                                <div class="features-video-content">
+                                <!-- <div class="features-video-content">
                                     <article class="hentry post">
                                         <div class="post__author author vcard inline-items">
                                             <img src="<?php echo $this->crud->get_image_url($row['user_type'], $row['user_id']);?>" width="36" height="36" alt="author">
@@ -72,7 +72,7 @@
                                         <?php endforeach; endif;?>
                                         </div>
                                     </article>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>

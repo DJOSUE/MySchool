@@ -123,7 +123,7 @@
                                         <select name="unit_id" id="unit_id">
                                             <option value=""><?php echo getPhrase('select');?></option>
                                             <?php 
-                                                $exams = $this->db->get_where('v_class_units', array( 'class_id' => $class_id))->result_array();
+                                                $exams = $this->crud->get_exam_by_class($class_id);
                                                 foreach($exams as $row):
                                             ?>
                                             <option value="<?php echo $row['unit_id'];?>"

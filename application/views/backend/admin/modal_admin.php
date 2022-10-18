@@ -1,5 +1,6 @@
 <?php 
     $admin = $this->db->get_where('admin' , array('admin_id' => $param2))->result_array();
+    $roles = $this->system->get_admins_role();
     foreach($admin as $row):
 ?>
     <div class="modal-body">
@@ -54,9 +55,12 @@
                             <label class="control-label"><?php echo getPhrase('account_type');?></label>
                             <div class="select">
                                 <select name="owner_status" id="slct">
-                                    <option value="">Seleccionar</option>
-                                    <option value="1" <?php if($row['owner_status'] == 1) echo 'selected';?>><?php echo getPhrase('suer_admin');?></option>
-                                    <option value="0" <?php if($row['owner_status'] == 2) echo "selected";?>><?php echo getPhrase('admin');?></option>
+                                    <option value=""><?= getPhrase('select');?></option>
+                                    <?php 
+                                    foreach ($roles as $role) :
+                                    ?>
+                                    <option value="<?= $role['role_id']?>"><?= $role['name'];?></option>
+                                    <?php endforeach;?>
                                 </select>
                             </div>
                         </div>

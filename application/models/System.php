@@ -66,6 +66,13 @@ class System extends School
         return $role;
     }
 
+    function get_admins_role()
+    {
+        $this->db->order_by('name', 'ASC');
+        $roles = $this->db->get_where('roles', array('status' => 1, 'table' => 'admin', 'role_id !=' => '1' ))->result_array();
+        return $roles;
+    }
+    
     function get_role_name($role_id)
     {
         $role = $this->db->get_where('roles', array('role_id' => $role_id))->row_array();

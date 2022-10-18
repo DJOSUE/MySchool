@@ -2161,6 +2161,7 @@ class Crud extends School
     }
 
     function get_exam_by_class($class_id) {
+        $this->db->order_by('sequence', 'ASC');
         $query = $this->db->get_where('v_class_units', array( 'class_id' => $class_id))->result_array();
         return $query;
     }

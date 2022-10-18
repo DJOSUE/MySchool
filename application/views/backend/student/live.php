@@ -89,7 +89,7 @@
             userInfo : { 
                 email : '<?php echo $this->db->get_where('student', array('student_id' => $this->session->userdata('login_user_id')))->row()->email;?>' , 
                 displayName : '<?php echo $this->crud->get_name('student', $this->session->userdata('login_user_id'));?>',
-                moderator: true,
+                moderator: false,
             },
             roomName: "<?php echo $row['room'];?>",
             width: "100%",

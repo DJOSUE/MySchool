@@ -1124,7 +1124,7 @@
             $this->isAdmin();
             
             if($this->useDailyMarks){
-                $page_data['page_name']  = 'student_past_daily_marks';
+                $page_data['page_name']  = 'student_past_daily_marks_by_semester';
                 $page_data['page_title'] =  getPhrase('student_past_daily_marks');
                 $page_data['student_id'] =  $student_id;
                 $this->load->view('backend/index', $page_data);
@@ -1180,12 +1180,15 @@
         function student_attendance_report_selector()
         {
             $this->isAdmin();
-            $data['class_id']   = $this->input->post('class_id');
-            $data['subject_id'] = $this->input->post('subject_id');
+            // $data['class_id']   = $this->input->post('class_id');
+            // $data['subject_id'] = $this->input->post('subject_id');
             $data['year']       = $this->input->post('year');
             $data['month']      = $this->input->post('month');
-            $data['section_id'] = $this->input->post('section_id');
-            redirect(base_url().'admin/student_profile_attendance/'.$this->input->post('student_id').'/'.$data['class_id'].'/'.$data['section_id'].'/'.$data['subject_id'].'/'.$data['month'].'/'.$data['year'].'/','refresh');
+            // $data['section_id'] = $this->input->post('section_id');
+
+            redirect(base_url().'admin/student_profile_attendance/'.$this->input->post('student_id').'/'.$data['month'].'/'.$data['year'].'/','refresh');
+
+            // redirect(base_url().'admin/student_profile_attendance/'.$this->input->post('student_id').'/'.$data['class_id'].'/'.$data['section_id'].'/'.$data['subject_id'].'/'.$data['month'].'/'.$data['year'].'/','refresh');
         }
         
         //Student Profile Attendance function.
@@ -1195,11 +1198,11 @@
             $page_data['page_name']  = 'student_profile_attendance';
             $page_data['page_title'] =  getPhrase('student_attendance');
             $page_data['student_id'] =  $student_id;
-            $page_data['subject_id'] =  $param3;
-            $page_data['class_id'] =  $param1;
-            $page_data['section_id'] =  $param2;
-            $page_data['month'] =  $param4;
-            $page_data['year'] =  $param5;
+            // $page_data['subject_id'] =  $param3;
+            // $page_data['class_id'] =  $param1;
+            // $page_data['section_id'] =  $param2;
+            $page_data['month'] =  $param1;
+            $page_data['year'] =  $param2;
             $this->load->view('backend/index', $page_data);
         }
         

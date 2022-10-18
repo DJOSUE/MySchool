@@ -283,9 +283,17 @@
                                                             ?>
                                                             <tr>
                                                                 <td class="text-center">
-                                                                    <center>
-                                                                        <?= strip_tags(html_entity_decode($item['comment']));?>
-                                                                    </center>
+                                                                    <?php
+                                                                        $html_text = strip_tags(html_entity_decode($item['comment']));
+                                                                        if(strlen($html_text) > 100)
+                                                                        {
+                                                                            echo substr($html_text, 0, 100).'...';
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            echo $html_text;
+                                                                        }                                                                            
+                                                                    ?>
                                                                 </td>
                                                                 <td class="text-center">
                                                                     <center>

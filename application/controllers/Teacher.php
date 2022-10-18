@@ -544,7 +544,7 @@ class Teacher extends EduAppGT
             $info = $this->academic->updateMarks($unit_id, $class_id, $section_id, $subject_id);
 
         $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-        redirect(base_url().'teacher/upload_marks/'.$info.'/'.$unit_id.'/' , 'refresh');
+        redirect(base_url().'teacher/subject_upload_marks/'.$info.'/'.$unit_id.'/' , 'refresh');
     }
     
     //Subject marks function.
