@@ -394,5 +394,28 @@ class Payments extends EduAppGT
             redirect(base_url() . 'student/invoice/', 'refresh');
         }
 	}
+
+    public function manual_payment_process($user_id, $user_type)
+    {
+        $this->payment->create_payment($user_id, $user_type);
+        
+        $message =  getPhrase('successfully_added');
+        
+        if($user_type == 'student')
+        {
+            $page_data['student_id'] =  $user_id;
+            $page_data['page_name']  = 'student_payments';
+            $page_data['page_title'] =  getPhrase('student_payments');
+        }
+        else
+        {
+            $page_data['applicant_id'] =  $user_id;
+            $page_data['page_name']  = 'applicant_payments';
+            $page_data['page_title'] =  getPhrase('applicant_payments');
+        }       
+        
+        $this->session->set_flashdata('flash_message' , $message);
+        $this->load->view('backend/index', $page_data);
+    }
     
 }

@@ -57,9 +57,14 @@
         {
             $this->isStudent();
             $live_id  = base64_decode($param1);
-            $this->crud->saveLiveAttendance($live_id);
-            if($liveType == 2){
-                header('Location: '.$url.'');
+            // $this->crud->saveLiveAttendance($live_id);
+
+            if($param2 == 2){
+
+                $this->db->where('live_id', $live_id);
+                $links = $this->db->get('live')->row_array();
+
+                header('Location: '.$links['siteUrl'].'');
             }   else{
                 redirect(base_url() . 'student/live/'.base64_encode($live_id), 'refresh');
             }
@@ -478,13 +483,19 @@
         }
 
         //View invoice function.
-        function view_invoice($id  = '') 
+        function view_invoice($payment_id  = '') 
         {
             $this->isStudent();
-            $page_data['invoice_id'] = $id;
-            $page_data['page_name']    = 'view_invoice';
-            $page_data['page_title']   = getPhrase('invoice');
-            $this->load->view('backend/index',$page_data);
+
+            // $page_data['invoice_id'] = $id;
+            // $page_data['page_name']    = 'view_invoice';
+            // $page_data['page_title']   = getPhrase('invoice');
+            // $this->load->view('backend/index',$page_data);
+
+            $page_data['payment_id'] =  base64_decode($payment_id);
+            $page_data['page_name']  = 'payment_invoice';
+            $page_data['page_title'] =  getPhrase('payment_invoice');
+            $this->load->view('backend/print/payment_invoice', $page_data);
         }
 
         //View behavior report function.
@@ -560,6 +571,7 @@
         {
             $this->isStudent();
             parse_str(substr(strrchr($_SERVER['REQUEST_URI'], "?"), 1), $_GET);
+            
             if(html_escape($_GET['id']) != "")
             {
                 $notify['status'] = 1;
@@ -719,6 +731,7 @@
             $student_profile         = $this->db->get_where('student', array('student_id'   => $this->session->userdata('student_id')))->row();
             $student_id              = $student_profile->student_id;
             $page_data['invoices']   = $this->db->get_where('invoice', array('student_id' => $student_id))->result_array();
+            $page_data['student_id'] = $student_id;
             $page_data['page_name']  = 'invoice';
             $page_data['page_title'] = getPhrase('invoice');
             $this->load->view('backend/index', $page_data);

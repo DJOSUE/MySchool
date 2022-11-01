@@ -961,11 +961,9 @@
     
             $result = array_diff($current_subject_ids, $future_subject_ids);
 
-            // echo '<pre>';
-            // var_dump($result);
-            // echo '</pre>';
+           
     
-            if(($current_class_id != $future_class_id || $current_section_id != $future_section_id) && count($result) > 0){
+            if(($current_class_id != $future_class_id || $current_section_id != $future_section_id) || count($result) > 0){
 
                 foreach ($current_subjects as $item) {
                     
@@ -1031,23 +1029,19 @@
             else {
                 
                 $this->session->set_flashdata( 'flash_message', getPhrase( 'error' ) );
+                // echo '<pre>';
+                // var_dump($current_class_id);
+
+                // var_dump($future_class_id);
+                
+                // echo '</pre>';
             }
     
             $this->crud->clear_cache();
             redirect( base_url() . 'admin/student_update_class/'. $student_id.'/', 'refresh' );
         }
 
-        //Student Enrollments function.
-        function student_enrollments($student_id, $param1='') 
-        {
-            $this->isAdmin();
-            $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
-            $page_data['page_name']  = 'student_enrollments';
-            $page_data['page_title'] =  getPhrase('student_enrollments');
-            $page_data['student_id'] =  $student_id;
-            $page_data['class_id']   =  $class_id;
-            $this->load->view('backend/index', $page_data);
-        }
+
 
         //Save student enrollment 
         function save_student_enrollment()
@@ -1225,6 +1219,8 @@
             $page_data['student_id'] =  $student_id;
             $this->load->view('backend/index', $page_data);
         }
+
+
     
         //My account function.
         function my_account($param1 = "", $page_id = "")
@@ -2941,7 +2937,7 @@
                     $this->unset_admin();
                     $this->session->set_userdata('role_id', '6');
                     $this->session->set_userdata('program_id', $row->program_id);
-                    $this->session->set_userdata('student_login', $row->student_session);
+                    $this->session->set_userdata('student_login', '1');
                     $this->session->set_userdata('student_id', $row->student_id);
                     $this->session->set_userdata('login_user_id', $row->student_id);
                     $this->session->set_userdata('name', $row->first_name);
@@ -2990,7 +2986,7 @@
             redirect( base_url(), 'refresh' );
         }
         
-        /** Student Module */
+/***** Module Student ********************************************************************************************************************************/
         // 
         function admission_student_interaction($action, $student_id = '', $interaction_id = '', $return_url = '')
         {
@@ -3052,7 +3048,53 @@
             
         }
 
-/*****Admission Module  ******************************************************************************************************************************/        
+        //Student Enrollments function.
+        function student_enrollments($student_id, $param1='') 
+        {
+            $this->isAdmin();
+            $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
+            $page_data['page_name']  = 'student_enrollments';
+            $page_data['page_title'] =  getPhrase('student_enrollments');
+            $page_data['student_id'] =  $student_id;
+            $page_data['class_id']   =  $class_id;
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function student_payments($student_id, $param1='')
+        {
+            $this->isAdmin();
+            $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
+            $page_data['student_id'] =  $student_id;
+            $page_data['class_id']   =  $class_id;
+            
+            $page_data['page_name']  = 'student_payments';
+            $page_data['page_title'] =  getPhrase('student_payments');
+            
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function payment_process($user_id, $user_type)
+        {
+
+            $this->payment->create_payment($user_id, $user_type);
+
+            $return_url = 'admin/student_payments/'.$user_id;
+            
+            redirect(base_url() . $return_url, 'refresh');
+        }
+
+        function payment_invoice($payment_id)
+        {
+            $this->isAdmin();            
+            
+            $page_data['payment_id'] =  base64_decode($payment_id);
+            $page_data['page_name']  = 'payment_invoice';
+            $page_data['page_title'] =  getPhrase('payment_invoice');
+            $this->load->view('backend/print/payment_invoice', $page_data);
+            
+        }
+
+/***** Module Admission ******************************************************************************************************************************/        
         // Admission Dashboard
         function admission_dashboard()
         {
@@ -3539,7 +3581,7 @@
             $this->applicant->update_tag($applicant_id, $tag_id, $selected);
         }
 
-/*****Reports Module  ********************************************************************************************************************************/
+/***** Module Reports ********************************************************************************************************************************/
         
         //General reports function.
         function reports_general($class_id = '', $section_id = '')
@@ -3701,7 +3743,7 @@
             $this->load->view('backend/index', $page_data);
         }
 
-/*****Academic Settings Module     *******************************************************************************************************************/
+/***** Module Academic Settings **********************************************************************************************************************/
         
         //Update academic settings function.
         function academic_settings($param1 = '', $param2 = '', $param3 = '')
@@ -3935,7 +3977,7 @@
 
 
 
-/*****Task Module     ********************************************************************************************************************************/        
+/***** Module Task    ********************************************************************************************************************************/        
         // task Dashboard
         function task_dashboard()
         {
@@ -4195,7 +4237,7 @@
             echo $options;
         }
 
-/*****System module   ********************************************************************************************************************************/
+/***** Module System  ********************************************************************************************************************************/
        
         //System settings function.
         function system_settings($param1 = '', $param2 = '', $param3 = '')
@@ -4414,7 +4456,7 @@
             $this->load->view('backend/index', $page_data);
         }
 
-/*****HelpDesk functions *****************************************************************************************************************************/
+/***** HelpDesk functions ****************************************************************************************************************************/
         // ticket Dashboard
         function helpdesk_dashboard()
         {
@@ -4443,7 +4485,7 @@
             $page_data['assigned_me']   = $assigned_me;
             $page_data['page_name']     = 'helpdesk_dashboard';
             $page_data['page_title']    =  getPhrase('help_desk_dashboard');
-            $this->load->view('backend/index', $page_data);
+            $this->load->view('backend/helpdesk/index', $page_data);
         }
 
         function helpdesk_ticket_list($param1 = '')
@@ -4486,7 +4528,7 @@
             $page_data['assigned_me']   = $assigned_me;
             $page_data['page_name']     = 'helpdesk_ticket_list';
             $page_data['page_title']    =  getPhrase('helpdesk_ticket_list');
-            $this->load->view('backend/index', $page_data);
+            $this->load->view('backend/helpdesk/index', $page_data);
 
             // echo '<pre>';
             // var_dump($array);
@@ -4499,7 +4541,7 @@
             $page_data['ticket_code']   = $ticket_code;
             $page_data['page_name']     = 'helpdesk_ticket_info';
             $page_data['page_title']    = getPhrase('ticket_info');
-            $this->load->view('backend/index', $page_data);
+            $this->load->view('backend/helpdesk/index', $page_data);
         }
 
         function helpdesk_ticket($action, $ticket_id = '', $return_url = '')
@@ -4599,10 +4641,10 @@
     
             $page_data['page_name']  = 'helpdesk_tutorial';
             $page_data['page_title'] = getPhrase( 'video_tutorial' ); 
-            $this->load->view( 'backend/index', $page_data );
+            $this->load->view('backend/helpdesk/index', $page_data);
         }
 
-/*****Tools functions ********************************************************************************************************************************/
+/***** Tools functions *******************************************************************************************************************************/
 
         // unset Admin cookies
         function unset_admin(){

@@ -31,7 +31,7 @@
             </div>
             <div class="fancy-selector-options active">
                 <?php 
-                $fancy_subjects = $this->db->get_where('subject', array('class_id' => $fancy_cl_id, 'section_id' => $fancy_sec_id))->result_array();
+                $fancy_subjects = $this->db->get_where('v_enrollment', array('class_id' => $fancy_cl_id, 'section_id' => $fancy_sec_id, 'student_id' => $student_id))->result_array();
                 foreach($fancy_subjects as $fancy_row2):
             ?>
                 <a
@@ -43,7 +43,7 @@
                         </div>
                         <div class="fs-main-info">
                             <div class="fs-name">
-                                <?php echo $fancy_row2['name'];?>
+                                <?php echo $fancy_row2['subject_name'];?>
                             </div>
                         </div>
                     </div>

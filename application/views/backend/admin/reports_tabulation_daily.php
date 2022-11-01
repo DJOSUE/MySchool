@@ -320,7 +320,7 @@
                                     $labodiez       = $average[0][labdiez];
                         
                                     // Calculate the average 
-                                    if(is_numeric($labouno)     && $labouno != '-' ) { $count++; } 
+                                    // if(is_numeric($labouno)     && $labouno != '-' ) { $count++; } 
                                     if(is_numeric($labodos)     && $labodos != '-' ) { $count++; }  
                                     if(is_numeric($labotres)    && $labotres != '-' ) { $count++; }  
                                     if(is_numeric($labocuatro)  && $labocuatro != '-' ) { $count++; }  

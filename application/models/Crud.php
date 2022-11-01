@@ -1786,9 +1786,9 @@ class Crud extends School
         $this->mail->parent_new_invoice($student_name,$parent_email);
     }
 
-    function student_new_invoice($student_name,$student_email)
+    function student_new_invoice($student_name,$student_email, $payment_id = "")
     {
-        $this->mail->student_new_invoice($student_name,$student_email);
+        $this->mail->student_new_invoice($student_name,$student_email, $payment_id);
     }
 
     function attendance($student_id,$parent_id)

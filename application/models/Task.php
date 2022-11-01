@@ -38,7 +38,7 @@ class Task extends School
     public function get_category_info($category_id)
     {
         $this->db->reset_query();
-        $this->db->select('code as category_id, name, value_1 as color, value_2 as icon');
+        $this->db->select('code as category_id, name, value_1 as color, value_2 as icon, value_4 as default_user');
         $this->db->where('parameter_id', 'TASKCATEGO');
         $this->db->where('code', $category_id);
         $query = $this->db->get('parameters')->row_array();
@@ -49,6 +49,16 @@ class Task extends School
     {
         $query = $this->db->get_where('v_task_categories', array('category_id' => $category_id))->row();
         return $query->name;
+    }
+
+    public function get_category_assigned_to($category_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('value_4 as assigned_to');
+        $this->db->where('parameter_id', 'TASKCATEGO');
+        $this->db->where('code', $category_id);
+        $query = $this->db->get('parameters')->row_array();
+        return $query['assigned_to'];
     }
 
     public function get_priorities()
@@ -105,7 +115,7 @@ class Task extends School
     {
         $query = $this->db->get_where('parameters', array('parameter_id' => 'TASKSTATUS', 'code' => $status_id))->row();
         
-        // 3 = student
+        
         if($query->value_3 == '1'){
             return true;
         }
@@ -132,25 +142,42 @@ class Task extends School
 
     function create()
     {
-        $code = md5(date('d-m-Y H:i:s'));
-        $data['created_by']     = $this->session->userdata('login_user_id');
-        $data['title']          = html_escape($this->input->post('title'));
-        $data['task_code']      = $code;
-        $data['category_id']    = html_escape($this->input->post('category_id'));
-        $data['status_id']      = html_escape($this->input->post('status_id'));
-        $data['priority_id']    = html_escape($this->input->post('priority_id'));
-        $data['description']    = html_escape($this->input->post('description'));
-        $data['user_type']      = html_escape($this->input->post('user_type'));
-        $data['user_id']        = html_escape($this->input->post('user_id'));
+        $code           = md5(date('d-m-Y H:i:s'));
+        $account_type   =   get_table_user($this->session->userdata('role_id'));
+
+        $data['created_by']      = $this->session->userdata('login_user_id');
+        $data['created_by_type'] = $account_type;
+        $data['title']           = html_escape($this->input->post('title'));
+        $data['task_code']       = $code;
+        $data['category_id']     = html_escape($this->input->post('category_id'));
+        $data['status_id']       = html_escape($this->input->post('status_id'));
+        $data['priority_id']     = html_escape($this->input->post('priority_id'));
+        $data['description']     = html_escape($this->input->post('description'));
+        $data['user_type']       = html_escape($this->input->post('user_type'));
+        $data['user_id']         = html_escape($this->input->post('user_id'));
 
         if(!empty($this->input->post('assigned_to')))
         {
             $data['assigned_to'] = html_escape($this->input->post('assigned_to'));
         }
+        else
+        {
+            // Get if the category has a default
+            $category_assigned_to = $this->get_category_assigned_to($data['category_id']);
+            $assigned_to = explode("|",$category_assigned_to);
+
+            if(is_array($assigned_to))
+            {
+                $data['assigned_to_type'] = $assigned_to[0];
+                $data['assigned_to'] = $assigned_to[1];
+            }
+        }
 
         if($this->task->is_task_closed($this->input->post('status_id')))
         {
+            // Get table  
             $data['assigned_to'] =  $this->session->userdata('login_user_id');
+
         }
         
         if($_FILES['task_file']['name'] != '')
@@ -174,7 +201,8 @@ class Task extends School
 
     function update($task_id)
     {
-        $data['updated_by']     = $this->session->userdata('login_user_id');
+        $data['updated_by']         = $this->session->userdata('login_user_id');
+        $data['updated_by_type']    = get_table_user($this->session->userdata('role_id'));
 
         $task_code = $this->db->get_where('task' , array('task_id' => $task_id) )->row()->task_code;
         $assigned_to_old = $this->db->get_where('task' , array('task_id' => $task_id) )->row()->assigned_to;
@@ -198,11 +226,21 @@ class Task extends School
             $data['description']          = html_escape($this->input->post('description'));
         
         if(!empty($this->input->post('assigned_to')))
-            $data['assigned_to']         = html_escape($this->input->post('assigned_to'));
+        {
+            $assigned_to = explode('|', $this->input->post('assigned_to'));
+            if(is_array($assigned_to))
+            {
+                $data['assigned_to_type']    = $assigned_to[0];
+                $data['assigned_to']         = $assigned_to[1];
+            }
+            else
+            {
+                $data['assigned_to_type']    = 'admin';
+                $data['assigned_to']         = html_escape($this->input->post('assigned_to'));
+            }
+            
+        }
         
-       
-        if(!empty($this->input->post('assigned_to')))
-            $data['assigned_to']    = html_escape($this->input->post('assigned_to'));
         
         if($_FILES['task_file']['name'] != '')
         {
@@ -332,10 +370,34 @@ class Task extends School
         return $applicant_query->num_rows();
     }
 
-    function task_total_assigned_to($field, $field_id, $assigned_to)
+    function task_total_assigned_to($field, $field_id, $assigned_to, $assigned_to_type)
     {
         $this->db->where($field, $field_id);
+        $this->db->where('assigned_to_type', $assigned_to_type);
         $this->db->where('assigned_to', $assigned_to);
+        $applicant_query = $this->db->get('task');
+        return $applicant_query->num_rows();
+    }
+
+    function task_total_assigned_to_no_close($field, $field_id, $assigned_to, $assigned_to_type)
+    {
+        // All close
+        $this->db->reset_query();
+        $this->db->select('code as status_id');
+        $this->db->where('parameter_id', 'TASKSTATUS');
+        $this->db->where('value_3', '1');
+        $query = $this->db->get('parameters')->result_array();
+        $status_list = [];
+        foreach($query as $item)
+        {
+            array_push($status_list, $item['status_id']);
+        }
+
+        $this->db->reset_query();
+        $this->db->where($field, $field_id);
+        $this->db->where('assigned_to', $assigned_to);
+        $this->db->where('assigned_to_type', $assigned_to_type);        
+        $this->db->where_not_in('status_id', $status_list);
         $applicant_query = $this->db->get('task');
         return $applicant_query->num_rows();
     }

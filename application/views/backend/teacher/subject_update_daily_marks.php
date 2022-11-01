@@ -7,8 +7,8 @@
 
     $tmpQuantity = $quantityGrades;
 
-    $info = base64_decode($data);
-    $ex = explode('-', $info);
+    $info   = base64_decode($data);
+    $ex     = explode('-', $info);
 
     $class_id   = $ex[0];
     $section_id = $ex[1];
@@ -309,7 +309,7 @@
                                                         foreach($marks as $row):
                                                     ?>
                                                 <tr style="height:25px;">
-                                                    <td style="min-width:190px">
+                                                    <td style="min-width:100px">
                                                         <img alt=""
                                                             src="<?php echo $this->crud->get_image_url('student', $row['student_id']);?>"
                                                             width="25px" style="border-radius: 10px;margin-right:5px;">
@@ -319,7 +319,7 @@
                                                         <center>                                                            
                                                             <label
                                                                 name="unit_id_<?php echo $item['mark_id'];?>"
-                                                                style="width:55px; border: 1; text-align: center;">
+                                                                style=" border: 1; text-align: center;">
                                                                 <?php echo ($row['unit_name']);?>
                                                             </label>
                                                         </center>
@@ -328,7 +328,7 @@
                                                         <center>                                                            
                                                             <label
                                                                 name="unit_id_<?php echo $item['mark_id'];?>"
-                                                                style="width:55px; border: 1; text-align: center;">
+                                                                style="border: 1; text-align: center;">
                                                                 <?php echo ($row['date']);?>
                                                             </label>
                                                         </center>

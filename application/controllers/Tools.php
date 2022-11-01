@@ -62,4 +62,62 @@
             }
         }
         //End of Admin.php content. 
+
+        function notification_delete($notify_id, $deleteAll = false)
+        {
+
+            $this->isLogin();
+            
+            if(!$deleteAll)
+            {   
+                $this->db->where('id', $notify_id);
+                $this->db->set('status', '1', FALSE);
+                $this->db->update('notification');
+                
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted')); 
+
+                $page_data['page_name']  =  'notifications';
+                $page_data['page_title'] =  getPhrase('your_notifications');
+                $this->load->view('backend/index', $page_data);
+            }
+            else
+            {
+                $user_id    = $this->session->userdata('login_user_id');
+                $user_type  = get_table_user($this->session->userdata('role_id'));
+
+                $this->db->where('user_id', $user_id);
+                $this->db->where('user_type', $user_type);
+                $this->db->set('status', '1', FALSE);
+                $this->db->update('notification');
+
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));   
+
+                $page_data['page_name']  =  'notifications';
+                $page_data['page_title'] =  getPhrase('your_notifications');
+                $this->load->view('backend/index', $page_data);
+            }
+        }
+
+        function close_class_unit($class_id, $unit_id)
+        {
+            $this->db->reset_query();
+            $this->db->select('sequence');
+            $this->db->where('unit_id', $unit_id);
+            $this->db->where('class_id', $class_id);
+            $sequence = $this->db->get('class_unit')->row()->sequence;
+
+            $sequence += 1;
+
+            $this->db->reset_query();
+            $this->db->where('unit_id', $unit_id);
+            $this->db->where('class_id', $class_id);
+            $this->db->update('class_unit', array('is_current' => 0));
+
+            $this->db->reset_query();            
+            $this->db->where('sequence', $sequence);
+            $this->db->where('class_id', $class_id);
+            $this->db->update('class_unit', array('is_current' => 1));
+            
+            return 'success';
+        }
     }

@@ -60,15 +60,7 @@
                                     href="<?= base_url();?>admin/student_enrollments/<?= $student_id;?>/">
                                     <?= getPhrase('student_enrollments');?>
                                 </a>
-                            </li>
-                            <!-- <li <?= $page_name == 'student_invoices' ? 'class="menu-left-selected-icon"' : ''?>>
-                                <i class="picons-thin-icon-thin-0133_arrow_right_next"
-                                    style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
-                                <a
-                                    href="<?= base_url();?>admin/student_invoices/<?= $student_id;?>/">
-                                    <?= getPhrase('payments_history');?>
-                                </a>
-                            </li> -->
+                            </li>                            
                             <li <?= $page_name == 'student_placement_achievement' ? 'class="menu-left-selected-icon"' : ''?>>
                                 <i class="picons-thin-icon-thin-0133_arrow_right_next"
                                     style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
@@ -109,6 +101,14 @@
                                     <?= getPhrase('behavior');?>
                                 </a>
                             </li>
+                            <li <?= $page_name == 'student_payments' ? 'class="menu-left-selected-icon"' : ''?>>
+                                <i class="picons-thin-icon-thin-0133_arrow_right_next"
+                                    style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
+                                <a
+                                    href="<?= base_url();?>admin/student_payments/<?= $student_id;?>/">
+                                    <?= getPhrase('payments_history');?>
+                                </a>
+                            </li>                            
                             <?php if(has_permission('login_as_student')):?>
                             <li>
                                 <i class="picons-thin-icon-thin-0329_computer_laptop_user_login"

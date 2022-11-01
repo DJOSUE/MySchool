@@ -112,12 +112,14 @@
                                                                 <select name="status_id" required="">
                                                                     <?php $status = $this->applicant->get_applicant_status_update($row['status']);
                                                                         foreach($status as $item):
+                                                                            if($item['status_id'] != 3):
                                                                     ?>
                                                                     <option value="<?=$item['status_id']?>"
                                                                         <?php if($row['status'] == $item['status_id']) echo "selected";?>>
                                                                         <?= $item['name'];?>
                                                                     </option>
-                                                                    <? endforeach;?>
+                                                                            <?php endif;?>    
+                                                                    <?php endforeach;?>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -147,6 +149,14 @@
                                                                 class="control-label"><?= getPhrase('first_name');?></label>
                                                             <input class="form-control" name="first_name"
                                                                 value="<?= $row['first_name'];?>" type="text" required="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class="form-group label-floating">
+                                                            <label
+                                                                class="control-label"><?= getPhrase('last_name');?></label>
+                                                            <input class="form-control" name="last_name"
+                                                                value="<?= $row['last_name'];?>" type="text" required="">
                                                         </div>
                                                     </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">

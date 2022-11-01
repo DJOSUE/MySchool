@@ -211,7 +211,7 @@
                     <?php         				
                         $student_info = $this->db->query("SELECT * FROM v_enroll 
                                                                 WHERE student_id = '$student_id'
-                                                                AND class_id = $class_id
+                                                                AND class_id = '$class_id'
                                                                 AND year = '$running_year'
                                                                 AND semester_id = '$running_semester'
                                                                 LIMIT 1
@@ -219,7 +219,7 @@
 
                         $subjects = $this->db->get_where('v_enrollment' , array('class_id' => $class_id, 'section_id' => $section_id, 'student_id' => $student_id, 'year' => $running_year, 'semester_id' => $running_semester))->result_array();
                         
-    				    $exams = $this->db->get_where('v_class_units', array('class_id' => $class_id))->result_array();   				    
+    				    $exams = $this->crud->get_exam_by_class($class_id);			    
                         $section_id = $student_info['section_id'];
     				    foreach ($exams as $row2):
 				    ?>
@@ -337,7 +337,7 @@
                                             </td>
                                             <td><?php echo $this->crud->get_gpa($mark);?>
                                             </td>
-                                            <?php $data = base64_encode($row1['class_id']."-".$row1['section_id']."-".$row3['subject_id']); ?>
+                                            <?php $data = base64_encode($class_id."-".$section_id."-".$subject_id); ?>
                                             <td><a class="btn btn-rounded btn-sm btn-primary" style="color:white"
                                                     href="<?php echo base_url();?>student/subject_marks/<?php echo $data;?>/<?=$unit_id;?>"><?php echo getPhrase('view_all');?></a>
                                             </td>

@@ -4487,7 +4487,7 @@ html {
     
     .navs-tabs .navs-item {
         margin-bottom: 0px;
-        margin-right: 1rem;
+        /* margin-right: 1rem; */
     }
     
     .navs-tabs .navs-links {
@@ -9033,7 +9033,7 @@ html {
         padding-left: 0px;
         padding-right: 0px;
         padding-bottom: 15px;
-        margin-right: 2rem;
+        margin-right: 1rem;
     }
     
     .navs.upper.centered.navs-tabs .navs-links {
@@ -9073,7 +9073,7 @@ html {
     
     .navs-tabs .navs-item {
         margin-bottom: 0px;
-        margin-right: 1rem;
+        /* margin-right: 1rem; */
     }
     
     .table-schedule th,
@@ -10256,6 +10256,7 @@ html {
  SIDE PANEL IS ACTIVE - ADD STYLES
 */
     
+
     .with-side-panel .content-i {
         display: -webkit-box;
         display: -ms-flexbox;
@@ -10263,6 +10264,12 @@ html {
         -webkit-box-flex: 1;
         -ms-flex: 1;
         flex: 1;
+    }
+
+    @media (min-width: 1280px){
+        .content-i{
+            max-width:1200px
+        }
     }
     
     .with-side-panel .menu-mobile .mm-logo-buttons-w .content-panel-open {
@@ -27397,4 +27404,7 @@ table {
 }
 .text-font-12 {
     font-size: 12pt !important
+}
+.menu-left-selected-icon {
+    color: #000099 !important;
 }

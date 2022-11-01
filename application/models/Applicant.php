@@ -48,6 +48,16 @@ class Applicant extends School
 
         if(!empty($this->input->post('referral_by')))
             $data['referral_by']  = html_escape($this->input->post('referral_by'));
+
+        if(!empty($this->input->post('assigned_to')))
+        {
+            $data['assigned_to']    = html_escape($this->input->post('assigned_to'));
+        }
+        else
+        {
+            $data['assigned_to']    = $this->session->userdata('login_user_id');
+        }
+        
        
         $this->db->insert('applicant', $data);
 
@@ -56,7 +66,21 @@ class Applicant extends School
         $insert_id  = $this->db->insert_id();
         $this->crud->save_log($table, $action, $insert_id, $data);
 
+
+        // create an interaction 
+        if($data['is_imported'])
+        {
+            $account_type   =   get_table_user($this->session->userdata('role_id'));
+            $user_name  = $this->crud->get_name($account_type, $this->session->userdata('login_user_id'));            
+
+            $_POST['applicant_id']  = $insert_id;
+            $_POST['comment']       = $user_name.' imported to this applicant';
+            
+            $this->applicant->add_interaction('automatic');
+        }
+
         return $insert_id;
+        
 
     }
 
@@ -218,9 +242,13 @@ class Applicant extends School
     function add_interaction($type = '')
     {
         $md5 = md5(date('d-m-Y H:i:s'));
+        $account_type   =   get_table_user($this->session->userdata('role_id'));
 
         if($type != 'automatic')
-            $data['created_by']   = $this->session->userdata('login_user_id');
+        {
+            $data['created_by']         = $this->session->userdata('login_user_id');
+            $data['created_by_type']    = $account_type;
+        }
         else
             $data['created_by']   = DEFAULT_USER;
 

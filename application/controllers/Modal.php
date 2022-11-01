@@ -38,6 +38,26 @@ class Modal extends EduAppGT
 		$this->load->view( 'backend/'.$account_type.'/'.$page_name.'.php' ,$page_data);
 		
 	}
+
+	//Load popup modal function.
+	function popup_helpdesk($page_name = '' , $param2 = '' , $param3 = '', $param4 = '')
+	{		
+		$page_data['param2']		=	$param2;
+		$page_data['param3']		=	$param3;
+		$page_data['param4']		=	$param4;
+		$this->load->view( 'backend/helpdesk/'.$page_name.'.php' ,$page_data);
+		
+	}
+
+	//Load popup modal function.
+	function popup_task($page_name = '' , $param2 = '' , $param3 = '', $param4 = '')
+	{		
+		$page_data['param2']		=	$param2;
+		$page_data['param3']		=	$param3;
+		$page_data['param4']		=	$param4;
+		$this->load->view( 'backend/task/'.$page_name.'.php' ,$page_data);
+		
+	}
 	
 	//End of Modal.php
 }

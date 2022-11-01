@@ -240,7 +240,7 @@ class Accountant extends EduAppGT
     {
         $this->isAccountant();
         $page_data['page_name']  = 'students_payments';
-        $page_data['page_title'] = getPhrase('student_payments');
+        $page_data['page_title'] = getPhrase('students_payments');
         $this->load->view('backend/index', $page_data); 
     }
     
@@ -454,5 +454,225 @@ class Accountant extends EduAppGT
         $page_data['page_title'] = getPhrase( 'time_sheet' );
         $this->load->view( 'backend/index', $page_data );
     }
+
+    function student_profile($student_id, $param1='')
+    {
+        $this->isAccountant();
+        $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
+        $page_data['page_name']  = 'student_profile';
+        $page_data['page_title'] =  getPhrase('student_profile');
+        $page_data['student_id'] =  $student_id;
+        $page_data['class_id']   =  $class_id;
+        $this->load->view('backend/index', $page_data);
+    }
+
+    function student_payments($student_id, $param1='')
+    {
+        $this->isAccountant();
+        $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
+        $page_data['student_id'] =  $student_id;
+        $page_data['class_id']   =  $class_id;
+        
+        $page_data['page_name']  = 'student_payments';
+        $page_data['page_title'] =  getPhrase('student_payments');
+        
+        $this->load->view('backend/index', $page_data);
+    }
+
+    function payment_process($user_id, $user_type)
+    {
+
+        $this->payment->create_payment($user_id, $user_type);
+
+        $page_data['student_id'] =  $user_id;
+        $page_data['page_name']  = 'student_payments';
+        $page_data['page_title'] =  getPhrase('student_payments');
+        
+        $this->load->view('backend/index', $page_data);
+    }
+
+    function payment_invoice($payment_id)
+    {
+        $this->isAccountant();            
+        
+        $page_data['payment_id'] =  base64_decode($payment_id);
+        $page_data['page_name']  = 'payment_invoice';
+        $page_data['page_title'] =  getPhrase('payment_invoice');
+        $this->load->view('backend/print/payment_invoice', $page_data);
+        
+    }
+
     //End of Accountant.php
+
+/***** HelpDesk functions ****************************************************************************************************************************/
+
+    // ticket Dashboard
+    function helpdesk_dashboard()
+    {
+        $this->isAccountant('helpdesk_module');
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST')
+        {   
+            $department_id  = $this->input->post('department_id');                
+            $priority_id    = $this->input->post('priority_id');
+            $status_id      = $this->input->post('status_id');
+            $text           = $this->input->post('text');
+            $assigned_me    = $this->input->post('assigned_me');                
+        }
+        else
+        {    
+            $department_id  = "_blank";
+            $priority_id    = "_blank";
+            $status_id      = "_blank";
+            $assigned_me = 1;
+        }
+
+        $page_data['department_id'] = $department_id;
+        $page_data['priority_id']   = $priority_id;
+        $page_data['status_id']     = $status_id;
+        $page_data['text']          = $text;
+        $page_data['assigned_me']   = $assigned_me;
+        $page_data['page_name']     = 'helpdesk_dashboard';
+        $page_data['page_title']    =  getPhrase('help_desk_dashboard');
+        $this->load->view('backend/helpdesk/index', $page_data);
+    }
+
+    function helpdesk_ticket_list($param1 = '')
+    {
+        $this->isAccountant('helpdesk_module');
+
+        if($param1 != '')
+        {
+            $array      = explode('|',base64_decode($param1));
+
+            $status_id      = $array[0] != '-' ? $array[0] : '';
+            $priority_id    = $array[1] != '-' ? $array[1] : '';
+            $assigned_me    = $array[2] != '-' ? $array[2] : 0;
+            $department_id  = "";
+        }
+        else
+        {
+            $department_id  = "";
+            $priority_id    = "";
+            $status_id      = "";
+            $assigned_me    = 1;
+        }
+        
+        if($_SERVER['REQUEST_METHOD'] === 'POST')
+        {   
+            $category_id    = $this->input->post('category_id');                
+            $priority_id    = $this->input->post('priority_id');
+            $status_id      = $this->input->post('status_id');
+            $text           = $this->input->post('text');
+            $assigned_me    = $this->input->post('assigned_me');  
+            $search         = true;              
+        }
+
+        $page_data['department_id'] = $department_id;
+        $page_data['category_id']   = $category_id;
+        $page_data['priority_id']   = $priority_id;
+        $page_data['status_id']     = $status_id;
+        $page_data['text']          = $text;
+        $page_data['search']        = $search;
+        $page_data['assigned_me']   = $assigned_me;
+        $page_data['page_name']     = 'helpdesk_ticket_list';
+        $page_data['page_title']    =  getPhrase('helpdesk_ticket_list');
+        $this->load->view('backend/helpdesk/index', $page_data);
+
+        // echo '<pre>';
+        // var_dump($array);
+        // echo '</pre>';
+    }
+
+    function helpdesk_ticket_info($ticket_code = '', $param2 = '')
+    {
+        $this->isAccountant('helpdesk_module');
+        $page_data['ticket_code']   = $ticket_code;
+        $page_data['page_name']     = 'helpdesk_ticket_info';
+        $page_data['page_title']    = getPhrase('ticket_info');
+        $this->load->view('backend/helpdesk/index', $page_data);
+    }
+    
+    function helpdesk_tutorial()
+    {
+        $this->isAccountant();
+
+        $page_data['page_name']  = 'helpdesk_tutorial';
+        $page_data['page_title'] = getPhrase( 'video_tutorial' ); 
+        $this->load->view('backend/helpdesk/index', $page_data);
+    }
+
+/***** Search functions ****************************************************************************************************************************/
+
+    //Search query function.
+    function search_query($search_key = '') 
+    {        
+        if ($_POST)
+        {
+            redirect(base_url() . 'accountant/search_results?query=' . base64_encode(html_escape($this->input->post('search_key'))), 'refresh');
+        }
+    }
+
+    //Search results function.
+    function search_results()
+    {
+        $this->isAccountant();
+
+        parse_str(substr(strrchr($_SERVER['REQUEST_URI'], "?"), 1), $_GET);
+        if (html_escape($_GET['query']) == "")
+        {
+            redirect(base_url(), 'refresh');
+        }
+
+        $page_data['search_key'] =  html_escape($_GET['query']);
+        $page_data['page_name']  =  'search_results';
+        $page_data['page_title'] =  getPhrase('search_results');
+        $this->load->view('backend/index', $page_data);
+    }
+
+    function admission_applicant_interaction($action, $applicant_id = '', $interaction_id = '', $return_url = '')
+    {
+        $this->isAccountant();
+
+        $message = '';
+        switch ($action) {
+            case 'add':
+                if($return_url == '')
+                {
+                    if($applicant_id != '')
+                        $return_url = 'accountant/admission_applicant/'.$applicant_id;
+                    else
+                        $return_url = 'accountant/admission_applicants';
+                }
+
+                $this->applicant->add_interaction();
+                $message =  getPhrase('successfully_added');
+
+                if($applicant_id != '')
+                {
+                    $status_id_old = $this->db->get_where('v_applicants' , array('applicant_id' => $applicant_id) )->row()->status;
+    
+                    $status_id_new = $this->input->post('status_id');
+    
+                    if($status_id_old != $status_id_new)
+                    {
+                        $this->applicant->update_status($applicant_id, $status_id_new);
+                    }                       
+                }
+
+                break;
+            case 'update':
+                if($return_url == '')
+                    $return_url = 'accountant/admission_applicant/'.$applicant_id;
+                $this->applicant->update_interaction($interaction_id);
+                $message =  getPhrase('successfully_added');
+
+            default:
+                # code...
+                break;
+        }
+
+        $this->session->set_flashdata('flash_message' , $message);
+        redirect(base_url() . $return_url, 'refresh');
+    }
 }

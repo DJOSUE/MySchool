@@ -89,8 +89,15 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
  * 
  */
 
+ 
+defined('DEFAULT_GUID')        OR define('DEFAULT_GUID', 'uVlmIcG2YkCX4cqua3xoVQ'); // no errors
+
 defined('DEFAULT_USER')        OR define('DEFAULT_USER', 0); // no errors
 defined('DEFAULT_TABLE')       OR define('DEFAULT_TABLE', 'admin'); // no errors
+
+defined('INVOICE_FORMAT')       OR define('INVOICE_FORMAT', 'A1XXXXXXXXXX'); // no errors
+defined('CONCEPT_CARD_ID')      OR define('CONCEPT_CARD_ID', '5'); // no errors
+defined('CONCEPT_CARD_NAME')    OR define('CONCEPT_CARD_NAME', 'Credit Card Fee'); // no errors
 
 defined('FILES_ALLOWED_ATTACHMENT')         OR define('FILES_ALLOWED_ATTACHMENT', 'image/jpeg,image/png,application/pdf'); // Task Files
 defined('FILES_ALLOWED_IMAGE')              OR define('FILES_ALLOWED_IMAGE', 'image/jpeg,image/png'); // Task Files

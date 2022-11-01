@@ -117,7 +117,7 @@
                         </div>
                     </a>
                 </li>
-                <?php if(menu_option_visible('payments')):?>
+                <?php if(!menu_option_visible('payments_module')):?>
                 <li <?php if($page_name == 'invoice' || $page_name == 'view_invoice'):?>class="currentItem"
                     <?php endif;?>>
                     <a href="<?php echo base_url();?>student/invoice/" data-toggle="tooltip" data-placement="right"

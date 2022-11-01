@@ -80,18 +80,112 @@ class Mail extends School
     }
     
     //Send notifify to students for new invoice.
-    function student_new_invoice($student_name,$student_email)
+    function student_new_invoice($student_name, $student_email, $payment_id = "")
     {
         $email_sub      = $this->db->get_where('email_template' , array('task' => 'student_new_invoice'))->row()->subject;
         $email_msg      = $this->db->get_where('email_template' , array('task' => 'student_new_invoice'))->row()->body;
         $STUDENT_NAME   = $student_name;
         $email_msg      = str_replace('[STUDENT]' , $STUDENT_NAME , $email_msg);
-        $email_to       = $student_email;
+        $email_to       = $student_email;        
+
+
+        // Generate the invoice detail [INVOICE_DETAILS]
+
+        if($payment_id != "")
+        {
+            $payment_info = $this->payment->get_payment_info($payment_id);
+
+            $html  = "<div class='invoice-w' id='invoice_id'>";
+            $html .= "<div class='invoice-heading'>";
+            $html .= "<h3>".getPhrase('invoice')."</h3>";
+            $html .= "<div class='invoice-date'>";
+            $html .= $payment_info['invoice_number'];
+            $html .= "</div>";
+            $html .= "<br/>";
+            $html .= "<br/>";
+            $html .= '<div class="invoice-body">';
+            $html .= '<div class="invoice-table" style="width:100%;">';
+            $html .= '<table class="table">';
+            $html .= '<thead>';
+            $html .= '<tr>';
+            $html .= '<th>'.getPhrase('title').'</th>';
+            $html .= '<th>'.getPhrase('description').'</th>';
+            $html .= '<th class="text-right">'.getPhrase('amount').'</th>';
+            $html .= '</tr>';
+            $html .= '</thead>';
+            $html .= '<tbody>';
+            $html .= '<div>';
+            $html .= '<div>';
+            $html .= '</div>';
+
+
+            $payment_details = $this->payment->get_payment_details($payment_id);
+            $total_details = 0.00;
+            foreach($payment_details as $item)
+            {
+                $total_details += $item['amount'];
+
+                $html .= '<tr>';
+                $html .= '<td>';
+                $html .= $this->payment->get_income_type_name($item['concept_type']);
+                $html .= '</td>';
+                $html .= '<td>';
+                $html .= $item['comment'];
+                $html .= '</td>';
+                $html .= '<td class="text-right">';
+                $html .= $item['amount'];
+                $html .= '</td>';
+                $html .= '</tr>';
+            }
+
+            $payment_discounts = $this->payment->get_payment_discounts($payment_id);
+            $total_discounts = 0.00;
+            foreach($payment_discounts as $item)
+            {
+                $total_discounts += $item['amount'];
+
+                $html .= '<tr>';
+                $html .= '<td>';
+                $html .= $this->payment->get_income_type_name($item['discount_type']);
+                $html .= '</td>';
+                $html .= '<td>';
+                $html .= $item['comment'];
+                $html .= '</td>';
+                $html .= '<td class="text-right">';
+                $html .= $item['amount'];
+                $html .= '</td>';
+                $html .= '</tr>';
+            }
+
+            $total = $total_details - $total_discounts;
+
+            $html .= '</tbody>';
+            $html .= '<tfoot>';
+            $html .= '<tr>';
+            $html .= '<td>';
+            $html .= getPhrase('total');
+            $html .= '</td>';
+            $html .= '<td class="text-right" colspan="2">';
+            $html .= $total;
+            $html .= '</td>';
+            $html .= '</tr>';
+            $html .= '</tfoot>';
+            $html .= '</table>';
+            $html .= '</div>';
+            $html .= '</div>';
+
+
+            $email_msg      = str_replace('[INVOICE_DETAILS]' , $html , $email_msg);
+        
+        }
+
         $data = array(
             'email_msg' => $email_msg
         );
+
+
         if($email_to != '')
-        {
+        {            
             $this->submit($email_to,$email_sub,$data,'notify');
         }
     }

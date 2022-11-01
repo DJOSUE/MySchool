@@ -514,13 +514,16 @@ class Teacher extends EduAppGT
     }
     
     // 
-    function update_daily_marks_batch($datainfo = '', $param1 = '', $param2 = '', $param3 = ''){
+    function update_daily_marks_batch($datainfo = '', $param1 = '', $param2 = '', $param3 = '')
+    {
         $this->isTeacher();
+
+        // echo $param1;
 
         $filter = $this->academic->updateDailyMarksBatch($datainfo, $param1, $param2, $param3);
 
         $this->session->set_flashdata( 'flash_message', getPhrase( 'successfully_updated' ) );
-        redirect( base_url().'teacher/update_daily_marks/'.$datainfo.'/'.$filter.'/', 'refresh' );
+        redirect( base_url().'teacher/subject_update_daily_marks/'.$datainfo.'/'.$filter.'/', 'refresh' );
         
     }
 
@@ -1419,7 +1422,7 @@ class Teacher extends EduAppGT
         }
         
         $this->session->set_flashdata( 'flash_message', getPhrase( 'successfully_added' ) );
-        redirect( base_url().'teacher/update_daily_marks/'.$data, 'refresh' );
+        redirect( base_url().'teacher/subject_update_daily_marks/'.$data, 'refresh' );
     }
     
     //End of Teacher.php

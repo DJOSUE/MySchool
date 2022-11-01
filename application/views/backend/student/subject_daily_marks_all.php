@@ -214,6 +214,18 @@
                                                                         AND semester_id = '$running_semester'
                                                                         ")->result_array();
                                         }
+                                        else
+                                        {
+                                            $marks = $this->db->query("SELECT *
+                                                                    FROM v_mark_daily 
+                                                                    WHERE student_id = '$student_id'
+                                                                        AND class_id = '$class_id'
+                                                                        AND section_id = '$section_id'
+                                                                        AND subject_id = '$subject_id'                                                                        
+                                                                        AND year = '$running_year'
+                                                                        AND semester_id = '$running_semester'
+                                                                        ")->result_array();
+                                        }
                                         
                                         foreach($marks as $row):
                                         ?>

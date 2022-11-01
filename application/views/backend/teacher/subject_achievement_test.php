@@ -13,6 +13,7 @@
     $ex     = explode('-', $info);
     
     $class_id   = $ex[0];
+    $section_id = $ex[1];
     $subject_id = $ex[2];
 
     $sub = $this->db->get_where('subject', array('subject_id' => $ex[2]))->result_array();
@@ -75,9 +76,25 @@
                                             </thead>
                                             <tbody>
                                                 <?php
-                                                        $count = 1;
-                                                        $test_students = $this->db->get_where('pa_test' , array('class_id' => $ex[0], 'section_id' => $ex[1] ,'year' => $running_year,'semester_id' => $running_semester))->result_array();
+                                                        $count = 0;
+
+                                                        $students = $this->db->query("SELECT student_id FROM enroll 
+                                                        WHERE class_id = '$ex[0]' 
+                                                        AND section_id = '$ex[1]' 
+                                                        AND subject_id = '$subject_id'
+                                                        AND year = '$running_year'
+                                                        AND semester_id = '$running_semester'
+                                                        GROUP BY student_id")->result_array();
+
+                                                        $List = implode(', ', $students);
+
+
+
+                                                        $test_students = $this->db->get_where('pa_test' , array('class_id' => $ex[0], 'section_id' => $ex[1],'year' => $running_year,'semester_id' => $running_semester))->result_array();
                                                         foreach($test_students as $row):
+                                                            $key = array_search($row['student_id'], array_column($students, 'student_id'));
+                                                            if(is_numeric($key)):
+                                                                $count++;
                                                     ?>
                                                 <tr style="height:25px;">
                                                     <td style="min-width:190px">
@@ -106,7 +123,7 @@
                                                                 value="<?php echo $row['comment'];?>"></center>
                                                     </td>
                                                 </tr>
-                                                <?php endforeach;?>
+                                                <?php endif; endforeach;?>
                                             </tbody>
                                         </table>
                                         <div class="form-buttons-w text-center">

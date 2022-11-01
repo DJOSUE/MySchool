@@ -92,7 +92,7 @@ class Login extends EduAppGT
             $row = $query->row();
             $this->session->set_userdata('role_id', '6');
             $this->session->set_userdata('program_id', $row->program_id);
-            $this->session->set_userdata('student_login', $row->student_session);
+            $this->session->set_userdata('student_login', '1');
             $this->session->set_userdata('student_id', $row->student_id);
             $this->session->set_userdata('login_user_id', $row->student_id);
             $this->session->set_userdata('name', $row->first_name);

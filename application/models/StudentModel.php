@@ -5,9 +5,13 @@ class StudentModel extends School
     function add_interaction($student_id, $type = '')
     {
         $md5 = md5(date('d-m-Y H:i:s'));
+        $account_type   =   get_table_user($this->session->userdata('role_id'));
 
         if($type != 'automatic')
-            $data['created_by']   = $this->session->userdata('login_user_id');
+        {
+            $data['created_by']         = $this->session->userdata('login_user_id');
+            $data['created_by_type']    = $account_type;
+        }
         else
             $data['created_by']   = DEFAULT_USER;
 

@@ -406,7 +406,8 @@
                                             $this->db->where('section_id', $ex[1]);
                                             $this->db->where('subject_id', $ex[2]);
                                             $links = $this->db->get('live')->result_array();
-                                            foreach($links as $item):?>
+                                            foreach($links as $item):
+                                            ?>
                                                 <a class="list-group-item" href="<?php echo base_url();?>student/liveClass/<?php echo base64_encode($item['live_id']);?>/<?php echo $item['liveType'];?>" target="_blank">
                                                     <?= $item['title']; ?>
                                                 </a>

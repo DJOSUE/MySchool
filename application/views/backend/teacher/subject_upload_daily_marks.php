@@ -35,17 +35,17 @@
     <div class="conty">
         <?php include 'fancy.php';?>
         <div class="header-spacer"></div>
-        <div class="cursos cta-with-media" style="background: #<?php echo $subs['color'];?>;">
+        <div class="cursos cta-with-media" style="background: #<?= $subs['color'];?>;">
             <div class="cta-content">
                 <div class="user-avatar">
-                    <img alt="" src="<?php echo base_url();?>public/uploads/subject_icon/<?php echo $subs['icon'];?>"
+                    <img alt="" src="<?= base_url();?>public/uploads/subject_icon/<?= $subs['icon'];?>"
                         style="width:60px;">
                 </div>
-                <h3 class="cta-header"><?php echo $subs['name'];?> - <small><?php echo getPhrase('marks');?></small>
+                <h3 class="cta-header"><?= $subs['name'];?> - <small><?= getPhrase('marks');?></small>
                 </h3>
                 <small
-                    style="font-size:0.90rem; color:#fff;"><?php echo $this->db->get_where('class', array('class_id' => $ex[0]))->row()->name;?>
-                    "<?php echo $this->db->get_where('section', array('section_id' => $ex[1]))->row()->name;?>"
+                    style="font-size:0.90rem; color:#fff;"><?= $this->db->get_where('class', array('class_id' => $ex[0]))->row()->name;?>
+                    "<?= $this->db->get_where('section', array('section_id' => $ex[1]))->row()->name;?>"
                 </small>
             </div>
         </div>
@@ -61,12 +61,12 @@
                         <div class="ui-block">
                             <article class="hentry post thumb-full-width">
                                 <div class="post__author author vcard inline-items">
-                                    <img src="<?php echo base_url();?>public/uploads/<?php echo $this->db->get_where('settings', array('type' => 'logo'))->row()->description;?>"
+                                    <img src="<?= base_url();?>public/uploads/<?= $this->db->get_where('settings', array('type' => 'logo'))->row()->description;?>"
                                         style="border-radius:0px;">
                                     <div class="author-date">
                                         <a class="h6 post__author-name fn"
-                                            href="javascript:void(0);"><?php echo getPhrase('marks');?>
-                                            <small>(<?php echo $this->db->get_where('v_class_units', array('class_id' => $class_id, 'unit_id' => $unit_id))->row()->unit_name;?>)</small>.</a>
+                                            href="javascript:void(0);"><?= getPhrase('marks');?>
+                                            <small>(<?= $this->db->get_where('v_class_units', array('class_id' => $class_id, 'unit_id' => $unit_id))->row()->unit_name;?>)</small>.</a>
                                     </div>
                                     <br />
                                     <div class="post__author author vcard inline-items">
@@ -85,20 +85,20 @@
                     				                $var++;
                     				            ?>
                                                 <li class="<?php if($exam['unit_id'] == $unit_id) echo "act";?>"><a
-                                                        href="<?php echo base_url();?>teacher/subject_upload_marks/<?php echo $data.'/'.$exam['unit_id'];?>/"><i
-                                                            class="os-icon picons-thin-icon-thin-0023_calendar_month_day_planner_events"></i><?php echo $exam['unit_name'];?></a>
+                                                        href="<?= base_url();?>teacher/subject_upload_marks/<?= $data.'/'.$exam['unit_id'];?>/"><i
+                                                            class="os-icon picons-thin-icon-thin-0023_calendar_month_day_planner_events"></i><?= $exam['unit_name'];?></a>
                                                 </li>
                                                 <?php endforeach;?>
                                             </ul>
                                         </div>
                                     </div>
-                                    <?php echo form_open(base_url() . 'teacher/marks_update/'.$unit_id.'/'.$ex[0].'/'.$ex[1].'/'.$ex[2].'/'.$date);?>
+                                    <?= form_open(base_url() . 'teacher/marks_update/'.$unit_id.'/'.$ex[0].'/'.$ex[1].'/'.$ex[2].'/'.$date);?>
                                     <div class="table-responsive">
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr style="background:#f2f4f8;">
                                                     <th style="text-align: center;">
-                                                        <?php echo getPhrase('student');?>
+                                                        <?= getPhrase('student');?>
                                                     </th>
                                                     <?php 
                                                         $subjectLabel = $this->db->get_where('subject' , array('subject_id' => $ex[2]))->row();
@@ -106,11 +106,11 @@
                                                             $name = 'la'.$i;
                                                     ?>
                                                         <th style="text-align: center;">
-                                                            <?php echo $subjectLabel->$name; ?>
+                                                            <?= $subjectLabel->$name; ?>
                                                         </th>
                                                     <?php endfor; ?>
                                                     <th style="text-align: center;">
-                                                        <?php echo getPhrase('comment');?>
+                                                        <?= getPhrase('comment');?>
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -142,9 +142,9 @@
                                                 <tr style="height:25px;">
                                                     <td style="min-width:190px">
                                                         <img alt=""
-                                                            src="<?php echo $this->crud->get_image_url('student', $row['student_id']);?>"
+                                                            src="<?= $this->crud->get_image_url('student', $row['student_id']);?>"
                                                             width="25px" style="border-radius: 10px;margin-right:5px;">
-                                                        <?php echo $this->crud->get_name('student', $row['student_id']);?>
+                                                        <?= $this->crud->get_name('student', $row['student_id']);?>
                                                     </td>
                                                     <?php 
                                                         for ($i=0; $i < $quantityGrades; $i++):
@@ -152,17 +152,17 @@
                                                     ?>
                                                     <td>
                                                         <center><input type="text"
-                                                                name="<?php echo $name[1].$row['mark_daily_id'];?>"
+                                                                name="<?= $name[1].$row['mark_daily_id'];?>"
                                                                 placeholder="0"
                                                                 maxlength="3"
                                                                 style="width:65px; border: 1; text-align: center;"
-                                                                value="<?php echo $row[$name[2]];?>"> </center>
+                                                                value="<?= $row[$name[2]];?>"> </center>
                                                     </td>
                                                     <?php endfor; ?>
                                                     <td>
                                                         <center><input type="text" class="form-control"
-                                                                name="comment_<?php echo $row['mark_daily_id'];?>"
-                                                                value="<?php echo $row['comment'];?>"></center>
+                                                                name="comment_<?= $row['mark_daily_id'];?>"
+                                                                value="<?= $row['comment'];?>"></center>
                                                     </td>
                                                 </tr>
                                                 <?php endforeach;?>
@@ -170,18 +170,20 @@
                                         </table>
                                         <div class="form-buttons-w text-center">
                                             <button class="btn btn-success btn-rounded"
-                                                type="submit"><?php echo getPhrase('update');?></button>
+                                                type="submit"><?= getPhrase('update');?></button>
+                                            <a class="btn btn-danger btn-rounded" style="color: white;"
+                                                onclick="close_class_unit(<?= $unit_id?>)"><?= getPhrase('close_unit');?></a>
                                         </div>
-                                        <?php echo form_close();?>
+                                        <?= form_close();?>
                                     </div>
                                 </div>
                                 <div class="control-block-button post-control-button">
                                     <a href="javascript:void(0);"
-                                        onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_mark/<?php echo $ex[2];?>/<?php echo $ex[1];?>/');"
+                                        onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_mark/<?= $ex[2];?>/<?= $ex[1];?>/');"
                                         class="btn btn-control featured-post"
                                         style="background-color: #99bf2d; color: #fff;" data-toggle="tooltip"
                                         data-placement="top"
-                                        data-original-title="<?php echo getPhrase('update_activities');?>">
+                                        data-original-title="<?= getPhrase('update_activities');?>">
                                         <i class="picons-thin-icon-thin-0102_notebook_to_do_bullets_list"></i>
                                     </a>
                                 </div>
@@ -191,7 +193,7 @@
                 </div>
             </div>
             <a class="back-to-top" href="javascript:void(0);">
-                <img src="<?php echo base_url();?>public/style/olapp/svg-icons/back-to-top.svg" alt="arrow"
+                <img src="<?= base_url();?>public/style/olapp/svg-icons/back-to-top.svg" alt="arrow"
                     class="back-icon">
             </a>
         </div>
@@ -201,5 +203,36 @@
     $(document).ready(function(){
 		$("#update_daily_marks :input").attr("readonly", true);
     });
+
+    function close_class_unit(unit_id) {
+        Swal.fire({
+            title: '<?= getPhrase('confirm_close_unit');?>',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                class_id = <?=$class_id;?>;
+                $.ajax({
+                    url: '<?php echo base_url();?>tools/close_class_unit/' + class_id + '/' + unit_id,
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timerProgressBar: true,
+                            title: '<?= getPhrase('successfully_updated');?>',
+                            timer: 3000
+                        })
+                        location.reload(true); 
+                    }
+                });
+            }
+        })
+    }
 </script>
 <?php endforeach;?>

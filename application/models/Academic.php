@@ -1140,8 +1140,10 @@ class Academic extends School
         $data['semester_id'] = $this->runningSemester;
 
         //$data['student_id'] = $student_id;
-        $data['unit_id']    = $unit_id;
-        $data['mark_date']  = $mark_date;
+        if($unit_id != 'NA')
+            $data['unit_id']    = $unit_id;
+        if($mark_date != 'NA')
+            $data['mark_date']  = $mark_date;
 
         $data['can_edit']   = false;
 
@@ -1287,6 +1289,7 @@ class Academic extends School
             $laboocho       = html_escape($this->input->post('lab_ocho_'.$row['mark_daily_id']));
             $labonueve      = html_escape($this->input->post('lab_nueve_'.$row['mark_daily_id']));
             $labodiez       = html_escape($this->input->post('lab_diez_'.$row['mark_daily_id']));
+            $comment        = html_escape($this->input->post('comment_'.$row['mark_daily_id']));
 
             // Validate values
             if($labouno     == '' ) { $labouno      = '-'; } 
@@ -1320,17 +1323,18 @@ class Academic extends School
                 $obtained_marks = '-';
             
             $data['mark_obtained'] = $obtained_marks;
-            $data['labuno'] = $labouno;
-            $data['labdos'] = $labodos;
-            $data['labtres'] = $labotres;
-            $data['labcuatro'] = $labocuatro;
-            $data['labcinco'] = $labocinco;
-            $data['labseis'] = $laboseis;
-            $data['labsiete'] = $labosiete;
-            $data['labocho'] = $laboocho;
-            $data['labnueve'] = $labonueve;
-            $data['labdiez'] = $labodiez;
-            $data['labtotal'] = $labototal;
+            $data['labuno']     = $labouno;
+            $data['labdos']     = $labodos;
+            $data['labtres']    = $labotres;
+            $data['labcuatro']  = $labocuatro;
+            $data['labcinco']   = $labocinco;
+            $data['labseis']    = $laboseis;
+            $data['labsiete']   = $labosiete;
+            $data['labocho']    = $laboocho;
+            $data['labnueve']   = $labonueve;
+            $data['labdiez']    = $labodiez;
+            $data['labtotal']   = $labototal;
+            $data['comment']    = $comment;
 
             $this->db->where('mark_daily_id' , $row['mark_daily_id']);
             $this->db->update('mark_daily' , $data);
@@ -1688,12 +1692,26 @@ class Academic extends School
                                         AND student_id  = '$student_id'"
                                     )->result_array();
         }
-        else {
+        else 
+        {
+            $students = $this->db->query("SELECT student_id FROM enroll
+                            WHERE class_id  = '$ex[0]'
+                            AND section_id  = '$ex[1]'
+                            AND subject_id  = '$ex[2]'
+                            AND year        = '$running_year'
+                            AND semester_id = '$running_semester'
+                            AND student_id  = '$student_id'"
+                        )->result_array();
+            $List = implode(', ', $students);
+
+            
             $scores = $this->db->query("SELECT * FROM pa_test 
                                         WHERE class_id  = '$ex[0]'
                                         AND section_id  = '$ex[1]'
                                         AND year        = '$running_year'
-                                        AND semester_id = '$running_semester'"
+                                        AND semester_id = '$running_semester'
+                                        AND student_id in ($List)
+                                        "
                                     )->result_array();
         }
 
@@ -1712,7 +1730,7 @@ class Academic extends School
 
             $comment    = html_escape($this->input->post('comment_'.$row['test_id']));
 
-            $scoretotal      = (int)$score1 + (int)$score2 + (int)$score3 + (int)$score4 + (int)$score5 + (int)$score6 + (int)$score7 + (int)$score8 + (int)$score9 + (int)$score10;          
+            $scoretotal = (int)$score1 + (int)$score2 + (int)$score3 + (int)$score4 + (int)$score5 + (int)$score6 + (int)$score7 + (int)$score8 + (int)$score9 + (int)$score10;          
             
             $data_update['scoretotal'] = $scoretotal;
             $data_update['comment'] = $comment;
