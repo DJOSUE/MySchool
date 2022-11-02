@@ -28,7 +28,6 @@
 .orderby {
     cursor: pointer;
 }
-
 </style>
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -237,10 +236,10 @@
                                                                         name="payment_amount_<?=$item['transaction_type_id']?>"
                                                                         type="text" class="currency" placeholder="00.00"
                                                                         onfocusout="payment_total()" />
-                                                                        <?php if($item['name'] == 'Card'):?>
-                                                                        <span id="card_fee" class="currency"></span>
-                                                                        <span id="total_fee" class="currency"></span>
-                                                                        <?php endif;?>
+                                                                    <?php if($item['name'] == 'Card'):?>
+                                                                    <span id="card_fee" class="currency"></span>
+                                                                    <span id="total_fee" class="currency"></span>
+                                                                    <?php endif;?>
                                                                 </td>
                                                                 <?php if($item['name'] != 'Cash'):?>
                                                                 <td>
@@ -357,11 +356,11 @@
                                         <table class="table table-padded">
                                             <thead>
                                                 <tr>
-                                                    <th><?= getPhrase('invoice_number');?></th>
-                                                    <th><?= getPhrase('amount');?></th>
-                                                    <th><?= getPhrase('comment');?></th>
-                                                    <th><?= getPhrase('created_at');?></th>
-                                                    <th><?= getPhrase('created_by');?></th>
+                                                    <th class="orderby"><?= getPhrase('invoice_number');?></th>
+                                                    <th class="orderby"><?= getPhrase('amount');?></th>
+                                                    <th class="orderby"><?= getPhrase('comment');?></th>
+                                                    <th class="orderby"><?= getPhrase('created_at');?></th>
+                                                    <th class="orderby"><?= getPhrase('created_by');?></th>
                                                     <th></th>
                                                 </tr>
                                             </thead>
@@ -483,7 +482,15 @@ function apply_fee() {
 
     if (text != 'Visa') {
         var total = ((parseFloat(amount) * 5) / 100);
-        document.getElementById('totalCardFee').innerText = parseFloat(total).toFixed(2);
+        var totalFee = parseFloat(total) + parseFloat(amount);
+
+        if (total > 0) {
+            document.getElementById('totalCardFee').innerText = parseFloat(total).toFixed(2);
+            var htmlFee = "<b style='color:#ff214f'> Card Fee : $" + parseFloat(total).toFixed(2) + "</b>";
+            document.getElementById('card_fee').innerHTML = htmlFee;
+            var htmlFee = "<b style='color:#ff214f'> Total Card : $" + parseFloat(totalFee).toFixed(2) + "</b>";
+            document.getElementById('total_fee').innerHTML = htmlFee;
+        }
     } else {
         document.getElementById('totalCardFee').innerText = '00.00';
     }
@@ -498,18 +505,63 @@ function update_total() {
     var totalPayment = parseFloat(document.getElementById('total_payment').value);
 
     var totalToPay = (totalAmount + totalCardFee) - totalDiscount;
-    var total = totalAmount - totalDiscount;
+    var subtotal = totalAmount - totalDiscount;
+
+    var remainingAmount = (totalPayment > 0 ? totalPayment : 0) - subtotal;
 
     document.getElementById('txtTotal').value = totalToPay;
     document.getElementById('total').innerText = totalToPay;
 
-    if (totalPayment == total) {
+    document.getElementById('subtotal').innerText = subtotal;
+    document.getElementById('txtSubtotal').innerText = subtotal;
+
+    if (remainingAmount > 0) {
+        var txtRemainingAmount = "<b style='color:#ff214f'> Payment Exceeds </b>";
+        document.getElementById('txtRemainingAmount').innerHTML = txtRemainingAmount;
+    } else {
+        document.getElementById('txtRemainingAmount').innerHTML = "";
+    }
+
+    document.getElementById('remainingAmount').innerText = remainingAmount;
+
+
+    if (totalPayment == subtotal) {
         document.getElementById("btnPayment").disabled = false;
         document.getElementById("payment_error").innerHTML = '';
     } else {
         document.getElementById("btnPayment").disabled = true;
-        document.getElementById("payment_error").innerHTML = 'Validate that Total Amount is equal to Total Payment';
+        document.getElementById("payment_error").innerHTML =
+            "<b style='color:#ff214f'>Validate that \"Remaining to Pay\" is 00.00</b>";
     }
 
 }
+</script>
+<script type="text/javascript">
+$('.orderby').click(function() {
+    var table = $(this).parents('table').eq(0)
+    var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+    this.asc = !this.asc
+    if (!this.asc) {
+        rows = rows.reverse()
+    }
+    for (var i = 0; i < rows.length; i++) {
+        table.append(rows[i])
+    }
+})
+
+function comparer(index) {
+    return function(a, b) {
+        var valA = getCellValue(a, index),
+            valB = getCellValue(b, index)
+        return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+    }
+}
+
+function getCellValue(row, index) {
+    return $(row).children('td').eq(index).text()
+}
+
+// $(document).ready( function () {
+//     $('#tblPayments').DataTable();
+// } );
 </script>

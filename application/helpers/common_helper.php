@@ -53,12 +53,11 @@ if (!function_exists('is_super_admin'))
             $admin_id = $CI->session->userdata('admin_id');
         }
         
-        $owner_status = $CI->db->get_where('admin', array('admin_id' => $admin_id))->row()->owner_status;
+        $admin = $CI->db->get_where('admin', array('admin_id' => $admin_id))->row();
 
-        if($owner_status == 1){
+        if($admin->owner_status == 1 && ( in_array($admin->username, SYSADMIN_LIST))) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
 

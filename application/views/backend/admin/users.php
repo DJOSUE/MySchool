@@ -19,19 +19,19 @@
                                     <div class="ae-content-w grbg">
                                         <div class="top-header top-header-favorit">
                                             <div class="top-header-thumb">
-                                                <img src="<?php echo base_url();?>public/uploads/bglogin.jpg"
+                                                <img src="<?= base_url();?>public/uploads/bglogin.jpg"
                                                     alt="nature" class="bgcover">
                                                 <div class="top-header-author">
                                                     <div class="author-thumb">
-                                                        <img src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('logo');?>"
+                                                        <img src="<?= base_url();?>public/uploads/<?= $this->crud->getInfo('logo');?>"
                                                             alt="author" class="authorCv">
                                                     </div>
                                                     <div class="author-content">
                                                         <a href="javascript:void(0);"
-                                                            class="h3 author-name"><?php echo getPhrase('users');?></a>
+                                                            class="h3 author-name"><?= getPhrase('users');?></a>
                                                         <div class="country">
-                                                            <?php echo $this->crud->getInfo('system_name');?> |
-                                                            <?php echo $this->crud->getInfo('system_title');?></div>
+                                                            <?= $this->crud->getInfo('system_name');?> |
+                                                            <?= $this->crud->getInfo('system_title');?></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -57,23 +57,28 @@
                                                                                 <ul class="more-dropdown">
                                                                                     <li><a data-toggle="modal"
                                                                                             data-target="#access_admin"
-                                                                                            href="javascript:void(0);"><?php echo getPhrase('permissions');?></a>
+                                                                                            href="javascript:void(0);"><?= getPhrase('permissions');?></a>
                                                                                     </li>
                                                                                 </ul>
                                                                             </div>
                                                                             <?php endif;?>
                                                                             <div class="friend-avatar">
                                                                                 <div class="author-thumb">
-                                                                                    <img src="<?php echo base_url();?>public/uploads/icons/admins.svg"
+                                                                                    <img src="<?= base_url();?>public/uploads/icons/admins.svg"
                                                                                         width="110px"
                                                                                         style="background-color:#fff;padding:15px; border-radius:0px;">
                                                                                 </div>
                                                                                 <div class="author-content">
-                                                                                    <a href="<?php echo base_url();?>admin/admins/"
-                                                                                        class="h5 author-name"><?php echo getPhrase('admins');?></a>
+                                                                                    <a href="<?= base_url();?>admin/admins/"
+                                                                                        class="h5 author-name"><?= getPhrase('admins');?></a>
                                                                                     <div class="country">
-                                                                                        <?php echo $this->db->count_all_results('admin');?>
-                                                                                        <?php echo getPhrase('admins');?>
+                                                                                        <?php
+                                                                                        $this->db->reset_query();
+                                                                                        $this->db->where('status', '0');
+                                                                                        $this->db->from('admin');
+                                                                                        echo $this->db->count_all_results();
+                                                                                        ?>
+                                                                                        <?= getPhrase('admins');?>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -95,27 +100,29 @@
                                                                                 <ul class="more-dropdown">
                                                                                     <li><a data-toggle="modal"
                                                                                             data-target="#access_admin"
-                                                                                            href="javascript:void(0);"><?php echo getPhrase('permissions');?></a>
+                                                                                            href="javascript:void(0);"><?= getPhrase('permissions');?></a>
                                                                                     </li>
                                                                                 </ul>
                                                                             </div>
                                                                             <?php endif;?>
                                                                             <div class="friend-avatar">
                                                                                 <div class="author-thumb">
-                                                                                    <img src="<?php echo base_url();?>public/uploads/icons/admins.svg"
+                                                                                    <img src="<?= base_url();?>public/uploads/icons/admins.svg"
                                                                                         width="110px"
                                                                                         style="background-color:#fff;padding:15px; border-radius:0px;">
                                                                                 </div>
                                                                                 <div class="author-content">
-                                                                                    <a href="<?php echo base_url().'admin/admins/'.base64_encode('3');?>"
-                                                                                        class="h5 author-name"><?php echo getPhrase('advisors');?></a>
+                                                                                    <a href="<?= base_url().'admin/admins/'.base64_encode('3');?>"
+                                                                                        class="h5 author-name"><?= getPhrase('advisors');?></a>
                                                                                     <div class="country">
                                                                                         <?php 
-
+                                                                                        $this->db->reset_query();
+                                                                                        $this->db->where('status', '0');
                                                                                         $this->db->where('owner_status', '3');
                                                                                         $this->db->from('admin');
-                                                                                        echo $this->db->count_all_results();?>
-                                                                                        <?php echo getPhrase('advisors');?>
+                                                                                        echo $this->db->count_all_results();
+                                                                                        ?>
+                                                                                        <?= getPhrase('advisors');?>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -132,16 +139,16 @@
                                                                         <div class="friend-item-content">
                                                                             <div class="friend-avatar">
                                                                                 <div class="author-thumb">
-                                                                                    <img src="<?php echo base_url();?>public/uploads/icons/teachers.svg"
+                                                                                    <img src="<?= base_url();?>public/uploads/icons/teachers.svg"
                                                                                         width="110px"
                                                                                         style="background-color:#fff;padding:15px;border-radius:0px;">
                                                                                 </div>
                                                                                 <div class="author-content">
-                                                                                    <a href="<?php echo base_url();?>admin/teachers/"
-                                                                                        class="h5 author-name"><?php echo getPhrase('teachers');?></a>
+                                                                                    <a href="<?= base_url();?>admin/teachers/"
+                                                                                        class="h5 author-name"><?= getPhrase('teachers');?></a>
                                                                                     <div class="country">
-                                                                                        <?php echo $this->db->count_all_results('teacher');?>
-                                                                                        <?php echo getPhrase('teachers');?>
+                                                                                        <?= $this->db->count_all_results('teacher');?>
+                                                                                        <?= getPhrase('teachers');?>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -158,16 +165,16 @@
                                                                         <div class="friend-item-content">
                                                                             <div class="friend-avatar">
                                                                                 <div class="author-thumb">
-                                                                                    <img src="<?php echo base_url();?>public/uploads/icons/students.svg"
+                                                                                    <img src="<?= base_url();?>public/uploads/icons/students.svg"
                                                                                         width="110px"
                                                                                         style="background-color:#fff;padding:15px; border-radius:0px;">
                                                                                 </div>
                                                                                 <div class="author-content">
-                                                                                    <a href="<?php echo base_url();?>admin/students/"
-                                                                                        class="h5 author-name"><?php echo getPhrase('students');?></a>
+                                                                                    <a href="<?= base_url();?>admin/students/"
+                                                                                        class="h5 author-name"><?= getPhrase('students');?></a>
                                                                                     <div class="country">
-                                                                                        <?php echo $this->db->count_all_results('student');?>
-                                                                                        <?php echo getPhrase('students');?>
+                                                                                        <?= $this->db->count_all_results('student');?>
+                                                                                        <?= getPhrase('students');?>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -184,16 +191,16 @@
                                                                         <div class="friend-item-content">
                                                                             <div class="friend-avatar">
                                                                                 <div class="author-thumb">
-                                                                                    <img src="<?php echo base_url();?>public/uploads/icons/parents.svg"
+                                                                                    <img src="<?= base_url();?>public/uploads/icons/parents.svg"
                                                                                         width="110px"
                                                                                         style="background-color:#fff;padding:15px; border-radius:0px;">
                                                                                 </div>
                                                                                 <div class="author-content">
-                                                                                    <a href="<?php echo base_url();?>admin/parents/"
-                                                                                        class="h5 author-name"><?php echo getPhrase('parents');?></a>
+                                                                                    <a href="<?= base_url();?>admin/parents/"
+                                                                                        class="h5 author-name"><?= getPhrase('parents');?></a>
                                                                                     <div class="country">
-                                                                                        <?php echo $this->db->count_all_results('parent');?>
-                                                                                        <?php echo getPhrase('parents');?>
+                                                                                        <?= $this->db->count_all_results('parent');?>
+                                                                                        <?= getPhrase('parents');?>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -210,16 +217,16 @@
                                                                         <div class="friend-item-content">
                                                                             <div class="friend-avatar">
                                                                                 <div class="author-thumb">
-                                                                                    <img src="<?php echo base_url();?>public/uploads/icons/accountant.svg"
+                                                                                    <img src="<?= base_url();?>public/uploads/icons/accountant.svg"
                                                                                         width="110px"
                                                                                         style="background-color:#fff;padding:15px; border-radius:0px;">
                                                                                 </div>
                                                                                 <div class="author-content">
-                                                                                    <a href="<?php echo base_url();?>admin/accountant/"
-                                                                                        class="h5 author-name"><?php echo getPhrase('accountants');?></a>
+                                                                                    <a href="<?= base_url();?>admin/accountant/"
+                                                                                        class="h5 author-name"><?= getPhrase('accountants');?></a>
                                                                                     <div class="country">
-                                                                                        <?php echo $this->db->count_all_results('accountant');?>
-                                                                                        <?php echo getPhrase('accountants');?>
+                                                                                        <?= $this->db->count_all_results('accountant');?>
+                                                                                        <?= getPhrase('accountants');?>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -236,16 +243,16 @@
                                                                         <div class="friend-item-content">
                                                                             <div class="friend-avatar">
                                                                                 <div class="author-thumb">
-                                                                                    <img src="<?php echo base_url();?>public/uploads/icons/librarian.svg"
+                                                                                    <img src="<?= base_url();?>public/uploads/icons/librarian.svg"
                                                                                         width="110px"
                                                                                         style="background-color:#fff;padding:15px; border-radius:0px;">
                                                                                 </div>
                                                                                 <div class="author-content">
-                                                                                    <a href="<?php echo base_url();?>admin/librarian/"
-                                                                                        class="h5 author-name"><?php echo getPhrase('librarians');?></a>
+                                                                                    <a href="<?= base_url();?>admin/librarian/"
+                                                                                        class="h5 author-name"><?= getPhrase('librarians');?></a>
                                                                                     <div class="country">
-                                                                                        <?php echo $this->db->count_all_results('librarian');?>
-                                                                                        <?php echo getPhrase('librarians');?>
+                                                                                        <?= $this->db->count_all_results('librarian');?>
+                                                                                        <?= getPhrase('librarians');?>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -262,16 +269,16 @@
                                                                         <div class="friend-item-content">
                                                                             <div class="friend-avatar">
                                                                                 <div class="author-thumb">
-                                                                                    <img src="<?php echo base_url();?>public/uploads/icons/pendings.svg"
+                                                                                    <img src="<?= base_url();?>public/uploads/icons/pendings.svg"
                                                                                         width="110px"
                                                                                         style="background-color:#fff;padding:15px; border-radius:0px;">
                                                                                 </div>
                                                                                 <div class="author-content">
-                                                                                    <a href="<?php echo base_url();?>admin/pending/"
-                                                                                        class="h5 author-name"><?php echo getPhrase('pending_users');?></a>
+                                                                                    <a href="<?= base_url();?>admin/pending/"
+                                                                                        class="h5 author-name"><?= getPhrase('pending_users');?></a>
                                                                                     <div class="country">
-                                                                                        <?php echo $this->db->count_all_results('pending_users');?>
-                                                                                        <?php echo getPhrase('pending');?>
+                                                                                        <?= $this->db->count_all_results('pending_users');?>
+                                                                                        <?= getPhrase('pending');?>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -301,13 +308,13 @@
     aria-hidden="true">
     <div class="modal-dialog window-popup edit-my-poll-popup" role="document">
         <div class="modal-content">
-            <?php echo form_open(base_url() . 'admin/users/permissions/' , array('enctype' => 'multipart/form-data'));?>
+            <?= form_open(base_url() . 'admin/users/permissions/' , array('enctype' => 'multipart/form-data'));?>
             <a href="javascript:void(0);" class="close icon-close" data-dismiss="modal" aria-label="Close"></a>
             <div class="modal-header" style="background-color:#00579c">
-                <h6 class="title" style="color:white"><?php echo getPhrase('admin_permissions');?></h6>
+                <h6 class="title" style="color:white"><?= getPhrase('admin_permissions');?></h6>
             </div>
             <div class="ui-block-title ui-block-title-small">
-                <h6 class="title"><?php echo getPhrase('admin');?></h6>
+                <h6 class="title"><?= getPhrase('admin');?></h6>
             </div>
             <div class="modal-body">
                 <div class="ui-block-content">
@@ -334,7 +341,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="messages" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'messages'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('messages');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'messages'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('messages');?>
                                 </label>
                             </div>
                         </div>
@@ -343,7 +350,7 @@
                                 <label>
                                     <input type="checkbox" name="admins" value="1"
                                         <?php if($this->db->get_where('account_role', array('type' => 'admins'))->row()->permissions == 1) echo "checked";?>>
-                                    <?php echo getPhrase('admins');?>
+                                    <?= getPhrase('admins');?>
                                 </label>
                             </div>
                         </div>
@@ -351,7 +358,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="parents" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'parents'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('parents');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'parents'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('parents');?>
                                 </label>
                             </div>
                         </div>
@@ -359,7 +366,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="teachers" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'teachers'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('teachers');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'teachers'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('teachers');?>
                                 </label>
                             </div>
                         </div>
@@ -367,7 +374,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="students" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'students'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('students');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'students'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('students');?>
                                 </label>
                             </div>
                         </div>
@@ -375,7 +382,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="accountants" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'accountants'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('accountants');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'accountants'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('accountants');?>
                                 </label>
                             </div>
                         </div>
@@ -383,7 +390,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="librarians" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'librarians'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('librarians');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'librarians'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('librarians');?>
                                 </label>
                             </div>
                         </div>
@@ -391,7 +398,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="library" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'library'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('library');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'library'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('library');?>
                                 </label>
                             </div>
                         </div>
@@ -399,7 +406,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="academic" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'academic'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('academic');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'academic'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('academic');?>
                                 </label>
                             </div>
                         </div>
@@ -407,7 +414,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="attendance" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'attendance'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('attendance');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'attendance'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('attendance');?>
                                 </label>
                             </div>
                         </div>
@@ -415,7 +422,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="calendar" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'calendar'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('calendar');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'calendar'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('calendar');?>
                                 </label>
                             </div>
                         </div>
@@ -423,7 +430,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="files" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'files'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('files');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'files'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('files');?>
                                 </label>
                             </div>
                         </div>
@@ -431,7 +438,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="polls" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'polls'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('polls');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'polls'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('polls');?>
                                 </label>
                             </div>
                         </div>
@@ -439,7 +446,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="notifications" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'notifications'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('notifications');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'notifications'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('notifications');?>
                                 </label>
                             </div>
                         </div>
@@ -447,7 +454,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="admissions" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'admissions'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('admissions');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'admissions'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('admissions');?>
                                 </label>
                             </div>
                         </div>
@@ -455,7 +462,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="behavior" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'behavior'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('behavior');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'behavior'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('behavior');?>
                                 </label>
                             </div>
                         </div>
@@ -463,7 +470,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="news" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'news'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('news');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'news'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('news');?>
                                 </label>
                             </div>
                         </div>
@@ -471,7 +478,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="school_bus" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'school_bus'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('school_bus');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'school_bus'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('school_bus');?>
                                 </label>
                             </div>
                         </div>
@@ -479,7 +486,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="classrooms" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'classrooms'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('classrooms');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'classrooms'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('classrooms');?>
                                 </label>
                             </div>
                         </div>
@@ -487,7 +494,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="accounting" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'accounting'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('accounting');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'accounting'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('accounting');?>
                                 </label>
                             </div>
                         </div>
@@ -495,7 +502,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="schedules" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'schedules'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('schedules');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'schedules'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('schedules');?>
                                 </label>
                             </div>
                         </div>
@@ -503,7 +510,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="system_reports" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'system_reports'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('system_reports');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'system_reports'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('system_reports');?>
                                 </label>
                             </div>
                         </div>
@@ -511,7 +518,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="academic_settings" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'academic_settings'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('academic_settings');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'academic_settings'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('academic_settings');?>
                                 </label>
                             </div>
                         </div>
@@ -519,7 +526,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="settings" value="1"
-                                        <?php if($this->db->get_where('account_role', array('type' => 'settings'))->row()->permissions == 1) echo "checked";?>><?php echo getPhrase('settings');?>
+                                        <?php if($this->db->get_where('account_role', array('type' => 'settings'))->row()->permissions == 1) echo "checked";?>><?= getPhrase('settings');?>
                                 </label>
                             </div>
                         </div>
@@ -527,22 +534,22 @@
                 </div>
             </div>
             <div class="ui-block-title ui-block-title-small">
-                <h6 class="title"><?php echo getPhrase('super_admin');?></h6>
+                <h6 class="title"><?= getPhrase('super_admin');?></h6>
             </div>
             <div class="modal-body">
                 <div class="ui-block-content">
                     <div class="row">
                         <div class="col-sm-12">
-                            <?php echo getPhrase('all_permissions');?>
+                            <?= getPhrase('all_permissions');?>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="submit"
-                    class="btn btn-rounded btn-success btn-lg full-width"><?php echo getPhrase('save');?></button>
+                    class="btn btn-rounded btn-success btn-lg full-width"><?= getPhrase('save');?></button>
             </div>
-            <?php echo form_close();?>
+            <?= form_close();?>
         </div>
     </div>
 </div>
@@ -550,7 +557,7 @@
 <script type="text/javascript">
 function get_class_sections(class_id) {
     $.ajax({
-        url: '<?php echo base_url();?>admin/get_class_section/' + class_id,
+        url: '<?= base_url();?>admin/get_class_section/' + class_id,
         success: function(response) {
             jQuery('#section_selector_holder').html(response);
         }
@@ -559,7 +566,7 @@ function get_class_sections(class_id) {
 
 function get_class_sections2(class_id) {
     $.ajax({
-        url: '<?php echo base_url();?>admin/get_class_section/' + class_id,
+        url: '<?= base_url();?>admin/get_class_section/' + class_id,
         success: function(response) {
             jQuery('#section_selector_holder2').html(response);
         }

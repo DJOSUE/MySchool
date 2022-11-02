@@ -91,6 +91,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
  
 defined('DEFAULT_GUID')        OR define('DEFAULT_GUID', 'uVlmIcG2YkCX4cqua3xoVQ'); // no errors
+defined('SYSADMIN_LIST')       OR define('SYSADMIN_LIST', ['sysadmin', 'johanaadmin', 'agala']); // no errors
 
 defined('DEFAULT_USER')        OR define('DEFAULT_USER', 0); // no errors
 defined('DEFAULT_TABLE')       OR define('DEFAULT_TABLE', 'admin'); // no errors
