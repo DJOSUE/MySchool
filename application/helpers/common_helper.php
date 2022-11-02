@@ -204,3 +204,15 @@ if(!function_exists('calculate_age'))
 		return $age;
     }
 }
+
+if (!function_exists('get_settings')) {
+    function get_settings($key = '')
+    {
+        $CI    = &get_instance();
+        $CI->load->database();
+        
+        $CI->db->where('type', $key);
+        $result = $CI->db->get('settings')->row()->description;
+        return $result;
+    }
+}

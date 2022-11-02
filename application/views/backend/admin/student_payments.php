@@ -286,7 +286,7 @@
                                             <div class="">
                                                 <div class="form-group">
                                                     <label for="comment"><?=getPhrase('comment')?></label>
-                                                    <textarea class="form-control" name="comment" rows="3"></textarea>
+                                                    <textarea class="form-control" name="comment" rows="3" require></textarea>
                                                 </div>
                                             </div>
                                             <br /><br />

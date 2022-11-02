@@ -17,12 +17,18 @@
 .currency {
     padding-left: 12px;
     text-align: end;
+    float: right;
 }
 
 .currency-symbol {
     position: absolute;
     padding: 2px 5px;
 }
+
+.orderby {
+    cursor: pointer;
+}
+
 </style>
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -91,7 +97,7 @@
                                                             ?>
                                                             <tr>
                                                                 <td>
-                                                                    <select class="custom-select"
+                                                                    <select class="custom-select" tabindex="-1"
                                                                         id="income_type_<?=$item['income_type_id']?>"
                                                                         name="income_type_<?=$item['income_type_id']?>">
                                                                         <option value="<?=$item['income_type_id']?>">
@@ -113,11 +119,11 @@
                                                             <?php endforeach;?>
                                                             <tr>
                                                                 <td>
-                                                                    <?= getPhrase('total')?>
+                                                                    <?= getPhrase('')?>
                                                                 </td>
                                                                 <td>
                                                                     <input id="total_amount" class="currency"
-                                                                        disabled />
+                                                                        type="hidden" disabled />
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -146,7 +152,7 @@
                                                             ?>
                                                             <tr>
                                                                 <td>
-                                                                    <select class="custom-select"
+                                                                    <select class="custom-select" tabindex="-1"
                                                                         id="discount_type_<?=$item['discount_id']?>"
                                                                         name="discount_type_<?=$item['discount_id']?>">
                                                                         <option value="<?=$item['discount_id']?>">
@@ -168,11 +174,11 @@
                                                             <?php endforeach;?>
                                                             <tr>
                                                                 <td>
-                                                                    <?= getPhrase('total')?>
+                                                                    <?= getPhrase('')?>
                                                                 </td>
                                                                 <td>
                                                                     <input id="total_discount" class="currency"
-                                                                        disabled />
+                                                                        type="hidden" disabled />
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -203,7 +209,7 @@
                                                             ?>
                                                             <tr>
                                                                 <td>
-                                                                    <select class="custom-select"
+                                                                    <select class="custom-select" tabindex="-1"
                                                                         id="payment_type_<?=$item['transaction_type_id']?>"
                                                                         name="payment_type_<?=$item['transaction_type_id']?>">
                                                                         <option
@@ -214,7 +220,7 @@
                                                                     <select class="custom-select" style="width: 200px;"
                                                                         id="card_type_<?=$item['transaction_type_id']?>"
                                                                         name="card_type_<?=$item['transaction_type_id']?>"
-                                                                        onchange="apply_fee()">
+                                                                        onchange="apply_fee()" tabindex="-1">
                                                                         <?php 
                                                                         $card_types = $this->payment->get_credit_cards();
                                                                         foreach($card_types as $card):
@@ -231,6 +237,10 @@
                                                                         name="payment_amount_<?=$item['transaction_type_id']?>"
                                                                         type="text" class="currency" placeholder="00.00"
                                                                         onfocusout="payment_total()" />
+                                                                        <?php if($item['name'] == 'Card'):?>
+                                                                        <span id="card_fee" class="currency"></span>
+                                                                        <span id="total_fee" class="currency"></span>
+                                                                        <?php endif;?>
                                                                 </td>
                                                                 <?php if($item['name'] != 'Cash'):?>
                                                                 <td>
@@ -242,12 +252,17 @@
                                                             </tr>
                                                             <?php endforeach;?>
                                                             <tr>
-                                                                <td>
-                                                                    <?= getPhrase('total')?>
+                                                                <td class="currency">
+                                                                    <b style='color:#ff214f'>Remaining to pay:</b>
                                                                 </td>
                                                                 <td>
+                                                                    <span id="remainingAmount"
+                                                                        class="currency">00.00</span>
                                                                     <input id="total_payment" class="currency"
-                                                                        disabled />
+                                                                        type="hidden" disabled />
+                                                                </td>
+                                                                <td>
+                                                                    <span id="txtRemainingAmount"></span>
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -256,7 +271,7 @@
                                             </div>
                                         </div>
                                         <div class="col">
-                                            <div class="">
+                                            <div class="" style="margin-right: 50px;">
                                                 <div class="form-group">
                                                     <label for="comment"><?=getPhrase('comment')?></label>
                                                     <textarea class="form-control" name="comment" rows="3"></textarea>
@@ -277,37 +292,50 @@
                                                             <td>Total Items
                                                             </td>
                                                             <td>
-                                                                <span id="totalAmount">00.00</span>
+                                                                <span id="totalAmount" class="currency">00.00</span>
                                                                 <input id="txtTotalAmount" type="hidden" />
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Total Credit card fee
-                                                            </td>
-                                                            <td>
-                                                                <span id="totalCardFee">00.00</span>
-                                                                <input id="txtTotalCardFee" type="hidden" />
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Total discounts
                                                             </td>
                                                             <td>
-                                                                <span id="totalDiscount">-00.00</span>
+                                                                <span id="totalDiscount" class="currency">-00.00</span>
                                                                 <input id="txtTotalDiscount" type="hidden" />
                                                             </td>
                                                         </tr>
-                                                        <tr>
-                                                            <td>Total
+
+                                                        <tr style="border-top: 1px solid;">
+                                                            <td>Subtotal
                                                             </td>
                                                             <td>
-                                                                <span id="total">00.00</span>
+                                                                <span id="subtotal" class="currency">00.00</span>
+                                                                <input id="txtSubtotal" type="hidden" />
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td>Credit card fee
+                                                            </td>
+                                                            <td>
+                                                                <span id="totalCardFee" class="currency">00.00</span>
+                                                                <input id="txtTotalCardFee" type="hidden" />
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr style="border-top: 1px solid;">
+                                                            <td>Total to pay
+                                                            </td>
+                                                            <td>
+                                                                <span id="total" class="currency">00.00</span>
                                                                 <input id="txtTotal" name="txtTotal" type="hidden" />
                                                             </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
+                                            <br />
+                                            <br />
                                             <div class="form-buttons">
                                                 <button class="btn btn-rounded btn-success" id="btnPayment"
                                                     type="submit" disabled>

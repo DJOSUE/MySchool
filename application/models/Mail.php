@@ -376,33 +376,53 @@ class Mail extends School
 	//Submit email by SMTP function.
 	function submit($to, $subject, $message, $type)
 	{
-	    $config = Array(
-            'protocol' => $this->db->get_where('settings', array('type' => 'protocol'))->row()->description,
-            'smtp_host' => $this->db->get_where('settings', array('type' => 'smtp_host'))->row()->description,
-            'smtp_port' => $this->db->get_where('settings', array('type' => 'smtp_port'))->row()->description,
-            'smtp_user' => $this->db->get_where('settings', array('type' => 'smtp_user'))->row()->description,
-            'smtp_pass' => $this->db->get_where('settings', array('type' => 'smtp_pass'))->row()->description,
+        $this->load->library('email');
+        // $this->load->library('encrypt');
+        
+        $from = get_settings('system_email');
+        $fromName = get_settings('system_name');
+
+	    $config = array(
+            'protocol'  => get_settings('protocol'), // $this->db->get_where('settings', array('type' => 'protocol'))->row()->description,
+            'smtp_host' => get_settings('smtp_host'), // $this->db->get_where('settings', array('type' => 'smtp_host'))->row()->description,
+            'smtp_port' => get_settings('smtp_port'), // $this->db->get_where('settings', array('type' => 'smtp_port'))->row()->description,
+            'smtp_user' => get_settings('smtp_user'), // $this->db->get_where('settings', array('type' => 'smtp_user'))->row()->description,
+            'smtp_pass' => get_settings('smtp_pass'), // $this->db->get_where('settings', array('type' => 'smtp_pass'))->row()->description,
             'mailtype'  => 'html', 
-            'charset'   => $this->db->get_where('settings', array('type' => 'charset'))->row()->description,
-            'wordwrap' => true
+            'smtp_crypto' => 'ssl',
+            'charset'   => get_settings('charset'), // $this->db->get_where('settings', array('type' => 'charset'))->row()->description
         );
-        $this->load->library('email', $config);
+
+        $this->email->set_header('MIME-Version', 1.0);
+		$this->email->set_header('Content-type', 'text/html');
+		$this->email->set_header('charset', 'UTF-8');
+
         $this->email->initialize($config);
+        $this->email->set_mailtype("html");
         $this->email->set_newline("\r\n");
-        $this->email->from($this->db->get_where('settings', array('type' => 'system_email'))->row()->description, $this->db->get_where('settings', array('type' => 'system_name'))->row()->description);
+
         $this->email->to($to);
+        $this->email->from($from, $fromName);
         $this->email->subject($subject);
-        if($type == 'marks'){
-            $mesg = $this->load->view('backend/mails/marks.php',$message,TRUE);
-            $this->email->message($mesg);
-        }elseif($type == 'accept'){
-            $mesg = $this->load->view('backend/mails/accept.php',$message,TRUE);
-            $this->email->message($mesg);
-        }else{
-            $mesg = $this->load->view('backend/mails/notify.php',$message,true);   
-            $this->email->message($mesg);
+
+        if($type == 'marks')
+        {
+            $msg = $this->load->view('backend/mails/marks.php',$message,TRUE);
+            $this->email->message($msg);
         }
-        if (!$this->email->send()) {
+        elseif($type == 'accept')
+        {
+            $msg = $this->load->view('backend/mails/accept.php',$message,TRUE);
+            $this->email->message($msg);
+        }
+        else
+        {
+            $msg = $this->load->view('backend/mails/notify.php',$message,true);   
+            $this->email->message($msg);
+        }
+        
+        if (!$this->email->send()) 
+        {
             show_error($this->email->print_debugger());
         }
 	}

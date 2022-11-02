@@ -10266,11 +10266,11 @@ html {
         flex: 1;
     }
 
-    @media (min-width: 1280px){
+    /* @media (min-width: 1280px){
         .content-i{
             max-width:1200px
         }
-    }
+    } */
     
     .with-side-panel .menu-mobile .mm-logo-buttons-w .content-panel-open {
         display: block;
