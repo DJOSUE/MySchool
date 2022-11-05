@@ -347,15 +347,6 @@ class Accountant extends EduAppGT
         $this->load->view('backend/index', $page_data);
     }
     
-    //Manage payments function.
-    function payments($param1 = '' , $param2 = '' , $param3 = '') 
-    {
-        $this->isAccountant();
-        $page_data['page_name']  = 'payments';
-        $page_data['page_title'] = getPhrase('payments');
-        $this->load->view('backend/index', $page_data); 
-    }
-    
     //Accountant dashboard function.
     function panel()
     {
@@ -504,7 +495,82 @@ class Accountant extends EduAppGT
 
     //End of Accountant.php
 
-/***** HelpDesk functions ****************************************************************************************************************************/
+/***** Report Module *******************************************************************************************************************************/
+    //Manage payments function.
+    function report_dashboard($param1 = '' , $param2 = '' , $param3 = '') 
+    {
+        $this->isAccountant();
+        $page_data['page_name']  = 'report_dashboard';
+        $page_data['page_title'] = getPhrase('dashboard');
+        $this->load->view('backend/index', $page_data); 
+    }
+
+    function report_daily_income($param1 = '' , $param2 = '' , $param3 = '') 
+    {
+        $this->isAccountant();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $date = html_escape($this->input->post('date'));
+            $cashier_id = html_escape($this->input->post('cashier_id'));
+        }
+        else
+        {
+            $date = "";
+            $cashier_id = "";
+        }
+
+        $page_data['date']  = $date;
+        $page_data['cashier_id']  = $cashier_id;
+        $page_data['page_name']  = 'report_daily_income';
+        $page_data['page_title'] = getPhrase('daily_income');
+        $this->load->view('backend/index', $page_data); 
+    }
+
+    function report_monthly_income($param1 = '' , $param2 = '' , $param3 = '') 
+    {
+        $this->isAccountant();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $date = html_escape($this->input->post('date'));
+            $cashier_id = html_escape($this->input->post('cashier_id'));
+        }
+        else
+        {
+            $date = "";
+            $cashier_id = "";
+        }
+
+        $page_data['date']  = $date;
+        $page_data['cashier_id']  = $cashier_id;
+        $page_data['page_name']  = 'report_monthly_income';
+        $page_data['page_title'] = getPhrase('monthly_income');
+        $this->load->view('backend/index', $page_data); 
+    }
+
+    function report_payments($param1 = '' , $param2 = '' , $param3 = '') 
+    {
+        $interval   = date_interval_create_from_date_string('1 days');
+        $objDate    = date_create(date("m/d/Y"));
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $start_date = html_escape($this->input->post('start_date'));
+            $end_date   = html_escape($this->input->post('end_date'));
+        }
+        else
+        {
+            $start_date = date_format($objDate, "m/d/Y");
+            $end_date   = date_format(date_add($objDate, $interval), "m/d/Y");
+        }
+
+        $this->isAccountant();
+        $page_data['start_date'] = $start_date;
+        $page_data['end_date']   = $end_date;
+        $page_data['page_name']  = 'report_payments';
+        $page_data['page_title'] = getPhrase('payments');
+        $this->load->view('backend/index', $page_data); 
+    }
+
+/***** HelpDesk functions **************************************************************************************************************************/
 
     // ticket Dashboard
     function helpdesk_dashboard()

@@ -88,10 +88,10 @@
                         </div>
                     </a>
                 </li>
-                <?php if(menu_option_visible('permissions')):?>
+                <?php if(!menu_option_visible('request')):?>
                 <li <?php if($page_name == 'request'):?>class="currentItem" <?php endif;?>>
                     <a href="<?php echo base_url();?>student/request/" data-toggle="tooltip" data-placement="right"
-                        data-original-title="<?php echo getPhrase('permissions');?>">
+                        data-original-title="<?php echo getPhrase('request');?>">
                         <div class="left-menu-icon">
                             <i class="os-icon picons-thin-icon-thin-0015_fountain_pen"></i>
                         </div>

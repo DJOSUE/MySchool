@@ -18,7 +18,7 @@
             <div class="content-box">
                 <div class="col-sm-12">
                     <h5 class="form-header"><?php echo getPhrase('manage_sections');?></h5><br>
-                    <?php echo form_open(base_url() . 'admin/subjects/', array('class' => 'form m-b'));?>
+                    <?php echo form_open(base_url() . 'admin/academic_settings_subjects/', array('class' => 'form m-b'));?>
                     <div class="row">
                         <div class="col-sm-2">
                             <div class="form-group label-floating is-select">
@@ -166,7 +166,7 @@
                     <h6 class="title" style="color:white"><?php echo getPhrase('new_section');?></h6>
                 </div>
                 <div class="ui-block-content">
-                    <?php echo form_open(base_url() . 'admin/subjects/create');?>
+                    <?php echo form_open(base_url() . 'admin/academic_settings_subjects/create');?>
                     <div class="row">
                         <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="form-group label-floating">

@@ -11,7 +11,7 @@
     $reports_pages      = array('reports_general','reports_students', 'reports_students_all', 'reports_attendance', 'reports_accounting', 'reports_tabulation', 'reports_tabulation_daily', 'report_marks');  
     $calendar_pages     = array('calendar');
     $helpdesk_pages     = array('helpdesk_dashboard', 'helpdesk_ticket_list', 'helpdesk_ticket_info');
-    $payment_pages      = array('payments', 'students_payments', 'expense', 'new_payment');
+    $payment_pages      = array('report_dashboard', 'students_payments', 'expense', 'new_payment');
 
 ?>
 <div class="fixed-sidebar">
@@ -82,7 +82,7 @@
                 <?php endif;?>
                 <!-- Payments Access -->
                 <li <?= in_array($page_name, $payment_pages) ? 'class="currentItem"' : '';?>>
-                    <a href="<?php echo base_url();?>accountant/payments/" data-toggle="tooltip" data-placement="right"
+                    <a href="<?php echo base_url();?>accountant/report_dashboard/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('accounting');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0428_money_payment_dollar_bag_cash"></i>
@@ -101,7 +101,7 @@
                 </li>
                 <?php endif;?>
                 <!-- System Reports Access -->
-                <?php if(!has_permission('accounting_module')):?>
+                <?php if(has_permission('accounting_module')):?>
                 <li <?php if(in_array($page_name, $reports_pages)):?>class="currentItem" <?php endif;?>>
                     <a href="<?php echo base_url();?>accountant/reports_general/" data-toggle="tooltip"
                         data-placement="right" data-original-title="<?php echo getPhrase('accounting_reports');?>">

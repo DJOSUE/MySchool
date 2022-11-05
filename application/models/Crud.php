@@ -2371,23 +2371,23 @@ class Crud extends School
 
     function get_expense($month)
     {
-        $year = $this->db->get_where('settings', array('type' => 'running_year'))->row()->description;
-        $expense = $this->db->get_where('payment', array('year' => $year, 'payment_type' => 'expense', 'month' => $month))->result_array();
-        $total = 0;
-        foreach($expense as $row){
-            $total += $row['amount'];
-        }
+        // $year = $this->db->get_where('settings', array('type' => 'running_year'))->row()->description;
+        // $expense = $this->db->get_where('payment', array('year' => $year, 'payment_type' => 'expense', 'month' => $month))->result_array();
+        // $total = 0;
+        // foreach($expense as $row){
+        //     $total += $row['amount'];
+        // }
         return $total;
     }
     
     function get_payments($month)
     {
-        $year = $this->db->get_where('settings', array('type' => 'running_year'))->row()->description;
-        $expense = $this->db->get_where('payment', array('year' => $year, 'payment_type' => 'income', 'month' => $month))->result_array();
-        $total = 0;
-        foreach($expense as $row){
-            $total += $row['amount'];
-        }
+        // $year = $this->db->get_where('settings', array('type' => 'running_year'))->row()->description;
+        // $expense = $this->db->get_where('payment', array('year' => $year, 'payment_type' => 'income', 'month' => $month))->result_array();
+        // $total = 0;
+        // foreach($expense as $row){
+        //     $total += $row['amount'];
+        // }
         return $total;
     }
 

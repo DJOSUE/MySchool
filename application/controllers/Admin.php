@@ -2985,6 +2985,53 @@
             }
             redirect( base_url(), 'refresh' );
         }
+
+/***** Module accounting ********************************************************************************************************************************/
+        function accounting_dashboard()
+        {
+            $this->isAdmin();
+
+            if(has_permission('accounting_dashboard'))
+            {
+                $page_data['page_name']     = 'accounting_dashboard';
+                $page_data['page_title']    = getPhrase('accounting_dashboard');
+                $this->load->view('backend/index', $page_data);
+            }
+            else
+            {
+                redirect(base_url() . 'admin/accounting_daily_income', 'refresh');
+            }
+            
+        }
+
+        function accounting_daily_income()
+        {           
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $date = html_escape($this->input->post('date'));
+                $cashier_id = html_escape($this->input->post('cashier_id'));
+            }
+            else
+            {
+                if(has_permission('accounting_dashboard'))
+                {
+                    $date = "";
+                    $cashier_id = "";
+                }
+                else
+                {
+                    $date = "";
+                    $cashier_id = "admin:".$this->session->userdata('login_user_id');
+                }
+            }
+    
+            $page_data['date']          = $date;
+            $page_data['cashier_id']    = $cashier_id;
+            $page_data['cashier_all']   = has_permission('accounting_dashboard');            
+            $page_data['page_name']     = 'accounting_daily_income';
+            $page_data['page_title']    = getPhrase('daily_income');
+            $this->load->view('backend/index', $page_data); 
+
+        }
         
 /***** Module Student ********************************************************************************************************************************/
         // 
@@ -3092,6 +3139,18 @@
             $page_data['page_title'] =  getPhrase('payment_invoice');
             $this->load->view('backend/print/payment_invoice', $page_data);
             
+        }
+
+        //Student Enrollments function.
+        function student_new_enrollment($student_id, $param1='') 
+        {
+            $this->isAdmin();
+            $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
+            $page_data['page_name']  = 'student_new_enrollment';
+            $page_data['page_title'] =  getPhrase('new_enrollment');
+            $page_data['student_id'] =  $student_id;
+            $page_data['class_id']   =  $class_id;
+            $this->load->view('backend/index', $page_data);
         }
 
 /***** Module Admission ******************************************************************************************************************************/        
@@ -3580,6 +3639,8 @@
 
             $this->applicant->update_tag($applicant_id, $tag_id, $selected);
         }
+
+
 
 /***** Module Reports ********************************************************************************************************************************/
         

@@ -7,7 +7,7 @@
             <h6 class="title" style="color:white"><?php echo getPhrase('update_section');?></h6>
         </div>
         <div class="ui-block-content">
-            <?php echo form_open(base_url() . 'admin/sections/update/'.$row['section_id'], array('enctype' => 'multipart/form-data')); ?>
+            <?php echo form_open(base_url() . 'admin/academic_settings_sections/update/'.$row['section_id'], array('enctype' => 'multipart/form-data')); ?>
                 <div class="row">
                     <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
                         <div class="form-group label-floating">

@@ -93,6 +93,8 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 defined('DEFAULT_GUID')        OR define('DEFAULT_GUID', 'uVlmIcG2YkCX4cqua3xoVQ'); // no errors
 defined('SYSADMIN_LIST')       OR define('SYSADMIN_LIST', ['sysadmin', 'johanaadmin', 'agala']); // no errors
 
+defined('MONTH_LIST')       OR define('MONTH_LIST', array(["01",'January'], ["02",'February'], ["03",'March'], ["04",'April'], ["05",'May'], ["06",'June'], ["07",'July'], ["08",'August'], ["09",'September'], ["10",'October'], ["11",'November'], ["12",'December']));
+
 defined('DEFAULT_USER')        OR define('DEFAULT_USER', 0); // no errors
 defined('DEFAULT_TABLE')       OR define('DEFAULT_TABLE', 'admin'); // no errors
 
@@ -108,9 +110,11 @@ defined('ADMISSION_PLATFORM_URL')           OR define('ADMISSION_PLATFORM_URL', 
 defined('PATH_APPLICANT_FILES')             OR define('PATH_APPLICANT_FILES', 'public/uploads/applicant_files/'); // applicant_file
 defined('PATH_PUBLIC_ASSETS_IMAGES_FILES')  OR define('PATH_PUBLIC_ASSETS_IMAGES_FILES', 'public/assets/images/'); // applicant_file
 
+
 defined('PATH_STUDENT_IMAGE')               OR define('PATH_STUDENT_IMAGE', 'public/uploads/student_image/'); // student image
 defined('PATH_STUDENT_INTERACTION_FILES')   OR define('PATH_STUDENT_INTERACTION_FILES', 'public/uploads/student_interaction/'); // student interaction
 
 defined('PATH_TASK_FILES')                  OR define('PATH_TASK_FILES', 'public/uploads/task_files/'); // Task Files
 defined('PATH_TICKET_FILES')                OR define('PATH_TICKET_FILES', 'public/uploads/ticket_files/'); // Task Files
+defined('PATH_REQUEST_FILES')               OR define('PATH_REQUEST_FILES', 'public/uploads/request_files/'); // applicant_file
 

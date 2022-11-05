@@ -93,4 +93,156 @@ class StudentModel extends School
         
         return $query;
     }
+
+    public function get_request_types()
+    {
+        $this->db->reset_query();
+        $this->db->select('code as request_type, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'STUDENT_REQUEST');
+        $query = $this->db->get('parameters')->result_array();;
+        
+        return $query;
+    }
+    
+    public function get_request_type($request_type)
+    {
+        $this->db->reset_query();
+        $this->db->select('code as request_type_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'STUDENT_REQUEST');
+        $this->db->where('code', $request_type);
+        $query = $this->db->get('parameters')->row_array();
+        
+        return $query;
+    }
+
+    public function get_request_type_name($request_type)
+    {
+        $this->db->reset_query();
+        $this->db->select('name');
+        $this->db->where('parameter_id', 'STUDENT_REQUEST');
+        $this->db->where('code', $request_type);
+        $query = $this->db->get('parameters')->row()->name;
+        
+        return $query;
+    }
+
+    public function get_request_statuses()
+    {
+        $this->db->reset_query();
+        $this->db->select('code as status_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'REQUEST_STATUS');
+        $query = $this->db->get('parameters')->result_array();;
+        
+        return $query;
+    }
+    
+    public function get_request_status($status_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('code as status_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'REQUEST_STATUS');
+        $this->db->where('code', $status_id);
+        $query = $this->db->get('parameters')->row_array();
+        
+        return $query;
+    }
+
+    public function get_request_status_name($status_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('name');
+        $this->db->where('parameter_id', 'REQUEST_STATUS');
+        $this->db->where('code', $status_id);
+        $query = $this->db->get('parameters')->row()->name;
+        
+        return $query;
+    }
+
+    public function get_student_program($student_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('program_id');
+        $this->db->where('student_id', $student_id);
+        $query = $this->db->get('student')->row()->program_id;
+        
+        return $query;
+    }
+
+    public function get_student_program_name($student_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('program_id');
+        $this->db->where('student_id', $student_id);
+        $program_id = $this->db->get('student')->row()->program_id;
+
+        $this->db->reset_query();        
+        $this->db->where('program_id', $program_id);
+        $query = $this->db->get('program')->row()->name;
+        
+        return $query;
+    }
+
+    public function get_modality()
+    {
+        $this->db->reset_query();
+        $this->db->select('code as modality_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'MODALITY');
+        $query = $this->db->get('parameters')->result_array();;
+        
+        return $query;
+    }
+    
+    public function get_modality_info($modality_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('code as modality_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'MODALITY');
+        $this->db->where('code', $modality_id);
+        $query = $this->db->get('parameters')->row_array();
+        
+        return $query;
+    }
+
+    public function get_modality_name($modality_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('name');
+        $this->db->where('parameter_id', 'MODALITY');
+        $this->db->where('code', $modality_id);
+        $query = $this->db->get('parameters')->row()->name;
+        
+        return $query;
+    }
+
+    public function get_program_type()
+    {
+        $this->db->reset_query();
+        $this->db->select('code as program_type_id, name, value_1 as price, value_2 as icon');
+        $this->db->where('parameter_id', 'PROGRAM_TYPE');
+        $query = $this->db->get('parameters')->result_array();;
+        
+        return $query;
+    }
+    
+    public function get_program_type_info($program_type_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('code as program_type_id, name, value_1 as price, value_2 as icon');
+        $this->db->where('parameter_id', 'PROGRAM_TYPE');
+        $this->db->where('code', $program_type_id);
+        $query = $this->db->get('parameters')->row_array();
+        
+        return $query;
+    }
+
+    public function get_program_type_name($program_type_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('name');
+        $this->db->where('parameter_id', 'PROGRAM_TYPE');
+        $this->db->where('code', $program_type_id);
+        $query = $this->db->get('parameters')->row()->name;
+        
+        return $query;
+    }
 }

@@ -25,7 +25,7 @@
                 <li class="navs-item">
                     <a class="navs-links <?= $page_name == 'academic_settings_semesters' ? 'active': '' ;?>"
                         href="<?php echo base_url();?>admin/academic_settings_semesters/"><i
-                            class="os-icon picons-thin-icon-thin-0007_book_reading_read_bookmark"></i><span><?php echo getPhrase('semesters'); ?></span></a>
+                            class="os-icon picons-thin-icon-thin-0007_book_reading_read_bookmark"></i><span><?php echo getPhrase('semester'); ?></span></a>
                 </li>
                 <?php endif;?>
                 <?php if(has_permission('academic_settings_units')):?>

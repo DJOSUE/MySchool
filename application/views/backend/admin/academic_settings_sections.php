@@ -17,7 +17,7 @@
             <div class="content-box">
                 <div class="col-sm-12">
                     <h5 class="form-header"><?php echo getPhrase('manage_sections');?></h5><br>
-                    <?php echo form_open(base_url() . 'admin/sections/', array('class' => 'form m-b'));?>
+                    <?php echo form_open(base_url() . 'admin/academic_settings_sections/', array('class' => 'form m-b'));?>
                     <div class="row">
                         <div class="col-sm-2">
                             <div class="form-group label-floating is-select">
@@ -92,10 +92,10 @@
                                             <i class="icon-options"></i>
                                             <ul class="more-dropdown" style="z-index:999">
                                                 <li><a href="#"
-                                                        onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_section/<?php echo $row['section_id'];?>');"><?php echo getPhrase('edit');?></a>
+                                                        onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_academic_settings_section/<?php echo $row['section_id'];?>');"><?php echo getPhrase('edit');?></a>
                                                 </li>
                                                 <li><a onClick="return confirm('<?php echo getPhrase('confirm_delete');?>')"
-                                                        href="<?php echo base_url();?>admin/sections/delete/<?php echo $row['section_id'];?>"><?php echo getPhrase('delete');?></a>
+                                                        href="<?php echo base_url();?>admin/academic_settings_sections/delete/<?php echo $row['section_id'];?>"><?php echo getPhrase('delete');?></a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -136,7 +136,7 @@
                     <h6 class="title" style="color:white"><?php echo getPhrase('new_section');?></h6>
                 </div>
                 <div class="ui-block-content">
-                    <?php echo form_open(base_url() . 'admin/sections/create');?>
+                    <?php echo form_open(base_url() . 'admin/academic_settings_sections/create');?>
                     <div class="row">
                         <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="form-group label-floating is-select">

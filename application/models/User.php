@@ -1133,4 +1133,15 @@ class User extends School
         $this->crud->save_log($table, $action, $interaction_id, $data);
     }
 
+    function get_advisor()
+    {
+        $this->db->reset_query();
+        $this->db->select('admin_id, first_name, last_name');
+        $this->db->where('status', '1');
+        $this->db->where('owner_status', '3');
+        $this->db->order_by('first_name');
+        $query = $this->db->get('admin')->result_array();        
+        return $query;        
+    }
+
 }

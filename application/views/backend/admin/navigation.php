@@ -32,6 +32,9 @@
 
     $helpdesk_pages     = array('helpdesk_dashboard', 'helpdesk_ticket_list', 'helpdesk_ticket_info');
 
+    $accounting_pages   = array('accounting_dashboard', 'accounting_daily_income', 'invoice_details', 'payments', 'students_payments', 'expense', 'new_payment');
+    
+
 ?>
 <div class="fixed-sidebar">
     <div class="fixed-sidebar-left sidebar--small" id="sidebar-left">
@@ -232,10 +235,9 @@
                 </li>
                 <?php endif;?>
                 <!-- Payments Access -->
-                <?php if(has_permission('accounting_module')):?>
-                <li <?php if($page_name == 'invoice_details' || $page_name == 'payments' || $page_name == 'students_payments' || $page_name == 'expense' || $page_name == 'new_payment'):?>class="currentItem"
-                    <?php endif;?>>
-                    <a href="<?php echo base_url();?>admin/payments/" data-toggle="tooltip" data-placement="right"
+                <?php if(has_permission('accounting_module')):?>                
+                    <li <?php if(in_array($page_name, $accounting_pages)):?>class="currentItem" <?php endif;?>>
+                    <a href="<?php echo base_url();?>admin/accounting_dashboard/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('accounting');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0428_money_payment_dollar_bag_cash"></i>
