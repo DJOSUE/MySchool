@@ -1,6 +1,7 @@
 <?php 
     $running_year = $this->crud->getInfo('running_year'); 
     $advisor = $this->user->get_advisor();
+    $accounters = $this->user->get_accounters();
     $currency = $this->crud->getInfo('currency');
 
     $interval = date_interval_create_from_date_string('1 days');
@@ -15,7 +16,7 @@
     }
 
     $first_date = date_format($objDate, "Y-m-d");
-    $second_date = date_format(date_add($objDate, $interval), "Y-m-d");
+    // $second_date = date_format(date_add($objDate, $interval), "Y-m-d");
     
     $tuition_int = 0.00;
     $application_int = 0.00;
@@ -34,8 +35,8 @@
     $transfer = 0.00;
 
     $this->db->reset_query();    
-    $this->db->where('created_at >=', $first_date);
-    $this->db->where('created_at <=', $second_date);
+    $this->db->where('invoice_date =', $first_date);
+    // $this->db->where('created_at <=', $second_date);
 
     if($cashier_id != "")
     {
@@ -197,12 +198,17 @@ td {
                                             <?= getPhrase('cashier');?>
                                         </label>
                                         <div class="select">
-                                            <select name="cashier_id" onchange="get_class_sections(this.value)">
+                                            <select name="cashier_id" <?= $cashier_all == false ? 'disabled' : ''?>>
                                                 <option value=""><?= getPhrase('select');?></option>
                                                 <?php foreach($advisor as $row): ?>
                                                 <option value="admin:<?= $row['admin_id'];?>"
                                                     <?php if($cashier_id == ('admin:'.$row['admin_id'])) echo "selected";?>>
                                                     <?= $row['first_name'].' '.$row['last_name'];?></option>
+                                                <?php endforeach;?>
+                                                <?php foreach($accounters as $item): ?>
+                                                <option value="accountant:<?= $item['accountant_id'];?>"
+                                                    <?php if($cashier_id == ('accountant:'.$item['accountant_id'])) echo "selected";?>>
+                                                    <?= $item['first_name'].' '.$item['last_name'];?></option>
                                                 <?php endforeach;?>
                                             </select>
                                         </div>
@@ -245,7 +251,7 @@ td {
                                                             <b><?= getPhrase('date');?></b>
                                                         </td>
                                                         <td class="text-center" colspan="3">
-                                                            <b><?= date_format($objDate, 'F j Y (l)');  ?></b>
+                                                            <b><?= date_format(date_create($first_date), 'F j Y (l)');  ?></b>
                                                         </td>
                                                     </tr>
                                                 </thead>

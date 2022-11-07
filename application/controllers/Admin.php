@@ -2958,7 +2958,7 @@
                 if ( $param1 == 'accountant' ){
                     
                     $this->unset_admin();
-                    $this->session->set_userdata('role_id', '4');
+                    $this->session->set_userdata('role_id', $row->role_id);
                     $this->session->set_userdata('accountant_login', '1');
                     $this->session->set_userdata('accountant_id', $row->accountant_id);
                     $this->session->set_userdata('login_user_id', $row->accountant_id);
@@ -4766,6 +4766,23 @@
             }
         }
 
+        function get_class_section_saturdays($class_id = '', $pYear = '', $pSemesterId = '')
+        {
+            $year       =   $pYear == '' ? $this->runningYear : $pYear;
+            $SemesterId =   $pSemesterId == '' ? $this->runningSemester : $pSemesterId;
+            
+            $sections = $this->db->get_where('section' , array('class_id' => $class_id, 'year' => $year, 'semester_id' => $SemesterId))->result_array();
+            echo '<option value="">' . getPhrase('select') . '</option>';
+            foreach ($sections as $row) 
+            {
+                $text = strtolower($row['name']);
+
+                if(strpos($text, 'saturday') !== false )
+                    echo '<option value="' . $row['section_id'] .'">' . $row['name'] . '</option>';
+
+            }
+        }
+
         function get_class_section($class_id = '', $pYear = '', $pSemesterId = '')
         {
             $year       =   $pYear == '' ? $this->runningYear : $pYear;
@@ -4795,12 +4812,24 @@
         }
 
         //Get subjects by classId and sectionId.
-        function get_class_section_subjects($class_id = '', $section_id = '', $pYear = '', $pSemesterId = '')
+        function get_class_section_subjects($class_id = '', $section_id = '', $pYear = '', $pSemesterId = '' )
         {
             $year       =   $pYear == '' ? $this->runningYear : $pYear;
             $SemesterId =   $pSemesterId == '' ? $this->runningSemester : $pSemesterId;
 
             $subject = $this->db->get_where( 'subject', array( 'class_id' => $class_id, 'section_id' => $section_id, 'year' => $year, 'semester_id' => $SemesterId ) )->result_array();
+            
+            foreach ( $subject as $row )  {
+                echo '<option value="' . $row['subject_id'] . '">' . $row['name'] . ' (' . $this->crud->get_name('teacher', $row['teacher_id']) . ')' . '</option>';
+            }
+        }
+
+        function get_class_section_subjects_modality($class_id = '', $section_id = '', $pYear = '', $pSemesterId = '', $pModality = '')
+        {
+            $year       =   $pYear == '' ? $this->runningYear : $pYear;
+            $SemesterId =   $pSemesterId == '' ? $this->runningSemester : $pSemesterId;
+
+            $subject = $this->db->get_where( 'subject', array( 'class_id' => $class_id, 'section_id' => $section_id, 'year' => $year, 'semester_id' => $SemesterId, 'modality_id' => $pModality) )->result_array();
             
             foreach ( $subject as $row )  {
                 echo '<option value="' . $row['subject_id'] . '">' . $row['name'] . ' (' . $this->crud->get_name('teacher', $row['teacher_id']) . ')' . '</option>';
@@ -4985,5 +5014,13 @@
             // echo '</pre>';
         }
 
+        //Get Students by SectionId
+        function get_cost_tuition($program_type_id = '')
+        {
+            $program_type = $this->agreement->get_program_type_info($program_type_id);
+            
+            return $program_type['price'];
+        }
+        
         //End of Admin.php content. 
     }

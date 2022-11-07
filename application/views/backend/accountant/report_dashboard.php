@@ -29,8 +29,7 @@
                                                         </div>
                                                         <hr>
                                                         <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                                                            <div class="ui-block list" data-mh="friend-groups-item"
-                                                                style="">
+                                                            <div class="ui-block list" data-mh="friend-groups-item">
                                                                 <div class="friend-item friend-groups">
                                                                     <div class="friend-item-content">
                                                                         <div class="friend-avatar">
@@ -58,8 +57,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                                                            <div class="ui-block list" data-mh="friend-groups-item"
-                                                                style="">
+                                                            <div class="ui-block list" data-mh="friend-groups-item">
                                                                 <div class="friend-item friend-groups">
                                                                     <div class="friend-item-content">
                                                                         <div class="friend-avatar">
@@ -87,8 +85,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                                                            <div class="ui-block list" data-mh="friend-groups-item"
-                                                                style="">
+                                                            <div class="ui-block list" data-mh="friend-groups-item">
                                                                 <div class="friend-item friend-groups">
                                                                     <div class="friend-item-content">
                                                                         <div class="friend-avatar">
@@ -109,8 +106,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                                                            <div class="ui-block list" data-mh="friend-groups-item"
-                                                                style="">
+                                                            <div class="ui-block list" data-mh="friend-groups-item">
                                                                 <div class="friend-item friend-groups">
                                                                     <div class="friend-item-content">
                                                                         <div class="friend-avatar">

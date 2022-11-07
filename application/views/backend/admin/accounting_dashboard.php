@@ -15,7 +15,7 @@
                             <div class="content-box">
                                 <div class="app-em ail-w">
                                     <div class="ae-conte nt-w">
-                                        <div class="aec-full-m essage-w">
+                                        <div class="aec-full-message-w">
                                             <div class="aec-full -message">
                                                 <div class="container- fluid">
                                                     <div class="row">
@@ -26,7 +26,7 @@
                                                         <hr>
                                                         <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                                             <div class="ui-block list" data-mh="friend-groups-item"
-                                                                style="">
+                                                                >
                                                                 <div class="friend-item friend-groups">
                                                                     <div class="friend-item-content">
                                                                         <div class="friend-avatar">
@@ -55,7 +55,7 @@
                                                         </div>
                                                         <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                                             <div class="ui-block list" data-mh="friend-groups-item"
-                                                                style="">
+                                                                >
                                                                 <div class="friend-item friend-groups">
                                                                     <div class="friend-item-content">
                                                                         <div class="friend-avatar">
@@ -84,7 +84,7 @@
                                                         </div>
                                                         <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                                             <div class="ui-block list" data-mh="friend-groups-item"
-                                                                style="">
+                                                                >
                                                                 <div class="friend-item friend-groups">
                                                                     <div class="friend-item-content">
                                                                         <div class="friend-avatar">
@@ -106,7 +106,7 @@
                                                         </div>
                                                         <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                                             <div class="ui-block list" data-mh="friend-groups-item"
-                                                                style="">
+                                                                >
                                                                 <div class="friend-item friend-groups">
                                                                     <div class="friend-item-content">
                                                                         <div class="friend-avatar">

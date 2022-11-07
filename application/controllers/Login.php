@@ -115,7 +115,7 @@ class Login extends EduAppGT
         if ($query->num_rows() > 0) 
         {
             $row = $query->row();
-            $this->session->set_userdata('role_id', '4');
+            $this->session->set_userdata('role_id', $row->role_id);
             $this->session->set_userdata('accountant_login', '1');
             $this->session->set_userdata('accountant_id', $row->accountant_id);
             $this->session->set_userdata('login_user_id', $row->accountant_id);

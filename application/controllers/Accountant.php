@@ -500,29 +500,52 @@ class Accountant extends EduAppGT
     function report_dashboard($param1 = '' , $param2 = '' , $param3 = '') 
     {
         $this->isAccountant();
-        $page_data['page_name']  = 'report_dashboard';
-        $page_data['page_title'] = getPhrase('dashboard');
-        $this->load->view('backend/index', $page_data); 
+
+        if(has_permission('accounting_dashboard'))
+        {
+            $page_data['page_name']  = 'report_dashboard';
+            $page_data['page_title'] = getPhrase('dashboard');
+            $this->load->view('backend/index', $page_data); 
+        }
+        else
+        {
+            redirect(base_url() . 'accountant/report_daily_income', 'refresh');
+        }        
     }
 
     function report_daily_income($param1 = '' , $param2 = '' , $param3 = '') 
     {
         $this->isAccountant();
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $cashier_all = has_permission('accounting_dashboard');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {        
             $date = html_escape($this->input->post('date'));
-            $cashier_id = html_escape($this->input->post('cashier_id'));
+
+            if($cashier_all)
+                $cashier_id = html_escape($this->input->post('cashier_id'));
+            else
+                $cashier_id = "accountant:".$this->session->userdata('login_user_id');
         }
         else
         {
-            $date = "";
-            $cashier_id = "";
+            if($cashier_all)
+            {
+                $date = "";
+                $cashier_id = "";
+            }
+            else
+            {
+                $date = "";
+                $cashier_id = "accountant:".$this->session->userdata('login_user_id');
+            }
         }
 
         $page_data['date']  = $date;
-        $page_data['cashier_id']  = $cashier_id;
-        $page_data['page_name']  = 'report_daily_income';
-        $page_data['page_title'] = getPhrase('daily_income');
+        $page_data['cashier_id']    = $cashier_id;
+        $page_data['cashier_all']   = $cashier_all; 
+        $page_data['page_name']     = 'report_daily_income';
+        $page_data['page_title']    = getPhrase('daily_income');
         $this->load->view('backend/index', $page_data); 
     }
 

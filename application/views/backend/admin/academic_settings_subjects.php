@@ -260,6 +260,28 @@
                         </div>
                         <div class="col col-sm-6">
                             <div class="form-group label-floating is-select">
+                                <label class="control-label"><?php echo getPhrase('modality');?></label>
+                                <div class="select">
+                                    <select name="modality_id" id="modality_id">
+                                        <option value=""><?php echo getPhrase('select');?></option>
+                                        <?php $modality = $this->agreement->get_modality(); 
+                                                foreach($modality as $item):
+                                            ?>
+                                        <option value="<?php echo $item['modality_id'];?>">
+                                            <?php echo $item['name'];?></option>
+                                        <?php endforeach;?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-sm-6">
+                            <div class="form-group label-floating">
+                                <label class="control-label"><?php echo getPhrase('subject_capacity');?></label>
+                                <input class="form-control" placeholder="" name="subject_capacity" type="number" value="20" required>
+                            </div>
+                        </div>
+                        <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="form-group label-floating is-select">
                                 <label class="control-label"><?php echo getPhrase('icon');?></label>
                                 <input class="form-control" name="userfile" type="file">
                             </div>

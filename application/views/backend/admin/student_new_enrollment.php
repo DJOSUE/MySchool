@@ -12,6 +12,17 @@
     foreach($student_info as $row): 
         $status_info = $this->studentModel->get_status_info($row['student_session']);
         $program_info = $this->studentModel->get_program_info($row['program_id']);
+
+        if($program_info['name'] == 'International')
+        {
+            $program_type_id = '1';
+            $is_international = true;
+        }
+        else
+        {
+            $program_type_id = '';
+            $is_international = false;
+        }
 ?>
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -198,14 +209,15 @@
                                                             </label>
                                                             <div class="select">
                                                                 <select name="program_type_id" id="program_type_id"
-                                                                    required="">
-                                                                    <option value=""><?= getPhrase('select');?>
+                                                                    required=""
+                                                                    <?= $is_international == true ?  'disabled': ''?>>
                                                                     </option>
                                                                     <?php 
                                                                         $programs = $this->studentModel->get_program_type();
                                                                         foreach($programs as $item):
                                                                     ?>
-                                                                    <option value="<?= $item['program_type_id']; ?>">
+                                                                    <option value="<?= $item['program_type_id']; ?>"
+                                                                        <?= $program_type_id == $item['program_type_id'] ? 'selected': ''; ?>>
                                                                         <?= $item['name']; ?>
                                                                     </option>
                                                                     <?php endforeach?>
@@ -219,7 +231,6 @@
                                                             </label>
                                                             <div class="select">
                                                                 <select name="modality_id" id="modality_id" required="">
-                                                                    <option value=""><?= getPhrase('select');?>
                                                                     </option>
                                                                     <?php 
                                                                         $modalities = $this->studentModel->get_modality();
@@ -332,9 +343,14 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <small><span id="class_error"></span></small>
                                                 <div class="form-buttons-w text-right">
                                                     <a class="btn btn-rounded btn-success btn-lg step-trigger-btn"
-                                                        href="#stepContent3">
+                                                        onclick="validate_form()">
+                                                        <?= getPhrase('next');?>
+                                                    </a>
+                                                    <a class="btn btn-rounded btn-success btn-lg step-trigger-btn"
+                                                        href="#stepContent3" style="display: none;">
                                                         <?= getPhrase('next');?>
                                                     </a>
                                                 </div>
@@ -502,7 +518,8 @@
                                                     </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <div class="form-group label-floating">
-                                                            <label class="control-label"><?= getPhrase('expiration_date');?>
+                                                            <label
+                                                                class="control-label"><?= getPhrase('expiration_date');?>
                                                             </label>
                                                             <input class="form-control" name="expiration_date"
                                                                 id="expiration_date" type="text" required="">
@@ -512,21 +529,21 @@
                                                         <div class="form-group label-floating">
                                                             <label class="control-label"><?= getPhrase('zip_code');?>
                                                             </label>
-                                                            <input class="form-control" name="zip_code"
-                                                                id="zip_code" type="text" required="" minlength="5">
+                                                            <input class="form-control" name="zip_code" id="zip_code"
+                                                                type="text" required="" minlength="5">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="form-buttons-w text-right">
                                                     <button class="btn btn-rounded btn-success" type="submit">
-                                                    <?= getPhrase('save');?>
-                                                </button>
+                                                        <?= getPhrase('save');?>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                     </main>
                     <?php include 'student_area_menu.php';?>
@@ -590,10 +607,10 @@ function add_fees() {
     }
 }
 
-function automatic_payment(){
+function automatic_payment() {
     var checked = document.getElementById("automatic_payment").checked;
 
-    if(checked)
+    if (checked)
         document.getElementById("automatic_payment_div").style.display = 'flex';
     else
         document.getElementById("automatic_payment_div").style.display = 'none';
@@ -606,27 +623,77 @@ function create_agreement() {
 function get_class_sections(class_id) {
     var year = document.getElementById("year_id").value;
     var semester_id = document.getElementById("semester_id").value;
+    var program_type = $("#program_type_id option:selected").text().trim().toLowerCase();
 
-    $.ajax({
-        url: '<?= base_url();?>admin/get_class_section/' + class_id + '/' + year + '/' + semester_id,
-        success: function(response) {
-            jQuery('#section_selector_holder').html(response);
-        }
-    });
+
+
+    if (program_type.includes('saturdays')) {
+        console.log(program_type);
+
+        $.ajax({
+            url: '<?= base_url();?>admin/get_class_section_saturdays/' + class_id + '/' + year + '/' +
+                semester_id,
+            success: function(response) {
+                jQuery('#section_selector_holder').html(response);
+            }
+        });
+    } else {
+        $.ajax({
+            url: '<?= base_url();?>admin/get_class_section_international/' + class_id + '/' + year + '/' +
+                semester_id,
+            success: function(response) {
+                jQuery('#section_selector_holder').html(response);
+            }
+        });
+    }
+
+
 }
 
 function get_class_section_subjects(section_id) {
     var year = document.getElementById("year_id").value;
     var semester = document.getElementById("semester_id").value;
     var class_id = document.getElementById("class_id").value;
+    var modality_id = document.getElementById("modality_id").value;
 
     $.ajax({
-        url: '<?= base_url();?>admin/get_class_section_subjects/' + class_id + '/' + section_id + '/' +
-            year + '/' + semester,
+        url: '<?= base_url();?>admin/get_class_section_subjects_modality/' + class_id + '/' + section_id + '/' +
+            year + '/' + semester + '/' + modality_id,
         success: function(response) {
             jQuery('#subject_selector_holder').html(response).selectpicker('refresh');
         }
     });
+}
+
+function validate_form() {
+    var subjects = $("#subject_selector_holder").val();
+    var program_type = $("#program_type_id option:selected").text().trim();
+    var program_type_id = document.getElementById("program_type_id").value;
+
+    let length = subjects.length;
+
+    var text = "";
+
+    $("#class_error").html(text);
+
+    if (program_type.includes("Full time") && (length > 2 || length < 2)) {
+        text = "<b style='color:#ff214f'><?php echo getPhrase('please_select_2_class');?></b>";
+        $("#class_error").html(text);
+    } else if (length > 1 && (!program_type.includes("Full time"))) {
+        text = "<b style='color:#ff214f'><?php echo getPhrase('please_select_1_class');?></b>";
+        $("#class_error").html(text);
+    } else if (length == 0) {
+        text = "<b style='color:#ff214f'><?php echo getPhrase('please_select_a_class');?></b>";
+        $("#class_error").html(text);
+    }
+
+    if (valid) {
+        document.getElementById('stepContent3').click();
+    }
+
+
+
+
 }
 
 function save() {
@@ -634,25 +701,5 @@ function save() {
     var _subjects = btoa(subjects);
     console.log(_subjects);
     window.location.href = '<?= base_url();?>admin/save_student_enrollment/' + _subjects;
-}
-
-function confirm_delete(enroll_id) {
-
-    var student_id = document.getElementById("student_id").value;
-
-    Swal.fire({
-        title: "<?= getPhrase('confirm_delete');?>",
-        text: "<?= getPhrase('message_delete');?>",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: "<?= getPhrase('delete');?>"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            location.href = '<?= base_url();?>admin/delete_student_enrollment/' + enroll_id + '/' +
-                student_id;
-        }
-    })
 }
 </script>

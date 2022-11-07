@@ -335,6 +335,7 @@ class Payment extends School
         $invoice_number = $this->get_next_invoice_number();
 
         $data_payment['invoice_number']  = $invoice_number;
+        $data_payment['invoice_date']    = date("Y-m-d");
         $data_payment['user_id']         = $user_id;
         $data_payment['user_type']       = $user_type;
         $data_payment['comment']         = html_escape($this->input->post('comment'));

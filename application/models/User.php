@@ -1144,4 +1144,14 @@ class User extends School
         return $query;        
     }
 
+    function get_accounters()
+    {
+        $this->db->reset_query();
+        $this->db->select('accountant_id, first_name, last_name');
+        $this->db->where('status', '1');
+        $this->db->order_by('first_name');
+        $query = $this->db->get('accountant')->result_array();        
+        return $query;        
+    }
+
 }

@@ -15,7 +15,7 @@
     }
 
     $first_date = date_format($objDate, "Y-m-d");
-    $second_date = date_format(date_add($objDate, $interval), "Y-m-d");
+    // $second_date = date_format(date_add($objDate, $interval), "Y-m-d");
     
     $tuition_int = 0.00;
     $application_int = 0.00;
@@ -34,8 +34,8 @@
     $transfer = 0.00;
 
     $this->db->reset_query();    
-    $this->db->where('created_at >=', $first_date);
-    $this->db->where('created_at <=', $second_date);
+    $this->db->where('invoice_date >=', $first_date);
+    // $this->db->where('created_at <=', $second_date);
 
     if($cashier_id != "")
     {
@@ -246,7 +246,7 @@ td {
                                                             <b><?= getPhrase('date');?></b>
                                                         </td>
                                                         <td class="text-center" colspan="3">
-                                                            <b><?= date_format($objDate, 'F j Y (l)');  ?></b>
+                                                            <b><?= date_format(date_create($first_date), 'F j Y (l)');  ?></b>
                                                         </td>
                                                     </tr>
                                                 </thead>

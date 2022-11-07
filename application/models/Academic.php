@@ -593,15 +593,19 @@ class Academic extends School
     public function createSubject($year = '', $semesterId = '')
     {
         $md5 = md5(date('d-m-y H:i:s'));
-        $data['name']        = $this->input->post('new_name');
-        $data['about']       = $this->input->post('new_about');
-        $data['class_id']    = $this->input->post('new_class_id');
-        $data['section_id']  = $this->input->post('new_section_id');
-        $data['color']       = $this->input->post('new_color');
-        $data['icon']        = $md5.str_replace(' ', '', $_FILES['userfile']['name']);
-        $data['teacher_id']  = $this->input->post('new_teacher_id');
+        $data['name']               = html_escape($this->input->post('new_name'));
+        $data['about']              = html_escape($this->input->post('new_about'));
+        $data['class_id']           = html_escape($this->input->post('new_class_id'));
+        $data['section_id']         = html_escape($this->input->post('new_section_id'));
+        $data['color']              = html_escape($this->input->post('new_color'));
+        $data['icon']               = $md5.str_replace(' ', '', $_FILES['userfile']['name']);
+        $data['modality_id']        = html_escape($this->input->post('modality_id'));
+        $data['teacher_id']         = html_escape($this->input->post('new_teacher_id'));
+        $data['subject_capacity']   = html_escape($this->input->post('subject_capacity'));
+        
         $data['year']        = $year == '' ? $this->runningYear : $year;
         $data['semester_id'] = $semesterId == '' ? $this->runningSemester : $semesterId;
+
         $this->db->insert('subject', $data);
 
         $table      = 'subject';
