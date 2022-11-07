@@ -346,7 +346,7 @@
                                                 <small><span id="class_error"></span></small>
                                                 <div class="form-buttons-w text-right">
                                                     <a class="btn btn-rounded btn-success btn-lg step-trigger-btn"
-                                                        onclick="validate_form()">
+                                                        onclick="validate_form()" style="color: white;">
                                                         <?= getPhrase('next');?>
                                                     </a>
                                                     <a class="btn btn-rounded btn-success btn-lg step-trigger-btn"
@@ -673,27 +673,27 @@ function validate_form() {
     let length = subjects.length;
 
     var text = "";
+    var valid = true;
 
     $("#class_error").html(text);
 
     if (program_type.includes("Full time") && (length > 2 || length < 2)) {
         text = "<b style='color:#ff214f'><?php echo getPhrase('please_select_2_class');?></b>";
         $("#class_error").html(text);
+        valid = false;
     } else if (length > 1 && (!program_type.includes("Full time"))) {
         text = "<b style='color:#ff214f'><?php echo getPhrase('please_select_1_class');?></b>";
         $("#class_error").html(text);
+        valid = false;
     } else if (length == 0) {
         text = "<b style='color:#ff214f'><?php echo getPhrase('please_select_a_class');?></b>";
         $("#class_error").html(text);
+        valid = false;
     }
 
     if (valid) {
         document.getElementById('stepContent3').click();
     }
-
-
-
-
 }
 
 function save() {

@@ -275,7 +275,9 @@
                                                         </thead>
                                                         <tbody>
                                                             <?php 
-                                                                $interactions = $this->db->get_where('student_interaction', array('student_id' => $row['student_id']))->result_array();
+
+                                                                $interactions = $this->studentModel->get_interactions($row['student_id']);
+                                                                // $this->db->get_where('student_interaction', array('student_id' => $row['student_id']))->result_array();
                                                                 // echo '<pre>';
                                                                 // var_dump($interactions);
                                                                 // echo '</pre>';

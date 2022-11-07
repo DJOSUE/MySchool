@@ -53,6 +53,16 @@ class StudentModel extends School
         $action     = 'update';
         $this->crud->save_log($table, $action, $interaction_id, $data);
     }
+
+    function get_interactions($student_id)
+    {
+        $this->db->reset_query();
+        $this->db->order_by('created_at', 'desc');   
+        $this->db->where('student_id', $student_id);
+        $query = $this->db->get('student_interaction')->result_array();;
+        
+        return $query;
+    }
     
     public function get_status()
     {

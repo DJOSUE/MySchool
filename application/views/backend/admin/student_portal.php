@@ -278,7 +278,8 @@
                                                         </thead>
                                                         <tbody>
                                                             <?php 
-                                                                $interactions = $this->db->get_where('v_student_interaction', array('student_id' => $row['student_id']))->result_array();
+                                                                $interactions = $this->studentModel->get_interactions($row['student_id']);
+                                                                // $this->db->get_where('v_student_interaction', array('student_id' => $row['student_id']))->result_array();
                                                                 foreach ($interactions as $item):
                                                             ?>
                                                             <tr>
@@ -297,7 +298,7 @@
                                                                 </td>
                                                                 <td class="text-center">
                                                                     <center>
-                                                                        <?= $item['first_name'];?>
+                                                                        <?= $this->crud->get_name($item['created_by_type'], $item['created_by']);?>
                                                                     </center>
                                                                 </td>
                                                                 <td class="text-center">
