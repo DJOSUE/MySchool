@@ -1021,6 +1021,7 @@
         {
             $this->isStudent();
             parse_str(substr(strrchr($_SERVER['REQUEST_URI'], "?"), 1), $_GET);
+
             if(html_escape($_GET['id']) != "")
             {
                 $notify['status'] = 1;
@@ -1034,10 +1035,17 @@
             }
             if ($param1 == "create")
             {
-                $this->crud->studentRequestPermission();
+                $this->request->student_permission_request();
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
                 redirect(base_url() . 'student/request/', 'refresh');
             }
+            if ($param1 == "vacation") 
+            {
+                $this->request->student_vacation_request();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'student/request/', 'refresh');
+            }
+
             $data['page_name']  = 'request';
             $data['page_title'] = getPhrase('permissions');
             $this->load->view('backend/index', $data);

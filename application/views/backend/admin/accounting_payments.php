@@ -19,14 +19,14 @@
     <div class="conty">
         <div class="os-tabs-w menu-shad">
             <div class="os-tabs-controls">
-                <?php include "report__nav.php";?>
+                <?php include "accounting__nav.php";?>
             </div>
         </div><br>
         <div class="content-i">
             <div class="content-box">
                 <div class="element-wrapper">
                     <div class="tab-content">
-                        <?= form_open(base_url() . 'accountant/report_payments/');?>
+                        <?= form_open(base_url() . 'admin/accounting_payments/');?>
                         <div class="row">
                             <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                 <div class="form-group label-floating is-select" style="background-color: #fff;">
@@ -69,13 +69,13 @@
                             <div class="element-wrapper">
                                 <div>
                                     <a href="#" id="btnExport"><button class="btn btn-info btn-sm btn-rounded"><i
-                                        class="picons-thin-icon-thin-0123_download_cloud_file_sync"
-                                        style="font-weight: 300; font-size: 25px;"></i></button>
+                                                class="picons-thin-icon-thin-0123_download_cloud_file_sync"
+                                                style="font-weight: 300; font-size: 25px;"></i></button>
                                     </a>
                                 </div>
                                 <div class="element-box-tp">
                                     <div class="table-responsive">
-                                    <table class="table table-padded" id="dvData">
+                                        <table class="table table-padded" id="dvData">
                                             <thead>
                                                 <tr>
                                                     <th><?= getPhrase('date');?></th>
@@ -83,8 +83,10 @@
                                                     <th><?= getPhrase('origin');?></th>
                                                     <th><?= getPhrase('tuition');?></th>
                                                     <th><?= getPhrase('book');?></th>
-                                                    <th><?= getPhrase('fee');?></th>
+                                                    <th><?= getPhrase('application_fee');?></th>
+                                                    <th><?= getPhrase('card_fee');?></th>
                                                     <th><?= getPhrase('other');?></th>
+                                                    <th><?= getPhrase('discounts');?></th>
                                                     <th><b><?= getPhrase('total');?></b></th>
                                                     <?php foreach ($payment_type as $type):  ?>
                                                     <th><?= $type['name']?></th>
@@ -96,7 +98,17 @@
                                             <tbody>
                                                 <?php
                                                     foreach($payments as $row):
-                                                        $program = $this->studentModel->get_student_program_name($row['user_id']);
+
+                                                        if($row['user_type'] === 'student')
+                                                        {
+                                                            $program = ucfirst($row['user_type']) .' - '. $this->studentModel->get_student_program_name($row['user_id']);
+                                                        }
+                                                        else
+                                                        {
+                                                            $program = ucfirst($row['user_type']) .' - '.  $this->studentModel->get_applicant_program_name($row['user_id']);
+                                                        }
+
+                                                        
 
                                                         // Get Discounts
                                                         $this->db->reset_query();
@@ -125,15 +137,20 @@
                                                         $this->db->where('concept_type =', '3');
                                                         $application = $this->db->get('payment_details')->row()->amount; 
 
+                                                        // Get Card fee  id = 5
+                                                        $this->db->reset_query();
+                                                        $this->db->select_sum('amount');
+                                                        $this->db->where('payment_id =', $row['payment_id']);
+                                                        $this->db->where('concept_type =', '5');
+                                                        $card_fee = $this->db->get('payment_details')->row()->amount; 
+
                                                         // Get others                                      
-                                                        $otherTransaction = array(4,5);
+                                                        $otherTransaction = array(4);
                                                         $this->db->reset_query();
                                                         $this->db->select_sum('amount');
                                                         $this->db->where('payment_id', $row['payment_id']);
                                                         $this->db->where_in('concept_type', $otherTransaction);
                                                         $other = $this->db->get('payment_details')->row()->amount; 
-
-                                                        $tuition = $tuition - $discounts;
 
                                                 ?>
                                                 <tr>
@@ -167,7 +184,17 @@
                                                     </td>
                                                     <td class="cell-with-media">
                                                         <span>
+                                                            <?= number_format($card_fee, 2);?>
+                                                        </span>
+                                                    </td>
+                                                    <td class="cell-with-media">
+                                                        <span>
                                                             <?= number_format($other, 2);?>
+                                                        </span>
+                                                    </td>
+                                                    <td class="cell-with-media">
+                                                        <span>
+                                                            - <?= number_format($discounts, 2);?>
                                                         </span>
                                                     </td>
                                                     <td class="cell-with-media">
@@ -211,18 +238,18 @@
     </div>
 </div>
 <script>
-    $("#btnExport").click(function(e) {
-		var reportName = '<?php echo getPhrase('reports_tabulation').'_'.date('d-m-Y');?>';
-		var a = document.createElement('a');
-		var data_type = 'data:application/vnd.ms-excel;charset=utf-8';
-		var table_html = $('#dvData')[0].outerHTML;
-		table_html = table_html.replace(/<tfoot[\s\S.]*tfoot>/gmi, '');
-		var css_html =
-			'<style>td {border: 0.5pt solid #c0c0c0} .tRight { text-align:right} .tLeft { text-align:left} </style>';
-		a.href = data_type + ',' + encodeURIComponent('<html><head>' + css_html + '</' + 'head><body>' +
-			table_html + '</body></html>');
-		a.download = reportName + '.xls';
-		a.click();
-		e.preventDefault();
-	});
+$("#btnExport").click(function(e) {
+    var reportName = '<?php echo getPhrase('reports_tabulation').'_'.date('d-m-Y');?>';
+    var a = document.createElement('a');
+    var data_type = 'data:application/vnd.ms-excel;charset=utf-8';
+    var table_html = $('#dvData')[0].outerHTML;
+    table_html = table_html.replace(/<tfoot[\s\S.]*tfoot>/gmi, '');
+    var css_html =
+        '<style>td {border: 0.5pt solid #c0c0c0} .tRight { text-align:right} .tLeft { text-align:left} </style>';
+    a.href = data_type + ',' + encodeURIComponent('<html><head>' + css_html + '</' + 'head><body>' +
+        table_html + '</body></html>');
+    a.download = reportName + '.xls';
+    a.click();
+    e.preventDefault();
+});
 </script>

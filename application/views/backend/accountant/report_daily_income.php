@@ -43,11 +43,21 @@
         $ex = explode(':',$cashier_id);
 
         $this->db->where('created_by', $ex['1']);
-        $this->db->where('created_by_type', $ex['0']);
+        $this->db->where('created_by_type', $ex['0']);       
     }    
     $payments = $this->db->get('payment')->result_array();
 
+    if($cashier_id != "")
+    {
+        $ex = explode(':',$cashier_id);
+        $cashier_name = $this->crud->get_name($ex['0'], $ex['1']);
+    }
+
+    
+
     foreach ($payments as $key => $value) {
+
+        
         if($value['user_type'] == 'student')
         {
             $program_id = $this->studentModel->get_student_program($value['user_id']);
@@ -182,7 +192,7 @@ td {
         </div><br>
         <?php 
             // echo '<pre>';
-            // var_dump( $cashier_id);
+            // var_dump($payments);
             // echo '</pre>';
         ?>
         <div class="content-i">
@@ -220,7 +230,7 @@ td {
                                         <div class="form-group date-time-picker">
                                             <input type="text" autocomplete="off" class="datepicker-here"
                                                 data-position="bottom left" data-language='en' name="date" id="date"
-                                                value="<?=$date?>">
+                                                value="<?=date_format($objDate, "m/d/Y");?>">
 
                                         </div>
                                     </div>
@@ -294,7 +304,7 @@ td {
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            Legal Service
+                                                            Other
                                                         </td>
                                                         <td>
                                                             <span class="currency">
@@ -395,7 +405,9 @@ td {
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            
+                                                            <br />
+                                                            <br />
+                                                            <?= $cashier_name;?>
                                                         </td>
                                                         <td>
                                                             <br />

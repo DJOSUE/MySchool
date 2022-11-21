@@ -61,9 +61,9 @@ class Crud extends School
         $data['status']       = 0;
         $data['year']         = $this->runningYear;
         $data['semester_id']  = $this->runningSemester;
-        $this->db->insert('students_request', $data);
+        $this->db->insert('student_request', $data);
 
-        $table      = 'students_request';
+        $table      = 'student_request';
         $action     = 'insert';
         $insert_id  = $this->db->insert_id();
         $this->crud->save_log($table, $action, $insert_id, $data);
@@ -100,9 +100,9 @@ class Crud extends School
         $data['status']       = 0;
         $data['year']         = $this->runningYear;
         $data['semester_id']  = $this->runningSemester;
-        $this->db->insert('students_request', $data);
+        $this->db->insert('student_request', $data);
 
-        $table      = 'students_request';
+        $table      = 'student_request';
         $action     = 'insert';
         $insert_id  = $this->db->insert_id();
         $this->crud->save_log($table, $action, $insert_id, $data);
@@ -217,9 +217,9 @@ class Crud extends School
     public function acceptStudentRequest($requestId)
     {
         $data['status']          = 1;
-        $this->db->update('students_request', $data, array('request_id' => $requestId));
-        $student                 = $this->db->get_where('students_request', array('request_id' => $requestId))->row()->student_id;
-        $parent                  = $this->db->get_where('students_request', array('request_id' => $requestId))->row()->parent_id;
+        $this->db->update('student_request', $data, array('request_id' => $requestId));
+        $student                 = $this->db->get_where('student_request', array('request_id' => $requestId))->row()->student_id;
+        $parent                  = $this->db->get_where('student_request', array('request_id' => $requestId))->row()->parent_id;
         $notify['notify']        = "<strong>".  $this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('absence_approved_for') ." <b>".$this->db->get_where('student', array('student_id' => $student))->row()->name."</b>";
         $notify['user_id']       = $parent;
         $notify['user_type']     = "parent";
@@ -241,9 +241,9 @@ class Crud extends School
     public function rejectStudentRequest($requestId)
     {
         $data['status']             = 2;
-        $this->db->update('students_request', $data, array('request_id' => $requestId));
-        $parent                     = $this->db->get_where('students_request', array('request_id' => $requestId))->row()->parent_id;
-        $student                    = $this->db->get_where('students_request', array('request_id' => $requestId))->row()->student_id;
+        $this->db->update('student_request', $data, array('request_id' => $requestId));
+        $parent                     = $this->db->get_where('student_request', array('request_id' => $requestId))->row()->parent_id;
+        $student                    = $this->db->get_where('student_request', array('request_id' => $requestId))->row()->student_id;
         $notify['notify']           = "<strong>". $this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('absence_rejected_for') ." <b>".$this->db->get_where('student', array('student_id' => $student))->row()->name."</b>";
         $notify['user_id']          = $parent;
         $notify['user_type']        = "parent";
@@ -2231,7 +2231,10 @@ class Crud extends School
     {
         $this->db->limit(5);
         $this->db->order_by('id', 'desc');
-        $n = $this->db->get_where('notification', array('user_id' => $this->session->userdata('login_user_id'), 'user_type' => $this->session->userdata('login_type')))->result_array();
+        $this->db->where('user_id', $this->session->userdata('login_user_id'));
+        $this->db->where('user_type', $this->session->userdata('login_type'));
+        $this->db->where('status <> ', '2');
+        $n = $this->db->get('notification')->result_array();
         return $n;
     }
     
@@ -2290,6 +2293,7 @@ class Crud extends School
     
     function get_name($type = '', $id = '')
     {
+        $this->db->reset_query();
         $query = $this->db->get_where(''.$type.'',array($type."_id" => $id))->row();
         $first = $query->first_name;
         $last = $query->last_name;
@@ -2298,8 +2302,19 @@ class Crud extends School
         return $name;
     }
 
+    function get_email($type = '', $id = '')
+    {
+        $this->db->reset_query();
+        $query = $this->db->get_where(''.$type.'',array($type."_id" => $id))->row();
+        
+        
+        $email = $query->email;
+        return $email;
+    }
+
     function get_user_info($type = '', $id = '')
     {
+        $this->db->reset_query();
         $query = $this->db->get_where(''.$type.'',array($type."_id" => $id))->row_array();
 
         return $query;
@@ -2464,7 +2479,7 @@ class Crud extends School
         $this->db->truncate('section');
         $this->db->truncate('settings');
         $this->db->truncate('student');
-        $this->db->truncate('students_request');
+        $this->db->truncate('student_request');
         $this->db->truncate('subject');
         $this->db->truncate('teacher');
         $this->db->truncate('teacher_attendance');
@@ -3048,7 +3063,7 @@ class Crud extends School
     
     function deleteStudent($student_id)
     {
-        $tables = array('student', 'attendance', 'enroll', 'invoice', 'mark', 'payment', 'students_request', 'student_report');
+        $tables = array('student', 'attendance', 'enroll', 'invoice', 'mark', 'payment', 'student_request', 'student_report');
         $this->db->delete($tables, array('student_id' => $student_id));
         $threads = $this->db->get('message_thread')->result_array();
         if (count($threads) > 0) 

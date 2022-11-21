@@ -446,29 +446,7 @@ class Accountant extends EduAppGT
         $this->load->view( 'backend/index', $page_data );
     }
 
-    function student_profile($student_id, $param1='')
-    {
-        $this->isAccountant();
-        $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
-        $page_data['page_name']  = 'student_profile';
-        $page_data['page_title'] =  getPhrase('student_profile');
-        $page_data['student_id'] =  $student_id;
-        $page_data['class_id']   =  $class_id;
-        $this->load->view('backend/index', $page_data);
-    }
 
-    function student_payments($student_id, $param1='')
-    {
-        $this->isAccountant();
-        $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
-        $page_data['student_id'] =  $student_id;
-        $page_data['class_id']   =  $class_id;
-        
-        $page_data['page_name']  = 'student_payments';
-        $page_data['page_title'] =  getPhrase('student_payments');
-        
-        $this->load->view('backend/index', $page_data);
-    }
 
     function payment_process($user_id, $user_type)
     {
@@ -495,6 +473,53 @@ class Accountant extends EduAppGT
 
     //End of Accountant.php
 
+/***** Student Module ******************************************************************************************************************************/
+    function student_profile($student_id, $param1='')
+    {
+        $this->isAccountant();
+        $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
+        $page_data['page_name']  = 'student_profile';
+        $page_data['page_title'] =  getPhrase('student_profile');
+        $page_data['student_id'] =  $student_id;
+        $page_data['class_id']   =  $class_id;
+        $this->load->view('backend/index', $page_data);
+    }
+
+    function student_payments($student_id, $param1='')
+    {
+        $this->isAccountant();
+        $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
+        $page_data['student_id'] =  $student_id;
+        $page_data['class_id']   =  $class_id;
+        
+        $page_data['page_name']  = 'student_payments';
+        $page_data['page_title'] =  getPhrase('student_payments');
+        
+        $this->load->view('backend/index', $page_data);
+    }
+/***** Student Module ******************************************************************************************************************************/
+    function applicant_profile($applicant_id, $param1='')
+    {
+        $this->isAccountant();
+        
+        $page_data['page_name']  = 'applicant_profile';
+        $page_data['page_title'] =  getPhrase('applicant_profile');
+        $page_data['applicant_id'] =  $applicant_id;
+        // $page_data['class_id']   =  $class_id;
+        $this->load->view('backend/index', $page_data);
+    }
+
+    function applicant_payment($applicant_id, $param1='')
+    {
+        $this->isAccountant();
+        
+        $page_data['applicant_id'] =  $applicant_id;
+        
+        $page_data['page_name']  = 'applicant_payment';
+        $page_data['page_title'] =  getPhrase('applicant_payment');
+        
+        $this->load->view('backend/index', $page_data);
+    }
 /***** Report Module *******************************************************************************************************************************/
     //Manage payments function.
     function report_dashboard($param1 = '' , $param2 = '' , $param3 = '') 

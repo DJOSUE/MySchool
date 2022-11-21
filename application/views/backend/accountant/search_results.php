@@ -102,7 +102,7 @@
                                             width="35px">
                                     </div>
                                     <div class="notification-event">
-                                        <a href="<?= base_url();?>accountant/admission_applicant/<?= $row['applicant_id'];?>/"
+                                        <a href="<?= base_url();?>accountant/applicant_profile/<?= $row['applicant_id'];?>/"
                                             class="h6 notification-friend"><?= $this->crud->get_name('applicant', $row['applicant_id']) ;?></a>.
                                         <span class="notification-date">
                                             <span class="badge badge-info"

@@ -338,6 +338,9 @@ class Payment extends School
         $data_payment['invoice_date']    = date("Y-m-d");
         $data_payment['user_id']         = $user_id;
         $data_payment['user_type']       = $user_type;
+        $data_payment['user_id']         = $user_id;
+        $data_payment['year']            = $this->runningYear;
+        $data_payment['semester_id']     = $this->runningSemester;
         $data_payment['comment']         = html_escape($this->input->post('comment'));
         $data_payment['amount']          = $this->input->post('txtTotal');
         $data_payment['created_by']      = $this->session->userdata('login_user_id');
@@ -612,6 +615,27 @@ class Payment extends School
         return $query;
     }
 
+    public function get_income_types_by_user($user_type)
+    {
+        $this->db->reset_query();
+        $this->db->select('code as income_type_id, name');
+
+        switch ($user_type) {
+            case 'student':
+                $this->db->where('value_1', '1');
+                break;
+            case 'applicant':
+                $this->db->where('value_2', '1');
+                break;
+        }
+        
+        
+        $this->db->where('parameter_id', 'INCOME_TYPE');
+        $this->db->where_not_in('name', CONCEPT_CARD_NAME);
+        $query = $this->db->get('parameters')->result_array();
+        return $query;
+    }
+
     public function get_income_type($income_type_id)
     {
         $this->db->reset_query();
@@ -682,6 +706,23 @@ class Payment extends School
     {
         $this->db->reset_query();
         $this->db->select('code as discount_id, name');
+        $this->db->where('parameter_id', 'DISCOUNT_TYPE');
+        $query = $this->db->get('parameters')->result_array();
+        return $query;
+    }
+
+    public function get_discount_types_by_user($user_type)
+    {
+        $this->db->reset_query();
+        $this->db->select('code as discount_id, name');
+        switch ($user_type) {
+            case 'student':
+                $this->db->where('value_1', '1');
+                break;
+            case 'applicant':
+                $this->db->where('value_2', '1');
+                break;
+        }
         $this->db->where('parameter_id', 'DISCOUNT_TYPE');
         $query = $this->db->get('parameters')->result_array();
         return $query;

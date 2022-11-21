@@ -1,3 +1,8 @@
+    <?php 
+    $student_id = $this->session->userdata('login_user_id');
+    $program_name = $this->studentModel->get_student_program_name($student_id );
+
+    ?>
     <div class="content-w">
         <?php include 'fancy.php';?>
         <div class="header-spacer"></div>
@@ -6,13 +11,25 @@
                 <div class="os-tabs-controls">
                     <ul class="navs navs-tabs upper">
                         <li class="navs-item">
-                            <a class="navs-links active" data-toggle="tab" href="#permissions"><i
-                                    class="os-icon picons-thin-icon-thin-0015_fountain_pen"></i><span><?= getPhrase('request');?></span></a>
+                            <a class="navs-links active" data-toggle="tab" href="#permissions">
+                                <i class="os-icon picons-thin-icon-thin-0015_fountain_pen"></i>
+                                <span><?= getPhrase('request');?></span>
+                            </a>
                         </li>
                         <li class="navs-item">
-                            <a class="navs-links" data-toggle="tab" href="#apply"><i
-                                    class="os-icon picons-thin-icon-thin-0389_gavel_hammer_law_judge_court"></i><span><?= getPhrase('apply');?></span></a>
+                            <a class="navs-links" data-toggle="tab" href="#permission_request">
+                                <i class="os-icon picons-thin-icon-thin-0389_gavel_hammer_law_judge_court"></i>
+                                <span><?= getPhrase('permission');?></span>
+                            </a>
                         </li>
+                        <?php if ($program_name == "International") :?>
+                        <li class="navs-item">
+                            <a class="navs-links" data-toggle="tab" href="#vacation_request">
+                                <i class="os-icon picons-thin-icon-thin-0389_gavel_hammer_law_judge_court"></i>
+                                <span><?= getPhrase('vacation');?></span>
+                            </a>
+                        </li>
+                        <?php endif;?>
                     </ul>
                 </div>
             </div>
@@ -20,7 +37,6 @@
                 <div class="content-box">
                     <div class="element-wrapper">
                         <div class="tab-content">
-
                             <div class="tab-pane active" id="permissions">
                                 <div class="element-box lined-primary shadow">
                                     <div class="table-responsive">
@@ -39,7 +55,7 @@
                                                 <?php
         		                                $count = 1;
         		                                $this->db->order_by('request_id', 'desc');
-        		                                $requests = $this->db->get_where('students_request', array('student_id' => $this->session->userdata('login_user_id')))->result_array();
+        		                                $requests = $this->db->get_where('student_request', array('student_id' => $this->session->userdata('login_user_id')))->result_array();
             		                            foreach ($requests as $row) {
         	                                ?>
                                                 <tr>
@@ -94,58 +110,112 @@
                                 </div>
                             </div>
 
-                            <div class="tab-pane" id="apply">
+                            <div class="tab-pane" id="permission_request">
                                 <div class="element-wrapper">
                                     <div class="element-box lined-primary shadow">
-                                        <?= form_open(base_url() . 'student/request/create' , array('enctype' => 'multipart/form-data'));?>
                                         <h5 class="form-header"><?= getPhrase('apply');?></h5><br>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label for=""> <?= getPhrase('from');?></label>
-                                                    <input type='text' class="datepicker-here" data-position="top left"
-                                                        data-language='en' name="start_date"
-                                                        data-multiple-dates-separator="/" />
+                                        <b>
+                                            <?= getPhrase('permission_request_info');?>
+                                        </b><br><br>
+                                        <div>
+                                            <?= form_open(base_url() . 'student/request/create' , array('enctype' => 'multipart/form-data'));?>
+                                            <input type="text" name="request_type" hidden value="2" />
+                                            <div class="form-group">
+                                                <label for=""> <?= getPhrase('reason');?></label>
+                                                <input class="form-control" placeholder="" type="text" name="title"
+                                                    required="">
+                                            </div>
+                                            <div class="form-group">
+                                                <label> <?= getPhrase('description');?></label>
+                                                <textarea class="form-control" rows="4" name="description"
+                                                    required=""></textarea>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for=""> <?= getPhrase('from');?></label>
+                                                        <input type='text' class="datepicker-here" required=""
+                                                            data-position="top left" data-language='en'
+                                                            name="start_date" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for=""> <?= getPhrase('until');?></label>
+                                                        <input type='text' class="datepicker-here" required=""
+                                                            data-position="top left" data-language='en'
+                                                            name="end_date" />
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for=""> <?= getPhrase('reason');?></label>
-                                            <input class="form-control" placeholder="" type="text" name="title"
-                                                required="">
-                                        </div>
-                                        <div class="form-group">
-                                            <label> <?= getPhrase('description');?></label>
-                                            <textarea class="form-control" rows="4" name="description"
-                                                required=""></textarea>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label for=""> <?= getPhrase('from');?></label>
-                                                    <input type='text' class="datepicker-here" data-position="top left"
-                                                        data-language='en' name="start_date"
-                                                        data-multiple-dates-separator="/" />
+                                            <div class="form-group">
+                                                <label for=""> <?= getPhrase('file');?></label>
+                                                <input type='file' class="form-control" name="file_name" required="" />
+                                            </div>
+                                            <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
+                                                <div class="description-toggle">
+                                                    <div class="description-toggle-content">
+                                                        <div class="h6"><?php echo getPhrase('notice');?></div>
+                                                        <p><?php echo getPhrase('disclosure_message');?></p>
+                                                    </div>
+                                                    <div class="togglebutton">
+                                                        <label><input name="disclosure_message" value="1" required
+                                                                type="checkbox"></label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label for=""> <?= getPhrase('until');?></label>
-                                                    <input type='text' class="datepicker-here" data-position="top left"
-                                                        data-language='en' name="end_date"
-                                                        data-multiple-dates-separator="/" />
-                                                </div>
+                                            <div class="form-buttons-w text-right">
+                                                <button class="btn btn-rounded btn-primary" type="submit">
+                                                    <?= getPhrase('send');?></button>
                                             </div>
+                                            <?= form_close();?>
                                         </div>
-                                        <div class="form-buttons-w text-right">
-                                            <button class="btn btn-rounded btn-primary" type="submit">
-                                                <?= getPhrase('send');?></button>
-                                        </div>
-                                        <?= form_close();?>
                                     </div>
                                 </div>
                             </div>
 
+                            <div class="tab-pane" id="vacation_request">
+                                <div class="element-wrapper">
+                                    <div class="element-box lined-primary shadow">
+                                        <h5 class="form-header"><?= getPhrase('apply');?></h5><br>
+                                        <b>
+                                            <?= getPhrase('vacation_request_info');?>
+                                        </b><br><br>
+
+                                        <div>
+                                            <?= form_open(base_url() . 'student/request/vacation' , array('enctype' => 'multipart/form-data'));?>
+                                            <input type="text" name="request_type" hidden value="1" />
+                                            <!-- <div class="form-group">
+                                                <label for=""> <?= getPhrase('reason');?></label>
+                                                <input class="form-control" placeholder="" type="text" name="title"
+                                                    required="">
+                                            </div> -->
+                                            <div class="form-group">
+                                                <label> <?= getPhrase('description');?></label>
+                                                <textarea class="form-control" rows="4" name="description"
+                                                    required=""></textarea>
+                                            </div>
+                                            <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
+                                                <div class="description-toggle">
+                                                    <div class="description-toggle-content">
+                                                        <div class="h6"><?php echo getPhrase('notice');?></div>
+                                                        <p><?php echo getPhrase('disclosure_message');?></p>
+                                                    </div>
+                                                    <div class="togglebutton">
+                                                        <label><input name="disclosure_message" value="1" required
+                                                                type="checkbox"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-buttons-w text-right">
+                                                <button class="btn btn-rounded btn-primary" type="submit">
+                                                    <?= getPhrase('send');?></button>
+                                            </div>
+                                            <?= form_close();?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,7 +1,7 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
     
 class Mail extends School 
-{
+{ 
     /*
         Software:       MySchool - School Management System
         Author:         DHCoder - Software, Web and Mobile developer.
@@ -421,14 +421,103 @@ class Mail extends School
             $this->email->message($msg);
         }
         
-        if (!$this->email->send()) 
-        {
-            show_error($this->email->print_debugger());
-        }
+        $this->email->send();
+
+        // if (!$this->email->send()) 
+        // {
+        //     show_error($this->email->print_debugger());
+        // }
 	}
 
     //Sent password to the new student
-    
+
+    //Send attendance notification.
+    function request_approved($user_id, $user_type, $request_type)
+    {
+        if($request_type === 'vacation')
+        {
+            $email_sub      = $this->db->get_where('email_template' , array('task' => 'vacation_approved'))->row()->subject;
+            $email_msg      = $this->db->get_where('email_template' , array('task' => 'vacation_approved'))->row()->body;
+        }
+        else
+        {
+            $email_sub      = $this->db->get_where('email_template' , array('task' => 'request_approved'))->row()->subject;
+            $email_msg      = $this->db->get_where('email_template' , array('task' => 'request_approved'))->row()->body;
+        }
+
+        $STUDENT_NAME   = $this->crud->get_name($user_type, $user_id);        
+
+        $email_msg      = str_replace('[USER_NAME]' , $STUDENT_NAME , $email_msg);
+
+        $email_to       = $this->db->get_where($user_type, array($user_type.'_id' => $user_id))->row()->email;
+        
+        $data = array(
+            'email_msg' => $email_msg
+        );
+
+        if($email_to != '')
+        {
+            $this->submit($email_to,$email_sub,$data,'notify');
+        }
+    }
+
+    function request_approved_to_teacher($user_id, $user_type, $request_type)
+    {
+        if($request_type === 'vacation')
+        {
+            $email_sub      = $this->db->get_where('email_template' , array('task' => 'vacation_approved'))->row()->subject;
+            $email_msg      = $this->db->get_where('email_template' , array('task' => 'vacation_approved'))->row()->body;
+        }
+        else
+        {
+            $email_sub      = $this->db->get_where('email_template' , array('task' => 'request_approved'))->row()->subject;
+            $email_msg      = $this->db->get_where('email_template' , array('task' => 'request_approved'))->row()->body;
+        }
+
+        $STUDENT_NAME   = $this->crud->get_name($user_type, $user_id);        
+
+        $email_msg      = str_replace('[USER_NAME]' , $STUDENT_NAME , $email_msg);
+
+        $email_to       = $this->db->get_where($user_type, array($user_type.'_id' => $user_id))->row()->email;
+        
+        $data = array(
+            'email_msg' => $email_msg
+        );
+        
+        if($email_to != '')
+        {
+            $this->submit($email_to,$email_sub,$data,'notify');
+        }
+    }
+
+    //Send attendance notification.
+    function request_reject($user_id, $user_type, $request_type)
+    {
+        if($request_type === 'vacation')
+        {
+            $email_sub      = $this->db->get_where('email_template' , array('task' => 'vacation_rejected'))->row()->subject;
+            $email_msg      = $this->db->get_where('email_template' , array('task' => 'vacation_rejected'))->row()->body;
+        }
+        else
+        {
+            $email_sub      = $this->db->get_where('email_template' , array('task' => 'request_rejected'))->row()->subject;
+            $email_msg      = $this->db->get_where('email_template' , array('task' => 'request_rejected'))->row()->body;
+        }
+
+        $STUDENT_NAME   = $this->crud->get_name($user_type, $user_id);        
+
+        $email_msg      = str_replace('[USER_NAME]' , $STUDENT_NAME , $email_msg);
+
+        $email_to       = $this->db->get_where($user_type, array($user_type.'_id' => $user_id))->row()->email;
+        
+        $data = array(
+            'email_msg' => $email_msg
+        );
+        if($email_to != '')
+        {
+            $this->submit($email_to,$email_sub,$data,'notify');
+        }
+    }
     
     //End of Mail.php
 }

@@ -3,13 +3,13 @@
     $user_id     = $this->session->userdata('login_user_id');
     $account_type   =   get_table_user($this->session->userdata('role_id'));
 
-    $show = 'flex';
+    $show = 'none';
     $option = "";
     $checked = "";
 
-    if(!has_permission('request_permission_all'))
+    if(has_permission('request_permission_all'))
     {
-       // $show = 'flex';
+        $show = 'flex';
         $option = 'onclick="return false;"';
     }
 
@@ -28,7 +28,7 @@
         $this->db->where('assigned_to_type', $account_type);
     }
 
-    $this->db->where('request_type', '2');
+    $this->db->where('request_type', '1');
     $requests = $this->db->get('student_request')->result_array();
 ?>
 <div class="content-w">
@@ -48,7 +48,7 @@
                         <div class="row">
                             <div class="content-i">
                                 <div class="content-box">
-                                    <?= form_open(base_url() . 'admin/request_student/', array('class' => 'form m-b'));?>
+                                    <?= form_open(base_url() . 'admin/request_vacation/', array('class' => 'form m-b'));?>
                                     <div class="row" style="margin-top: -30px; border-radius: 5px;">
                                         <div class="col-sm-2">
                                             <div class="form-group label-floating is-select">
@@ -76,7 +76,7 @@
                                                 <div class="togglebutton">
                                                     <label>
                                                         <input name="assigned_me" value="1" type="checkbox"
-                                                            <?=$checked;?> <?=$option;?>>
+                                                            <?=$checked;?>>
                                                     </label>
                                                 </div>
                                             </div>
@@ -93,34 +93,31 @@
                                 </div>
                             </div>
                         </div>
+                        <div>
+                            <a href="#" id="btnExport"><button class="btn btn-info btn-sm btn-rounded"><i
+                                        class="picons-thin-icon-thin-0123_download_cloud_file_sync"
+                                        style="font-weight: 300; font-size: 25px;"></i></button>
+                            </a>
+                        </div>
+                        <br />
                         <div class="element-box-tp">
-                            <div>
-                                <a href="#" id="btnExport"><button class="btn btn-info btn-sm btn-rounded"><i
-                                            class="picons-thin-icon-thin-0123_download_cloud_file_sync"
-                                            style="font-weight: 300; font-size: 25px;"></i></button>
-                                </a>
-                            </div>
-                            <br/>
                             <div class="table-responsive">
                                 <table class="table table-padded" id="dvData">
                                     <thead>
                                         <tr>
-                                            <th><?= getPhrase('title');?></th>
                                             <th><?= getPhrase('description');?></th>
                                             <th><?= getPhrase('student');?></th>
                                             <th><?= getPhrase('email');?></th>
-                                            <th><?= getPhrase('from');?></th>
-                                            <th><?= getPhrase('until');?></th>
+                                            <th><?= getPhrase('grades');?></th>
                                             <th><?= getPhrase('status');?></th>
                                             <th><?= getPhrase('options');?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($requests as $row): ?>
+                                        <?php foreach ($requests as $row):
+                                            $average = $this->academic->get_student_grades_vacations($row['student_id'])
+                                        ?>
                                         <tr>
-                                            <td>
-                                                <?= $row['title']; ?>
-                                            </td>
                                             <td>
                                                 <?php 
                                                 if(strlen($row['description']) > 50)
@@ -131,18 +128,36 @@
                                             <td class="cell-with-media">
                                                 <img alt=""
                                                     src="<?= $this->crud->get_image_url('student', $row['student_id']);?>"
-                                                    style="height: 25px;"><span><?= $this->crud->get_name('student', $row['student_id']);?></span>
+                                                    style="height: 25px;">
+                                                <span>
+                                                    <?= $this->crud->get_name('student', $row['student_id']);?>
+                                                </span>
                                             </td>
                                             <td>
                                                 <?= $this->crud->get_email('student', $row['student_id']);?>
                                             </td>
                                             <td>
-                                                <a class="badge badge-success"
-                                                    style="color:white"><?= $row['start_date']; ?></a>
-                                            </td>
-                                            <td>
-                                                <a class="badge badge-primary"
-                                                    style="color:white"><?= $row['end_date']; ?></a>
+                                                <table>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td><?= getPhrase('attendance');?></td>
+                                                        <td><?= getPhrase('grade');?></td>
+                                                    </tr>
+                                                    <?php foreach($average as $item) :?>
+                                                    <tr>
+                                                        <td>
+                                                            <?= $item['year'];?> -
+                                                            <?= $this->academic->get_semester_name($item['semester_id']);?>
+                                                        </td>
+                                                        <td>
+                                                            <?= $item['final_attendance'];?>
+                                                        </td>
+                                                        <td>
+                                                            <?= $item['final_mark'];?>
+                                                        </td>
+                                                    </tr>
+                                                    <?php endforeach;?>
+                                                </table>
                                             </td>
                                             <td>
                                                 <?php $status_info =  $this->studentModel->get_request_status($row['status']);?>
@@ -162,7 +177,7 @@
                                                 <a data-toggle="tooltip" data-placement="top"
                                                     data-original-title="<?= getPhrase('approve');?>"
                                                     onClick="return confirm('<?= getPhrase('confirm_approval');?>')"
-                                                    href="<?= base_url();?>admin/request/accept/<?= $row['request_id'];?>/student/">
+                                                    href="<?= base_url();?>admin/request/accept_vacation/<?= $row['request_id'];?>/student/">
                                                     <i style="color:gray"
                                                         class="picons-thin-icon-thin-0154_ok_successful_check"></i>
                                                 </a>
@@ -193,7 +208,7 @@ function confirm_delete(request_id) {
 
     Swal.fire({
         input: 'textarea',
-        inputLabel: 'reason',
+        inputLabel: 'Comment',
         inputPlaceholder: 'Type your message here...',
         inputAttributes: {
             'aria-label': 'Type your message here'
@@ -203,29 +218,19 @@ function confirm_delete(request_id) {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: "<?= getPhrase('reject');?>",
-        inputValidator: (value) => {
-            return new Promise((resolve) => {
-                if (value != '') {
-                    resolve()
-                } else {
-                    resolve('You need to enter a reason')
-                }
-            })
-        }
+        confirmButtonText: "<?= getPhrase('delete');?>"
     }).then((result) => {
         msg = btoa(result.value);
         if (result.value) {
-            location.href = '<?= base_url();?>admin/request/reject/' + request_id + '/student/' + msg;
+            location.href = '<?= base_url();?>admin/request/reject_vacation/' + request_id + '/student/' + msg;
         }
-    });
-
+    })
 }
 </script>
 
 <script>
 $("#btnExport").click(function(e) {
-    var reportName = '<?php echo getPhrase('permission_request').'_'.date('d-m-Y');?>';
+    var reportName = '<?php echo getPhrase('vacation_request').'_'.date('d-m-Y');?>';
     var a = document.createElement('a');
     var data_type = 'data:application/vnd.ms-excel;charset=utf-8';
     var table_html = $('#dvData')[0].outerHTML;

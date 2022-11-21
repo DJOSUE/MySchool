@@ -1,9 +1,10 @@
 <?php 
-    $running_year = $this->crud->getInfo('running_year'); 
-    $advisor = $this->user->get_advisor();
-    $currency = $this->crud->getInfo('currency');
+    $running_year   = $this->crud->getInfo('running_year'); 
+    $advisor        = $this->user->get_advisor();
+    $accounters     = $this->user->get_accounters();
+    $currency       = $this->crud->getInfo('currency');
 
-    $interval = date_interval_create_from_date_string('1 days');
+    $interval       = date_interval_create_from_date_string('1 days');
 
     if($date == "")
     {
@@ -14,8 +15,7 @@
         $objDate = date_create($date);
     }
 
-    $first_date = date_format($objDate, "Y-m-d");
-    // $second_date = date_format(date_add($objDate, $interval), "Y-m-d");
+    $first_date = date_format($objDate, "Y-m-d");    
     
     $tuition_int = 0.00;
     $application_int = 0.00;
@@ -35,7 +35,6 @@
 
     $this->db->reset_query();    
     $this->db->where('invoice_date >=', $first_date);
-    // $this->db->where('created_at <=', $second_date);
 
     if($cashier_id != "")
     {
@@ -150,6 +149,13 @@
     $card += $card_fee;
 
     $total_payment = ($cash + $card + $check + $venmo + $transfer);
+
+    if($cashier_id != "")
+    {
+        $ex = explode(':',$cashier_id);
+        $cashier_name = $this->crud->get_name($ex['0'], $ex['1']);
+    }
+
 ?>
 <style>
 .invoice-w::before {
@@ -204,6 +210,11 @@ td {
                                                 <option value="admin:<?= $row['admin_id'];?>"
                                                     <?php if($cashier_id == ('admin:'.$row['admin_id'])) echo "selected";?>>
                                                     <?= $row['first_name'].' '.$row['last_name'];?></option>
+                                                <?php endforeach;?>
+                                                <?php foreach($accounters as $item): ?>
+                                                <option value="accountant:<?= $item['accountant_id'];?>"
+                                                    <?php if($cashier_id == ('accountant:'.$item['accountant_id'])) echo "selected";?>>
+                                                    <?= $item['first_name'].' '.$item['last_name'];?></option>
                                                 <?php endforeach;?>
                                             </select>
                                         </div>
@@ -390,7 +401,9 @@ td {
                                                     </tr>
                                                     <tr>
                                                         <td>
-
+                                                            <br />
+                                                            <br />
+                                                            <?= $cashier_name;?>
                                                         </td>
                                                         <td>
                                                             <br />

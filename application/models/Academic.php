@@ -1766,4 +1766,203 @@ class Academic extends School
         $students = $this->db->get_where('enroll', array('class_id' => $classId, 'section_id' => $sectionId, 'subject_id' => $subjectId))->num_rows();
         return $students;
     }
+
+    public function get_semester_enroll($year, $semester_id)
+    {
+        $this->db->reset_query();        
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $query = $this->db->get('semester_enroll')->row_array();
+        
+        return $query;
+    }
+
+    public function get_subject_capacity($class_id, $section_id, $subject_id)
+    {
+        $this->db->reset_query();            
+        $this->db->where('class_id', $class_id);
+        $this->db->where('section_id', $section_id);
+        $this->db->where('subject_id', $subject_id);
+        $subject = $this->db->get('subject')->row_array();
+
+        return $subject['subject_capacity'];
+    }
+
+    //Save student enrollment 
+    function save_student_enrollment($student_id)
+    {   
+        $subjects               = $this->input->post('subject_id');
+        $data['student_id']     = $student_id;
+        $data['class_id']       = $this->input->post('class_id');
+        $data['section_id']     = $this->input->post('section_id');
+        $data['year']           = $this->input->post('year_id');
+        $data['semester_id']    = $this->input->post('semester_id');
+        $data['enroll_code']    = substr(md5(rand(0, 1000000)), 0, 7);
+        $data['date_added']     = strtotime(date('Y-m-d H:i:s'));
+
+        foreach ($subjects as $key) {
+            $data['subject_id'] = $key;
+            $this->db->insert('enroll', $data);
+
+            $table      = 'enroll';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $data);
+
+            // Validate if is full to create a new
+            // $nroStudents = intval($this->academic->countStudentsSubject($data['class_id'] , $data['section_id'] , $key));
+            // $capacity    = intval($this->academic->get_subject_capacity($data['class_id'] , $data['section_id'] , $key));
+
+            // if($nroStudents >= $capacity)
+            // {
+            //     $this->academic->duplicate_subject($data['class_id'] , $data['section_id'] , $key);
+            // }
+        }
+
+    }
+
+    function duplicate_subject($class_id, $section_id, $subject_id)
+    {
+        $this->db->reset_query();            
+        $this->db->where('class_id', $class_id);
+        $this->db->where('section_id', $section_id);
+        $this->db->where('subject_id', $subject_id);
+        $subject = $this->db->get('subject')->row_array();
+        
+        $this->db->reset_query();
+        $data['name']               = $subject['name'];
+        $data['about']              = $subject['about'];
+        $data['class_id']           = $subject['class_id'];
+        $data['section_id']         = $subject['section_id'];
+        $data['color']              = $subject['color'];
+        $data['icon']               = $subject['icon'];
+        $data['modality_id']        = $subject['modality_id'];
+        $data['teacher_id']         = $subject['teacher_id'];
+        $data['subject_capacity']   = $subject['subject_capacity'];
+        
+        $data['year']        = $subject['year'];
+        $data['semester_id'] = $subject['semester_id'];
+
+        $this->db->insert('subject', $data);
+
+        $data['info_insert'] = "Automate Creation";
+        $table      = 'subject';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+
+        $this->crud->save_log($table, $action, $insert_id, $data);
+    }
+
+    function get_semester_name($semester_id)
+    {
+        $this->db->reset_query();
+        $this->db->where('semester_id', $semester_id);
+        $name  = $this->db->get('semesters')->row()->name;
+
+        return $name;
+    }
+
+    function get_student_grades_vacations($student_id)
+    {
+        $roundPrecision   =   $this->crud->getInfo('round_precision');
+        
+        $this->db->reset_query();
+        $this->db->order_by('date_added', 'DESC');
+        $this->db->select('student_id, class_id, section_id, year, semester_id');
+        $this->db->where('student_id', $student_id);        
+        $this->db->group_by(array('student_id', 'class_id', 'section_id'));
+        $this->db->limit(2);
+        $enrollments  = $this->db->get('enroll')->result_array();
+
+        $array = [];
+
+
+        foreach ($enrollments as $enroll) {
+            $class_id = $enroll['class_id'];
+            $section_id = $enroll['section_id'];
+            $year = $enroll['year'];
+            $semester_id = $enroll['semester_id'];
+            $enrollment = $this->db->get_where('v_enrollment' , array('student_id' => $student_id, 'class_id' => $class_id, 'section_id' => $section_id, 'year' => $year, 'semester_id' => $semester_id))->result_array(); 
+
+            $labouno_total = 0;
+            $count_total   = 0; 
+            $mark_total    = 0;
+            foreach ($enrollment as $row3){
+                $subject_id = $row3['subject_id'];  
+                $average = $this->db->query("SELECT ROUND((SUM(labuno)/COUNT(IF(labuno = '-' or labuno is null,null,'1'))), $roundPrecision) AS 'labuno',
+                                                    ROUND((SUM(labdos)/COUNT(IF(labdos = '-' or labdos is null,null,'1'))), $roundPrecision) AS 'labdos',
+                                                    ROUND((SUM(labtres)/COUNT(IF(labtres = '-' or labtres is null,null,'1'))), $roundPrecision) AS 'labtres',
+                                                    ROUND((SUM(labcuatro)/COUNT(IF(labcuatro = '-' or labcuatro is null,null,'1'))), $roundPrecision) AS 'labcuatro',
+                                                    ROUND((SUM(labcinco)/COUNT(IF(labcinco = '-' or labcinco is null,null,'1'))), $roundPrecision) AS 'labcinco',
+                                                    ROUND((SUM(labseis)/COUNT(IF(labseis = '-' or labseis is null,null,'1'))), $roundPrecision) AS 'labseis',
+                                                    ROUND((SUM(labsiete)/COUNT(IF(labsiete = '-' or labsiete is null,null,'1'))), $roundPrecision) AS 'labsiete',
+                                                    ROUND((SUM(labocho)/COUNT(IF(labocho = '-' or labocho is null,null,'1'))), $roundPrecision) AS 'labocho',
+                                                    ROUND((SUM(labnueve)/COUNT(IF(labnueve = '-' or labnueve is null,null,'1'))), $roundPrecision) AS 'labnueve',
+                                                    ROUND((SUM(labdiez)/COUNT(IF(labdiez = '-' or labdiez is null,null,'1'))), $roundPrecision) AS 'labdiez'
+                                                FROM mark_daily 
+                                                WHERE student_id = '$student_id'
+                                                    AND class_id = '$class_id'
+                                                    AND section_id = '$section_id'
+                                                    AND subject_id = '$subject_id'
+                                                    AND year = '$year'
+                                                    AND semester_id = '$semester_id'
+                                                ")->first_row();
+
+                // Calculate the average 
+                $count = 0;
+
+                $labouno        = $average->labuno;
+                $labodos        = $average->labdos;
+                $labotres       = $average->labtres;
+                $labocuatro     = $average->labcuatro;
+                $labocinco      = $average->labcinco;
+                $laboseis       = $average->labseis;
+                $labosiete      = $average->labsiete;
+                $laboocho       = $average->labocho;
+                $labonueve      = $average->labnueve;
+                $labodiez       = $average->labdiez;
+
+                // Validate values
+                if($labouno     == '' ) { $labouno      = '-'; } 
+                if($labodos     == '' ) { $labodos      = '-'; }  
+                if($labotres    == '' ) { $labotres     = '-'; }  
+                if($labocuatro  == '' ) { $labocuatro   = '-'; }  
+                if($labocinco   == '' ) { $labocinco    = '-'; }
+                if($laboseis    == '' ) { $laboseis     = '-'; } 
+                if($labosiete   == '' ) { $labosiete    = '-'; }  
+                if($laboocho    == '' ) { $laboocho     = '-'; }  
+                if($labonueve   == '' ) { $labonueve    = '-'; }  
+                if($labodiez    == '' ) { $labodiez     = '-'; }
+
+                // if(is_numeric($average->labuno)     && $average->labuno != '' ) { $count++; } 
+                if(is_numeric($average->labdos)     && $average->labdos != '' ) { $count++; }  
+                if(is_numeric($average->labtres)    && $average->labtres != '' ) { $count++; }  
+                if(is_numeric($average->labcuatro)  && $average->labcuatro != '' ) { $count++; }  
+                if(is_numeric($average->labcinco)   && $average->labcinco != '') { $count++; }
+                if(is_numeric($average->labseis)    && $average->labseis != '' ) { $count++; } 
+                if(is_numeric($average->labsiete)   && $average->labsiete != '' ) { $count++; }  
+                if(is_numeric($average->labocho)    && $average->labocho != '' ) { $count++; }  
+                if(is_numeric($average->labnueve)   && $average->labnueve != '' ) { $count++; }  
+                if(is_numeric($average->labdiez)    && $average->labdiez != '' ) { $count++; }                                                            
+                
+                $labototal      = (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
+
+                $mark = $count > 0 ? round(($labototal/$count), (int)$roundPrecision) : '-';
+
+                if($mark != '-'){
+                    $mark_total += $mark;
+                    $count_total++; 
+                }
+
+                if($labouno != '-'){
+                    $labouno_total += $labouno;
+                }
+            }
+            $final_mark = ($count_total > 0 ? round(($mark_total/$count_total), (int)$roundPrecision) : '-');
+            $final_attendance = ($count_total > 0 ? round(($labouno_total/$count_total), (int)$roundPrecision) : '-');
+
+            array_push($array, array('class_id' => $class_id, 'section_id' => $section_id, 'year' => $year, 'semester_id' => $semester_id, 'final_attendance' => $final_attendance,  'final_mark' => $final_mark));
+        }
+        return $array;
+    }
 }

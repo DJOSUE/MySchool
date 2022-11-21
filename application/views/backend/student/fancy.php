@@ -18,11 +18,11 @@
             <div class="fancy-selector-current">
                 <div class="fs-img">
                     <img alt=""
-                        src="<?php echo base_url();?>public/uploads/subject_icon/<?php echo $this->db->get_where('subject', array('subject_id' => $fc_ex[2]))->row()->icon;?>">
+                        src="<?= base_url();?>public/uploads/subject_icon/<?= $this->db->get_where('subject', array('subject_id' => $fc_ex[2]))->row()->icon;?>">
                 </div>
                 <div class="fs-main-info">
                     <div class="fs-name">
-                        <?php echo $this->db->get_where('subject', array('subject_id' => $fc_ex[2]))->row()->name;?>
+                        <?= $this->db->get_where('subject', array('subject_id' => $fc_ex[2]))->row()->name;?>
                     </div>
                 </div>
                 <div class="fs-selector-trigger">
@@ -35,15 +35,15 @@
                 foreach($fancy_subjects as $fancy_row2):
             ?>
                 <a
-                    href="<?php echo base_url();?>student/subject_dashboard/<?php echo base64_encode($fancy_cl_id.'-'.$fancy_section_id.'-'.$fancy_row2['subject_id']);?>/">
+                    href="<?= base_url();?>student/subject_dashboard/<?= base64_encode($fancy_cl_id.'-'.$fancy_section_id.'-'.$fancy_row2['subject_id']);?>/">
                     <div class="fancy-selector-option">
                         <div class="fs-img">
                             <img alt=""
-                                src="<?php echo base_url();?>public/uploads/subject_icon/<?php echo $fancy_row2['icon'];?>">
+                                src="<?= base_url();?>public/uploads/subject_icon/<?= $fancy_row2['icon'];?>">
                         </div>
                         <div class="fs-main-info">
                             <div class="fs-name">
-                                <?php echo $fancy_row2['subject_name'];?>
+                                <?= $fancy_row2['subject_name'];?>
                             </div>
                         </div>
                     </div>
@@ -57,7 +57,7 @@
         <div class="control-block">
             <div class="control-icon more has-items">
                 <i class="picons-thin-icon-thin-0275_chat_message_comment_bubble_typing"></i>
-                <?php if($fancy_number > 0):?><div class="label-avatar bg-success"><?php echo $fancy_number;?></div>
+                <?php if($fancy_number > 0):?><div class="label-avatar bg-success"><?= $fancy_number;?></div>
                 <?php endif;?>
                 <div class="more-dropdown more-with-triangle triangle-top-center">
                     <div class="mCustomScrollbar" data-mcs-theme="dark">
@@ -82,29 +82,29 @@
                             <?php $dbinfos = explode('-',$rw->sender);?>
                             <li class="message-unread">
                                 <div class="author-thumb">
-                                    <img src="<?php echo $this->crud->get_image_url($fancy_user_to_show_type, $fancy_user_to_show_id);?>"
+                                    <img src="<?= $this->crud->get_image_url($fancy_user_to_show_type, $fancy_user_to_show_id);?>"
                                         width="35px">
                                 </div>
                                 <div class="notification-event">
-                                    <a href="<?php echo base_url();?>student/message/message_read/<?php echo $fancy_rows['message_thread_code'];?>/"
-                                        class="h6 notification-friend"><?php echo $this->crud->get_name($fancy_user_to_show_type, $fancy_user_to_show_id);?></a>
+                                    <a href="<?= base_url();?>student/message/message_read/<?= $fancy_rows['message_thread_code'];?>/"
+                                        class="h6 notification-friend"><?= $this->crud->get_name($fancy_user_to_show_type, $fancy_user_to_show_id);?></a>
                                     <span class="chat-message-item"
                                         style="text-align: justify;"><?php if($rw->sender == $fancy_current_user) echo getPhrase('you').": " .substr($rw->message, 0, 90).'...'; else echo substr($rw->message, 0, 90);?>...</span>
                                     <span class="notification-date"><time
-                                            class="entry-date updated"><?php echo $rw->timestamp;?></time></span>
+                                            class="entry-date updated"><?= $rw->timestamp;?></time></span>
                                 </div>
                             </li>
                             <?php endforeach;?>
                         </ul>
                     </div>
-                    <a href="<?php echo base_url();?>student/message/"
-                        class="view-all bg-info"><?php echo getPhrase('view_all_messages');?></a>
+                    <a href="<?= base_url();?>student/message/"
+                        class="view-all bg-info"><?= getPhrase('view_all_messages');?></a>
                 </div>
             </div>
             <div class="control-icon more has-items">
                 <i class="picons-thin-icon-thin-0543_world_earth_worldwide_location_travel"></i>
                 <?php if($fancy_count->num_rows() > 0):?><div class="label-avatar bg-success">
-                    <?php echo $fancy_count->num_rows();?> </div><?php endif;?>
+                    <?= $fancy_count->num_rows();?> </div><?php endif;?>
                 <div class="more-dropdown more-with-triangle triangle-top-center">
                     <div class="mCustomScrollbar" data-mcs-theme="dark">
                         <ul class="notification-list">
@@ -114,44 +114,44 @@
                                 ?>
                             <li>
                                 <div class="author-thumb">
-                                    <img alt="" src="<?php echo base_url();?>public/uploads/notify.svg" width="35px">
+                                    <img alt="" src="<?= base_url();?>public/uploads/notify.svg" width="35px">
                                 </div>
                                 <div class="notification-event">
                                     <div>
-                                        <a href="<?php echo base_url();?><?php echo $fancy_notify['url'];?><?php if($fancy_notify['status'] == 0) {echo "?id=".$fancy_notify['id'];}?>"
-                                            class="h6 notification-friend"> <?php echo $fancy_notify['notify'];?></a>
+                                        <a href="<?= base_url();?><?= $fancy_notify['url'];?><?php if($fancy_notify['status'] == 0) {echo "?id=".$fancy_notify['id'];}?>"
+                                            class="h6 notification-friend"> <?= $fancy_notify['notify'];?></a>
                                     </div>
                                     <span class="notification-date"><time
-                                            class="entry-date updated"><?php echo $fancy_notify['date'];?>
-                                            <?php echo getPhrase('at');?>
-                                            <?php echo $fancy_notify['time'];?></time></span>
+                                            class="entry-date updated"><?= $fancy_notify['date'];?>
+                                            <?= getPhrase('at');?>
+                                            <?= $fancy_notify['time'];?></time></span>
                                 </div>
                             </li>
                             <?php endforeach;?>
                         </ul>
                     </div>
-                    <a href="<?php echo base_url();?>student/notifications/"
-                        class="view-all bg-info"><?php echo getPhrase('view_all_notifications');?></a>
+                    <a href="<?= base_url();?>student/notifications/"
+                        class="view-all bg-info"><?= getPhrase('view_all_notifications');?></a>
                 </div>
             </div>
             <div class="author-page author vcard inline-items more">
                 <div class="author-thumb">
                     <img alt="author"
-                        src="<?php echo $this->crud->get_image_url('student', $this->session->userdata('login_user_id'));?>"
+                        src="<?= $this->crud->get_image_url('student', $this->session->userdata('login_user_id'));?>"
                         class="avatar bg-white" width="32px">
                     <div class="more-dropdown more-with-triangle">
                         <div class="mCustomScrollbar" data-mcs-theme="dark">
                             <ul class="account-settings">
                                 <li>
-                                    <a href="<?php echo base_url();?>student/my_profile/">
+                                    <a href="<?= base_url();?>student/my_profile/">
                                         <i class="picons-thin-icon-thin-0699_user_profile_avatar_man_male"></i>
-                                        <span><?php echo getPhrase('my_account');?></span>
+                                        <span><?= getPhrase('my_account');?></span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo base_url();?>login/logout/">
+                                    <a href="<?= base_url();?>login/logout/">
                                         <i class="picons-thin-icon-thin-0040_exit_logout_door_emergency_outside"></i>
-                                        <span><?php echo getPhrase('logout');?></span>
+                                        <span><?= getPhrase('logout');?></span>
                                     </a>
                                 </li>
                             </ul>
@@ -160,14 +160,14 @@
                 </div>
                 <a href="#" class="author-name fn">
                     <div class="author-title">
-                        <?php echo $this->crud->get_name('student', $this->session->userdata('login_user_id'));?> <svg
+                        <?= $this->crud->get_name('student', $this->session->userdata('login_user_id'));?> <svg
                             class="olymp-dropdown-arrow-icon">
                             <use
-                                xlink:href="<?php echo base_url();?>public/style/olapp/svg-icons/sprites/icons.svg#olymp-dropdown-arrow-icon">
+                                xlink:href="<?= base_url();?>public/style/olapp/svg-icons/sprites/icons.svg#olymp-dropdown-arrow-icon">
                             </use>
                         </svg>
                     </div>
-                    <span class="author-subtitle"><?php echo ucwords($this->session->userdata('login_type'));?></span>
+                    <span class="author-subtitle"><?= ucwords($this->session->userdata('login_type'));?></span>
                 </a>
             </div>
         </div>
@@ -180,7 +180,7 @@
                 <a class="nav-link" data-toggle="tab" href="#chat" role="tab">
                     <div class="control-icon has-items">
                         <i class="picons-thin-icon-thin-0275_chat_message_comment_bubble_typing"></i>
-                        <?php if($fancy_number > 0):?><div class="label-avatar bg-success"><?php echo $fancy_number;?>
+                        <?php if($fancy_number > 0):?><div class="label-avatar bg-success"><?= $fancy_number;?>
                         </div><?php endif;?>
                     </div>
                 </a>
@@ -190,7 +190,7 @@
                     <div class="control-icon has-items">
                         <i class="picons-thin-icon-thin-0543_world_earth_worldwide_location_travel"></i>
                         <?php if($fancy_count->num_rows() > 0):?><div class="label-avatar bg-success">
-                            <?php echo $fancy_count->num_rows();?> </div><?php endif;?>
+                            <?= $fancy_count->num_rows();?> </div><?php endif;?>
                     </div>
                 </a>
             </li>
@@ -199,7 +199,7 @@
                     <div class="author-page author vcard inline-items more top16">
                         <div class="author-thumb imgs">
                             <img alt="author"
-                                src="<?php echo $this->crud->get_image_url($this->session->userdata('login_type'), $this->session->userdata('login_user_id'));?>"
+                                src="<?= $this->crud->get_image_url($this->session->userdata('login_type'), $this->session->userdata('login_user_id'));?>"
                                 class="avatar bg-white" width="35px">
                         </div>
                     </div>
@@ -231,22 +231,22 @@
                     <?php $dbinf = explode('-',$rw->sender);?>
                     <li class="message-unread">
                         <div class="author-thumb">
-                            <img src="<?php echo $this->crud->get_image_url($fancy_user_to_show_type, $fancy_user_to_show_id);?>"
+                            <img src="<?= $this->crud->get_image_url($fancy_user_to_show_type, $fancy_user_to_show_id);?>"
                                 width="35px">
                         </div>
                         <div class="notification-event">
-                            <a href="<?php echo base_url();?>student/message/message_read/<?php echo $row1['message_thread_code'];?>/"
-                                class="h6 notification-friend"><?php echo $this->crud->get_name($fancy_user_to_show_type, $fancy_user_to_show_id);?></a>
+                            <a href="<?= base_url();?>student/message/message_read/<?= $row1['message_thread_code'];?>/"
+                                class="h6 notification-friend"><?= $this->crud->get_name($fancy_user_to_show_type, $fancy_user_to_show_id);?></a>
                             <span class="chat-message-item"
                                 style="text-align: justify;"><?php if($rw->sender == $fancy_current_user) echo getPhrase('you').": ". substr($rw->message, 0, 90).'...'; else echo substr($rw->message, 0, 90);?>...</span>
                             <span class="notification-date"><time
-                                    class="entry-date updated"><?php echo $rw->timestamp;?></time></span>
+                                    class="entry-date updated"><?= $rw->timestamp;?></time></span>
                         </div>
                     </li>
                     <?php endforeach;?>
                 </ul>
-                <a href="<?php echo base_url();?>student/message/"
-                    class="view-all bg-info"><?php echo getPhrase('view_all_messages');?></a>
+                <a href="<?= base_url();?>student/message/"
+                    class="view-all bg-info"><?= getPhrase('view_all_messages');?></a>
             </div>
         </div>
         <div class="tab-pane " id="notification" role="tabpanel">
@@ -258,37 +258,37 @@
                         ?>
                     <li>
                         <div class="author-thumb">
-                            <img alt="" src="<?php echo base_url();?>public/uploads/notify.svg" width="35px">
+                            <img alt="" src="<?= base_url();?>public/uploads/notify.svg" width="35px">
                         </div>
                         <div class="notification-event">
                             <div>
-                                <a href="<?php echo base_url();?><?php echo $fancy_notify['url'];?><?php if($fancy_notify['status'] == 0) {echo "?id=".$fancy_notify['id'];}?>"
-                                    class="h6 notification-friend"> <?php echo $fancy_notify['notify'];?></a>
+                                <a href="<?= base_url();?><?= $fancy_notify['url'];?><?php if($fancy_notify['status'] == 0) {echo "?id=".$fancy_notify['id'];}?>"
+                                    class="h6 notification-friend"> <?= $fancy_notify['notify'];?></a>
                             </div>
                             <span class="notification-date"><time
-                                    class="entry-date updated"><?php echo $fancy_notify['date'];?>
-                                    <?php echo getPhrase('at');?> <?php echo $fancy_notify['time'];?></time></span>
+                                    class="entry-date updated"><?= $fancy_notify['date'];?>
+                                    <?= getPhrase('at');?> <?= $fancy_notify['time'];?></time></span>
                         </div>
                     </li>
                     <?php endforeach;?>
                 </ul>
-                <a href="<?php echo base_url();?>student/notifications/"
-                    class="view-all bg-info"><?php echo getPhrase('view_all_notifications');?></a>
+                <a href="<?= base_url();?>student/notifications/"
+                    class="view-all bg-info"><?= getPhrase('view_all_notifications');?></a>
             </div>
         </div>
         <div class="tab-pane " id="autor" role="tabpanel">
             <div class="mCustomScrollbar" data-mcs-theme="dark">
                 <ul class="account-settings">
                     <li>
-                        <a href="<?php echo base_url();?>student/my_profile/">
+                        <a href="<?= base_url();?>student/my_profile/">
                             <i class="picons-thin-icon-thin-0699_user_profile_avatar_man_male"></i>
-                            <span><?php echo getPhrase('my_account');?></span>
+                            <span><?= getPhrase('my_account');?></span>
                         </a>
                     </li>
                     <li>
-                        <a href="<?php echo base_url();?>login/logout/">
+                        <a href="<?= base_url();?>login/logout/">
                             <i class="picons-thin-icon-thin-0040_exit_logout_door_emergency_outside"></i>
-                            <span><?php echo getPhrase('logout');?></span>
+                            <span><?= getPhrase('logout');?></span>
                         </a>
                     </li>
                 </ul>

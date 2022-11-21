@@ -176,9 +176,9 @@
                                                         <th>
                                                             <?php echo getPhrase('teacher');?>
                                                         </th>
-                                                        <th>
+                                                        <!-- <th>
                                                             <?php echo getPhrase('options');?>
-                                                        </th>
+                                                        </th> -->
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -246,7 +246,7 @@
                                                                 </label>
                                                             </center>
                                                         </td>
-                                                        <td class="text-center bolder">
+                                                        <!-- <td class="text-center bolder">
                                                             <a class="grey" 
                                                             data-toggle="tooltip" 
                                                             data-placement="top" 
@@ -255,7 +255,7 @@
                                                             onClick="confirm_delete(<?= $item['enroll_id']; ?>)" >
                                                             <i class="picons-thin-icon-thin-0056_bin_trash_recycle_delete_garbage_empty"></i>
                                                             </a>
-                                                        </td>
+                                                        </td> -->
                                                     </tr>
                                                     <?php endforeach;?>
                                                 </tbody>

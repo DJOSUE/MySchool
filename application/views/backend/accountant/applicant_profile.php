@@ -21,9 +21,6 @@
     <?php include 'fancy.php';?>
     <div class="header-spacer"></div>
     <div class="conty">
-        <div class="os-tabs-w menu-shad">
-            <? include 'admission__nav.php';?>
-        </div><br>
         <div class="row">
             <div class="content-i">
                 <div class="content-box">
@@ -32,7 +29,7 @@
                             <div id="newsfeed-items-grid">
                                 <div class="ui-block paddingtel">
                                     <div class="user-profile">
-                                        <?php include 'admission_applicant__header.php';?>
+                                        <?php include 'applicant__header.php';?>
                                         <div class="ui-block">
                                             <div class="ui-block-title">
                                                 <h6 class="title"><?= getPhrase('personal_information');?>
@@ -95,7 +92,7 @@
                                                             <div class="togglebutton">
                                                                 <label>
                                                                     <input name="tag_<?=$tag_id?>" value="1" <?= $allow_actions == true ? "disabled" : ""?>
-                                                                        type="checkbox" onchange="update_tag(this, <?=$tag_id?>)"
+                                                                        type="checkbox" disabled
                                                                         <?php if(in_array($tag_id, $tags_applicant)) echo "checked";?>>
                                                                 </label>
                                                             </div>
@@ -105,7 +102,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class=" ui-block-title row" style="border-style: none;">
+                                        <!-- <div class=" ui-block-title row" style="border-style: none;">
                                             <div class="col-sm-4">
                                                 <div class="row" style="justify-content: flex-end;">
                                                     <?php if($is_international):?>
@@ -127,8 +124,8 @@
                                                     <?php endif;?>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <?php if($is_international):?>
+                                        </div> -->
+                                        <!-- <?php if($is_international):?>
                                         <div class="ui-block" id="application_view" style="display: none;">
                                             <div class="ui-block-title">
                                                 <h6 class="title"><?= getPhrase('application');?>
@@ -273,7 +270,7 @@
 
                                             </div>
                                         </div>
-                                        <?php endif;?>
+                                        <?php endif;?> -->
                                         <br />
                                         <div class="ui-block">
                                             <div class="ui-block-title">
@@ -494,7 +491,7 @@
                                         <div class="ui-block-content">
                                             <div class="help-support-block">
                                                 <h3 class="title"><?= getPhrase('quick_links');?></h3>
-                                                <? include 'admission_applicant__menu.php'?>
+                                                <? include 'applicant__menu.php'?>
                                             </div>
                                         </div>
                                     </div>

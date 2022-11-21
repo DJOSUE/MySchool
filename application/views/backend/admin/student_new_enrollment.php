@@ -45,13 +45,16 @@
                         </div>
                         <!-- add enrollments -->
                         <div>
+
                             <div class="ui-block">
                                 <div class="ui-block-title">
                                     <div class="col-sm-2">
                                         <h6 class="title"><?= getPhrase('new_enrollment');?></h6>
                                     </div>
                                 </div>
+
                                 <div class="ui-block-content">
+                                    <?php echo form_open(base_url() . 'admin/student/agreement/'. $student_id , array('enctype' => 'multipart/form-data', 'autocomplete' => 'off'));?>
                                     <div class="steps-w">
                                         <div class="step-triggers">
                                             <a class="step-trigger active"
@@ -71,8 +74,8 @@
                                                         </div>
                                                         <div class="togglebutton">
                                                             <label>
-                                                                <input id="update_info" value="1" type="checkbox"
-                                                                    onchange="update_info()">
+                                                                <input id="update_info" name="update_info" value="1"
+                                                                    type="checkbox" onchange="update_info_enable_fields()">
                                                             </label>
                                                         </div>
                                                     </div>
@@ -210,7 +213,7 @@
                                                             <div class="select">
                                                                 <select name="program_type_id" id="program_type_id"
                                                                     required=""
-                                                                    <?= $is_international == true ?  'disabled': ''?>>
+                                                                    <?= $is_international == true ?  'readonly ': ''?>>
                                                                     </option>
                                                                     <?php 
                                                                         $programs = $this->studentModel->get_program_type();
@@ -350,7 +353,8 @@
                                                         <?= getPhrase('next');?>
                                                     </a>
                                                     <a class="btn btn-rounded btn-success btn-lg step-trigger-btn"
-                                                        href="#stepContent3" style="display: none;">
+                                                        id="btnStepContent2" href="#stepContent3"
+                                                        style="display: none;">
                                                         <?= getPhrase('next');?>
                                                     </a>
                                                 </div>
@@ -362,8 +366,8 @@
                                                             <label class="control-label">
                                                                 <?= getPhrase('cost_tuition');?>
                                                             </label>
-                                                            <input class="form-control" name="cost_tuition"
-                                                                id="cost_tuition" type="text" required="" disabled>
+                                                            <input class="form-control" name="cost_tuition" id="tuition"
+                                                                type="text" required="" readonly value="0">
                                                         </div>
                                                     </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -373,8 +377,9 @@
                                                             <label class="control-label">
                                                                 <?= getPhrase('scholarship');?>
                                                             </label>
-                                                            <input class="form-control" name="scholarship"
-                                                                id="scholarship" type="text">
+                                                            <input class="form-control" name="discount_scholarship"
+                                                                id="discount_scholarship" onfocusout="amount_total()"
+                                                                type="text">
                                                         </div>
                                                     </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -383,7 +388,7 @@
                                                                 <?= getPhrase('discount');?>
                                                             </label>
                                                             <input class="form-control" name="discount" id="discount"
-                                                                type="text">
+                                                                onfocusout="amount_total()" type="text">
                                                         </div>
                                                     </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -391,8 +396,9 @@
                                                             <label class="control-label">
                                                                 <?= getPhrase('books_fee');?>
                                                             </label>
-                                                            <input class="form-control" name="books_fee" id="books_fee"
-                                                                value="75" type="text">
+                                                            <input class="form-control" name="books_fee"
+                                                                id="cost_books_fee" value="75"
+                                                                onfocusout="amount_total()" type="text">
                                                         </div>
                                                     </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -402,8 +408,8 @@
                                                             <label class="control-label">
                                                                 <?= getPhrase('total_payment');?>
                                                             </label>
-                                                            <input class="form-control" name="cost_tuition"
-                                                                id="cost_tuition" type="text" required="" disabled>
+                                                            <input class="form-control" name="total_payment" value="0"
+                                                                id="total_payment" type="text" required="" readonly>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -426,6 +432,23 @@
                                                         </div>
                                                     </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class="form-group label-floating is-select">
+                                                            <label
+                                                                class="control-label"><?= getPhrase('payment_date');?>
+                                                            </label>
+                                                            <div class="select">
+                                                                <select name="payment_date" id="payment_date"
+                                                                    required="">
+                                                                    <?php 
+                                                                        $payment_dates = $this->agreement->get_payment_date();
+                                                                        foreach($payment_dates as $item):
+                                                                    ?>
+                                                                    <option value="<?= $item['date'];?>">
+                                                                        <?= $item['name']?></option>
+                                                                    <?php endforeach;?>
+                                                                </select>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <div class="form-group label-floating">
@@ -433,19 +456,9 @@
                                                                 Payment 1
                                                             </label>
                                                             <input class="form-control" name="amount_1" id="amount_1"
-                                                                type="text" required="" value="0" disabled>
+                                                                type="text" required="" value="0" readonly>
                                                         </div>
-                                                    </div>
-                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                        <div class="form-group label-floating">
-                                                            <label class="control-label">
-                                                                <?= getPhrase('date_1');?>
-                                                            </label>
-                                                            <input class="datepicker-here" name="date_1" id="date_1"
-                                                                data-position="bottom left" data-language='en'
-                                                                type="text" required="">
-                                                        </div>
-                                                    </div>
+                                                    </div>                                                    
                                                 </div>
                                                 <div class="row" id="payment_schedule">
 
@@ -460,8 +473,8 @@
                                                             </div>
                                                             <div class="togglebutton">
                                                                 <label>
-                                                                    <input id="automatic_payment" value="1"
-                                                                        type="checkbox" onchange="automatic_payment()">
+                                                                    <input id="automatic_payment" name="automatic_payment" value="1"
+                                                                        type="checkbox" onchange="automatic_payment_enable_fields()">
                                                                 </label>
                                                             </div>
                                                         </div>
@@ -473,8 +486,7 @@
                                                             <label class="control-label"><?= getPhrase('type_card');?>
                                                             </label>
                                                             <div class="select">
-                                                                <select name="type_card_id" id="type_card_id"
-                                                                    required="">
+                                                                <select name="type_card_id" id="type_card_id">
                                                                     <option value=""><?= getPhrase('select');?>
                                                                     </option>
                                                                     <?php 
@@ -494,7 +506,7 @@
                                                             <label class="control-label"><?= getPhrase('card_holder');?>
                                                             </label>
                                                             <input class="form-control" name="card_holder"
-                                                                id="card_holder" type="text" required="">
+                                                                id="card_holder" type="text">
                                                         </div>
                                                     </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -502,7 +514,7 @@
                                                             <label class="control-label"><?= getPhrase('card_number');?>
                                                             </label>
                                                             <input class="form-control" name="card_number"
-                                                                id="card_number" type="text" required="" minlength="10"
+                                                                id="card_number" type="text" minlength="10"
                                                                 maxlength="19">
                                                         </div>
                                                     </div>
@@ -512,7 +524,7 @@
                                                                 class="control-label"><?= getPhrase('security_code');?>
                                                             </label>
                                                             <input class="form-control" name="security_code"
-                                                                id="security_code" type="text" required="" minlength="3"
+                                                                id="security_code" type="text" minlength="3"
                                                                 maxlength="4">
                                                         </div>
                                                     </div>
@@ -522,7 +534,7 @@
                                                                 class="control-label"><?= getPhrase('expiration_date');?>
                                                             </label>
                                                             <input class="form-control" name="expiration_date"
-                                                                id="expiration_date" type="text" required="">
+                                                                id="expiration_date" type="text">
                                                         </div>
                                                     </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -530,7 +542,7 @@
                                                             <label class="control-label"><?= getPhrase('zip_code');?>
                                                             </label>
                                                             <input class="form-control" name="zip_code" id="zip_code"
-                                                                type="text" required="" minlength="5">
+                                                                type="text" minlength="5">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -542,8 +554,11 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <?php echo form_close();?>
                                 </div>
+
                             </div>
+
                         </div>
                     </main>
                     <?php include 'student_area_menu.php';?>
@@ -552,12 +567,14 @@
         </div>
     </div>
 </div>
+
 <?php endforeach;?>
 
 
 
 <script type="text/javascript">
-function update_info() {
+function update_info_enable_fields() {
+
     var checked = document.getElementById("update_info").checked;
 
     document.getElementById("first_name").disabled = !checked;
@@ -577,37 +594,39 @@ function get_price() {
 }
 
 function add_fees() {
+    let index = 2
     var nro = document.getElementById("number_payments").value;
+    var amount = parseFloat(document.getElementById("tuition").value);
+    var costs = parseFloat(totalCost());
+    var discounts = parseFloat(totalDiscount());
+
+    var quota = (amount / parseInt(nro));
+
+    document.getElementById('amount_1').value = (quota + costs);
     document.getElementById("payment_schedule").innerHTML = "";
 
     if (nro > 1) {
-        document.getElementById("payment_schedule").innerHTML = "";
-        for (let index = 2; index <= nro; index++) {
+        for (index; index <= nro; index++) {
             let html = '<div class="col col-lg-6 col-md-6 col-sm-12 col-12">'
             html += '    <div class="form-group label-floating">'
             html += '        <label class="control-label">'
             html += '            Payment ' + index
             html += '        </label>'
             html += '        <input class="form-control" name="amount_' + index + '"'
-            html += '            id="amount_' + index + '" type="text" required="" disabled>'
-            html += '    </div>'
-            html += '</div>'
-            html += '<div class="col col-lg-6 col-md-6 col-sm-12 col-12">'
-            html += '    <div class="form-group label-floating">'
-            html += '        <label class="control-label">'
-            html += '            Date ' + index
-            html += '        </label>'
-            html += '        <input class="datepicker-here" name="date_' + index + '" id="date_' + index + '"'
-            html += '            data-position="bottom left" data-language="en"'
-            html += '            type="text" required="" disabled>'
+            html += '            id="amount_' + index + '" value="' + quota + '"type="text" required="" readonly >'
             html += '    </div>'
             html += '</div>'
             document.getElementById("payment_schedule").innerHTML += html;
         }
+        var name = "amount_" + (parseInt(index) - 1);
+        console.log(name);
+
+        document.getElementById(name).value = (quota - discounts);
     }
+
 }
 
-function automatic_payment() {
+function automatic_payment_enable_fields() {
     var checked = document.getElementById("automatic_payment").checked;
 
     if (checked)
@@ -692,8 +711,59 @@ function validate_form() {
     }
 
     if (valid) {
-        document.getElementById('stepContent3').click();
+        get_tuition();
+        document.getElementById('btnStepContent2').click();
+
     }
+}
+
+function get_tuition() {
+    var program_type_id = document.getElementById("program_type_id").value;
+    var _url = '<?= base_url();?>admin/get_cost_tuition/' + program_type_id;
+    var cost = "";
+
+    $.ajax({
+        url: _url,
+        success: function(response) {
+            cost = response;
+            document.getElementById("tuition").value = cost;
+
+        }
+    });
+}
+
+function amount_total() {
+
+    var tuition = parseFloat(document.getElementById("tuition").value);
+
+    var total = ((tuition + totalCost()) - totalDiscount());
+
+    document.getElementById('total_payment').value = total;
+    document.getElementById('amount_1').value = total;
+}
+
+function totalCost() {
+    var arrCost = document.querySelectorAll('input[id^="cost_"]');
+    var totalCost = 0.00;
+
+    for (var i = 0; i < arrCost.length; i++) {
+        if (parseFloat(arrCost[i].value))
+            totalCost += parseFloat(arrCost[i].value);
+    }
+
+    return totalCost;
+}
+
+function totalDiscount() {
+    var arrDiscount = document.querySelectorAll('input[id^="discount"]');
+    var totalDiscount = 0.00;
+
+    for (var i = 0; i < arrDiscount.length; i++) {
+        if (parseFloat(arrDiscount[i].value))
+            totalDiscount += parseFloat(arrDiscount[i].value);
+    }
+
+    return totalDiscount;
 }
 
 function save() {

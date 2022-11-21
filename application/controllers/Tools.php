@@ -56,7 +56,7 @@
             $array      = ['admin', 'teacher', 'student', 'parent', 'accountant', 'librarian'];
             $login_type = $this->session->userdata('login_type');
             
-            if (in_array($login_type, $array))
+            if (!in_array($login_type, $array))
             {
                 redirect(base_url(), 'refresh');
             }
@@ -65,37 +65,16 @@
 
         function notification_delete($notify_id, $deleteAll = false)
         {
-
             $this->isLogin();
-            
-            if(!$deleteAll)
-            {   
-                $this->db->where('id', $notify_id);
-                $this->db->set('status', '1', FALSE);
-                $this->db->update('notification');
-                
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted')); 
 
-                $page_data['page_name']  =  'notifications';
-                $page_data['page_title'] =  getPhrase('your_notifications');
-                $this->load->view('backend/index', $page_data);
-            }
-            else
-            {
-                $user_id    = $this->session->userdata('login_user_id');
-                $user_type  = get_table_user($this->session->userdata('role_id'));
+            $this->notification->delete($notify_id, $deleteAll);
 
-                $this->db->where('user_id', $user_id);
-                $this->db->where('user_type', $user_type);
-                $this->db->set('status', '1', FALSE);
-                $this->db->update('notification');
+            redirect(base_url() , 'refresh');
 
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));   
-
-                $page_data['page_name']  =  'notifications';
-                $page_data['page_title'] =  getPhrase('your_notifications');
-                $this->load->view('backend/index', $page_data);
-            }
+            $page_data['page_name']  =  'notifications';
+            $page_data['page_title'] =  getPhrase('your_notifications');
+            $this->load->view('backend/index', $page_data);
+        
         }
 
         function close_class_unit($class_id, $unit_id)
@@ -119,5 +98,13 @@
             $this->db->update('class_unit', array('is_current' => 1));
             
             return 'success';
+        }
+
+        function get_semester_enroll($year, $semester_id)
+        {
+            $semester_enroll = $this->academic->get_semester_enroll($year, $semester_id);
+            echo '<pre>';
+            var_dump($semester_enroll);
+            echo '</pre>';
         }
     }

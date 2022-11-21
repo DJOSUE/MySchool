@@ -118,3 +118,7 @@ defined('PATH_TASK_FILES')                  OR define('PATH_TASK_FILES', 'public
 defined('PATH_TICKET_FILES')                OR define('PATH_TICKET_FILES', 'public/uploads/ticket_files/'); // Task Files
 defined('PATH_REQUEST_FILES')               OR define('PATH_REQUEST_FILES', 'public/uploads/request_files/'); // applicant_file
 
+
+defined('DEFAULT_REQUEST_ACCEPTED')        OR define('DEFAULT_REQUEST_ACCEPTED', 2); // no errors
+defined('DEFAULT_REQUEST_REJECTED')        OR define('DEFAULT_REQUEST_REJECTED', 3); // no errors
+defined('DEFAULT_USER_VACATION')           OR define('DEFAULT_USER_VACATION', 3); // no errors

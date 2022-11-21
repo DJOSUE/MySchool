@@ -190,11 +190,11 @@
                 </li>
                 <?php endif;?>
                 <!-- Behavior Access -->
-                <?php if(has_permission('behavior_module')):?>
+                <?php if(has_permission('request_module')):?>
                 <li <?php if($page_name == 'request_student' || $page_name == 'request' || $page_name == 'looking_report'):?>class="currentItem"
                     <?php endif;?>>
-                    <a href="<?php echo base_url();?>admin/request_student/" data-toggle="tooltip"
-                        data-placement="right" data-original-title="<?php echo getPhrase('behavior');?>">
+                    <a href="<?php echo base_url();?>admin/request_dashboard/" data-toggle="tooltip"
+                        data-placement="right" data-original-title="<?php echo getPhrase('requests');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0389_gavel_hammer_law_judge_court"></i>
                         </div>
@@ -450,9 +450,9 @@
                 </li>
                 <?php endif;?>
                 <!-- Behavior Access -->
-                <?php if(has_permission('behavior_module')):?>
+                <?php if(has_permission('request_module')):?>
                 <li>
-                    <a href="<?php echo base_url();?>admin/request_student/">
+                    <a href="<?php echo base_url();?>admin/request_dashboard/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0389_gavel_hammer_law_judge_court"></i>
                         </div>
@@ -707,9 +707,9 @@
                 </li>
                 <?php endif;?>
                 <!-- Behavior Access -->
-                <?php if(has_permission('behavior_module')):?>
+                <?php if(has_permission('request_module')):?>
                 <li>
-                    <a href="<?php echo base_url();?>admin/request_student/">
+                    <a href="<?php echo base_url();?>admin/request_dashboard/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0389_gavel_hammer_law_judge_court"></i>
                         </div>

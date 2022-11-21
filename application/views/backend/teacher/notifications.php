@@ -5,17 +5,17 @@
             <div class="ui-blo ck">
                 <div class="top-header top-header-favorit">
                     <div class="top-header-thumb">
-                        <img src="<?php echo base_url();?>public/uploads/bglogin.jpg" class="bgcover">
+                        <img src="<?= base_url();?>public/uploads/bglogin.jpg" class="bgcover">
                         <div class="top-header-author">
                             <div class="author-thumb">
-                                <img src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('logo');?>"
+                                <img src="<?= base_url();?>public/uploads/<?= $this->crud->getInfo('logo');?>"
                                     style="background-color: #fff; padding:10px">
                             </div>
                             <div class="author-content">
                                 <a href="javascript:void(0);"
-                                    class="h3 author-name"><?php echo getPhrase('your_notifications');?></a>
-                                <div class="country"><?php echo $this->crud->getInfo('system_name');?> |
-                                    <?php echo $this->crud->getInfo('system_title');?></div>
+                                    class="h3 author-name"><?= getPhrase('your_notifications');?></a>
+                                <div class="country"><?= $this->crud->getInfo('system_name');?> |
+                                    <?= $this->crud->getInfo('system_title');?></div>
                             </div>
                         </div>
                     </div>
@@ -30,33 +30,38 @@
                     <div class="col  col-sm-12 col-12">
                         <div class="ui-block">
                             <div class="ui-block-title">
-                                <h6 class="title"><?php echo getPhrase('your_notifications');?></h6>
-                                <a onClick="return confirm('<?php echo getPhrase('confirm_delete');?>')"
-                                    data-toggle="tooltip" data-placement="bottom"
-                                    data-original-title="<?php echo getPhrase('delete_all_notification');?>"
-                                    href="<?php echo base_url();?>tools/notification_delete/0/true">
-                                    <i class="picons-thin-icon-thin-0057_bin_trash_recycle_delete_garbage_full"></i>
-                                </a>
+                                <h6 class="title"><?= getPhrase('your_notifications');?></h6>
+                                <div class="expense">
+                                    <a class="btn btn-success btn-rounded btn-upper"
+                                        onClick="return confirm('<?= getPhrase('confirm_delete');?>')" type="button"
+                                        href="<?= base_url();?>tools/notification_delete/0/true">
+                                        <i class="picons-thin-icon-thin-0057_bin_trash_recycle_delete_garbage_full"></i>
+                                        <?= getPhrase('delete_all');?>
+                                    </a>
+                                </div>
                             </div>
                             <?php 
                                 $this->db->order_by('id', 'desc');
-                                $notifications = $this->db->get_where('notification', array('user_id' => $this->session->userdata('login_user_id'), 'user_type' => $this->session->userdata('login_type')));
+								$this->db->where('user_id', $this->session->userdata('login_user_id'));
+								$this->db->where('user_type', $this->session->userdata('login_type'));
+								$this->db->where('status <> ', '2');
+								$notifications = $this->db->get('notification');
                                 if($notifications->num_rows() > 0):?>
                             <ul class="notification-list">
                                 <?php foreach($notifications->result_array() as $notify):?>
                                 <li>
                                     <div class="author-thumb">
-                                        <img src="<?php echo base_url();?>public/uploads/notify.svg">
+                                        <img src="<?= base_url();?>public/uploads/notify.svg">
                                     </div>
                                     <div class="notification-event">
-                                        <a href="<?php echo base_url();?><?php echo $notify['url'];?><?php if($notify['status'] == 0) {echo "?id=".$notify['id'];}?>"
-                                            class="h6 notification-friend"><?php echo $notify['notify'];?></a>
+                                        <a href="<?= base_url();?><?= $notify['url'];?><?php if($notify['status'] == 0) {echo "?id=".$notify['id'];}?>"
+                                            class="h6 notification-friend"><?= $notify['notify'];?></a>
                                         <span class="notification-date"><time
-                                                class="entry-date updated"><?php echo $notify['date'];?>
-                                                <?php echo getPhrase('at');?>
-                                                <?php echo $notify['time'];?></time></span>
-                                        <a onClick="return confirm('<?php echo getPhrase('confirm_delete');?>')"
-                                            href="<?php echo base_url();?>teacher/notification/delete/<?php echo $notify['id'];?>"><i
+                                                class="entry-date updated"><?= $notify['date'];?>
+                                                <?= getPhrase('at');?>
+                                                <?= $notify['time'];?></time></span>
+                                        <a onClick="return confirm('<?= getPhrase('confirm_delete');?>')"
+                                            href="<?= base_url();?>teacher/notification/delete/<?= $notify['id'];?>"><i
                                                 class="picons-thin-icon-thin-0057_bin_trash_recycle_delete_garbage_full"></i></a>
                                     </div>
                                 </li>
@@ -64,7 +69,7 @@
                             </ul>
                             <?php else:?>
                             <div class="bg-white" style="padding:55px">
-                                <h5><?php echo getPhrase('you_dont_have_notifications');?></h5>
+                                <h5><?= getPhrase('you_dont_have_notifications');?></h5>
                             </div>
                             <?php endif;?>
                         </div>

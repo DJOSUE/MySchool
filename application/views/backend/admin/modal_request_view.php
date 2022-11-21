@@ -5,6 +5,7 @@
     $edit_data = $task_query->result_array();
 
     foreach ($edit_data as $row):
+        $student_info = $this->crud->get_student_info_by_id($row['student_id']);
 ?>
 <div class="modal-body">
     <div class="modal-header" style="background-color:#00579c">
@@ -13,6 +14,20 @@
     <div class="modal-body">
         <div class="content-i">
             <div class="content-box">
+                <div class="row">
+                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                        <ul class="widget w-personal-info item-block">
+                            <li>
+                                <span class="title">
+                                    <?= getPhrase('Name');?>:
+                                </span>
+                                <span class="text">
+                                    <?= $student_info['first_name'] .' '. $student_info['last_name'];?>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                         <ul class="widget w-personal-info item-block">

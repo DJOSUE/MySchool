@@ -507,6 +507,8 @@ function apply_fee() {
             document.getElementById('total_fee').innerHTML = htmlFee;
         }
     } else {
+        document.getElementById('card_fee').innerText = ""
+        document.getElementById('total_fee').innerText = ""
         document.getElementById('totalCardFee').innerText = '00.00';
     }
 
