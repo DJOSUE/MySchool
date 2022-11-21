@@ -461,22 +461,26 @@ class Mail extends School
         }
     }
 
-    function request_approved_to_teacher($user_id, $user_type, $request_type)
+    function request_approved_to_teacher($user_id, $user_type, $data)
     {
-        if($request_type === 'vacation')
-        {
-            $email_sub      = $this->db->get_where('email_template' , array('task' => 'vacation_approved'))->row()->subject;
-            $email_msg      = $this->db->get_where('email_template' , array('task' => 'vacation_approved'))->row()->body;
-        }
-        else
-        {
-            $email_sub      = $this->db->get_where('email_template' , array('task' => 'request_approved'))->row()->subject;
-            $email_msg      = $this->db->get_where('email_template' , array('task' => 'request_approved'))->row()->body;
-        }
+        
+        $email_sub      = $this->db->get_where('email_template' , array('task' => 'request_approved_to_teacher'))->row()->subject;
+        $email_msg      = $this->db->get_where('email_template' , array('task' => 'request_approved_to_teacher'))->row()->body;
+        
 
-        $STUDENT_NAME   = $this->crud->get_name($user_type, $user_id);        
+        $STUDENT_NAME   = $data['STUDENT_NAME'];
+        $LEVEL_NAME     = $data['LEVEL_NAME'];
+        $SCHEDULE       = $data['SCHEDULE'];
+        $SUBJECT        = $data['SUBJECT'];
+        $DATE_START     = $data['DATE_START'];
+        $DATE_END       = $data['DATE_END'];
 
-        $email_msg      = str_replace('[USER_NAME]' , $STUDENT_NAME , $email_msg);
+        $email_msg      = str_replace('[STUDENT_NAME]' , $STUDENT_NAME , $email_msg);
+        $email_msg      = str_replace('[LEVEL_NAME]' , $LEVEL_NAME , $email_msg);
+        $email_msg      = str_replace('[SCHEDULE]' , $SCHEDULE , $email_msg);
+        $email_msg      = str_replace('[SUBJECT]' , $SUBJECT , $email_msg);
+        $email_msg      = str_replace('[DATE_START]' , $DATE_START , $email_msg);
+        $email_msg      = str_replace('[DATE_END]' , $DATE_END , $email_msg);
 
         $email_to       = $this->db->get_where($user_type, array($user_type.'_id' => $user_id))->row()->email;
         

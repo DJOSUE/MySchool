@@ -57,6 +57,7 @@
         		                                $this->db->order_by('request_id', 'desc');
         		                                $requests = $this->db->get_where('student_request', array('student_id' => $this->session->userdata('login_user_id')))->result_array();
             		                            foreach ($requests as $row) {
+                                                    $semester_name = $this->academic->get_semester_name($row['semester_id']);
         	                                ?>
                                                 <tr>
                                                     <td>
@@ -68,14 +69,33 @@
                                                     <td>
                                                         <?=   substr($row['description'], 0, 50).'...'; ?>
                                                     </td>
+                                                    <?php if($row['request_type'] == 1):?>
                                                     <td>
                                                         <a class="btn nc btn-rounded btn-sm btn-primary"
-                                                            style="color:white"><?= $row['start_date']; ?></a>
+                                                            style="color:white">
+                                                            <?= $row['year'].'-'.$semester_name; ?>
+                                                        </a>
                                                     </td>
                                                     <td>
                                                         <a class="btn nc btn-rounded btn-sm btn-secondary"
-                                                            style="color:white"><?= $row['end_date']; ?></a>
+                                                            style="color:white">
+                                                            <?= $row['year'].'-'.$semester_name; ?>
+                                                        </a>
                                                     </td>
+                                                    <?php else:?>
+                                                    <td>
+                                                        <a class="btn nc btn-rounded btn-sm btn-primary"
+                                                            style="color:white">
+                                                            <?= $row['start_date']; ?>
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn nc btn-rounded btn-sm btn-secondary"
+                                                            style="color:white">
+                                                            <?= $row['end_date']; ?>
+                                                        </a>
+                                                    </td>
+                                                    <?php endif;?>
                                                     <td>
                                                         <?php $status_info =  $this->studentModel->get_request_status($row['status']);?>
 

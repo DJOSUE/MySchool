@@ -117,7 +117,17 @@ class Request extends School
                 {
                     $teacher_id = $item['teacher_id'];
                     $request_info = $this->get_request_info($request_id, $user_type);
-                    $this->notification->teacher_student_request('absence_approved_teacher', $user_name,$teacher_id, 'teacher', '', $request_info['start_date'], $request_info['end_date']);
+                    $this->notification->teacher_student_request('absence_approved_teacher', $user_name,$teacher_id, 'teacher', '', $request_info['start_date'], $request_info['end_date']);                    
+        
+                    $data['STUDENT_NAME'] = $user_name;
+                    $data['LEVEL_NAME']   = $item['class_name'];
+                    $data['SCHEDULE']     = $item['section_name'];
+                    $data['SUBJECT']      = $item['subject_name'];
+                    $data['DATE_START']   = $request_info['start_date'];
+                    $data['DATE_END']     = $request_info['end_date'];
+
+                    $this->mail->request_approved_to_teacher($user_id, $user_type, $data);
+
                 }
             }
         }
