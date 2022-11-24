@@ -6,17 +6,26 @@
 
     $interval = date_interval_create_from_date_string('1 days');
 
-    if($date == "")
+    if($date_start == "")
     {
-        $objDate = date_create(date("Y-m-d"));
+        $objDateStart = date_create(date("Y-m-d"));
     }
     else
     {
-        $objDate = date_create($date);
+        $objDateStart = date_create($date_start);
     }
 
-    $first_date = date_format($objDate, "Y-m-d");
-    // $second_date = date_format(date_add($objDate, $interval), "Y-m-d");
+    $first_date = date_format($objDateStart, "Y-m-d");
+
+    if($date_end == "")
+    {
+        $objDateEnd = date_create(date("Y-m-d"));
+    }
+    else
+    {
+        $objDateEnd = date_create($date_end);
+    }    
+    $second_date = date_format($objDateEnd, "Y-m-d");
     
     $tuition_int = 0.00;
     $application_int = 0.00;
@@ -35,7 +44,8 @@
     $transfer = 0.00;
 
     $this->db->reset_query();    
-    $this->db->where('invoice_date =', $first_date);
+    $this->db->where('invoice_date >=', $first_date);
+    $this->db->where('invoice_date <=', $second_date);
     // $this->db->where('created_at <=', $second_date);
 
     if($cashier_id != "")
@@ -56,103 +66,108 @@
     
 
     foreach ($payments as $key => $value) {
-
         
         if($value['user_type'] == 'student')
         {
             $program_id = $this->studentModel->get_student_program($value['user_id']);
-            $discounts = 0.00;
-
-            // Get Discounts
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $discounts = $this->db->get('payment_discounts')->row()->amount; 
-
-            // Get Tuition  id = 1
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('concept_type =', '1');
-            $tuition = $this->db->get('payment_details')->row()->amount; 
-            
-
-            // Get books  id = 2
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('concept_type =', '2');
-            $books += $this->db->get('payment_details')->row()->amount; 
-
-
-            // Get application/enroll  id = 3
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('concept_type =', '3');
-            $application = $this->db->get('payment_details')->row()->amount; 
-
-            // Get Legal Service  id = 4
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('concept_type =', '4');
-            $legal_service += $this->db->get('payment_details')->row()->amount;
-
-            // Get card fee id = 5
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('concept_type =', '5');
-            $card_fee += $this->db->get('payment_details')->row()->amount;
-
-            if($program_id == 1) // International
-            {
-                $tuition_int        += ($tuition - $discounts);
-                $application_int    += $application;
-            }
-            else
-            {
-                $tuition_local      += ($tuition - $discounts);
-                $application_local  += $application;
-            }
-
-            // Get Payments Cash id = 1 
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('transaction_type =', '1');
-            $cash += $this->db->get('payment_transaction')->row()->amount; 
-
-            // Get Payments card id = 2 
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('transaction_type =', '2');
-            $card += $this->db->get('payment_transaction')->row()->amount; 
-
-            // Get Payments Venmo id = 3
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('transaction_type =', '3');
-            $venmo += $this->db->get('payment_transaction')->row()->amount; 
-
-            // Get Payments Check id = 4
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('transaction_type =', '4');
-            $check += $this->db->get('payment_transaction')->row()->amount; 
-
-            // Get Payments Transfer id = 5
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('transaction_type =', '5');
-            $transfer += $this->db->get('payment_transaction')->row()->amount; 
-
         }
+        else
+        {
+            $program_id = $this->studentModel->get_applicant_program($value['user_id']);
+        }
+        
+        $discounts = 0.00;
+
+        // Get Discounts
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $discounts = $this->db->get('payment_discounts')->row()->amount; 
+
+        // Get Tuition  id = 1
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('concept_type =', '1');
+        $tuition = $this->db->get('payment_details')->row()->amount; 
+        
+
+        // Get books  id = 2
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('concept_type =', '2');
+        $books += $this->db->get('payment_details')->row()->amount; 
+
+
+        // Get application/enroll  id = 3
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('concept_type =', '3');
+        $application = $this->db->get('payment_details')->row()->amount; 
+
+        // Get Legal Service  id = 4
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('concept_type =', '4');
+        $legal_service += $this->db->get('payment_details')->row()->amount;
+
+        // Get card fee id = 5
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('concept_type =', '5');
+        $card_fee += $this->db->get('payment_details')->row()->amount;
+
+        if($program_id == 1) // International
+        {
+            $tuition_int        += ($tuition - $discounts);
+            $application_int    += $application;
+        }
+        else
+        {
+            $tuition_local      += ($tuition - $discounts);
+            $application_local  += $application;
+        }
+
+        // Get Payments Cash id = 1 
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('transaction_type =', '1');
+        $cash += $this->db->get('payment_transaction')->row()->amount; 
+
+        // Get Payments card id = 2 
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('transaction_type =', '2');
+        $card += $this->db->get('payment_transaction')->row()->amount; 
+
+        // Get Payments Venmo id = 3
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('transaction_type =', '3');
+        $venmo += $this->db->get('payment_transaction')->row()->amount; 
+
+        // Get Payments Check id = 4
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('transaction_type =', '4');
+        $check += $this->db->get('payment_transaction')->row()->amount; 
+
+        // Get Payments Transfer id = 5
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('transaction_type =', '5');
+        $transfer += $this->db->get('payment_transaction')->row()->amount; 
+
+        
         
     }
 
@@ -173,6 +188,7 @@
     text-align: end;
     float: right;
 }
+
 .bold {
     font-weight: bold;
 }
@@ -200,7 +216,7 @@ td {
                 <div class="element-wrapper">
                     <div class="tab-content">
                         <div class="tab-pane active" id="invoices">
-                            <?= form_open(base_url() . 'accountant/report_daily_income/');?>
+                            <?= form_open(base_url() . 'accountant/report_income/');?>
                             <div class="row">
                                 <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <div class="form-group label-floating is-select">
@@ -224,13 +240,24 @@ td {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                                <div class="col col-xl-2 col-lg-4 col-md-4 col-sm-8 col-8">
                                     <div class="form-group label-floating is-select" style="background-color: #fff;">
                                         <label class="control-label"><?php echo getPhrase('date');?></label>
                                         <div class="form-group date-time-picker">
                                             <input type="text" autocomplete="off" class="datepicker-here"
-                                                data-position="bottom left" data-language='en' name="date" id="date"
-                                                value="<?=date_format($objDate, "m/d/Y");?>">
+                                                data-position="bottom left" data-language='en' name="date_start"
+                                                id="date_start" value="<?=date_format($objDateStart, "Y-m-d");?>">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-xl-2 col-lg-4 col-md-4 col-sm-8 col-8">
+                                    <div class="form-group label-floating is-select" style="background-color: #fff;">
+                                        <label class="control-label"><?php echo getPhrase('date');?></label>
+                                        <div class="form-group date-time-picker">
+                                            <input type="text" autocomplete="off" class="datepicker-here"
+                                                data-position="bottom left" data-language='en' name="date_end"
+                                                id="date_end" value="<?=date_format($objDateEnd, "Y-m-d");?>">
 
                                         </div>
                                     </div>
@@ -251,7 +278,7 @@ td {
                                     <br><br>
                                     <div class="invoice-w" id="invoice_id">
                                         <div class="invoice-heading">
-                                            <h3><?= getPhrase('daily_income');?></h3>
+                                            <h3><?= getPhrase('income');?></h3>
                                         </div>
                                         <div class="invoice-body">
                                             <table class="table-bordered" style="padding: 6px 0px;">
@@ -261,7 +288,8 @@ td {
                                                             <b><?= getPhrase('date');?></b>
                                                         </td>
                                                         <td class="text-center" colspan="3">
-                                                            <b><?= date_format(date_create($first_date), 'F j Y (l)');  ?></b>
+                                                            <b><?= date_format(date_create($first_date), 'F j Y (l)');  ?></b><br/>
+                                                            <b><?= date_format(date_create($second_date), 'F j Y (l)');  ?></b>
                                                         </td>
                                                     </tr>
                                                 </thead>
@@ -384,10 +412,10 @@ td {
                                                             </span>
                                                         </td>
                                                         <td>
-                                                            
+
                                                         </td>
                                                         <td>
-                                                            
+
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -424,7 +452,7 @@ td {
                                             </table>
                                         </div>
                                         <div class="invoice-footer">
-                                            
+
                                         </div>
                                     </div>
                                 </div>
@@ -436,7 +464,14 @@ td {
         </div>
     </div>
 </div>
-
+<!-- <script>
+    window.onload = function exampleFunction() {
+        // var $datepicker = $('#date_start');
+        // $datepicker.datepicker();
+        // $datepicker.datepicker('setDate', '<?=date_format($objDateStart, "Y-m-d");?>');
+        console.log('The Script will load now.');
+    }
+</script> -->
 <script>
 function Print(div) {
     var printContents = document.getElementById(div).innerHTML;

@@ -6,8 +6,8 @@
                         </li>
                         <?php endif;?>                        
                         <li class="navs-item">
-                            <a class="navs-links <?= $page_name == 'report_daily_income' ? 'active' : ''?>" href="<?= base_url();?>accountant/report_daily_income/"><i
-                                    class="os-icon picons-thin-icon-thin-0426_money_payment_dollars_coins_cash"></i><span><?= getPhrase('daily_income');?></span></a>
+                            <a class="navs-links <?= $page_name == 'report_income' ? 'active' : ''?>" href="<?= base_url();?>accountant/report_income/"><i
+                                    class="os-icon picons-thin-icon-thin-0426_money_payment_dollars_coins_cash"></i><span><?= getPhrase('income');?></span></a>
                         </li>
                         <?php if(has_permission('accounting_dashboard')):?>
                         <li class="navs-item">

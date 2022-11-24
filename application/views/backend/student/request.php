@@ -205,11 +205,48 @@
                                         <div>
                                             <?= form_open(base_url() . 'student/request/vacation' , array('enctype' => 'multipart/form-data'));?>
                                             <input type="text" name="request_type" hidden value="1" />
-                                            <!-- <div class="form-group">
-                                                <label for=""> <?= getPhrase('reason');?></label>
-                                                <input class="form-control" placeholder="" type="text" name="title"
-                                                    required="">
-                                            </div> -->
+                                            <div class="row">
+                                                <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                                                    <div class="form-group label-floating is-select">
+                                                        <label class="control-label">
+                                                            <?= getPhrase('year');?>
+                                                        </label>
+                                                        <div class="select">
+                                                            <select name="year">
+                                                                <?php 
+                                                                    $running_year = $this->crud->getInfo('running_year');
+                                                                    $years = $this->crud->get_years(1);
+                                                                    foreach($years as $year):
+                                                                ?>
+                                                                <option value="<?= $year['year'];?>"
+                                                                    <?php if($running_year == $year['year']) echo 'selected';?>>
+                                                                    <?= $year['year'];?></option>
+                                                                <?php endforeach;?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                                                    <div class="form-group label-floating is-select">
+                                                        <label class="control-label">
+                                                            <?= getPhrase('semester');?>
+                                                        </label>
+                                                        <div class="select">
+                                                            <select name="semester_id">
+                                                                <?php 
+                                                                    $running_semester = $this->crud->getInfo('running_semester');
+                                                                    $semesters = $this->crud->get_periods(1);
+                                                                    foreach($semesters as $semester):
+                                                                ?>
+                                                                <option value="<?= $semester['semester_id'];?>"
+                                                                    <?php if($running_semester == $semester['semester_id']) echo 'selected';?>>
+                                                                    <?= $semester['name'];?></option>
+                                                                <?php endforeach;?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="form-group">
                                                 <label> <?= getPhrase('description');?></label>
                                                 <textarea class="form-control" rows="4" name="description"

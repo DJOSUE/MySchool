@@ -60,7 +60,7 @@
                         </div>
                     </a>
                 </li>
-                <?php if(menu_option_visible('class_routine')):?>
+                <?php if(menu_option_visible('class_routine_module')):?>
                 <li <?php if($page_name == 'class_routine'):?>class="currentItem" <?php endif;?>>
                     <a href="<?php echo base_url();?>student/class_routine/" data-toggle="tooltip"
                         data-placement="right" data-original-title="<?php echo getPhrase('class_routine');?>">
@@ -70,7 +70,7 @@
                     </a>
                 </li>
                 <?php endif; ?>
-                <?php if(menu_option_visible('library')):?>
+                <?php if(menu_option_visible('library_module')):?>
                 <li <?php if($page_name == 'library'):?>class="currentItem" <?php endif;?>>
                     <a href="<?php echo base_url();?>student/library/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('library');?>">
@@ -80,7 +80,7 @@
                     </a>
                 </li>
                 <?php endif; ?>
-                <li <?php if($page_name == 'noticeboard'):?>class="currentItem" <?php endif;?>>
+                <li <?php if($page_name == 'noticeboard_student'):?>class="currentItem" <?php endif;?>>
                     <a href="<?php echo base_url();?>student/noticeboard/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('news');?>">
                         <div class="left-menu-icon">
@@ -88,7 +88,7 @@
                         </div>
                     </a>
                 </li>
-                <?php if(!menu_option_visible('request')):?>
+                <?php if(menu_option_visible('request_module')):?>
                 <li <?php if($page_name == 'request'):?>class="currentItem" <?php endif;?>>
                     <a href="<?php echo base_url();?>student/request/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('request');?>">
@@ -117,7 +117,7 @@
                         </div>
                     </a>
                 </li>
-                <?php if(!menu_option_visible('payments_module')):?>
+                <?php if(menu_option_visible('payment_module')):?>
                 <li <?php if($page_name == 'invoice' || $page_name == 'view_invoice'):?>class="currentItem"
                     <?php endif;?>>
                     <a href="<?php echo base_url();?>student/invoice/" data-toggle="tooltip" data-placement="right"
@@ -128,7 +128,7 @@
                     </a>
                 </li>
                 <?php endif; ?>
-                <?php if(!menu_option_visible('school_books')):?>
+                <?php if(menu_option_visible('school_books')):?>
                 <li <?php if($page_name == 'book' ):?>class="currentItem"
                     <?php endif;?>>
                     <a href="<?php echo base_url();?>books/" data-toggle="tooltip" data-placement="right"
@@ -201,7 +201,7 @@
                         <span class="left-menu-title"><?php echo getPhrase('marks');?></span>
                     </a>
                 </li>
-                <?php if(menu_option_visible('class_routine')):?>
+                <?php if(menu_option_visible('class_routine_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>student/class_routine/">
                         <div class="left-menu-icon">
@@ -211,7 +211,7 @@
                     </a>
                 </li>
                 <?php endif; ?>
-                <?php if(menu_option_visible('library')):?>
+                <?php if(menu_option_visible('library_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>student/library/">
                         <div class="left-menu-icon">
@@ -229,7 +229,7 @@
                         <span class="left-menu-title"><?php echo getPhrase('news');?></span>
                     </a>
                 </li>                
-                <?php if(menu_option_visible('permissions')):?>
+                <?php if(menu_option_visible('request_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>student/request/">
                         <div class="left-menu-icon">
@@ -257,7 +257,7 @@
                         <span class="left-menu-title"><?php echo getPhrase('calendar');?></span>
                     </a>
                 </li>
-                <?php if(menu_option_visible('payments')):?>
+                <?php if(menu_option_visible('payment_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>student/invoice/">
                         <div class="left-menu-icon">
@@ -267,7 +267,7 @@
                     </a>
                 </li>
                 <?php endif;?>
-                <?php if(!menu_option_visible('school_books')):?>
+                <?php if(menu_option_visible('school_books')):?>
                 <li>
                     <a href="<?php echo base_url();?>books/">
                         <div class="left-menu-icon">
@@ -348,7 +348,7 @@
                         <span class="left-menu-title"><?php echo getPhrase('marks');?></span>
                     </a>
                 </li>
-                <?php if(menu_option_visible('class_routine')):?>
+                <?php if(menu_option_visible('class_routine_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>student/class_routine/">
                         <div class="left-menu-icon">
@@ -376,7 +376,7 @@
                         <span class="left-menu-title"><?php echo getPhrase('news');?></span>
                     </a>
                 </li>
-                <?php if(menu_option_visible('permissions')):?>
+                <?php if(menu_option_visible('request_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>student/request/">
                         <div class="left-menu-icon">
@@ -404,7 +404,7 @@
                         <span class="left-menu-title"><?php echo getPhrase('calendar');?></span>
                     </a>
                 </li>
-                <?php if(menu_option_visible('payments')):?>
+                <?php if(menu_option_visible('payment_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>student/invoice/">
                         <div class="left-menu-icon">
@@ -414,7 +414,7 @@
                     </a>
                 </li>
                 <?php endif;?>
-                <?php if(!menu_option_visible('school_books')):?>
+                <?php if(menu_option_visible('school_books')):?>
                 <li>
                     <a href="<?php echo base_url();?>books/">
                         <div class="left-menu-icon">

@@ -188,7 +188,7 @@ td {
                 <div class="element-wrapper">
                     <div class="tab-content">
                         <div class="tab-pane active" id="invoices">
-                            <?= form_open(base_url() . 'accountant/report_daily_income/');?>
+                            <?= form_open(base_url() . 'accountant/report_monthly_income/');?>
                             <div class="row">
                                 <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <div class="form-group label-floating is-select">

@@ -46,101 +46,110 @@
     $payments = $this->db->get('payment')->result_array();
 
     foreach ($payments as $key => $value) {
+        
         if($value['user_type'] == 'student')
         {
             $program_id = $this->studentModel->get_student_program($value['user_id']);
-            $discounts = 0.00;
-
-            // Get Discounts
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $discounts = $this->db->get('payment_discounts')->row()->amount; 
-
-            // Get Tuition  id = 1
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('concept_type =', '1');
-            $tuition = $this->db->get('payment_details')->row()->amount; 
-            
-
-            // Get books  id = 2
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('concept_type =', '2');
-            $books += $this->db->get('payment_details')->row()->amount; 
-
-
-            // Get application/enroll  id = 3
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('concept_type =', '3');
-            $application = $this->db->get('payment_details')->row()->amount; 
-
-            // Get Legal Service  id = 4
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('concept_type =', '4');
-            $legal_service += $this->db->get('payment_details')->row()->amount;
-
-            // Get card fee id = 5
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('concept_type =', '5');
-            $card_fee += $this->db->get('payment_details')->row()->amount;
-
-            if($program_id == 1) // International
-            {
-                $tuition_int        += ($tuition - $discounts);
-                $application_int    += $application;
-            }
-            else
-            {
-                $tuition_local      += ($tuition - $discounts);
-                $application_local  += $application;
-            }
-
-            // Get Payments Cash id = 1 
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('transaction_type =', '1');
-            $cash += $this->db->get('payment_transaction')->row()->amount; 
-
-            // Get Payments card id = 2 
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('transaction_type =', '2');
-            $card += $this->db->get('payment_transaction')->row()->amount; 
-
-            // Get Payments Venmo id = 3
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('transaction_type =', '3');
-            $venmo += $this->db->get('payment_transaction')->row()->amount; 
-
-            // Get Payments Check id = 4
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('transaction_type =', '4');
-            $check += $this->db->get('payment_transaction')->row()->amount; 
-
-            // Get Payments Transfer id = 5
-            $this->db->reset_query();
-            $this->db->select_sum('amount');
-            $this->db->where('payment_id =', $value['payment_id']);
-            $this->db->where('transaction_type =', '5');
-            $transfer += $this->db->get('payment_transaction')->row()->amount; 
-
         }
+        else
+        {
+            $program_id = $this->studentModel->get_applicant_program($value['user_id']);
+        }
+        
+        $program_id = $this->studentModel->get_student_program($value['user_id']);
+
+        $discounts = 0.00;
+
+        // Get Discounts
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $discounts = $this->db->get('payment_discounts')->row()->amount; 
+
+        // Get Tuition  id = 1
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('concept_type =', '1');
+        $tuition = $this->db->get('payment_details')->row()->amount; 
+        
+
+        // Get books  id = 2
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('concept_type =', '2');
+        $books += $this->db->get('payment_details')->row()->amount; 
+
+
+        // Get application/enroll  id = 3
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('concept_type =', '3');
+        $application = $this->db->get('payment_details')->row()->amount; 
+
+        // Get Legal Service  id = 4
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('concept_type =', '4');
+        $legal_service += $this->db->get('payment_details')->row()->amount;
+
+        // Get card fee id = 5
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('concept_type =', '5');
+        $card_fee += $this->db->get('payment_details')->row()->amount;
+
+        if($program_id == 1) // International
+        {
+            $tuition_int        += ($tuition - $discounts);
+            $application_int    += $application;
+        }
+        else
+        {
+            $tuition_local      += ($tuition - $discounts);
+            $application_local  += $application;
+        }
+
+        // Get Payments Cash id = 1 
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('transaction_type =', '1');
+        $cash += $this->db->get('payment_transaction')->row()->amount; 
+
+        // Get Payments card id = 2 
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('transaction_type =', '2');
+        $card += $this->db->get('payment_transaction')->row()->amount; 
+
+        // Get Payments Venmo id = 3
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('transaction_type =', '3');
+        $venmo += $this->db->get('payment_transaction')->row()->amount; 
+
+        // Get Payments Check id = 4
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('transaction_type =', '4');
+        $check += $this->db->get('payment_transaction')->row()->amount; 
+
+        // Get Payments Transfer id = 5
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('transaction_type =', '5');
+        $transfer += $this->db->get('payment_transaction')->row()->amount; 
+
+        
         
     }
 

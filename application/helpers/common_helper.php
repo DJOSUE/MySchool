@@ -89,9 +89,9 @@ if (!function_exists('menu_option_visible'))
         $CI	=&	get_instance();
 		$CI->load->database();
 
-        $query = $CI->db->get_where('settings', array('type' => $option))->row();
+        $query = $CI->db->get_where('menu_option', array('code' => $option))->row();
         
-        if($query->description == 1){
+        if($query->show == 1){
             return true;
         }
         else{

@@ -70,8 +70,8 @@ class Request extends School
         $data['description']  = $this->input->post('description');
         $data['parent_id']    = $this->db->get_where('student', array('student_id' => $student_id))->row()->parent_id;
         $data['status']       = 1;
-        $data['year']         = $this->runningYear;
-        $data['semester_id']  = $this->runningSemester;
+        $data['year']         = $this->input->post('year');
+        $data['semester_id']  = $this->input->post('semester_id');
 
         $data['assigned_to']      = $program['user_notify_id'];
         $data['assigned_to_type'] = $program['user_notify_type'];

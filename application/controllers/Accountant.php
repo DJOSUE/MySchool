@@ -534,18 +534,19 @@ class Accountant extends EduAppGT
         }
         else
         {
-            redirect(base_url() . 'accountant/report_daily_income', 'refresh');
+            redirect(base_url() . 'accountant/report_income', 'refresh');
         }        
     }
 
-    function report_daily_income($param1 = '' , $param2 = '' , $param3 = '') 
+    function report_income($param1 = '' , $param2 = '' , $param3 = '') 
     {
         $this->isAccountant();
 
         $cashier_all = has_permission('accounting_dashboard');
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {        
-            $date = html_escape($this->input->post('date'));
+            $date_start = html_escape($this->input->post('date_start'));
+            $date_end = html_escape($this->input->post('date_end'));
 
             if($cashier_all)
                 $cashier_id = html_escape($this->input->post('cashier_id'));
@@ -566,11 +567,12 @@ class Accountant extends EduAppGT
             }
         }
 
-        $page_data['date']  = $date;
+        $page_data['date_start']    = $date_start;
+        $page_data['date_end']      = $date_end;
         $page_data['cashier_id']    = $cashier_id;
         $page_data['cashier_all']   = $cashier_all; 
-        $page_data['page_name']     = 'report_daily_income';
-        $page_data['page_title']    = getPhrase('daily_income');
+        $page_data['page_name']     = 'report_income';
+        $page_data['page_title']    = getPhrase('income');
         $this->load->view('backend/index', $page_data); 
     }
 
