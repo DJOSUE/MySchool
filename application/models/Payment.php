@@ -454,16 +454,17 @@ class Payment extends School
             $user_info = $this->crud->get_user_info($user_type, $user_id);
             $this->crud->student_new_invoice($user_info['first_name'], "".$user_info['email']."", $payment_id);
 
-            $created_by      = $this->session->userdata('login_user_id');
-            $created_by_type = $data_payment['created_by_type'];
-            $created_name    = $this->crud->get_name($created_by_type, $created_by);            
-            $comment         = $created_name.' posted a payment of $ '. $data_payment['amount'];
-
+            $created_by       = $this->session->userdata('login_user_id');
+            $created_by_type  = $data_payment['created_by_type'];
+            $created_name     = $this->crud->get_name($created_by_type, $created_by);            
+            $comment          = $created_name.' posted a payment of $ '. $data_payment['amount'];
+            $_POST['comment'] = $comment;
 
             // Create an interaction
             if($user_type == 'applicant')
             {
                 $_POST['applicant_id']  = $user_id;
+                
                 $this->applicant->add_interaction('automatic');
             }
             else
