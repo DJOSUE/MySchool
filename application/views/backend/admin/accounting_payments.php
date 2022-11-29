@@ -11,7 +11,7 @@
     $payments = $this->db->get('payment')->result_array();
 
     $payment_type = $this->payment->get_transaction_types();
-
+    $income_type = $this->payment->get_income_types();
 ?>
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -81,11 +81,9 @@
                                                     <th><?= getPhrase('date');?></th>
                                                     <th><?= getPhrase('student');?></th>
                                                     <th><?= getPhrase('origin');?></th>
-                                                    <th><?= getPhrase('tuition');?></th>
-                                                    <th><?= getPhrase('book');?></th>
-                                                    <th><?= getPhrase('application_fee');?></th>
-                                                    <th><?= getPhrase('card_fee');?></th>
-                                                    <th><?= getPhrase('other');?></th>
+                                                    <?php foreach ($income_type as $type):  ?>
+                                                    <th><?= $type['name']?></th>
+                                                    <?php endforeach;?>
                                                     <th><?= getPhrase('discounts');?></th>
                                                     <th><b><?= getPhrase('total');?></b></th>
                                                     <?php foreach ($payment_type as $type):  ?>
@@ -114,44 +112,7 @@
                                                         $this->db->reset_query();
                                                         $this->db->select_sum('amount');
                                                         $this->db->where('payment_id =', $row['payment_id']);
-                                                        $discounts = $this->db->get('payment_discounts')->row()->amount; 
-
-                                                        // Get Tuition  id = 1
-                                                        $this->db->reset_query();
-                                                        $this->db->select_sum('amount');
-                                                        $this->db->where('payment_id =', $row['payment_id']);
-                                                        $this->db->where('concept_type =', '1');
-                                                        $tuition = $this->db->get('payment_details')->row()->amount;
-
-                                                        // Get books  id = 2
-                                                        $this->db->reset_query();
-                                                        $this->db->select_sum('amount');
-                                                        $this->db->where('payment_id =', $row['payment_id']);
-                                                        $this->db->where('concept_type =', '2');
-                                                        $books = $this->db->get('payment_details')->row()->amount; 
-
-                                                        // Get application/enroll  id = 3
-                                                        $this->db->reset_query();
-                                                        $this->db->select_sum('amount');
-                                                        $this->db->where('payment_id =', $row['payment_id']);
-                                                        $this->db->where('concept_type =', '3');
-                                                        $application = $this->db->get('payment_details')->row()->amount; 
-
-                                                        // Get Card fee  id = 5
-                                                        $this->db->reset_query();
-                                                        $this->db->select_sum('amount');
-                                                        $this->db->where('payment_id =', $row['payment_id']);
-                                                        $this->db->where('concept_type =', '5');
-                                                        $card_fee = $this->db->get('payment_details')->row()->amount; 
-
-                                                        // Get others                                      
-                                                        $otherTransaction = array(4);
-                                                        $this->db->reset_query();
-                                                        $this->db->select_sum('amount');
-                                                        $this->db->where('payment_id', $row['payment_id']);
-                                                        $this->db->where_in('concept_type', $otherTransaction);
-                                                        $other = $this->db->get('payment_details')->row()->amount; 
-
+                                                        $discounts = $this->db->get('payment_discounts')->row()->amount;  
                                                 ?>
                                                 <tr>
                                                     <td>
@@ -167,31 +128,17 @@
                                                             <?= $program;?>
                                                         </span>
                                                     </td>
-                                                    <td class="cell-with-media">
-                                                        <span>
-                                                            <?= number_format($tuition, 2);?>
-                                                        </span>
+                                                    <?php foreach ($income_type as $type):
+                                                       $this->db->reset_query();
+                                                       $this->db->select_sum('amount');
+                                                       $this->db->where('payment_id =', $row['payment_id']);
+                                                       $this->db->where('concept_type =', $type['income_type_id']);
+                                                       $income = $this->db->get('payment_details')->row()->amount;
+                                                    ?>
+                                                    <td>
+                                                        <?= number_format($income, 2);?>
                                                     </td>
-                                                    <td class="cell-with-media">
-                                                        <span>
-                                                            <?= number_format($books, 2);?>
-                                                        </span>
-                                                    </td>
-                                                    <td class="cell-with-media">
-                                                        <span>
-                                                            <?= number_format($application, 2);?>
-                                                        </span>
-                                                    </td>
-                                                    <td class="cell-with-media">
-                                                        <span>
-                                                            <?= number_format($card_fee, 2);?>
-                                                        </span>
-                                                    </td>
-                                                    <td class="cell-with-media">
-                                                        <span>
-                                                            <?= number_format($other, 2);?>
-                                                        </span>
-                                                    </td>
+                                                    <?php endforeach;?>
                                                     <td class="cell-with-media">
                                                         <span>
                                                             - <?= number_format($discounts, 2);?>
@@ -203,8 +150,6 @@
                                                         </span>
                                                     </td>
                                                     <?php foreach ($payment_type as $type):
-                                                        # code...
-                                                        // Get Discounts
                                                         $this->db->reset_query();
                                                         $this->db->select_sum('amount');
                                                         $this->db->where('payment_id =', $row['payment_id']);

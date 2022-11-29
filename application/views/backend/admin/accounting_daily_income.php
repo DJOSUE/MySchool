@@ -56,8 +56,6 @@
             $program_id = $this->studentModel->get_applicant_program($value['user_id']);
         }
         
-        $program_id = $this->studentModel->get_student_program($value['user_id']);
-
         $discounts = 0.00;
 
         // Get Discounts
@@ -89,11 +87,11 @@
         $this->db->where('concept_type =', '3');
         $application = $this->db->get('payment_details')->row()->amount; 
 
-        // Get Legal Service  id = 4
+        // Get COS  id = 6
         $this->db->reset_query();
         $this->db->select_sum('amount');
         $this->db->where('payment_id =', $value['payment_id']);
-        $this->db->where('concept_type =', '4');
+        $this->db->where('concept_type =', '6');
         $legal_service += $this->db->get('payment_details')->row()->amount;
 
         // Get card fee id = 5
@@ -102,6 +100,13 @@
         $this->db->where('payment_id =', $value['payment_id']);
         $this->db->where('concept_type =', '5');
         $card_fee += $this->db->get('payment_details')->row()->amount;
+
+        // Get COS  id = 6
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where_not_in('concept_type', array('1', '2', '3', '5', '6'));
+        $others += $this->db->get('payment_details')->row()->amount;
 
         if($program_id == 1) // International
         {
@@ -147,13 +152,11 @@
         $this->db->select_sum('amount');
         $this->db->where('payment_id =', $value['payment_id']);
         $this->db->where('transaction_type =', '5');
-        $transfer += $this->db->get('payment_transaction')->row()->amount; 
-
-        
+        $transfer += $this->db->get('payment_transaction')->row()->amount;
         
     }
 
-    $total_income = ($tuition_int + $application_int + $tuition_local + $application_local + $books + $legal_service + $card_fee);
+    $total_income = ($tuition_int + $application_int + $tuition_local + $application_local + $books + $legal_service + $card_fee + $others);
 
     $card += $card_fee;
 
@@ -266,7 +269,8 @@ td {
                                                             <b><?= getPhrase('date');?></b>
                                                         </td>
                                                         <td class="text-center" colspan="3">
-                                                            <b><?= date_format(date_create($first_date), 'F j Y (l)');  ?></b>
+                                                            <b><?= date_format(date_create($first_date), 'F j Y (l)');  ?></b><br />
+                                                            <b><?= date_format(date_create($second_date), 'F j Y (l)');  ?></b>
                                                         </td>
                                                     </tr>
                                                 </thead>
@@ -309,7 +313,7 @@ td {
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            Legal Service
+                                                            COS
                                                         </td>
                                                         <td>
                                                             <span class="currency">
@@ -327,11 +331,11 @@ td {
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            Application fee International
+                                                            Other
                                                         </td>
                                                         <td>
                                                             <span class="currency">
-                                                                <?= $currency.' '.number_format($application_int, 2);?>
+                                                                <?= $currency.' '.number_format($others, 2);?>
                                                             </span>
                                                         </td>
                                                         <td>
@@ -345,11 +349,11 @@ td {
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            Application fee Local
+                                                            Application fee International
                                                         </td>
                                                         <td>
                                                             <span class="currency">
-                                                                <?= $currency.' '.number_format($application_local, 2);?>
+                                                                <?= $currency.' '.number_format($application_int, 2);?>
                                                             </span>
                                                         </td>
                                                         <td>
@@ -363,11 +367,11 @@ td {
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            Books
+                                                            Application fee Local
                                                         </td>
                                                         <td>
                                                             <span class="currency">
-                                                                <?= $currency.' '.number_format($books, 2);?>
+                                                                <?= $currency.' '.number_format($application_local, 2);?>
                                                             </span>
                                                         </td>
                                                         <td>
@@ -381,6 +385,19 @@ td {
                                                     </tr>
                                                     <tr>
                                                         <td>
+                                                            Books
+                                                        </td>
+                                                        <td>
+                                                            <span class="currency">
+                                                                <?= $currency.' '.number_format($books, 2);?>
+                                                            </span>
+                                                        </td>
+                                                        <td colspan="2">
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
                                                             Card fee
                                                         </td>
                                                         <td>
@@ -388,10 +405,7 @@ td {
                                                                 <?= $currency.' '.number_format($card_fee, 2);?>
                                                             </span>
                                                         </td>
-                                                        <td>
-
-                                                        </td>
-                                                        <td>
+                                                        <td colspan="2">
 
                                                         </td>
                                                     </tr>

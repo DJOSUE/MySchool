@@ -385,7 +385,7 @@ class Applicant extends School
         $this->db->reset_query();
         $this->db->select('program_id');
         $this->db->where('applicant_id', $applicant_id);
-        $program_id = $this->db->get('student')->row()->program_id;
+        $program_id = $this->db->get('applicant')->row()->program_id;
 
         $this->db->reset_query();        
         $this->db->where('program_id', $program_id);
@@ -393,4 +393,7 @@ class Applicant extends School
         
         return $query;
     }
+
+
+    
 }
