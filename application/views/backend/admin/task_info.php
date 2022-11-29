@@ -171,9 +171,30 @@
                                                                 <span class="text"><?= $description;?></span>
                                                             </li>
                                                         </ul>
-
+                                                    </div>                                                    
+                                                </div>
+                                                <?php if($row['task_file']):?>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <ul class="widget w-personal-info item-block">
+                                                            <li>
+                                                                <span class="title">
+                                                                    <?= getPhrase('file');?>:
+                                                                </span>
+                                                                <span class="text">
+                                                                    <a href="<?= base_url().PATH_TASK_FILES;?><?= $row['task_file'];?>" class="grey"
+                                                                        data-toggle="tooltip" data-placement="top" target="_blank"
+                                                                        data-original-title="<?= getPhrase('view_file');?>">
+                                                                        <i
+                                                                            class="os-icon picons-thin-icon-thin-0075_document_file_paper_text_article_blog_template"></i>
+                                                                        <?= getPhrase('view_file');?>
+                                                                    </a>
+                                                                </span>
+                                                            </li>
+                                                        </ul>
                                                     </div>
                                                 </div>
+                                                <? endif;?>
                                             </div>
                                         </div>
                                         <div class="ui-block">
