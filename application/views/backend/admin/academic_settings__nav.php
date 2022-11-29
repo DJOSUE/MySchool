@@ -7,6 +7,13 @@
                             class="os-icon picons-thin-icon-thin-0006_book_writing_reading_read_manual"></i><span><?php echo getPhrase('academic_settings'); ?></span></a>
                 </li>
                 <?php endif;?>
+                <?php if(has_permission('academic_settings_semester_enroll')):?>
+                <li class="navs-item">
+                    <a class="navs-links <?= $page_name == 'academic_settings_semester_enroll' ? 'active': '' ;?>"
+                        href="<?php echo base_url();?>admin/academic_settings_semester_enroll/"><i
+                            class="os-icon picons-thin-icon-thin-0006_book_writing_reading_read_manual"></i><span><?php echo getPhrase('semester_enroll'); ?></span></a>
+                </li>
+                <?php endif;?>
                 <?php if(has_permission('academic_settings_grades')):?>
                 <li class="navs-item">
                     <a class="navs-links <?= $page_name == 'academic_settings_grade' ? 'active': '' ;?>"

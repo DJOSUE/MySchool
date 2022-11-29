@@ -122,3 +122,7 @@ defined('PATH_REQUEST_FILES')               OR define('PATH_REQUEST_FILES', 'pub
 defined('DEFAULT_REQUEST_ACCEPTED')        OR define('DEFAULT_REQUEST_ACCEPTED', 2); // no errors
 defined('DEFAULT_REQUEST_REJECTED')        OR define('DEFAULT_REQUEST_REJECTED', 3); // no errors
 defined('DEFAULT_USER_VACATION')           OR define('DEFAULT_USER_VACATION', 3); // no errors
+
+
+defined('DEFAULT_CAPACITY')                 OR define('DEFAULT_CAPACITY', 25); // no errors
+defined('DEFAULT_SUBJECTS')                 OR define('DEFAULT_SUBJECTS', array(['name' => 'Content', 'color' => '0084FF', 'icon' => 'fce9f911fad6da4a5c66e877815eea1bteachers.svg'], ['name' => 'Application ', 'color' => 'FF1C23', 'icon' => '8e06e806952d1faef05e626629d312e5talk.png'])); // no errors

@@ -3773,6 +3773,32 @@
             $this->load->view('backend/index', $page_data);
         }
 
+        //Update academic settings function.
+        function academic_settings_semester_enroll($param1 = '', $param2 = '', $param3 = '')
+        {
+            $this->isAdmin();
+            if ($param1 == 'do_update') 
+            {
+                $this->crud->updateAcademicSettings();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/academic_settings/', 'refresh');
+            }
+            $page_data['page_name']  = 'academic_settings_semester_enroll';
+            $page_data['page_title'] = getPhrase('semester_enroll');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function semester_enroll($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            if ($param1 == 'create') 
+            {
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+            }
+
+            redirect(base_url() . 'admin/academic_settings_semester_enroll/', 'refresh');
+        }
+        
                 
         //Grade Levels function.
         function academic_settings_grade($param1 = '', $param2 = '')

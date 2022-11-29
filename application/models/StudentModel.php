@@ -102,6 +102,7 @@ class StudentModel extends School
     }
     
     /**** functions */
+
     public function get_status()
     {
         $this->db->reset_query();
@@ -268,39 +269,7 @@ class StudentModel extends School
         
         return $query;
     }
-
-    public function get_modality()
-    {
-        $this->db->reset_query();
-        $this->db->select('code as modality_id, name, value_1 as color, value_2 as icon');
-        $this->db->where('parameter_id', 'MODALITY');
-        $query = $this->db->get('parameters')->result_array();;
-        
-        return $query;
-    }
     
-    public function get_modality_info($modality_id)
-    {
-        $this->db->reset_query();
-        $this->db->select('code as modality_id, name, value_1 as color, value_2 as icon');
-        $this->db->where('parameter_id', 'MODALITY');
-        $this->db->where('code', $modality_id);
-        $query = $this->db->get('parameters')->row_array();
-        
-        return $query;
-    }
-
-    public function get_modality_name($modality_id)
-    {
-        $this->db->reset_query();
-        $this->db->select('name');
-        $this->db->where('parameter_id', 'MODALITY');
-        $this->db->where('code', $modality_id);
-        $query = $this->db->get('parameters')->row()->name;
-        
-        return $query;
-    }
-
     public function get_program_type()
     {
         $this->db->reset_query();
@@ -332,7 +301,7 @@ class StudentModel extends School
         
         return $query;
     }
-    
+
     public function get_semester_enroll($year, $semester_id)
     {
         $this->db->reset_query();        
@@ -356,6 +325,7 @@ class StudentModel extends School
         
         return $query;
 
-
     }
+
+
 }

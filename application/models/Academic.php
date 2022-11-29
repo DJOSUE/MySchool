@@ -1965,4 +1965,215 @@ class Academic extends School
         }
         return $array;
     }
+
+    public function get_modality()
+    {
+        $this->db->reset_query();
+        $this->db->select('code as modality_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'MODALITY');
+        $query = $this->db->get('parameters')->result_array();;
+        
+        return $query;
+    }
+    
+    public function get_modality_info($modality_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('code as modality_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'MODALITY');
+        $this->db->where('code', $modality_id);
+        $query = $this->db->get('parameters')->row_array();
+        
+        return $query;
+    }
+
+    public function get_modality_name($modality_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('name');
+        $this->db->where('parameter_id', 'MODALITY');
+        $this->db->where('code', $modality_id);
+        $query = $this->db->get('parameters')->row()->name;
+        
+        return $query;
+    }
+
+    public function get_schedule_type()
+    {
+        $this->db->reset_query();
+        $this->db->select('code as schedule_type_id, name, value_1 as price, value_2 as icon');
+        $this->db->where('parameter_id', 'SCHEDULE_TYPE');
+        $query = $this->db->get('parameters')->result_array();;
+        
+        return $query;
+    }
+    
+    public function get_schedule_type_info($schedule_type_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('code as schedule_type_id, name, value_1 as price, value_2 as icon');
+        $this->db->where('parameter_id', 'SCHEDULE_TYPE');
+        $this->db->where('code', $schedule_type_id);
+        $query = $this->db->get('parameters')->row_array();
+        
+        return $query;
+    }
+
+    public function get_schedule_type_name($schedule_type_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('name');
+        $this->db->where('parameter_id', 'SCHEDULE_TYPE');
+        $this->db->where('code', $schedule_type_id);
+        $query = $this->db->get('parameters')->row()->name;
+        
+        return $query;
+    }
+
+    public function get_classes()
+    {
+        $this->db->reset_query();
+        $query = $this->db->get('class')->result_array();;
+        
+        return $query;
+    }
+    
+    public function get_class_info($class_id)
+    {
+        $this->db->reset_query();
+        $this->db->where('class_id', $class_id);
+        $query = $this->db->get('class')->row_array();
+        
+        return $query;
+    }
+
+    public function get_class_name($class_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('name');
+        $this->db->where('class_id', $class_id);
+        $query = $this->db->get('class')->row()->name;
+        
+        return $query;
+    }
+
+    public function exist_schedule($class_id, $year, $semester_id, $schedule)
+    {
+        $this->db->reset_query();
+        $this->db->where('class_id', $class_id);
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $this->db->where('name', $schedule);
+        $query = $this->db->get('section');
+
+        if($query->num_rows() > 0)
+        {
+            return $query->row()->section_id;;
+        }
+        else
+        {
+            return 0;
+        }       
+        
+    }
+
+    public function exist_subject($class_id, $year, $semester_id, $section_id, $modality_id, $subject)
+    {
+        $this->db->reset_query();
+        $this->db->where('class_id', $class_id);
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $this->db->where('section_id', $section_id);
+        $this->db->where('modality_id', $modality_id);
+        $this->db->where('name', $subject);
+        $query = $this->db->get('subject');
+
+        if($query->num_rows() > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }       
+        
+    }
+
+
+    function create_semester_enroll()
+    {
+        $year           = $this->input->post('year');
+        $semester_id    = $this->input->post('semester_id');
+
+        $data['year']           = $this->input->post('year');
+        $data['semester_id']    = $this->input->post('semester_id');
+        $data['number_class']   = $this->input->post('number_class');
+        $data['date_start']     = $this->input->post('date_start');
+        $data['date_end']       = $this->input->post('date_end');
+        $data['created_by']     = $this->session->userdata('login_user_id');
+
+        $this->db->insert('semester_enroll', $data);
+
+        $table      = 'semester_enroll';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
+        //Creating Classes 
+        $class_ids = $this->input->post('class_ids');
+        foreach ( $class_ids as $class_id )
+        {            
+            $schedules = $this->input->post('schedule');
+
+            foreach ( $schedules as $subject_id )  
+            {
+                $schedule = $this->get_schedule_type_name($subject_id);
+                $section_id = $this->exist_schedule($class_id, $year, $semester_id, $schedule);
+
+                // Create Schedule
+                if($section_id == 0)
+                {
+                    $dataSection['name']        = $schedule;
+                    $dataSection['class_id']    = $class_id;
+                    $dataSection['year']        = $year;
+                    $dataSection['semester_id'] = $semester_id;                    
+
+                    $this->db->insert('section', $dataSection);
+
+                    $table       = 'section';
+                    $action      = 'insert';  
+                    $$section_id = $this->db->insert_id();                   
+                    $this->crud->save_log($table, $action, $insert_id, $dataSection);
+                }
+                
+                //Create Subject
+                $modality_ids = $this->input->post('modality_ids');
+                foreach ( $modality_ids as $modality_id )  
+                {
+                    $subjects = DEFAULT_SUBJECTS;
+                    foreach ( $subjects as $subject )
+                    {
+                        if(!$this->exist_subject($class_id, $year, $semester_id, $section_id, $modality_id, $subject))
+                        {
+                            $dataSubject['name']        = $subject['name'];
+                            $dataSubject['color']       = $subject['color'];
+                            $dataSubject['icon']        = $subject['icon'];
+                            $dataSubject['class_id']    = $class_id;
+                            $dataSubject['year']        = $year;
+                            $dataSubject['semester_id'] = $semester_id;                    
+                            $dataSubject['modality_id'] = $subject['modality_id'];
+
+                            $this->db->insert('subject', $dataSubject);
+        
+                            $table       = 'subject';
+                            $action      = 'insert';  
+                            $$section_id = $this->db->insert_id();                   
+                            $this->crud->save_log($table, $action, $insert_id, $dataSubject);
+                        }
+                    }
+                    
+                }
+            }
+        }
+    }
 }
