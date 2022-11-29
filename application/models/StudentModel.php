@@ -50,7 +50,10 @@ class StudentModel extends School
             $data['created_by_type']    = $account_type;
         }
         else
-            $data['created_by']   = DEFAULT_USER;
+        {
+            $data['created_by']         = DEFAULT_USER;
+            $data['created_by_type']    = DEFAULT_TABLE;
+        }
 
         
         $data['student_id'] = $student_id;

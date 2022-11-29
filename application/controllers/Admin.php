@@ -2930,7 +2930,7 @@
                 }
                 else
                 {
-                    $date = "";
+                    $date = date("Y-m-d");
                     $cashier_id = "admin:".$this->session->userdata('login_user_id');
                 }
             }

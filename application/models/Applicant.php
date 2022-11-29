@@ -250,7 +250,10 @@ class Applicant extends School
             $data['created_by_type']    = $account_type;
         }
         else
-            $data['created_by']   = DEFAULT_USER;
+        {
+            $data['created_by']         = DEFAULT_USER;
+            $data['created_by_type']    = DEFAULT_TABLE;
+        }
 
         $data['applicant_id'] = $this->input->post('applicant_id');
         $data['comment']      = html_escape($this->input->post('comment'));

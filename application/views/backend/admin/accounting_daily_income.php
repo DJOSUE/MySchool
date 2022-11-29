@@ -199,9 +199,9 @@ td {
             </div>
         </div><br>
         <?php 
-            // echo '<pre>';
-            // var_dump( $cashier_all);
-            // echo '</pre>';
+            echo '<pre>';
+            var_dump( $first_date);
+            echo '</pre>';
         ?>
         <div class="content-i">
             <div class="content-box">
@@ -269,8 +269,7 @@ td {
                                                             <b><?= getPhrase('date');?></b>
                                                         </td>
                                                         <td class="text-center" colspan="3">
-                                                            <b><?= date_format(date_create($first_date), 'F j Y (l)');  ?></b><br />
-                                                            <b><?= date_format(date_create($second_date), 'F j Y (l)');  ?></b>
+                                                            <b><?= date_format(date_create($first_date), 'F j Y (l)');  ?></b><br />                                                            
                                                         </td>
                                                     </tr>
                                                 </thead>
