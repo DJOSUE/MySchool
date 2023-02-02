@@ -164,7 +164,7 @@ class Ticket extends School
         $this->db->insert('ticket', $data);
 
         $table      = 'ticket';
-        $action     = 'ticket';
+        $action     = 'insert';
         $insert_id  = $this->db->insert_id();
         $this->crud->save_log($table, $action, $insert_id, $data);
 
@@ -325,9 +325,10 @@ class Ticket extends School
         return $applicant_query->num_rows();
     }
 
-    function ticket_total_created_by($field, $field_id, $created_by)
+    function ticket_total_created_by($field, $field_id, $created_by, $created_by_type)
     {
         $this->db->where($field, $field_id);
+        $this->db->where('created_by_type', $created_by_type);        
         $this->db->where('created_by', $created_by);
         $applicant_query = $this->db->get('ticket');
         return $applicant_query->num_rows();
@@ -335,7 +336,7 @@ class Ticket extends School
 
     function ticket_total_assigned_to($field, $field_id, $assigned_to)
     {
-        $this->db->where($field, $field_id);
+        $this->db->where($field, $field_id);        
         $this->db->where('assigned_to', $assigned_to);
         $applicant_query = $this->db->get('ticket');
         return $applicant_query->num_rows();

@@ -52,29 +52,29 @@ class Teacher extends EduAppGT
     }
 
     //Live classes function.
-    function meet($param1 = '', $param2 = '', $param3 = '')
+    function subject_meet($param1 = '', $param2 = '', $param3 = '')
     {
         $this->isTeacher();
         if($param1 == 'create')
         {
             $this->academic->createLiveClass();
             $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-            redirect(base_url() . 'teacher/meet/'.$param2, 'refresh');
+            redirect(base_url() . 'teacher/subject_meet/'.$param2, 'refresh');
         }
         if($param1 == 'update')
         {
             $this->academic->updateLiveClass($param2);
             $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-            redirect(base_url() . 'teacher/meet/'.$param3, 'refresh');
+            redirect(base_url() . 'teacher/subject_meet/'.$param3, 'refresh');
         }
         if($param1 == 'delete')
         {
             $this->academic->deleteLiveClass($param2);
             $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
-            redirect(base_url() . 'teacher/meet/'.$param3, 'refresh');
+            redirect(base_url() . 'teacher/subject_meet/'.$param3, 'refresh');
         }
         $page_data['data'] = $param1;
-        $page_data['page_name']  = 'meet';
+        $page_data['page_name']  = 'subject_meet';
         $page_data['page_title'] = getPhrase('meet');
         $this->load->view('backend/index', $page_data);
     }
@@ -422,7 +422,7 @@ class Teacher extends EduAppGT
     }
     
     //Upload marks function.
-    function upload_marks($datainfo = '', $param2 = '')
+    function subject_upload_marks($datainfo = '', $param2 = '')
     {
         $this->isTeacher();
 
@@ -439,21 +439,21 @@ class Teacher extends EduAppGT
         if($this->useDailyMarks){
             $page_data['unit_id'] = $page;
             $page_data['data'] = $datainfo;
-            $page_data['page_name']  =   'upload_daily_marks';
+            $page_data['page_name']  =   'subject_upload_daily_marks';
             $page_data['page_title'] = getPhrase('upload_daily_marks');
             $this->load->view('backend/index', $page_data);
         }
         else {
             $page_data['unit_id'] = $page;
             $page_data['data'] = $datainfo;
-            $page_data['page_name']  =   'upload_marks';
+            $page_data['page_name']  =   'subject_upload_marks';
             $page_data['page_title'] = getPhrase('upload_marks');
             $this->load->view('backend/index', $page_data);
         }
     }
     
     //Daily Marks Average
-    function daily_marks_average($datainfo = '', $param2 = ''){
+    function subject_daily_marks_average($datainfo = '', $param2 = ''){
         $this->isTeacher();
 
         if($param2 != ""){
@@ -466,13 +466,13 @@ class Teacher extends EduAppGT
 
         $page_data['unit_id'] = $page;
         $page_data['data'] = $datainfo;
-        $page_data['page_name']  =   'daily_marks_average';
+        $page_data['page_name']  =   'subject_daily_marks_average';
         $page_data['page_title'] = getPhrase('daily_marks_average');
         $this->load->view('backend/index', $page_data);
     }
 
     //Daily Marks Update
-    function update_daily_marks($datainfo = '', $param2 = ''){
+    function subject_update_daily_marks($datainfo = '', $param2 = ''){
         $this->isTeacher();
 
         $filters  = base64_decode($param2);
@@ -508,19 +508,22 @@ class Teacher extends EduAppGT
         $page_data['unit_id']    = $unit_id;
         $page_data['mark_date']  = $mark_date;
         $page_data['data']       = $datainfo;
-        $page_data['page_name']  = 'update_daily_marks';
+        $page_data['page_name']  = 'subject_update_daily_marks';
         $page_data['page_title'] = getPhrase('update_daily_marks');
         $this->load->view('backend/index', $page_data);
     }
     
     // 
-    function update_daily_marks_batch($datainfo = '', $param1 = '', $param2 = '', $param3 = ''){
+    function update_daily_marks_batch($datainfo = '', $param1 = '', $param2 = '', $param3 = '')
+    {
         $this->isTeacher();
+
+        // echo $param1;
 
         $filter = $this->academic->updateDailyMarksBatch($datainfo, $param1, $param2, $param3);
 
         $this->session->set_flashdata( 'flash_message', getPhrase( 'successfully_updated' ) );
-        redirect( base_url().'teacher/update_daily_marks/'.$datainfo.'/'.$filter.'/', 'refresh' );
+        redirect( base_url().'teacher/subject_update_daily_marks/'.$datainfo.'/'.$filter.'/', 'refresh' );
         
     }
 
@@ -544,7 +547,7 @@ class Teacher extends EduAppGT
             $info = $this->academic->updateMarks($unit_id, $class_id, $section_id, $subject_id);
 
         $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-        redirect(base_url().'teacher/upload_marks/'.$info.'/'.$unit_id.'/' , 'refresh');
+        redirect(base_url().'teacher/subject_upload_marks/'.$info.'/'.$unit_id.'/' , 'refresh');
     }
     
     //Subject marks function.
@@ -1261,14 +1264,14 @@ class Teacher extends EduAppGT
     }
 
     //Subject dashboard function.
-    function achievement_test($data = '') 
+    function subject_achievement_test($data = '') 
     {
         $this->isTeacher();
 
         $this->academic->uploadAchievement($data);
 
         $page_data['data'] = $data;
-        $page_data['page_name']    = 'achievement_test';
+        $page_data['page_name']    = 'subject_achievement_test';
         $page_data['page_title']   = getPhrase('achievement_test');
         $this->load->view('backend/index',$page_data);
     }
@@ -1280,7 +1283,7 @@ class Teacher extends EduAppGT
         $filter = $this->academic->uploadAchievementBatch($datainfo, $student_id);
 
         $this->session->set_flashdata( 'flash_message', getPhrase( 'successfully_updated' ) );
-        redirect( base_url().'teacher/achievement_test/'.$datainfo.'/', 'refresh' );
+        redirect( base_url().'teacher/subject_achievement_test/'.$datainfo.'/', 'refresh' );
         
     }
 
@@ -1354,6 +1357,121 @@ class Teacher extends EduAppGT
         $page_data['page_title'] = getPhrase( 'time_sheet' );
         $this->load->view( 'backend/index', $page_data );
     }
+
+    function add_daily_marks($student_id, $exam_id, $mark_date, $data){
+
+        $info = base64_decode($data);
+        $ex = explode('-', $info);
+        $class_id       = $ex[0];
+        $section_id     = $ex[1]; 
+        $subject_id     = $ex[2];
+
+        $exam_id_old = $this->db->get_where( 'exam', array( 'exam_id'=> $exam_id ) )->row()->exam_id_old;
+
+        if ($student_id != 'none') {
+
+            $data_insert['student_id']  = $student_id;
+            $data_insert['class_id']    = $class_id;
+            $data_insert['section_id']  = $section_id;
+            $data_insert['subject_id']  = $subject_id;
+            $data_insert['unit_id']     = $exam_id;
+            $data_insert['exam_id']     = $exam_id_old;
+            $data_insert['year']        = $this->runningYear;
+            $data_insert['semester_id'] = $this->runningSemester;
+            $data_insert['mark_date']   = $mark_date;
+
+            $this->db->insert( 'mark_daily', $data_insert );
+            $this->session->set_flashdata( 'flash_message',  getPhrase('successfully_added') );
+            
+        } else {
+            $students = $this->db->query("SELECT student_id FROM enroll 
+                                        WHERE class_id  = '$class_id'
+                                        AND section_id  = '$section_id'
+                                        AND subject_id  = '$subject_id'
+                                        AND year        = '$this->runningYear;'
+                                        AND semester_id = '$this->runningSemester;'
+                                        AND student_id NOT IN (
+                                            SELECT
+                                                student_id
+                                            FROM
+                                                `mark_daily`
+                                                WHERE class_id  = '$class_id'
+                                                AND section_id  = '$section_id'
+                                                AND subject_id  = '$subject_id'
+                                                AND unit_id     = '$exam_id'
+                                                AND year        = '$this->runningYear;'
+                                                AND semester_id = '$this->runningSemester;' 
+                                                AND mark_date   = '$mark_date'
+                                            )
+                                        GROUP BY student_id"
+            )->result_array();
+
+            foreach ($students as $item) {
+                $data_insert['student_id']  = $item['student_id'];
+                $data_insert['class_id']    = $class_id;
+                $data_insert['section_id']  = $section_id;
+                $data_insert['subject_id']  = $subject_id;
+                $data_insert['unit_id']     = $exam_id;
+                $data_insert['exam_id']     = $exam_id_old;
+                $data_insert['year']        = $this->runningYear;
+                $data_insert['semester_id'] = $this->runningSemester;;
+                $data_insert['mark_date']   = $mark_date;
+
+                $this->db->insert('mark_daily', $data_insert);
+            }
+        }
+        
+        $this->session->set_flashdata( 'flash_message', getPhrase( 'successfully_added' ) );
+        redirect( base_url().'teacher/subject_update_daily_marks/'.$data, 'refresh' );
+    }
+
+    function student_month($param1 = '', $param2 = '')
+    {
+        $this->isTeacher();
+
+        $page_data['page_name']  = 'student_month';
+        $page_data['page_title'] = getPhrase( 'student_month' );
+        $this->load->view( 'backend/index', $page_data );
+    }
     
+    function student_month_action($param1 = '', $param2 = '')
+    {
+        $this->isTeacher();
+
+        switch ($param1) {
+            case 'delete':
+                $this->academic->delete_student_month($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                break;
+            
+            case 'add':
+                //Validate if exist a Student of the month
+
+                $data['year']           = $this->runningYear;
+                $data['semester_id']    = $this->runningSemester;
+                $data['class_id']       = $this->input->post('class_id');
+                $data['section_id']     = $this->input->post('section_id');
+                $data['subject_id']     = $this->input->post('subject_id');
+                $data['month']          = $this->input->post('month');
+
+                
+                $query = $this->db->get_where('student_month', $data);
+                if ($query->num_rows() > 0) 
+                {
+                    $this->session->set_flashdata('flash_message' , getPhrase('duplicate'));                    
+                }
+                else
+                {
+                    $this->academic->create_student_month();
+                    $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                }
+                
+                break;
+        }
+        
+        redirect(base_url() . 'teacher/student_month/', 'refresh');
+        
+    }
+
     //End of Teacher.php
 }

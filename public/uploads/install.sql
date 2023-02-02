@@ -2375,11 +2375,11 @@ CREATE TABLE IF NOT EXISTS `student` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `students_request`
+-- Estructura de tabla para la tabla `student_request`
 --
 
-DROP TABLE IF EXISTS `students_request`;
-CREATE TABLE IF NOT EXISTS `students_request` (
+DROP TABLE IF EXISTS `student_request`;
+CREATE TABLE IF NOT EXISTS `student_request` (
   `request_id` int(11) NOT NULL AUTO_INCREMENT,
   `student_id` int(11) NOT NULL,
   `parent_id` int(11) DEFAULT NULL,

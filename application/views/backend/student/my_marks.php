@@ -22,6 +22,7 @@
                                 <table class="table table-lightborder">
                                     <thead>
                                         <tr>
+                                        <th><?php echo getPhrase('class');?></th>
                                             <th><?php echo getPhrase('subject');?></th>
                                             <th><?php echo getPhrase('teacher');?></th>
                                             <th><?php echo getPhrase('mark');?></th>

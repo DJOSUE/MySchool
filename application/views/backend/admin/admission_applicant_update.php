@@ -14,30 +14,7 @@
     <div class="header-spacer"></div>
     <div class="conty">
         <div class="os-tabs-w menu-shad">
-            <div class="os-tabs-controls">
-                <ul class="navs navs-tabs upper">
-                    <li class="navs-item">
-                        <a class="navs-links" href="<?= base_url();?>admin/admission_dashboard/">
-                            <i
-                                class="os-icon picons-thin-icon-thin-0482_gauge_dashboard_empty"></i><span><?= getPhrase('home');?></span></a>
-                    </li>
-                    <li class="navs-item active">
-                        <a class="navs-links" href="<?= base_url();?>admin/admission_new_applicant/">
-                            <i
-                                class="os-icon picons-thin-icon-thin-0716_user_profile_add_new"></i><span><?= getPhrase('new_applicant');?></span></a>
-                    </li>
-                    <li class="navs-item">
-                        <a class="navs-links" href="<?= base_url();?>admin/admission_new_student/">
-                            <i
-                                class="os-icon picons-thin-icon-thin-0706_user_profile_add_new"></i><span><?= getPhrase('new_student');?></span></a>
-                    </li>
-                    <li class="navs-item">
-                        <a class="navs-links active" href="<?= base_url();?>admin/admission_applicant/">
-                            <i
-                                class="os-icon picons-thin-icon-thin-0704_users_profile_group_couple_man_woman"></i><span><?= getPhrase('applicant');?></span></a>
-                    </li>
-                </ul>
-            </div>
+            <? include 'admission__nav.php';?>
         </div><br>
         <div class="row">
             <div class="content-i">
@@ -47,56 +24,7 @@
                             <div id="newsfeed-items-grid">
                                 <div class="ui-block paddingtel">
                                     <div class="user-profile">
-                                        <div class="up-head-w"
-                                            style="background-image:url(<?= base_url();?>public/uploads/bglogin.jpg)">
-                                            <div class="up-main-info">
-                                                <div class="user-avatar-w">
-                                                    <div class="user-avatar">
-                                                        <img alt=""
-                                                            src="<?= $this->crud->get_image_url('applicant', $row['applicant_id']);?>"
-                                                            style="background-color:#fff;">
-                                                    </div>
-                                                </div>
-                                                <h3 class="text-white"><?= $row['first_name'];?>
-                                                    <?= $row['last_name'];?></h3>
-                                            </div>
-                                            <svg class="decor" width="842px" height="219px" viewBox="0 0 842 219"
-                                                preserveAspectRatio="xMaxYMax meet" version="1.1"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                <g transform="translate(-381.000000, -362.000000)" fill="#FFFFFF">
-                                                    <path class="decor-path"
-                                                        d="M1223,362 L1223,581 L381,581 C868.912802,575.666667 1149.57947,502.666667 1223,362 Z">
-                                                    </path>
-                                                </g>
-                                            </svg>
-                                        </div>
-                                        <div class="up-controls">                                            
-                                            <div class="row">
-                                                <div class="col-lg-6">
-                                                    <div class="value-pair">
-                                                        <div><?= getPhrase('applicant_type');?>:</div>
-                                                        <div class="value badge-status badge-pill badge-info" style="background-color: <?= $type_info['color']?>;">
-                                                            <?=$type_info['name'];?>
-                                                        </div>
-                                                    </div>
-                                                    <div class="value-pair">
-                                                        <div><?= getPhrase('status');?>:</div>
-                                                        <div class="value badge-status badge-pill badge-primary" style="background-color: <?= $status_info['color']?>;">
-                                                            <?= $status_info['name'];?>
-                                                        </div>
-                                                    </div>
-                                                    <?php if($row['is_imported'] == 1) :?>
-                                                    <div class="value-pair">
-                                                        <div> </div>
-                                                        <div class="value badge-status badge-pill badge-primary">
-                                                            <?= getPhrase('imported');?>
-                                                        </div>
-                                                    </div>
-                                                    <?php endif;?>                                                    
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <?php include 'admission_applicant__header.php';?>
                                         <div class="ui-block">
                                             <div class="ui-block-title">
                                                 <h6 class="title"><?= getPhrase('personal_information');?>
@@ -112,12 +40,14 @@
                                                                 <select name="status_id" required="">
                                                                     <?php $status = $this->applicant->get_applicant_status_update($row['status']);
                                                                         foreach($status as $item):
+                                                                            if($item['status_id'] != 3):
                                                                     ?>
                                                                     <option value="<?=$item['status_id']?>"
                                                                         <?php if($row['status'] == $item['status_id']) echo "selected";?>>
                                                                         <?= $item['name'];?>
                                                                     </option>
-                                                                    <? endforeach;?>
+                                                                            <?php endif;?>    
+                                                                    <?php endforeach;?>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -147,6 +77,14 @@
                                                                 class="control-label"><?= getPhrase('first_name');?></label>
                                                             <input class="form-control" name="first_name"
                                                                 value="<?= $row['first_name'];?>" type="text" required="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class="form-group label-floating">
+                                                            <label
+                                                                class="control-label"><?= getPhrase('last_name');?></label>
+                                                            <input class="form-control" name="last_name"
+                                                                value="<?= $row['last_name'];?>" type="text" required="">
                                                         </div>
                                                     </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -252,34 +190,7 @@
                                         <div class="ui-block-content">
                                             <div class="help-support-block">
                                                 <h3 class="title"><?= getPhrase('quick_links');?></h3>
-                                                <ul class="help-support-list">
-                                                    <li>
-                                                        <i class="picons-thin-icon-thin-0133_arrow_right_next"
-                                                            style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
-                                                        <a
-                                                            href="<?= base_url();?>admin/admission_applicant/<?= $applicant_id;?>/">
-                                                            <?= getPhrase('personal_information');?>
-                                                        </a>
-                                                    </li>
-                                                    <?php if(!$allow_actions):?>
-                                                    <li>
-                                                        <i class="picons-thin-icon-thin-0133_arrow_right_next"
-                                                            style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
-                                                        <a
-                                                            href="<?= base_url();?>admin/admission_applicant_update/<?= $applicant_id;?>/">
-                                                            <?= getPhrase('update_information');?>
-                                                        </a>
-                                                    </li>                                                    
-                                                    <li>
-                                                        <i class="picons-thin-icon-thin-0133_arrow_right_next"
-                                                            style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
-                                                        <a
-                                                            href="<?= base_url();?>admin/admission_applicant_convert/<?= $applicant_id;?>/">
-                                                            <?= getPhrase('convert_to_student');?>
-                                                        </a>
-                                                    </li>
-                                                    <?php endif;?>
-                                                </ul>
+                                                <? include 'admission_applicant__menu.php'?>
                                             </div>
                                         </div>
                                     </div>

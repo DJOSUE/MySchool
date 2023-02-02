@@ -113,7 +113,7 @@
                                                             <h6 class="user-title"><?php echo ucwords($data[$i]);?></h6>
                                                         </div>
                                                         <a class="btn btn-rounded  btn-primary"
-                                                            href="<?php echo base_url();?>admin/translate/update/<?php echo $data[$i];?>"><i
+                                                            href="<?php echo base_url();?>admin/system_translate/update/<?php echo $data[$i];?>"><i
                                                                 class="picons-thin-icon-thin-0307_chat_discussion_yes_no_pro_contra_conversation"></i>
                                                             <?php echo getPhrase('update');?></a>
                                                     </div>

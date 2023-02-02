@@ -44,13 +44,9 @@
                                             <div class="col-lg-6">
                                                 <div class="value-pair">
                                                     <div><?php echo getPhrase('account_type');?>:</div>
-                                                    <?php if($row['owner_status'] == 1):?>
-                                                    <div class="value badge badge-pill badge-success">
-                                                        <?php echo getPhrase('super_admin');?></div>
-                                                    <?php else:?>
                                                     <div class="value badge badge-pill badge-primary">
-                                                        <?php echo getPhrase('admin');?></div>
-                                                    <?php endif;?>
+                                                        <?= $this->system->get_role_name($row['owner_status']);?>
+                                                    </div>
                                                 </div>
                                                 <div class="value-pair">
                                                     <div><?php echo getPhrase('member_since');?>:</div>

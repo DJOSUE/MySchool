@@ -26,7 +26,7 @@
                         <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label class="control-label"><?php echo getPhrase('about_the_subject');?></label>
-                                <textarea class="form-control" name="about" required><?php echo $row['about'];?></textarea>
+                                <textarea class="form-control" name="about"><?php echo $row['about'];?></textarea>
                             </div>  
                         </div>
                         <div class="col col-lg-12 col-md-12 col-sm-12 col-12">

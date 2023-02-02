@@ -10,7 +10,7 @@
             <div class="content-i">
                 <div class="content-box">
                     <div class="back">
-                        <a href="<?php echo base_url();?>teacher/meet/<?php echo base64_encode($row['class_id']."-".$row['section_id']."-".$row['subject_id']);?>/"><i class="picons-thin-icon-thin-0131_arrow_back_undo"></i></a>
+                        <a href="<?php echo base_url();?>teacher/subject_meet/<?php echo base64_encode($row['class_id']."-".$row['section_id']."-".$row['subject_id']);?>/"><i class="picons-thin-icon-thin-0131_arrow_back_undo"></i></a>
                     </div>
                     <div class="row">
                         <div class="col col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -18,7 +18,7 @@
                                 <div class="video-player">
                                     <div id="container" style="width:100%;height:83vh"></div>
                                 </div>
-                                <div class="features-video-content">
+                                <!-- <div class="features-video-content">
                                     <article class="hentry post">
                                         <div class="post__author author vcard inline-items">
                                             <img src="<?php echo $this->crud->get_image_url($row['user_type'], $row['user_id']);?>" width="36" height="36" alt="author">
@@ -72,7 +72,7 @@
                                         <?php endforeach; endif;?>
                                         </div>
                                     </article>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>

@@ -593,15 +593,19 @@ class Academic extends School
     public function createSubject($year = '', $semesterId = '')
     {
         $md5 = md5(date('d-m-y H:i:s'));
-        $data['name']        = $this->input->post('new_name');
-        $data['about']       = $this->input->post('new_about');
-        $data['class_id']    = $this->input->post('new_class_id');
-        $data['section_id']  = $this->input->post('new_section_id');
-        $data['color']       = $this->input->post('new_color');
-        $data['icon']        = $md5.str_replace(' ', '', $_FILES['userfile']['name']);
-        $data['teacher_id']  = $this->input->post('new_teacher_id');
+        $data['name']               = html_escape($this->input->post('new_name'));
+        $data['about']              = html_escape($this->input->post('new_about'));
+        $data['class_id']           = html_escape($this->input->post('new_class_id'));
+        $data['section_id']         = html_escape($this->input->post('new_section_id'));
+        $data['color']              = html_escape($this->input->post('new_color'));
+        $data['icon']               = $md5.str_replace(' ', '', $_FILES['userfile']['name']);
+        $data['modality_id']        = html_escape($this->input->post('modality_id'));
+        $data['teacher_id']         = html_escape($this->input->post('new_teacher_id'));
+        $data['subject_capacity']   = html_escape($this->input->post('subject_capacity'));
+        
         $data['year']        = $year == '' ? $this->runningYear : $year;
         $data['semester_id'] = $semesterId == '' ? $this->runningSemester : $semesterId;
+
         $this->db->insert('subject', $data);
 
         $table      = 'subject';
@@ -1049,7 +1053,7 @@ class Academic extends School
                                                                        'section_id'  => $section_id, 
                                                                        'subject_id'  => $subject_id,
                                                                        'unit_id'     => $exam_id,
-                                                                       'date'        => $date,
+                                                                       'mark_date'   => $date,
                                                                        'year'        => $this->runningYear,
                                                                        'semester_id' => $this->runningSemester
                                                   ))->result_array();
@@ -1128,8 +1132,8 @@ class Academic extends School
         return $info;
     }
     
-    public function updateDailyMarksBatch($datainfo, $student_id, $unit_id, $mark_date){
-
+    public function updateDailyMarksBatch($datainfo, $student_id, $unit_id, $mark_date)
+    {
         $info = base64_decode( $datainfo );
         $ex = explode( '-', $info );
 
@@ -1139,9 +1143,11 @@ class Academic extends School
         $data['year']        = $this->runningYear;
         $data['semester_id'] = $this->runningSemester;
 
-        $data['student_id'] = $student_id;
-        $data['unit_id']    = $unit_id;
-        $data['mark_date']  = $mark_date;
+        //$data['student_id'] = $student_id;
+        if($unit_id != 'NA')
+            $data['unit_id']    = $unit_id;
+        if($mark_date != 'NA')
+            $data['mark_date']  = $mark_date;
 
         $data['can_edit']   = false;
 
@@ -1252,7 +1258,7 @@ class Academic extends School
                                             AND subject_id  = '$ex[2]'
                                             AND year        = '$running_year'
                                             AND semester_id = '$running_semester'
-                                            AND date        = '$mark_date'
+                                            AND date   = '$mark_date'
                                             ORDER BY first_name asc
                                             ")->result_array();
         }
@@ -1287,6 +1293,7 @@ class Academic extends School
             $laboocho       = html_escape($this->input->post('lab_ocho_'.$row['mark_daily_id']));
             $labonueve      = html_escape($this->input->post('lab_nueve_'.$row['mark_daily_id']));
             $labodiez       = html_escape($this->input->post('lab_diez_'.$row['mark_daily_id']));
+            $comment        = html_escape($this->input->post('comment_'.$row['mark_daily_id']));
 
             // Validate values
             if($labouno     == '' ) { $labouno      = '-'; } 
@@ -1320,17 +1327,18 @@ class Academic extends School
                 $obtained_marks = '-';
             
             $data['mark_obtained'] = $obtained_marks;
-            $data['labuno'] = $labouno;
-            $data['labdos'] = $labodos;
-            $data['labtres'] = $labotres;
-            $data['labcuatro'] = $labocuatro;
-            $data['labcinco'] = $labocinco;
-            $data['labseis'] = $laboseis;
-            $data['labsiete'] = $labosiete;
-            $data['labocho'] = $laboocho;
-            $data['labnueve'] = $labonueve;
-            $data['labdiez'] = $labodiez;
-            $data['labtotal'] = $labototal;
+            $data['labuno']     = $labouno;
+            $data['labdos']     = $labodos;
+            $data['labtres']    = $labotres;
+            $data['labcuatro']  = $labocuatro;
+            $data['labcinco']   = $labocinco;
+            $data['labseis']    = $laboseis;
+            $data['labsiete']   = $labosiete;
+            $data['labocho']    = $laboocho;
+            $data['labnueve']   = $labonueve;
+            $data['labdiez']    = $labodiez;
+            $data['labtotal']   = $labototal;
+            $data['comment']    = $comment;
 
             $this->db->where('mark_daily_id' , $row['mark_daily_id']);
             $this->db->update('mark_daily' , $data);
@@ -1369,12 +1377,12 @@ class Academic extends School
             if($this->useDailyMarks)
             {
                 $verify_data = array('unit_id' => $data['unit_id'], 'class_id' => $data['class_id'], 'section_id' => $data['section_id'],
-                                    'student_id' => $row['student_id'],'subject_id' => $data['subject_id'], 'year' => $data['year'], 'date' => $date);
+                                    'student_id' => $row['student_id'],'subject_id' => $data['subject_id'], 'year' => $data['year'], 'mark_date' => $date);
                 $query = $this->db->get_where('mark_daily' , $verify_data);
 
                 if($query->num_rows() < 1) 
                 {   
-                    $data['date']       = $date;
+                    $data['mark_date']  = $date;
                     $data['student_id'] = $row['student_id'];
                     
                     $this->db->insert('mark_daily' , $data);
@@ -1622,7 +1630,8 @@ class Academic extends School
         return $info;
     }
     
-    public function getClassCurrentUnit($class_id) {
+    public function getClassCurrentUnit($class_id)
+    {
         $query = $this->db->query("SELECT unit_id FROM v_class_units WHERE class_id='$class_id' AND is_current = 1 ORDER BY sequence ASC")->row()->unit_id;
 
         if($query == null){
@@ -1674,25 +1683,36 @@ class Academic extends School
         $data['year']           = $this->runningYear;
         $data['semester_id']    = $this->runningSemester;
 
-        $running_year     = $data['year'] ;
-        $running_semester = $data['semester_id'];
-
         // Get Score
         if($student_id != ""){
             $scores = $this->db->query("SELECT * FROM pa_test 
                                         WHERE class_id  = '$ex[0]'
                                         AND section_id  = '$ex[1]'
-                                        AND year        = '$running_year'
-                                        AND semester_id = '$running_semester'
+                                        AND year        = '$this->runningYear'
+                                        AND semester_id = '$this->runningSemester'
                                         AND student_id  = '$student_id'"
                                     )->result_array();
         }
-        else {
+        else 
+        {
+            $students = $this->db->query("SELECT student_id FROM enroll
+                            WHERE class_id  = '$ex[0]'
+                            AND section_id  = '$ex[1]'
+                            AND subject_id  = '$ex[2]'
+                            AND year        = '$this->runningYear'
+                            AND semester_id = '$this->runningSemester'"
+                        )->result_array();
+
+            $student_ids = array_column($students, 'student_id');
+            $List = implode(', ', $student_ids);            
+            
             $scores = $this->db->query("SELECT * FROM pa_test 
                                         WHERE class_id  = '$ex[0]'
                                         AND section_id  = '$ex[1]'
-                                        AND year        = '$running_year'
-                                        AND semester_id = '$running_semester'"
+                                        AND year        = '$this->runningYear'
+                                        AND semester_id = '$this->runningSemester'
+                                        AND student_id in ($List)
+                                        "
                                     )->result_array();
         }
 
@@ -1711,7 +1731,7 @@ class Academic extends School
 
             $comment    = html_escape($this->input->post('comment_'.$row['test_id']));
 
-            $scoretotal      = (int)$score1 + (int)$score2 + (int)$score3 + (int)$score4 + (int)$score5 + (int)$score6 + (int)$score7 + (int)$score8 + (int)$score9 + (int)$score10;          
+            $scoretotal = (int)$score1 + (int)$score2 + (int)$score3 + (int)$score4 + (int)$score5 + (int)$score6 + (int)$score7 + (int)$score8 + (int)$score9 + (int)$score10;          
             
             $data_update['scoretotal'] = $scoretotal;
             $data_update['comment'] = $comment;
@@ -1743,4 +1763,825 @@ class Academic extends School
         $students = $this->db->get_where('enroll', array('class_id' => $classId, 'section_id' => $sectionId, 'subject_id' => $subjectId))->num_rows();
         return $students;
     }
+
+    public function get_semester_enroll($year, $semester_id)
+    {
+        $this->db->reset_query();        
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $query = $this->db->get('semester_enroll')->row_array();
+        
+        return $query;
+    }
+
+    public function get_subjects($year, $semester_id, $class_id, $section_id, $subject_id)
+    {
+        $this->db->reset_query();            
+        $this->db->where('class_id', $class_id);
+        $this->db->where('section_id', $section_id);
+        $this->db->where('subject_id', $subject_id);
+        $subject = $this->db->get('subject')->row_array();
+
+        return $subject['subject_capacity'];
+    }
+
+    function get_subjects_by_modality($year = '', $semester_id = '', $modality)
+    {   
+        $year       =   $year == '' ? $this->runningYear : $year;
+        $semester_id =   $semester_id == '' ? $this->runningSemester : $semester_id;
+
+        $this->db->reset_query();
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $this->db->where('modality_id', $modality);
+        $subject = $this->db->get('v_subject')->result_array();
+        
+        return $subject;
+    }
+
+    function get_subject_by_modality($class_id, $section_id, $modality, $year = '', $semester_id = '')
+    {   
+        $year       =   $year == '' ? $this->runningYear : $year;
+        $semester_id =   $semester_id == '' ? $this->runningSemester : $semester_id;
+
+        $this->db->reset_query();
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $this->db->where('class_id', $class_id);
+        $this->db->where('section_id', $section_id);
+        $this->db->where('modality_id', $modality);
+        $subject = $this->db->get('v_subject')->result_array();
+        
+        return $subject;
+    }
+
+    function get_modality_of_subject($subject_id, $year = '', $semester_id = '')
+    {   
+        $year       =   $year == '' ? $this->runningYear : $year;
+        $semester_id =   $semester_id == '' ? $this->runningSemester : $semester_id;
+
+        $this->db->reset_query();
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $this->db->where('subject_id', $subject_id);
+        $subject = $this->db->get('v_subject')->row_array();
+        
+        $return = $this->get_modality_info($subject['modality_id']);
+
+        return $return;
+    }
+
+    public function get_subject_capacity($class_id, $section_id, $subject_id)
+    {
+        $this->db->reset_query();            
+        $this->db->where('class_id', $class_id);
+        $this->db->where('section_id', $section_id);
+        $this->db->where('subject_id', $subject_id);
+        $subject = $this->db->get('subject')->row_array();
+
+        return $subject['subject_capacity'];
+    }
+
+    //Save student enrollment 
+    function save_student_enrollment($student_id)
+    {   
+        $subjects               = $this->input->post('subject_id');
+        $data['student_id']     = $student_id;
+        $data['class_id']       = $this->input->post('class_id');
+        $data['section_id']     = $this->input->post('section_id');
+        $data['year']           = $this->input->post('year_id');
+        $data['semester_id']    = $this->input->post('semester_id');
+        $data['enroll_code']    = substr(md5(rand(0, 1000000)), 0, 7);
+        $data['date_added']     = strtotime(date('Y-m-d H:i:s'));
+
+        foreach ($subjects as $key) {
+            $data['subject_id'] = $key;
+            $this->db->insert('enroll', $data);
+
+            $table      = 'enroll';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $data);
+
+            // Validate if is full to create a new
+            // $nroStudents = intval($this->academic->countStudentsSubject($data['class_id'] , $data['section_id'] , $key));
+            // $capacity    = intval($this->academic->get_subject_capacity($data['class_id'] , $data['section_id'] , $key));
+
+            // if($nroStudents >= $capacity)
+            // {
+            //     $this->academic->duplicate_subject($data['class_id'] , $data['section_id'] , $key);
+            // }
+        }
+
+        // Change the status to be Active
+
+        $data_student['student_session'] = 1;
+        $this->db->where('student_id', $student_id);
+        $this->db->update('student', $data_student);  
+
+        // Create Interaction         
+        $user_id        = $this->session->userdata('login_user_id');
+        $user_table     = get_table_user($this->session->userdata('role_id'));
+        $user_name      = $this->crud->get_name($user_table, $user_id);
+        $level          = $this->academic->get_class_name($this->input->post('class_id'));
+        $section_name   = $this->academic->get_section_name($this->input->post('section_id'));
+        
+        $data_interaction['created_by']         = DEFAULT_USER;
+        $data_interaction['created_by_type']    = DEFAULT_TABLE;
+        $data_interaction['student_id']         = $student_id;
+        $data_interaction['comment']            = $user_name." registered in the ". $level." level, ".$section_name.' schedule.';
+
+        $this->studentModel->add_interaction_data($data_interaction);
+
+    }
+
+    function duplicate_subject($class_id, $section_id, $subject_id)
+    {
+        $this->db->reset_query();            
+        $this->db->where('class_id', $class_id);
+        $this->db->where('section_id', $section_id);
+        $this->db->where('subject_id', $subject_id);
+        $subject = $this->db->get('subject')->row_array();
+        
+        $this->db->reset_query();
+        $data['name']               = $subject['name'];
+        $data['about']              = $subject['about'];
+        $data['class_id']           = $subject['class_id'];
+        $data['section_id']         = $subject['section_id'];
+        $data['color']              = $subject['color'];
+        $data['icon']               = $subject['icon'];
+        $data['modality_id']        = $subject['modality_id'];
+        $data['teacher_id']         = $subject['teacher_id'];
+        $data['subject_capacity']   = $subject['subject_capacity'];
+        
+        $data['year']        = $subject['year'];
+        $data['semester_id'] = $subject['semester_id'];
+
+        $this->db->insert('subject', $data);
+
+        $data['info_insert'] = "Automate Creation";
+        $table      = 'subject';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+
+        $this->crud->save_log($table, $action, $insert_id, $data);
+    }
+
+    function get_semester_name($semester_id)
+    {
+        $this->db->reset_query();
+        $this->db->where('semester_id', $semester_id);
+        $name  = $this->db->get('semesters')->row()->name;
+
+        return $name;
+    }
+
+    function get_section_name($section_id)
+    {
+        $this->db->reset_query();
+        $this->db->where('section_id', $section_id);
+        $name  = $this->db->get('section')->row()->name;
+
+        return $name;
+    }
+
+    function get_student_grades_vacations($student_id)
+    {
+        $roundPrecision   =   $this->crud->getInfo('round_precision');
+        
+        $this->db->reset_query();
+        $this->db->order_by('date_added', 'DESC');
+        $this->db->select('student_id, class_id, section_id, year, semester_id');
+        $this->db->where('student_id', $student_id);        
+        $this->db->group_by(array('student_id', 'class_id', 'section_id'));
+        $this->db->limit(2);
+        $enrollments  = $this->db->get('enroll')->result_array();
+
+        $array = [];
+
+
+        foreach ($enrollments as $enroll) {
+            $class_id = $enroll['class_id'];
+            $section_id = $enroll['section_id'];
+            $year = $enroll['year'];
+            $semester_id = $enroll['semester_id'];
+            $enrollment = $this->db->get_where('v_enrollment' , array('student_id' => $student_id, 'class_id' => $class_id, 'section_id' => $section_id, 'year' => $year, 'semester_id' => $semester_id))->result_array(); 
+
+            $labouno_total = 0;
+            $count_total   = 0; 
+            $mark_total    = 0;
+            foreach ($enrollment as $row3){
+                $subject_id = $row3['subject_id'];  
+                $average = $this->db->query("SELECT ROUND((SUM(labuno)/COUNT(IF(labuno = '-' or labuno is null,null,'1'))), $roundPrecision) AS 'labuno',
+                                                    ROUND((SUM(labdos)/COUNT(IF(labdos = '-' or labdos is null,null,'1'))), $roundPrecision) AS 'labdos',
+                                                    ROUND((SUM(labtres)/COUNT(IF(labtres = '-' or labtres is null,null,'1'))), $roundPrecision) AS 'labtres',
+                                                    ROUND((SUM(labcuatro)/COUNT(IF(labcuatro = '-' or labcuatro is null,null,'1'))), $roundPrecision) AS 'labcuatro',
+                                                    ROUND((SUM(labcinco)/COUNT(IF(labcinco = '-' or labcinco is null,null,'1'))), $roundPrecision) AS 'labcinco',
+                                                    ROUND((SUM(labseis)/COUNT(IF(labseis = '-' or labseis is null,null,'1'))), $roundPrecision) AS 'labseis',
+                                                    ROUND((SUM(labsiete)/COUNT(IF(labsiete = '-' or labsiete is null,null,'1'))), $roundPrecision) AS 'labsiete',
+                                                    ROUND((SUM(labocho)/COUNT(IF(labocho = '-' or labocho is null,null,'1'))), $roundPrecision) AS 'labocho',
+                                                    ROUND((SUM(labnueve)/COUNT(IF(labnueve = '-' or labnueve is null,null,'1'))), $roundPrecision) AS 'labnueve',
+                                                    ROUND((SUM(labdiez)/COUNT(IF(labdiez = '-' or labdiez is null,null,'1'))), $roundPrecision) AS 'labdiez'
+                                                FROM mark_daily 
+                                                WHERE student_id = '$student_id'
+                                                    AND class_id = '$class_id'
+                                                    AND section_id = '$section_id'
+                                                    AND subject_id = '$subject_id'
+                                                    AND year = '$year'
+                                                    AND semester_id = '$semester_id'
+                                                ")->first_row();
+
+                // Calculate the average 
+                $count = 0;
+
+                $labouno        = $average->labuno;
+                $labodos        = $average->labdos;
+                $labotres       = $average->labtres;
+                $labocuatro     = $average->labcuatro;
+                $labocinco      = $average->labcinco;
+                $laboseis       = $average->labseis;
+                $labosiete      = $average->labsiete;
+                $laboocho       = $average->labocho;
+                $labonueve      = $average->labnueve;
+                $labodiez       = $average->labdiez;
+
+                // Validate values
+                if($labouno     == '' ) { $labouno      = '-'; } 
+                if($labodos     == '' ) { $labodos      = '-'; }  
+                if($labotres    == '' ) { $labotres     = '-'; }  
+                if($labocuatro  == '' ) { $labocuatro   = '-'; }  
+                if($labocinco   == '' ) { $labocinco    = '-'; }
+                if($laboseis    == '' ) { $laboseis     = '-'; } 
+                if($labosiete   == '' ) { $labosiete    = '-'; }  
+                if($laboocho    == '' ) { $laboocho     = '-'; }  
+                if($labonueve   == '' ) { $labonueve    = '-'; }  
+                if($labodiez    == '' ) { $labodiez     = '-'; }
+
+                // if(is_numeric($average->labuno)     && $average->labuno != '' ) { $count++; } 
+                if(is_numeric($average->labdos)     && $average->labdos != '' ) { $count++; }  
+                if(is_numeric($average->labtres)    && $average->labtres != '' ) { $count++; }  
+                if(is_numeric($average->labcuatro)  && $average->labcuatro != '' ) { $count++; }  
+                if(is_numeric($average->labcinco)   && $average->labcinco != '') { $count++; }
+                if(is_numeric($average->labseis)    && $average->labseis != '' ) { $count++; } 
+                if(is_numeric($average->labsiete)   && $average->labsiete != '' ) { $count++; }  
+                if(is_numeric($average->labocho)    && $average->labocho != '' ) { $count++; }  
+                if(is_numeric($average->labnueve)   && $average->labnueve != '' ) { $count++; }  
+                if(is_numeric($average->labdiez)    && $average->labdiez != '' ) { $count++; }                                                            
+                
+                $labototal      = (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
+
+                $mark = $count > 0 ? round(($labototal/$count), (int)$roundPrecision) : '-';
+
+                if($mark != '-'){
+                    $mark_total += $mark;
+                    $count_total++; 
+                }
+
+                if($labouno != '-'){
+                    $labouno_total += $labouno;
+                }
+            }
+            $final_mark = ($count_total > 0 ? round(($mark_total/$count_total), (int)$roundPrecision) : '-');
+            $final_attendance = ($count_total > 0 ? round(($labouno_total/$count_total), (int)$roundPrecision) : '-');
+
+            array_push($array, array('class_id' => $class_id, 'section_id' => $section_id, 'year' => $year, 'semester_id' => $semester_id, 'final_attendance' => $final_attendance,  'final_mark' => $final_mark));
+        }
+        return $array;
+    }
+
+    public function get_modality()
+    {
+        $this->db->reset_query();
+        $this->db->select('code as modality_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'MODALITY');
+        $query = $this->db->get('parameters')->result_array();;
+        
+        return $query;
+    }
+    
+    public function get_modality_info($modality_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('code as modality_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'MODALITY');
+        $this->db->where('code', $modality_id);
+        $query = $this->db->get('parameters')->row_array();
+        
+        return $query;
+    }
+
+    public function get_modality_name($modality_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('name');
+        $this->db->where('parameter_id', 'MODALITY');
+        $this->db->where('code', $modality_id);
+        $query = $this->db->get('parameters')->row()->name;
+        
+        return $query;
+    }
+
+    public function get_schedule_type()
+    {
+        $this->db->reset_query();
+        $this->db->select('code as schedule_type_id, name, value_1 as price, value_2 as icon');
+        $this->db->where('parameter_id', 'SCHEDULE_TYPE');
+        $query = $this->db->get('parameters')->result_array();;
+        
+        return $query;
+    }
+    
+    public function get_schedule_type_info($schedule_type_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('code as schedule_type_id, name, value_1 as price, value_2 as icon');
+        $this->db->where('parameter_id', 'SCHEDULE_TYPE');
+        $this->db->where('code', $schedule_type_id);
+        $query = $this->db->get('parameters')->row_array();
+        
+        return $query;
+    }
+
+    public function get_schedule_type_name($schedule_type_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('name');
+        $this->db->where('parameter_id', 'SCHEDULE_TYPE');
+        $this->db->where('code', $schedule_type_id);
+        $query = $this->db->get('parameters')->row()->name;
+        
+        return $query;
+    }
+
+    public function get_classes()
+    {
+        $this->db->reset_query();
+        $query = $this->db->get('class')->result_array();;
+        
+        return $query;
+    }
+    
+    public function get_class_info($class_id)
+    {
+        $this->db->reset_query();
+        $this->db->where('class_id', $class_id);
+        $query = $this->db->get('class')->row_array();
+        
+        return $query;
+    }
+
+    public function get_class_name($class_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('name');
+        $this->db->where('class_id', $class_id);
+        $query = $this->db->get('class')->row()->name;
+        
+        return $query;
+    }
+
+    public function exist_schedule($class_id, $year, $semester_id, $schedule)
+    {
+        $this->db->reset_query();
+        $this->db->where('class_id', $class_id);
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $this->db->where('name', $schedule);
+        $query = $this->db->get('section');
+
+        if($query->num_rows() > 0)
+        {
+            return $query->row()->section_id;;
+        }
+        else
+        {
+            return 0;
+        }       
+        
+    }
+
+    public function exist_subject($class_id, $year, $semester_id, $section_id, $modality_id, $subject)
+    {
+        $this->db->reset_query();
+        $this->db->where('class_id', $class_id);
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $this->db->where('section_id', $section_id);
+        $this->db->where('modality_id', $modality_id);
+        $this->db->where('name', $subject);
+        $query = $this->db->get('subject');
+
+        if($query->num_rows() > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }       
+        
+    }
+
+    public function exist_semester_enroll($year, $semester_id)
+    {
+        $this->db->reset_query();        
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);        
+        $query = $this->db->get('semester_enroll');
+
+        if($query->num_rows() > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    function create_semester_enroll()
+    {
+        $year           = $this->input->post('year');
+        $semester_id    = $this->input->post('semester_id');
+
+        if(!$this->exist_semester_enroll($year, $semester_id))
+        {
+            $data['year']           = $this->input->post('year');
+            $data['semester_id']    = $this->input->post('semester_id');
+            $data['start_date']     = $this->input->post('date_start');
+            $data['end_date']       = $this->input->post('date_end');
+            $data['created_by']     = $this->session->userdata('login_user_id');
+
+            $this->db->insert('semester_enroll', $data);
+
+            $table      = 'semester_enroll';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $data);
+        }
+
+        //Creating Classes 
+        $class_ids = $this->input->post('class_ids');
+        foreach ( $class_ids as $class_id )
+        {            
+            $schedules = $this->input->post('schedule');
+
+            foreach ( $schedules as $subject_id )  
+            {
+                $schedule = $this->get_schedule_type_name($subject_id);
+                $section_id = $this->exist_schedule($class_id, $year, $semester_id, $schedule);
+
+                // Create Schedule
+                if($section_id == 0)
+                {
+                    $dataSection['name']        = $schedule;
+                    $dataSection['class_id']    = $class_id;
+                    $dataSection['year']        = $year;
+                    $dataSection['semester_id'] = $semester_id;                    
+
+                    $this->db->insert('section', $dataSection);
+
+                    $table      = 'section';
+                    $action     = 'insert';  
+                    $section_id = $this->db->insert_id();                   
+                    $this->crud->save_log($table, $action, $section_id, $dataSection);
+                }
+                
+                //Create Subject
+                $modality_ids = $this->input->post('modality_ids');
+                foreach ( $modality_ids as $modality_id )  
+                {
+                    $subjects = DEFAULT_SUBJECTS;
+                    foreach ( $subjects as $subject )
+                    {
+                        if(!$this->exist_subject($class_id, $year, $semester_id, $section_id, $modality_id, $subject['name']))
+                        {
+                            $dataSubject['name']        = $subject['name'];
+                            $dataSubject['color']       = $subject['color'];
+                            $dataSubject['icon']        = $subject['icon'];
+                            $dataSubject['class_id']    = $class_id;
+                            $dataSubject['semester_id'] = $semester_id;
+                            $dataSubject['year']        = $year;
+                            $dataSubject['section_id']  = $section_id;
+                            $dataSubject['modality_id'] = $modality_id;
+
+                            $this->db->insert('subject', $dataSubject);
+        
+                            $table     = 'subject';
+                            $action    = 'insert';  
+                            $insert_id = $this->db->insert_id();                   
+                            $this->crud->save_log($table, $action, $insert_id, $dataSubject);
+                        }
+                    }
+                    
+                }
+            }
+        }
+    }
+
+    function get_program_type()
+    {
+        $this->db->reset_query();
+        $this->db->select('code as program_type_id, name, value_1 as price, value_2 as icon');
+        $this->db->where('parameter_id', 'PROGRAM_TYPE');
+        $query = $this->db->get('parameters')->result_array();;
+        
+        return $query;
+    }
+    
+    function get_program_type_info($program_type_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('code as program_type_id, name, value_1 as price, value_2 as icon');
+        $this->db->where('parameter_id', 'PROGRAM_TYPE');
+        $this->db->where('code', $program_type_id);
+        $query = $this->db->get('parameters')->row_array();
+        
+        return $query;
+    }
+
+    function get_program_type_name($program_type_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('name');
+        $this->db->where('parameter_id', 'PROGRAM_TYPE');
+        $this->db->where('code', $program_type_id);
+        $query = $this->db->get('parameters')->row()->name;
+        
+        return $query;
+    }
+
+    function create_student_month()
+    {
+        
+        $data['student_id']     = $this->input->post('student_id');
+        $data['year']           = $this->runningYear;
+        $data['semester_id']    = $this->runningSemester;
+        $data['class_id']       = $this->input->post('class_id');
+        $data['section_id']     = $this->input->post('section_id');
+        $data['subject_id']     = $this->input->post('subject_id');
+        $data['month']          = $this->input->post('month');
+        $data['created_by']     = $this->session->userdata('login_user_id');
+
+        $this->db->insert('student_month', $data);
+
+        $table      = 'student_month';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+    }
+
+    function delete_student_month($student_month_id)
+    {
+        $this->db->reset_query();
+        $this->db->where('student_month_id', $student_month_id);
+        $this->db->delete('student_month');
+
+        $table      = 'student_month';
+        $action     = 'delete';
+        $this->crud->save_log($table, $action, $student_month_id, []);
+    }
+    
+    function best_student_month($student_month_id)
+    {
+        $data['is_best'] = 1;
+        $this->db->where('student_month_id', $student_month_id);
+        $this->db->update('student_month', $data);
+
+        $table      = 'student_month';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $student_month_id, $data);
+    }
+
+    function student_month_has_best($month)
+    {
+        $this->db->reset_query();
+        $this->db->where('year', $this->runningYear);
+        $this->db->where('semester_id', $this->runningSemester);    
+        $this->db->where('month', $month);
+        $this->db->where('is_best', '1');
+        $query = $this->db->get('v_student_month');
+
+        if ($query->num_rows() > 0) 
+        {
+            return true;
+        }
+        else{
+            return false;
+        }
+
+        
+    }
+
+    function get_student_month_by_student($student_id)
+    {
+        $this->db->reset_query();
+        $this->db->where('student_id', $student_id);   
+        $query = $this->db->get('v_student_month')->result_array();
+
+        return $query;
+    }
+
+    function get_student_grades($student_id, $year = "", $semester_id = "")
+    {
+        $roundPrecision   =   $this->crud->getInfo('round_precision');
+        
+        $year           =   $year == ""         ? $this->runningYear        : $year;
+        $semester_id    =   $semester_id == ""  ? $this->runningSemester    : $semester_id;
+ 
+        $average = $this->db->query("SELECT ROUND((SUM(labuno)/COUNT(IF(labuno = '-' or labuno is null,null,'1'))), $roundPrecision) AS 'labuno',
+                                            ROUND((SUM(labdos)/COUNT(IF(labdos = '-' or labdos is null,null,'1'))), $roundPrecision) AS 'labdos',
+                                            ROUND((SUM(labtres)/COUNT(IF(labtres = '-' or labtres is null,null,'1'))), $roundPrecision) AS 'labtres',
+                                            ROUND((SUM(labcuatro)/COUNT(IF(labcuatro = '-' or labcuatro is null,null,'1'))), $roundPrecision) AS 'labcuatro',
+                                            ROUND((SUM(labcinco)/COUNT(IF(labcinco = '-' or labcinco is null,null,'1'))), $roundPrecision) AS 'labcinco',
+                                            ROUND((SUM(labseis)/COUNT(IF(labseis = '-' or labseis is null,null,'1'))), $roundPrecision) AS 'labseis',
+                                            ROUND((SUM(labsiete)/COUNT(IF(labsiete = '-' or labsiete is null,null,'1'))), $roundPrecision) AS 'labsiete',
+                                            ROUND((SUM(labocho)/COUNT(IF(labocho = '-' or labocho is null,null,'1'))), $roundPrecision) AS 'labocho',
+                                            ROUND((SUM(labnueve)/COUNT(IF(labnueve = '-' or labnueve is null,null,'1'))), $roundPrecision) AS 'labnueve',
+                                            ROUND((SUM(labdiez)/COUNT(IF(labdiez = '-' or labdiez is null,null,'1'))), $roundPrecision) AS 'labdiez'
+                                        FROM mark_daily 
+                                        WHERE student_id = '$student_id'
+                                            AND year = '$year'
+                                            AND semester_id = '$semester_id'
+                                        ")->first_row();
+
+        // Calculate the average 
+        $count = 0;
+
+        $labouno        = $average->labuno;
+        $labodos        = $average->labdos;
+        $labotres       = $average->labtres;
+        $labocuatro     = $average->labcuatro;
+        $labocinco      = $average->labcinco;
+        $laboseis       = $average->labseis;
+        $labosiete      = $average->labsiete;
+        $laboocho       = $average->labocho;
+        $labonueve      = $average->labnueve;
+        $labodiez       = $average->labdiez;
+
+        // Validate values
+        if($labouno     == '' ) { $labouno      = '-'; } 
+        if($labodos     == '' ) { $labodos      = '-'; }  
+        if($labotres    == '' ) { $labotres     = '-'; }  
+        if($labocuatro  == '' ) { $labocuatro   = '-'; }  
+        if($labocinco   == '' ) { $labocinco    = '-'; }
+        if($laboseis    == '' ) { $laboseis     = '-'; } 
+        if($labosiete   == '' ) { $labosiete    = '-'; }  
+        if($laboocho    == '' ) { $laboocho     = '-'; }  
+        if($labonueve   == '' ) { $labonueve    = '-'; }  
+        if($labodiez    == '' ) { $labodiez     = '-'; }
+
+        // if(is_numeric($average->labuno)     && $average->labuno != '' ) { $count++; } 
+        if(is_numeric($average->labdos)     && $average->labdos != '' ) { $count++; }  
+        if(is_numeric($average->labtres)    && $average->labtres != '' ) { $count++; }  
+        if(is_numeric($average->labcuatro)  && $average->labcuatro != '' ) { $count++; }  
+        if(is_numeric($average->labcinco)   && $average->labcinco != '') { $count++; }
+        if(is_numeric($average->labseis)    && $average->labseis != '' ) { $count++; } 
+        if(is_numeric($average->labsiete)   && $average->labsiete != '' ) { $count++; }  
+        if(is_numeric($average->labocho)    && $average->labocho != '' ) { $count++; }  
+        if(is_numeric($average->labnueve)   && $average->labnueve != '' ) { $count++; }  
+        if(is_numeric($average->labdiez)    && $average->labdiez != '' ) { $count++; }                                                            
+        
+        $labototal      = (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
+
+        $mark = $count > 0 ? round(($labototal/$count), (int)$roundPrecision) : '-';
+
+        return array('attendance' => $labouno, 'mark' => $mark);
+    }
+    
+    function get_student_enrollments($student_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('class_id, class_name, section_id, section_name, year, semester_id, semester_name');
+        $this->db->from('v_enroll');
+        $this->db->where('student_id', $student_id);
+        $this->db->group_by('class_id, section_id');
+        $enrollments =  $this->db->get()->result_array(); 
+
+        return $enrollments;        
+    }
+
+    function get_student_enrollment($student_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('class_id, class_name, section_id, section_name, year, semester_id, semester_name');
+        $this->db->where('year', $this->runningYear);
+        $this->db->where('semester_id', $this->runningSemester);
+        $this->db->from('v_enroll');
+        $this->db->where('student_id', $student_id);
+        $this->db->group_by('class_id, section_id');
+        $enrollments =  $this->db->get()->result_array(); 
+
+        return $enrollments;        
+    }
+
+    function get_teachers_by_student($student_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('teacher_id, teacher_name');
+        $this->db->from('v_enrollment');
+        $this->db->where('year', $this->runningYear);
+        $this->db->where('semester_id', $this->runningSemester);
+        $this->db->where('student_id', $student_id);
+        $this->db->group_by('teacher_id');
+        $teachers =  $this->db->get()->result_array(); 
+
+        return $teachers;  
+    }
+
+    function get_students_by_teacher($teacher_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('student_id');
+        $this->db->from('v_enrollment');
+        $this->db->where('year', $this->runningYear);
+        $this->db->where('semester_id', $this->runningSemester);
+        $this->db->where('teacher_id', $teacher_id);
+        $this->db->group_by('student_id');
+        $this->db->order_by('full_name');
+        $students =  $this->db->get()->result_array(); 
+
+        return $students;  
+    }
+
+    function get_total_student_class($class_id, $year = "", $semester_id = "")
+    {        
+        $year           =   $year == ""         ? $this->runningYear        : $year;
+        $semester_id    =   $semester_id == ""  ? $this->runningSemester    : $semester_id;
+
+        $this->db->reset_query();
+        $this->db->select('year, semester_id, class_id, section_id, student_id');
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);    
+        $this->db->where('class_id', $class_id);        
+        $this->db->where('program_id is NOT NULL', NULL, FALSE);
+        $this->db->group_by(array('year', 'semester_id', 'class_id', 'section_id', 'student_id'));     
+        $query = $this->db->get('v_enrollment');
+
+        $students = $query->num_rows();
+        return $students;
+    }
+
+    function get_pass_student_class($class_id, $year = "", $semester_id = "")
+    {        
+        $year           =   $year == ""         ? $this->runningYear        : $year;
+        $semester_id    =   $semester_id == ""  ? $this->runningSemester    : $semester_id;
+
+        $min            = floatval($this->crud->getInfo('minium_mark'));
+
+        $this->db->reset_query();
+        $this->db->select('year, semester_id, class_id, section_id, student_id');
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);    
+        $this->db->where('class_id', $class_id);
+        $this->db->where('program_id is NOT NULL', NULL, FALSE);
+        $this->db->group_by(array('year', 'semester_id', 'class_id', 'section_id', 'student_id'));     
+        $query = $this->db->get('v_enrollment')->result_array();
+
+        $pass = 0;
+
+        foreach ($query as $item) 
+        {
+            $grade = $this->get_student_grades($item['student_id'], $year, $semester_id);
+
+            if($grade['mark'] >= $min)
+                $pass++;
+        }
+
+        return $pass;
+        
+    }
+
+    function get_total_student_type($program_id, $year = "", $semester_id = "")
+    {
+        $year           =   $year == ""         ? $this->runningYear        : $year;
+        $semester_id    =   $semester_id == ""  ? $this->runningSemester    : $semester_id;
+
+        $this->db->reset_query();
+        $this->db->select('year, semester_id, class_id, section_id, student_id');
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);    
+        $this->db->where('program_id', $program_id);   
+        $this->db->group_by(array('year', 'semester_id', 'class_id', 'section_id', 'student_id'));
+        $query = $this->db->get('v_enrollment');
+
+        $students = $query->num_rows();
+        return $students;
+    }
+
+    function get_classes_by_semester($year = "", $semester_id = "")
+    {
+        $year           =   $year == ""         ? $this->runningYear        : $year;
+        $semester_id    =   $semester_id == ""  ? $this->runningSemester    : $semester_id;
+
+        $this->db->reset_query();
+        $this->db->select('class_id, class_name, section_id, section_name, subject_id, name, modality_id, teacher_name');
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $this->db->group_by(array('class_id', 'section_id', 'subject_id', 'modality_id'));
+        $query = $this->db->get('v_subject');
+        $result = $query->result_array(); 
+        return $result;
+    }
+
 }

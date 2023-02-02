@@ -6,41 +6,41 @@
                 <div class="os-tabs-controls">
                     <ul class="navs navs-tabs upper">
                         <li class="navs-item">
-                            <a class="navs-links" href="<?php echo base_url();?>admin/system_settings/">
+                            <a class="navs-links" href="<?= base_url();?>admin/system_settings/">
                                 <i class="os-icon picons-thin-icon-thin-0050_settings_panel_equalizer_preferences"></i>
-                                <span><?php echo getPhrase('system_settings');?></span>
+                                <span><?= getPhrase('system_settings');?></span>
                             </a>
                         </li>
                         <li class="navs-item">
-                            <a class="navs-links" href="<?php echo base_url();?>admin/system_security/">
+                            <a class="navs-links" href="<?= base_url();?>admin/system_security/">
                                 <i
                                     class="picons-thin-icon-thin-0328_computer_screen_locked_password_protected_security"></i>
-                                <span><?php echo getPhrase('system_security');?></span>
+                                <span><?= getPhrase('system_security');?></span>
                             </a>
                         </li>
                         <li class="navs-item">
-                            <a class="navs-links" href="<?php echo base_url();?>admin/system_sms/">
+                            <a class="navs-links" href="<?= base_url();?>admin/system_sms/">
                                 <i class="os-icon picons-thin-icon-thin-0287_mobile_message_sms"></i>
-                                <span><?php echo getPhrase('sms');?></span>
+                                <span><?= getPhrase('sms');?></span>
                             </a>
                         </li>
                         <li class="navs-item">
-                            <a class="navs-links active" href="<?php echo base_url();?>admin/system_email/">
+                            <a class="navs-links active" href="<?= base_url();?>admin/system_email/">
                                 <i class="os-icon picons-thin-icon-thin-0315_email_mail_post_send"></i>
-                                <span><?php echo getPhrase('email_settings');?></span>
+                                <span><?= getPhrase('email_settings');?></span>
                             </a>
                         </li>
                         <li class="navs-item">
-                            <a class="navs-links" href="<?php echo base_url();?>admin/system_translate/">
+                            <a class="navs-links" href="<?= base_url();?>admin/system_translate/">
                                 <i
                                     class="os-icon picons-thin-icon-thin-0307_chat_discussion_yes_no_pro_contra_conversation"></i>
-                                <span><?php echo getPhrase('translate');?></span>
+                                <span><?= getPhrase('translate');?></span>
                             </a>
                         </li>
                         <li class="navs-item">
-                            <a class="navs-links" href="<?php echo base_url();?>admin/system_database/">
+                            <a class="navs-links" href="<?= base_url();?>admin/system_database/">
                                 <i class="picons-thin-icon-thin-0356_database"></i>
-                                <span><?php echo getPhrase('database');?></span>
+                                <span><?= getPhrase('database');?></span>
                             </a>
                         </li>
                     </ul>
@@ -50,10 +50,10 @@
                 <div class="content-box">
                     <div class="element-box shadow lined-success">
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="content-box">
                                 <div class="os-tabs-w">
                                     <div class="os-tabs-controls">
-                                        <ul class="navs navs-tabs">
+                                        <ul class="navs navs-tabs upper">
                                             <?php 
                                             $email_templates  = $this->db->get('email_template')->result_array();
                                             foreach ($email_templates as $row):
@@ -61,8 +61,8 @@
                                             <li class="navs-item">
                                                 <a class="navs-link <?php if ($row['email_template_id'] == $current_email_template_id) echo 'active';?>"
                                                     data-toggle="tab"
-                                                    href="#email<?php echo $row['email_template_id'];?>">
-                                                    <b>[</b><?php echo getPhrase($row['task']);?><b>]</b></a>
+                                                    href="#email<?= $row['email_template_id'];?>">
+                                                    <b>[</b><?= getPhrase($row['task']);?><b>]</b></a>
                                             </li>
                                             <?php endforeach;?>
                                         </ul>
@@ -71,24 +71,24 @@
                                 <div class="tab-content">
                                     <?php foreach ($email_templates as $row): ?>
                                     <div class="tab-pane <?php if ($row['email_template_id'] == $current_email_template_id) echo 'active';?>"
-                                        id="email<?php echo $row['email_template_id'];?>">
-                                        <?php echo form_open(base_url() . 'admin/email/template/' . $row['email_template_id']);?>
-                                        <h5 class="form-header"><?php echo getPhrase($row['task']);?></h5>
+                                        id="email<?= $row['email_template_id'];?>">
+                                        <?= form_open(base_url() . 'admin/system_email/template/' . $row['email_template_id']);?>
+                                        <h5 class="form-header"><?= getPhrase($row['task']);?></h5>
                                         <div class="form-group">
-                                            <label for=""> <?php echo getPhrase('email_subject');?></label>
+                                            <label for=""> <?= getPhrase('email_subject');?></label>
                                             <input class="form-control" name="subject" placeholder=""
-                                                value="<?php echo $row['subject'];?>" type="text">
+                                                value="<?= $row['subject'];?>" type="text">
                                         </div>
                                         <div class="form-group">
-                                            <label for=""> <?php echo getPhrase('email_body');?></label>
+                                            <label for=""> <?= getPhrase('email_body');?></label>
                                             <textarea id="mymce" name="body" cols="100%"
-                                                rows="10"><?php echo $row['body'];?></textarea>
+                                                rows="10"><?= $row['body'];?></textarea>
                                         </div>
                                         <div class="form-buttons-w text-right">
                                             <button class="btn btn-rounded btn-success" type="submit">
-                                                <?php echo getPhrase('save');?></button>
+                                                <?= getPhrase('save');?></button>
                                         </div>
-                                        <?php echo form_close();?>
+                                        <?= form_close();?>
                                     </div>
                                     <?php endforeach;?>
                                 </div>

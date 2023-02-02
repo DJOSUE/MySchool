@@ -51,7 +51,7 @@
                                             <?php
                             		            $count = 1;
             		                            $this->db->order_by('request_id', 'desc');
-            		                            $requests = $this->db->get('students_request')->result_array();
+            		                            $requests = $this->db->get('student_request')->result_array();
             		                            foreach ($requests as $row) { 
             	                            ?> 
                                             <tr>

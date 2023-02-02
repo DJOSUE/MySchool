@@ -60,7 +60,7 @@
                     </li>
                     <li class="navs-item">
                         <a class="navs-links"
-                            href="<?php echo base_url();?>admin/daily_marks_average/<?php echo $data;?>/"><i
+                            href="<?php echo base_url();?>admin/subject_daily_marks_average/<?php echo $data;?>/"><i
                                 class="os-icon picons-thin-icon-thin-0197_layout_grid_view"></i><span><?php echo getPhrase('daily_marks_average');?></span></a>
                     </li>
                     <?php else: ?>
@@ -71,7 +71,7 @@
                     </li>
                     <?php endif; ?> 
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/meet/<?php echo $data;?>/"><i
+                        <a class="navs-links" href="<?php echo base_url();?>admin/subject_meet/<?php echo $data;?>/"><i
                                 class="os-icon picons-thin-icon-thin-0591_presentation_video_play_beamer"></i><span><?php echo getPhrase('live');?></span></a>
                     </li>
                     <?php if(!$useGradeAttendance):?>

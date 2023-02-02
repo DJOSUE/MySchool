@@ -5,7 +5,7 @@
     $class_id           = $ex[1];
     $section_id         = $ex[2];
     $year               = $ex[3];
-    $semester_id           = $ex[4];
+    $semester_id        = $ex[4];
 
     $roundPrecision     =   $this->crud->getInfo('round_precision');
 	$class_name		 	= 	$this->db->get_where('class' , array('class_id' => $class_id))->row()->name;
@@ -125,7 +125,7 @@
                                                                             AND semester_id = '$semester_id' 
                                                                             ")->result_array();
                                             // Math to get Average
-                                            $Total_Sum = array_sum($average[0]);
+                                            $Total_Sum = array_sum($average[0]) - $average[0][labuno];
                                             $count = 0;
                                             
                                             $labouno        = $average[0][labuno];
@@ -140,7 +140,7 @@
                                             $labodiez       = $average[0][labdiez];
                                 
                                             // Calculate the average 
-                                            if(is_numeric($labouno)     && $labouno != '-' ) { $count++; } 
+                                            // if(is_numeric($labouno)     && $labouno != '-' ) { $count++; } 
                                             if(is_numeric($labodos)     && $labodos != '-' ) { $count++; }  
                                             if(is_numeric($labotres)    && $labotres != '-' ) { $count++; }  
                                             if(is_numeric($labocuatro)  && $labocuatro != '-' ) { $count++; }  

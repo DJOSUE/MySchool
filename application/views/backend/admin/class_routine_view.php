@@ -11,12 +11,22 @@
                 <div class="os-tabs-controls">
                     <ul class="navs navs-tabs upper">
                         <li class="navs-item">
-                            <a class="navs-links active" href="<?php echo base_url();?>admin/class_routine_view/"><i
-                                    class="os-icon picons-thin-icon-thin-0024_calendar_month_day_planner_events"></i><span><?php echo getPhrase('class_routine');?></span></a>
+                            <a class="navs-links" href="<?= base_url();?>admin/class_routine_by_semester/">
+                                <i class="os-icon picons-thin-icon-thin-0024_calendar_month_day_planner_events"></i>
+                                <span><?= getPhrase('report_level_routine');?></span>
+                            </a>
                         </li>
                         <li class="navs-item">
-                            <a class="navs-links" href="<?php echo base_url();?>admin/teacher_routine/"><i
-                                    class="os-icon picons-thin-icon-thin-0011_reading_glasses"></i><span><?php echo getPhrase('teacher_routine');?></span></a>
+                            <a class="navs-links active" href="<?= base_url();?>admin/class_routine_view/">
+                                <i class="os-icon picons-thin-icon-thin-0024_calendar_month_day_planner_events"></i>
+                                <span><?= getPhrase('class_routine');?></span>
+                            </a>
+                        </li>
+                        <li class="navs-item">
+                            <a class="navs-links" href="<?= base_url();?>admin/teacher_routine/">
+                                <i class="os-icon picons-thin-icon-thin-0011_reading_glasses"></i>
+                                <span><?= getPhrase('teacher_routine');?></span>
+                            </a>
                         </li>
                     </ul>
                 </div>

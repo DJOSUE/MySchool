@@ -153,26 +153,26 @@
         }
         
         //Meet for Live Classes function.
-        function meet($param1 = '', $param2 = '', $param3 = '')
+        function subject_meet($param1 = '', $param2 = '', $param3 = '')
         {
             $this->isAdmin();
             if($param1 == 'create')
             {
                 $this->academic->createLiveClass();
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-                redirect(base_url() . 'admin/meet/'.$param2, 'refresh');
+                redirect(base_url() . 'admin/subject_meet/'.$param2, 'refresh');
             }
             if($param1 == 'update')
             {
                 $this->academic->updateLiveClass($param2);
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/meet/'.$param3, 'refresh');
+                redirect(base_url() . 'admin/subject_meet/'.$param3, 'refresh');
             }
             if($param1 == 'delete')
             {
                 $this->academic->deleteLiveClass($param2);
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
-                redirect(base_url() . 'admin/meet/'.$param3, 'refresh');
+                redirect(base_url() . 'admin/subject_meet/'.$param3, 'refresh');
             }
             $page_data['data'] = $param1;
             $page_data['page_name']  = 'meet';
@@ -345,29 +345,6 @@
             $page_data['page_title'] = getPhrase('pending_users');
             $this->load->view('backend/index', $page_data);
         }
-    
-        //Students reports function.
-        function reports_students($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-            $page_data['class_id']      = html_escape($this->input->post('class_id'));
-            $page_data['section_id']    = html_escape($this->input->post('section_id'));
-            $page_data['subject_id']    = $this->input->post('subject_id');
-            $page_data['page_name']     = 'reports_students';
-            $page_data['page_title']    = getPhrase('students_report');
-            $this->load->view('backend/index', $page_data);
-        }
-    
-        //General reports function.
-        function reports_general($class_id = '', $section_id = '')
-        {
-            $this->isAdmin();
-            $page_data['page_name']     = 'reports_general';
-            $page_data['class_id']      = html_escape($this->input->post('class_id'));
-            $page_data['section_id']    = html_escape($this->input->post('section_id'));
-            $page_data['page_title']    = getPhrase('general_reports');
-            $this->load->view('backend/index', $page_data);
-        }
 
         //Manage birthdays function.
         function birthdays()
@@ -376,6 +353,12 @@
             $page_data['page_name']  = 'birthdays';
             $page_data['page_title'] = getPhrase('birthdays');
             $this->load->view('backend/index', $page_data);
+        }
+
+        function birthdays_export()
+        {
+            $this->isAdmin();
+            $data = $this->user->download_Excel_birthdays();                       
         }
 
         //Manage Librarians function.
@@ -468,22 +451,6 @@
             $page_data['page_title'] =  getPhrase('your_notifications');
             $this->load->view('backend/index', $page_data);
         }
-
-        //Update academic settings function.
-        function academic_settings($param1 = '', $param2 = '', $param3 = '')
-        {
-            $this->isAdmin();
-            if ($param1 == 'do_update') 
-            {
-                $this->crud->updateAcademicSettings();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/academic_settings/', 'refresh');
-            }
-            $page_data['page_name']  = 'academic_settings';
-            $page_data['page_title'] = getPhrase('academic_settings');
-            $page_data['settings']   = $this->db->get('settings')->result_array();
-            $this->load->view('backend/index', $page_data);
-        }
         
         //Check if student exist function.
         function query() 
@@ -503,60 +470,6 @@
                 }
             }
         }
-        
-        //Grade Levels function.
-        function grade($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-            if ($param1 == 'create') 
-            {
-                $this->academic->createLevel();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-                redirect(base_url() . 'admin/grade/', 'refresh');
-            }
-            if ($param1 == 'update') 
-            {
-                $this->academic->updateLevel($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/grade/', 'refresh');
-            }
-            if ($param1 == 'delete') 
-            {
-                $this->academic->deleteLevel($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
-                redirect(base_url() . 'admin/grade/', 'refresh');
-            }
-            $page_data['page_name']  = 'grade';
-            $page_data['page_title'] = getPhrase('grades');
-            $this->load->view('backend/index', $page_data);
-        }
-
-        //GPA function.
-        function gpa($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-            if ($param1 == 'create') 
-            {
-                $this->academic->createGPA()();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-                redirect(base_url() . 'admin/gpa/', 'refresh');
-            }
-            if ($param1 == 'update') 
-            {
-                $this->academic->updateGPA()($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/gpa/', 'refresh');
-            }
-            if ($param1 == 'delete') 
-            {
-                $this->academic->deleteGPA()($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
-                redirect(base_url() . 'admin/gpa/', 'refresh');
-            }
-            $page_data['page_name']  = 'gpa';
-            $page_data['page_title'] = getPhrase('gpa');
-            $this->load->view('backend/index', $page_data);
-        }
     
         //All users and manage admin permissions function.
         function users($param1 = '' , $param2 = '')
@@ -574,7 +487,7 @@
         }
     
         //Manage Admins function.
-        function admins($param1 = '' , $param2 = '')
+        function admins($param1 = '' , $param2 = '', $param3 = '')
         {
             $this->isAdmin();
 
@@ -591,7 +504,13 @@
             {
                 $this->user->updateAdmin($param2);
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/admins/', 'refresh');
+
+                if($param3 == "")
+                {
+                    $param3 = 'admins';
+                }
+
+                redirect(base_url() . 'admin/'.$param3.'/', 'refresh');
             }
             else if ($param1 == 'update_profile') 
             {
@@ -1038,7 +957,12 @@
             $future_class_id    = $this->input->post('future_class_id');
             $future_section_id  = $this->input->post('future_section_id');
     
-            $current_subjects = $this->db->get_where( 'subject', array( 'class_id' => $current_class_id, 'section_id' => $current_section_id, 'year' => $this->runningYear, 'semester_id' => $this->runningSemester) )->result_array();
+            $this->db->reset_query();
+            $this->db->where('class_id', $current_class_id);
+            $this->db->where('section_id', $current_section_id);
+            $this->db->where('year', $this->runningYear);
+            $this->db->where('class_id', $current_class_id);
+            $current_subjects = $this->db->get('subject')->result_array();
         
             $current_subject_ids = array();
             $future_subject_ids = array();
@@ -1052,10 +976,15 @@
             $result = array_diff($current_subject_ids, $future_subject_ids);
 
             // echo '<pre>';
+            // var_dump($current_class_id);
+            // echo '<hr/>';
+            // var_dump($current_section_id);
+            // echo '<hr/>';
             // var_dump($result);
             // echo '</pre>';
-    
-            if(($current_class_id != $future_class_id || $current_section_id != $future_section_id) && count($result) > 0){
+
+            if(($current_class_id != $future_class_id || $current_section_id != $future_section_id) || count($result) > 0)
+            {
 
                 foreach ($current_subjects as $item) {
                     
@@ -1118,54 +1047,20 @@
 
                 $this->session->set_flashdata( 'flash_message', getPhrase( 'successfully_updated' ) );
             }
-            else {
+            else 
+            {
                 
                 $this->session->set_flashdata( 'flash_message', getPhrase( 'error' ) );
+                echo '<pre>';
+                var_dump($current_class_id);
+
+                var_dump($future_class_id);
+                
+                echo '</pre>';
             }
     
             $this->crud->clear_cache();
             redirect( base_url() . 'admin/student_update_class/'. $student_id.'/', 'refresh' );
-        }
-
-        //Student Enrollments function.
-        function student_enrollments($student_id, $param1='') 
-        {
-            $this->isAdmin();
-            $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
-            $page_data['page_name']  = 'student_enrollments';
-            $page_data['page_title'] =  getPhrase('student_enrollments');
-            $page_data['student_id'] =  $student_id;
-            $page_data['class_id']   =  $class_id;
-            $this->load->view('backend/index', $page_data);
-        }
-
-        //Save student enrollment 
-        function save_student_enrollment()
-        {
-            $this->isAdmin();
-            $student_id         = $this->input->post('student_id');
-            $subjects           = $this->input->post('subject_id');
-    
-            $data['student_id']     = $student_id;
-            $data['class_id']       = $this->input->post('class_id');
-            $data['section_id']     = $this->input->post('section_id');
-            $data['year']           = $this->input->post('year_id');
-            $data['semester_id']    = $this->input->post('semester_id');
-            $data['enroll_code']    = substr(md5(rand(0, 1000000)), 0, 7);
-            $data['date_added']     = strtotime(date('Y-m-d H:i:s'));
-    
-            foreach ($subjects as $key) {
-                $data['subject_id'] = $key;
-                $this->db->insert('enroll', $data);
-
-                $table      = 'enroll';
-                $action     = 'insert';
-                $insert_id  = $this->db->insert_id();
-                $this->crud->save_log($table, $action, $insert_id, $data);
-            }
-    
-            $this->session->set_flashdata('flash_message', getPhrase('successfully_added'));
-            redirect(base_url() . 'admin/student_enrollments/'.$student_id, 'refresh');
         }
 
         //Delete student enrollment 
@@ -1214,7 +1109,7 @@
             $this->isAdmin();
             
             if($this->useDailyMarks){
-                $page_data['page_name']  = 'student_past_daily_marks';
+                $page_data['page_name']  = 'student_past_daily_marks_by_semester';
                 $page_data['page_title'] =  getPhrase('student_past_daily_marks');
                 $page_data['student_id'] =  $student_id;
                 $this->load->view('backend/index', $page_data);
@@ -1270,12 +1165,15 @@
         function student_attendance_report_selector()
         {
             $this->isAdmin();
-            $data['class_id']   = $this->input->post('class_id');
-            $data['subject_id'] = $this->input->post('subject_id');
+            // $data['class_id']   = $this->input->post('class_id');
+            // $data['subject_id'] = $this->input->post('subject_id');
             $data['year']       = $this->input->post('year');
             $data['month']      = $this->input->post('month');
-            $data['section_id'] = $this->input->post('section_id');
-            redirect(base_url().'admin/student_profile_attendance/'.$this->input->post('student_id').'/'.$data['class_id'].'/'.$data['section_id'].'/'.$data['subject_id'].'/'.$data['month'].'/'.$data['year'].'/','refresh');
+            // $data['section_id'] = $this->input->post('section_id');
+
+            redirect(base_url().'admin/student_profile_attendance/'.$this->input->post('student_id').'/'.$data['month'].'/'.$data['year'].'/','refresh');
+
+            // redirect(base_url().'admin/student_profile_attendance/'.$this->input->post('student_id').'/'.$data['class_id'].'/'.$data['section_id'].'/'.$data['subject_id'].'/'.$data['month'].'/'.$data['year'].'/','refresh');
         }
         
         //Student Profile Attendance function.
@@ -1285,11 +1183,11 @@
             $page_data['page_name']  = 'student_profile_attendance';
             $page_data['page_title'] =  getPhrase('student_attendance');
             $page_data['student_id'] =  $student_id;
-            $page_data['subject_id'] =  $param3;
-            $page_data['class_id'] =  $param1;
-            $page_data['section_id'] =  $param2;
-            $page_data['month'] =  $param4;
-            $page_data['year'] =  $param5;
+            // $page_data['subject_id'] =  $param3;
+            // $page_data['class_id'] =  $param1;
+            // $page_data['section_id'] =  $param2;
+            $page_data['month'] =  $param1;
+            $page_data['year'] =  $param2;
             $this->load->view('backend/index', $page_data);
         }
         
@@ -1380,86 +1278,6 @@
             }
             $data['page_name']  = 'book_request';
             $data['page_title'] = getPhrase('book_request');
-            $this->load->view('backend/index', $data);
-        }
-    
-        //Permissions request for teachers function.
-        function request($param1 = "", $param2 = "")
-        {
-            $this->isAdmin();
-            parse_str(substr(strrchr($_SERVER['REQUEST_URI'], "?"), 1), $_GET);
-            if(html_escape($_GET['id']) != "")
-            {
-                $notify['status'] = 1;
-                $this->db->where('id', html_escape($_GET['id']));
-                $this->db->update('notification', $notify);
-
-                $table      = 'notification';
-                $action     = 'update';
-                $update_id  = html_escape($_GET['id']);
-                $this->crud->save_log($table, $action, $update_id, $notify);
-
-            }           
-            if ($param1 == "accept")
-            {
-                $this->crud->acceptRequest($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/request/', 'refresh');
-            }
-            if ($param1 == "reject")
-            {
-                $this->crud->rejectRequest($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('rejected_successfully'));
-                redirect(base_url() . 'admin/request/', 'refresh');
-            }
-            $data['page_name']  = 'request';
-            $data['page_title'] = getPhrase('permissions');
-            $this->load->view('backend/index', $data);
-        }
-    
-        //Permissions request for students function.
-        function request_student($param1 = "", $param2 = "")
-        {
-            $this->isAdmin();
-            parse_str(substr(strrchr($_SERVER['REQUEST_URI'], "?"), 1), $_GET);
-            if(html_escape($_GET['id']) != "")
-            {
-                $notify['status'] = 1;
-                $this->db->where('id', html_escape($_GET['id']));
-                $this->db->update('notification', $notify);
-
-                $table      = 'notification';
-                $action     = 'update';
-                $update_id  = html_escape($_GET['id']);
-                $this->crud->save_log($table, $action, $update_id, $notify);
-
-            }
-            if ($param1 == "accept")
-            {
-                $this->crud->acceptStudentRequest($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/request/', 'refresh');
-            }
-            if ($param1 == "reject")
-            {
-                $this->crud->rejectStudentRequest($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('rejected_successfully'));
-                redirect(base_url() . 'admin/request/', 'refresh');
-            }
-            if($param1 == 'delete')
-            {
-                $this->crud->deletePermission($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
-                redirect(base_url() . 'admin/request_student/', 'refresh');
-            }
-            if($param1 == 'delete_teacher')
-            {
-                $this->crud->deleteTeacherPermission($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
-                redirect(base_url() . 'admin/request_student/', 'refresh');
-            }
-            $data['page_name']  = 'request_student';
-            $data['page_title'] = getPhrase('reports');
             $this->load->view('backend/index', $data);
         }
     
@@ -1962,6 +1780,35 @@
             $this->load->view('backend/index', $page_data);
         }
         
+        //Save student enrollment 
+        function save_student_enrollment()
+        {
+            $this->isAdmin();
+            $student_id         = $this->input->post('student_id');
+            $subjects           = $this->input->post('subject_id');
+    
+            $data['student_id']     = $student_id;
+            $data['class_id']       = $this->input->post('class_id');
+            $data['section_id']     = $this->input->post('section_id');
+            $data['year']           = $this->input->post('year_id');
+            $data['semester_id']    = $this->input->post('semester_id');
+            $data['enroll_code']    = substr(md5(rand(0, 1000000)), 0, 7);
+            $data['date_added']     = strtotime(date('Y-m-d H:i:s'));
+    
+            foreach ($subjects as $key) {
+                $data['subject_id'] = $key;
+                $this->db->insert('enroll', $data);
+
+                $table      = 'enroll';
+                $action     = 'insert';
+                $insert_id  = $this->db->insert_id();
+                $this->crud->save_log($table, $action, $insert_id, $data);
+            }
+    
+            $this->session->set_flashdata('flash_message', getPhrase('successfully_added'));
+            redirect(base_url() . 'admin/student_enrollments/'.$student_id, 'refresh');
+        }
+        
         //Manage students function.
         function student($param1 = '', $param2 = '', $param3 = '')
         {
@@ -1979,13 +1826,15 @@
             if ($param1 == 'admission') 
             {
                 $student_id = $this->user->studentAdmission();
+
+                // Save the agreement/contract
+                $agreement_id = $this->agreement->create_agreement($student_id);
+
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-                if($this->input->post('download_pdf') == '1')
-                {
-                   redirect(base_url() . 'admin/download_file/'.$student_id.'/'.base64_encode($this->input->post('password')), 'refresh');
-                }else{
-                    redirect(base_url() . 'admin/admission_new_student/', 'refresh');
-                }
+
+                // Print the Contract                
+                $data = base64_encode($student_id.'-'.$agreement_id.'-'.'admission_new_student');
+                redirect(base_url() . 'admin/student_download_agreement/'.$data, 'refresh');
             }
             if ($param1 == 'do_update') 
             {
@@ -2011,8 +1860,43 @@
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
                 redirect(base_url() . 'admin/students/', 'refresh');
             }
+            if($param1 == 'agreement')
+            {
+                //Update personal info 
+                if($this->input->post('update_info') == '1')
+                {
+                    $this->studentModel->update_student_enroll($param2);   
+                }
+              
+                //Save student enrollment 
+                $this->academic->save_student_enrollment($param2);
+
+                // Save the agreement/contract
+                $agreement_id = $this->agreement->create_agreement($param2);
+                
+                $this->session->set_flashdata('flash_message', getPhrase('successfully_added'));
+
+                $data = base64_encode($param2.'-'.$agreement_id.'-'.'student_enrollments');
+                redirect(base_url() . 'admin/student_download_agreement/'.$data, 'refresh');
+            }
         }
-    
+
+        function student_download_agreement($param1)
+        {            
+            $this->isAdmin();
+
+            $array = base64_decode($param1);
+            $data  = explode('-', $array);
+            
+            $page_data['student_id']    = $data[0];
+            $page_data['agreement_id']  = $data[1];
+            $page_data['url']           = $data[2];
+            $page_data['page_name']     = 'student_download_agreement';
+            $page_data['page_title']    = getPhrase('student_download_agreement');
+            $this->load->view('backend/index', $page_data);
+
+        }
+
         //Promote students function.
         function student_promotion($param1 = '' , $param2 = '')
         {
@@ -2100,6 +1984,38 @@
                 redirect(base_url() . 'admin/cursos/', 'refresh');
             }
         }
+
+        //Manage subjects function.
+        function subject($param1 = '', $param2 = '' , $param3 = '')
+        {
+            $this->isAdmin();
+            if ($param1 == 'create') 
+            {
+                $this->academic->createCourse();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'admin/cursos/'.base64_encode($param2)."/", 'refresh');
+            }
+            if ($param1 == 'update_labs') 
+            {
+                $class_id = $this->db->get_where('subject', array('subject_id' => $param2))->row()->class_id;
+                $this->academic->updateCourseActivity($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/upload_marks/'.base64_encode($class_id."-".$this->input->post('section_id')."-".$param2).'/', 'refresh');
+            }
+            if ($param1 == 'update') 
+            {
+                $this->academic->updateCourse($param2);
+                $class_id = $this->db->get_where('subject', array('subject_id' => $param2))->row()->class_id;
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/cursos/'.base64_encode($class_id."-".$this->input->post('section_id').'-'.$param2)."/", 'refresh');
+            }
+            if ($param1 == 'delete') 
+            {
+                $this->academic->deleteCourse($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                redirect(base_url() . 'admin/academic_settings_subjects/', 'refresh');
+            }
+        }
         
         //Online exam result function.
         function online_exam_result($param1 = '', $param2 = '') 
@@ -2144,164 +2060,6 @@
             $data = file_get_contents("public/uploads/libreria/" . $file_name);
             $name = $file_name;
             force_download($name, $data);
-        }
-
-        //Manage school sections function.
-        function sections($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-            $class = $this->input->post('class_id');
-            if ($class == '')
-            {
-                $class = $this->db->get('class')->first_row()->class_id;
-            }
-            $year_id = $this->input->post('year_id');
-            if ($year_id == '')
-            {
-                $year_id = $this->runningYear;
-            }
-            $semester_id = $this->input->post('semester_id');
-            if ($semester_id == '')
-            {
-                $semester_id = $this->runningSemester;
-            }
-            
-            if ($param1 == 'create') 
-            {
-                $new_year_id = $this->input->post('new_year_id');
-                $new_semester_id = $this->input->post('new_semester_id');
-
-                $this->academic->createSection($new_year_id, $new_semester_id);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-                redirect(base_url() . 'admin/sections/' . $this->input->post('class_id') ."/", 'refresh');
-            }
-            if($param1 == 'update')
-            {
-                $this->academic->updateSection($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/sections/', 'refresh');
-            }
-            if ($param1 == 'delete') 
-            {
-                $this->academic->deleteSection($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
-                redirect(base_url() . 'admin/sections/' , 'refresh');
-            }
-            $page_data['page_name']     = 'section';
-            $page_data['page_title']    = getPhrase('sections');
-            $page_data['class_id']      = $class;
-            $page_data['year_id']       = $year_id;
-            $page_data['semester_id']   = $semester_id;
-            $this->load->view('backend/index', $page_data);    
-        }
-
-        //Manage school subjects function.
-        function subjects($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-
-            $class = $this->input->post('class_id');
-            if ($class == '')
-            {
-                $class = $this->db->get('class')->first_row()->class_id;
-            }
-
-            $year_id = $this->input->post('year_id');
-            if ($year_id == '')
-            {
-                $year_id = $this->runningYear;
-            }
-
-            $semester_id = $this->input->post('semester_id');
-            if ($semester_id == '')
-            {
-                $semester_id = $this->runningSemester;
-            }
-
-            $section_id = $this->input->post('section_id');
-
-            if ($param1 == 'create') 
-            {
-                $new_year_id = $this->input->post('new_year_id');
-                $new_semester_id = $this->input->post('new_semester_id');
-
-                $this->academic->createSubject($new_year_id, $new_semester_id);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-                redirect(base_url() . 'admin/subjects/' . $this->input->post('class_id') ."/", 'refresh');
-            }
-            if($param1 == 'update')
-            {
-                $this->academic->updateCourse($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/subjects/', 'refresh');
-            }
-            if ($param1 == 'delete') 
-            {
-                $this->academic->deleteCourse($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
-                redirect(base_url() . 'admin/subjects/' , 'refresh');
-            }
-            $page_data['page_name']     = 'subjects';
-            $page_data['page_title']    = getPhrase('subjects');
-            $page_data['class_id']      = $class;
-            $page_data['year_id']       = $year_id;
-            $page_data['section_id']    = $section_id;
-            $page_data['semester_id']   = $semester_id;
-            $this->load->view('backend/index', $page_data);    
-        }
-
-        //Manage units function.
-        function units($param1 = '', $param2 = '' , $param3 = '')
-        {
-            $this->isAdmin();
-            if ($param1 == 'create') 
-            {
-                $this->academic->createUnit();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-                redirect(base_url() . 'admin/units/', 'refresh');
-            }
-            if ($param1 == 'update') 
-            {
-                $this->academic->updateUnit($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/units/', 'refresh');
-            }
-            if ($param1 == 'delete') 
-            {
-                $this->academic->deleteUnit($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
-                redirect(base_url() . 'admin/units/', 'refresh');
-            }
-            $page_data['page_name']  = 'units';
-            $page_data['page_title'] = getPhrase('units');
-            $this->load->view('backend/index', $page_data);
-        }
-
-        //Manage semesters function.
-        function semesters($param1 = '', $param2 = '' , $param3 = '')
-        {
-            $this->isAdmin();
-            if ($param1 == 'create') 
-            {
-                $this->academic->createSemester();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-                redirect(base_url() . 'admin/semesters/', 'refresh');
-            }
-            if ($param1 == 'update') 
-            {
-                $this->academic->updateSemester($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/semesters/', 'refresh');
-            }
-            if ($param1 == 'delete') 
-            {
-                $this->academic->deleteSemester($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
-                redirect(base_url() . 'admin/semesters/', 'refresh');
-            }
-            $page_data['page_name']  = 'semester';
-            $page_data['page_title'] = getPhrase('units');
-            $this->load->view('backend/index', $page_data);
         }
 
         //Update Book Function.
@@ -2366,7 +2124,7 @@
         }
 
         // Daily marks average
-        function daily_marks_average($datainfo = '', $param2 = ''){
+        function subject_daily_marks_average($datainfo = '', $param2 = ''){
             $this->isAdmin();
             if($param2 != ""){
                 $page = $param2;
@@ -2440,6 +2198,29 @@
             $page_data['page_title'] = getPhrase('class_routine');
             $this->load->view('backend/index', $page_data);
         }
+
+        //Class routine view function.
+        function class_routine_by_semester($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+
+            if($_SERVER['REQUEST_METHOD'] === 'POST')
+            {   
+                $year_id        = $this->input->post('year_id');
+                $semester_id    = $this->input->post('semester_id');
+            }
+            else
+            {    
+                $year_id        = $this->runningYear;
+                $semester_id    = $this->runningSemester;
+            }            
+
+            $page_data['year_id']       = $year_id;
+            $page_data['semester_id']   = $semester_id;
+            $page_data['page_name']     = 'class_routine_by_semester';
+            $page_data['page_title']    = getPhrase('class_routine_by_semester');
+            $this->load->view('backend/index', $page_data);
+        }
     
         //Manage attendance function.
         function attendance($param1 = '', $param2 = '')
@@ -2462,123 +2243,6 @@
             $page_data['section_id'] = $section_id;
             $page_data['page_title'] = getPhrase('attendance');
             $this->load->view('backend/index', $page_data);
-        }
-    
-        //Attendance report function.
-        function attendance_report($param1 = '', $param2 = '', $param3 = '', $param4 = '', $param5 = '') 
-        {
-            if($param1 == 'check')
-            {
-                $data['class_id']    = $this->input->post('class_id');
-                $data['subject_id']  = $this->input->post('subject_id');
-                $data['year']        = $this->input->post('year');
-                $data['month']       = $this->input->post('month');
-                $data['section_id']  = $this->input->post('section_id');
-                redirect(base_url().'admin/attendance_report/'.$data['class_id'].'/'.$data['section_id'].'/'.$data['subject_id'].'/'.$data['month'].'/'.$data['year'],'refresh');
-            }
-            $page_data['class_id']    = $param1;
-            $page_data['section_id']  = $param2;
-            $page_data['subject_id']  = $param3;
-            $page_data['month']       = $param4;
-            $page_data['year']        = $param5;
-            $page_data['page_name']   = 'attendance_report';
-            $page_data['page_title']  = getPhrase('attendance_report');
-            $this->load->view('backend/index',$page_data);
-        }
-        
-        //Tabulation report function.
-        function reports_tabulation($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-
-            $year_id = $this->input->post( 'year_id' );
-            if ($year_id == '') {
-                $year_id = $this->runningYear;
-            }
-
-            $semester_id = $this->input->post( 'semester_id' );
-            if ( $semester_id == '' ) {
-                $semester_id = $this->runningSemester;
-            }
-
-            $page_data['year_id']       = $year_id;
-            $page_data['semester_id']   = $semester_id;
-            $page_data['class_id']      = $this->input->post('class_id');
-            $page_data['section_id']    = $this->input->post('section_id');
-            $page_data['subject_id']    = $this->input->post('subject_id');
-
-            if($this->useDailyMarks){
-                $page_data['page_name']   = 'reports_tabulation_daily';
-                $page_data['page_title']  = getPhrase('tabulation_daily_report');
-                $this->load->view('backend/index', $page_data);
-            } 
-            else { 
-                $page_data['page_name']   = 'reports_tabulation';
-                $page_data['page_title']  = getPhrase('tabulation_report');
-                $this->load->view('backend/index', $page_data);
-            }
-        }
-        
-        //Accounting report function.
-        function reports_accounting($param1 = '', $param2 = '')
-        {
-          $this->isAdmin();
-          $page_data['page_name']   = 'reports_accounting';
-          $page_data['page_title']  = getPhrase('accounting_report');
-          $this->load->view('backend/index', $page_data);
-        }
-         
-        //Marks report function.
-        function reports_marks($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-            if($param1 == 'generate')
-            {
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-                redirect(base_url() . 'admin/reports_marks/', 'refresh');
-            }
-            $page_data['class_id']   = $this->input->post('class_id');
-            $page_data['section_id']   = $this->input->post('section_id');
-            $page_data['student_id']   = $this->input->post('student_id');
-            $page_data['unit_id']   = $this->input->post('unit_id');
-            $page_data['page_name']   = 'reports_marks';
-            $page_data['page_title']  = getPhrase('marks_report');
-            $this->load->view('backend/index', $page_data);
-        }
-    
-        //Report attendance view function.
-        function report_attendance_view($class_id = '' , $section_id = '', $month = '', $year = '') 
-        {
-            $this->isAdmin();
-            $page_data['class_id']   = $class_id;
-            $page_data['month']      = $month;
-            $page_data['year']       = $year;
-            $page_data['page_name']  = 'report_attendance_view';
-            $page_data['section_id'] = $section_id;
-            $page_data['page_title'] = getPhrase('attendance_report');
-            $this->load->view('backend/index', $page_data);
-        }
-    
-        //Manage behavior report function.
-        function create_report($param1 = '', $param2 = '')
-        {
-            $this->isAdmin();
-            if($param1 == 'send')
-            {
-                $this->academic->createReport();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
-                redirect(base_url() . 'admin/request_student/', 'refresh');
-            }
-            if($param1 == 'response')
-            {
-                $this->academic->reportResponse();
-            }
-            if($param1 == 'update')
-            {
-                $this->academic->updateReport($param2);
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/looking_report/'.$param2, 'refresh');
-            }
         }
         
         //Calendar events function.
@@ -3303,7 +2967,7 @@
                     $this->unset_admin();
                     $this->session->set_userdata('role_id', '6');
                     $this->session->set_userdata('program_id', $row->program_id);
-                    $this->session->set_userdata('student_login', $row->student_session);
+                    $this->session->set_userdata('student_login', '1');
                     $this->session->set_userdata('student_id', $row->student_id);
                     $this->session->set_userdata('login_user_id', $row->student_id);
                     $this->session->set_userdata('name', $row->first_name);
@@ -3324,7 +2988,7 @@
                 if ( $param1 == 'accountant' ){
                     
                     $this->unset_admin();
-                    $this->session->set_userdata('role_id', '4');
+                    $this->session->set_userdata('role_id', $row->role_id);
                     $this->session->set_userdata('accountant_login', '1');
                     $this->session->set_userdata('accountant_id', $row->accountant_id);
                     $this->session->set_userdata('login_user_id', $row->accountant_id);
@@ -3351,8 +3015,80 @@
             }
             redirect( base_url(), 'refresh' );
         }
+
+/***** Module accounting *****************************************************************************************************************************/
+        function accounting_dashboard()
+        {
+            $this->isAdmin();
+
+            if(has_permission('accounting_dashboard'))
+            {
+                $page_data['page_name']     = 'accounting_dashboard';
+                $page_data['page_title']    = getPhrase('accounting_dashboard');
+                $this->load->view('backend/index', $page_data);
+            }
+            else
+            {
+                redirect(base_url() . 'admin/accounting_daily_income', 'refresh');
+            }
+            
+        }
+
+        function accounting_daily_income()
+        {     
+            $this->isAdmin();
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $date = html_escape($this->input->post('date'));
+                $cashier_id = html_escape($this->input->post('cashier_id'));
+            }
+            else
+            {
+                if(has_permission('accounting_dashboard'))
+                {
+                    $date = "";
+                    $cashier_id = "";
+                }
+                else
+                {
+                    $date = date("Y-m-d");
+                    $cashier_id = "admin:".$this->session->userdata('login_user_id');
+                }
+            }
+    
+            $page_data['date']          = $date;
+            $page_data['cashier_id']    = $cashier_id;
+            $page_data['cashier_all']   = has_permission('accounting_dashboard');            
+            $page_data['page_name']     = 'accounting_daily_income';
+            $page_data['page_title']    = getPhrase('daily_income');
+            $this->load->view('backend/index', $page_data); 
+
+        }
+
+        function accounting_payments()
+        {
+            $this->isAdmin();
+            $interval   = date_interval_create_from_date_string('1 days');
+            $objDate    = date_create(date("m/d/Y"));
+            
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $start_date = html_escape($this->input->post('start_date'));
+                $end_date   = html_escape($this->input->post('end_date'));
+            }
+            else
+            {
+                $start_date = date_format($objDate, "m/d/Y");
+                $end_date   = date_format(date_add($objDate, $interval), "m/d/Y");
+            }
+            
+            $page_data['start_date'] = $start_date;
+            $page_data['end_date']   = $end_date;
+            $page_data['page_name']  = 'accounting_payments';
+            $page_data['page_title'] = getPhrase('payments');
+            $this->load->view('backend/index', $page_data); 
+        }
         
-        /** Student Module */
+/***** Module Student ********************************************************************************************************************************/
         // 
         function admission_student_interaction($action, $student_id = '', $interaction_id = '', $return_url = '')
         {
@@ -3414,7 +3150,159 @@
             
         }
 
-/*****Admission Module  ********************************************************************************************************************************/        
+        //Student Enrollments function.
+        function student_enrollments($student_id, $param1='') 
+        {
+            $this->isAdmin();
+            $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
+            $page_data['page_name']  = 'student_agreements';
+            $page_data['page_title'] =  getPhrase('student_agreements');
+            $page_data['student_id'] =  $student_id;
+            $page_data['class_id']   =  $class_id;
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function student_payments($student_id, $param1='')
+        {
+            $this->isAdmin();
+            $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
+            $page_data['student_id'] =  $student_id;
+            $page_data['class_id']   =  $class_id;
+            
+            $page_data['page_name']  = 'student_payments';
+            $page_data['page_title'] =  getPhrase('student_payments');
+            
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function payment_process($user_id, $user_type)
+        {
+
+            $this->payment->create_payment($user_id, $user_type);
+
+            $return_url = 'admin/student_payments/'.$user_id;
+
+            if($user_type === 'applicant')
+            {
+                $return_url = 'admin/admission_applicant/'.$user_id;
+            }
+
+            $this->session->set_flashdata('flash_message', getPhrase('successfully_added'));
+            
+            redirect(base_url() . $return_url, 'refresh');
+        }
+
+        function payment_invoice($payment_id)
+        {
+            $this->isAdmin();            
+            
+            $page_data['payment_id'] =  base64_decode($payment_id);
+            $page_data['page_name']  = 'payment_invoice';
+            $page_data['page_title'] =  getPhrase('payment_invoice');
+            $this->load->view('backend/print/payment_invoice', $page_data);
+            
+        }
+
+        //Student Enrollments function.
+        function student_new_enrollment($student_id, $param1='') 
+        {
+            $this->isAdmin();
+            $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
+            $page_data['page_name']  = 'student_new_enrollment';
+            $page_data['page_title'] =  getPhrase('new_enrollment');
+            $page_data['student_id'] =  $student_id;
+            $page_data['class_id']   =  $class_id;
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //Student Enrollments function.
+        function student_agreements($student_id, $param1='') 
+        {
+            $this->isAdmin();            
+            $page_data['page_name']  = 'student_agreements';
+            $page_data['page_title'] =  getPhrase('student_agreements');
+            $page_data['student_id'] =  $student_id;
+            // $page_data['class_id']   =  $class_id;
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //Student Enrollments function.
+        function student_print_documents($student_id, $param1='') 
+        {
+            $this->isAdmin();            
+            $page_data['page_name']  = 'student_print_documents';
+            $page_data['page_title'] =  getPhrase('student_print_documents');
+            $page_data['student_id'] =  $student_id;            
+            $this->load->view('backend/index', $page_data);
+        }
+
+
+
+/***** Student of the Month functions ****************************************************************************************************************************/
+        
+        function student_month_dashboard()
+        {
+            // $this->isAdmin('student_month_access');
+
+            if($_SERVER['REQUEST_METHOD'] === 'POST')
+            {   
+                $month_id  = $this->input->post('month_id');
+            }
+            else
+            {    
+                $month_id  = "";
+            }
+
+            $page_data['month_id']      = $month_id;
+            $page_data['page_name']     = 'student_month_dashboard';
+            $page_data['page_title']    =  getPhrase('student_month_dashboard');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function student_month_action($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+
+            switch ($param1) {
+                case 'best':
+                    $this->academic->best_student_month($param2);
+                    $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                    break;
+                case 'delete':
+                    $this->academic->delete_student_month($param2);
+                    $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                    break;
+                
+                case 'add':
+                    //Validate if exist a Student of the month
+
+                    $data['year']           = $this->runningYear;
+                    $data['semester_id']    = $this->runningSemester;
+                    $data['class_id']       = $this->input->post('class_id');
+                    $data['section_id']     = $this->input->post('section_id');
+                    $data['subject_id']     = $this->input->post('subject_id');
+                    $data['month']          = $this->input->post('month');
+
+                    
+                    $query = $this->db->get_where('student_month', $data);
+                    if ($query->num_rows() > 0) 
+                    {
+                        $this->session->set_flashdata('flash_message' , getPhrase('duplicate'));                    
+                    }
+                    else
+                    {
+                        $this->academic->create_student_month();
+                        $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                    }
+                    
+                    break;
+            }
+            
+            redirect(base_url() . 'admin/student_month_dashboard/', 'refresh');
+            
+        }
+
+/***** Module Admission ******************************************************************************************************************************/        
         // Admission Dashboard
         function admission_dashboard()
         {
@@ -3537,6 +3425,15 @@
             $this->load->view('backend/index', $page_data);
         }
 
+        // 
+        function admission_applicant_payment($applicant_id = '', $param2 = '')
+        {
+            $this->isAdmin('admission_module');
+            $page_data['applicant_id'] = $applicant_id;
+            $page_data['page_name']    = 'admission_applicant_payment';
+            $page_data['page_title']   = getPhrase('applicant_payment');
+            $this->load->view('backend/index', $page_data);
+        }
 
         function applicant($action, $applicant_id = '', $return_url = '')
         {
@@ -3901,8 +3798,150 @@
             $this->applicant->update_tag($applicant_id, $tag_id, $selected);
         }
 
-/*****Reports Module  ********************************************************************************************************************************/
-        // task Dashboard
+
+
+/***** Module Reports ********************************************************************************************************************************/
+        
+        //General reports function.
+        function reports_general($class_id = '', $section_id = '')
+        {
+            $this->isAdmin();
+            $page_data['page_name']     = 'reports_general';
+            $page_data['class_id']      = html_escape($this->input->post('class_id'));
+            $page_data['section_id']    = html_escape($this->input->post('section_id'));
+            $page_data['page_title']    = getPhrase('general_reports');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //Students reports function.
+        function reports_students($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            $page_data['class_id']      = html_escape($this->input->post('class_id'));
+            $page_data['section_id']    = html_escape($this->input->post('section_id'));
+            $page_data['subject_id']    = $this->input->post('subject_id');
+            $page_data['page_name']     = 'reports_students';
+            $page_data['page_title']    = getPhrase('students_report');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //Attendance report function.
+        function attendance_report($param1 = '', $param2 = '', $param3 = '', $param4 = '', $param5 = '') 
+        {
+            if($param1 == 'check')
+            {
+                $data['class_id']    = $this->input->post('class_id');
+                $data['subject_id']  = $this->input->post('subject_id');
+                $data['year']        = $this->input->post('year');
+                $data['month']       = $this->input->post('month');
+                $data['section_id']  = $this->input->post('section_id');
+                redirect(base_url().'admin/attendance_report/'.$data['class_id'].'/'.$data['section_id'].'/'.$data['subject_id'].'/'.$data['month'].'/'.$data['year'],'refresh');
+            }
+            $page_data['class_id']    = $param1;
+            $page_data['section_id']  = $param2;
+            $page_data['subject_id']  = $param3;
+            $page_data['month']       = $param4;
+            $page_data['year']        = $param5;
+            $page_data['page_name']   = 'attendance_report';
+            $page_data['page_title']  = getPhrase('attendance_report');
+            $this->load->view('backend/index',$page_data);
+        }
+
+        //Marks report function.
+        function reports_marks($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            if($param1 == 'generate')
+            {
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'admin/reports_marks/', 'refresh');
+            }
+            $page_data['class_id']   = $this->input->post('class_id');
+            $page_data['section_id']   = $this->input->post('section_id');
+            $page_data['student_id']   = $this->input->post('student_id');
+            $page_data['unit_id']   = $this->input->post('unit_id');
+            $page_data['page_name']   = 'reports_marks';
+            $page_data['page_title']  = getPhrase('marks_report');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //Tabulation report function.
+        function reports_tabulation($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+
+            $year_id = $this->input->post( 'year_id' );
+            if ($year_id == '') {
+                $year_id = $this->runningYear;
+            }
+
+            $semester_id = $this->input->post( 'semester_id' );
+            if ( $semester_id == '' ) {
+                $semester_id = $this->runningSemester;
+            }
+
+            $page_data['year_id']       = $year_id;
+            $page_data['semester_id']   = $semester_id;
+            $page_data['class_id']      = $this->input->post('class_id');
+            $page_data['section_id']    = $this->input->post('section_id');
+            $page_data['subject_id']    = $this->input->post('subject_id');
+
+            if($this->useDailyMarks){
+                $page_data['page_name']   = 'reports_tabulation_daily';
+                $page_data['page_title']  = getPhrase('tabulation_daily_report');
+                $this->load->view('backend/index', $page_data);
+            } 
+            else { 
+                $page_data['page_name']   = 'reports_tabulation';
+                $page_data['page_title']  = getPhrase('tabulation_report');
+                $this->load->view('backend/index', $page_data);
+            }
+        }
+        
+        //Accounting report function.
+        function reports_accounting($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            $page_data['page_name']   = 'reports_accounting';
+            $page_data['page_title']  = getPhrase('accounting_report');
+            $this->load->view('backend/index', $page_data);
+        }
+    
+        //Report attendance view function.
+        function report_attendance_view($class_id = '' , $section_id = '', $month = '', $year = '') 
+        {
+            $this->isAdmin();
+            $page_data['class_id']   = $class_id;
+            $page_data['month']      = $month;
+            $page_data['year']       = $year;
+            $page_data['page_name']  = 'report_attendance_view';
+            $page_data['section_id'] = $section_id;
+            $page_data['page_title'] = getPhrase('attendance_report');
+            $this->load->view('backend/index', $page_data);
+        }
+    
+        //Manage behavior report function.
+        function create_report($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            if($param1 == 'send')
+            {
+                $this->academic->createReport();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'admin/request_student/', 'refresh');
+            }
+            if($param1 == 'response')
+            {
+                $this->academic->reportResponse();
+            }
+            if($param1 == 'update')
+            {
+                $this->academic->updateReport($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/looking_report/'.$param2, 'refresh');
+            }
+        }
+
         function reports_students_all()
         {
             $year_id = $this->input->post( 'year_id' );
@@ -3923,7 +3962,310 @@
             $this->load->view('backend/index', $page_data);
         }
 
-/*****Task Module     ********************************************************************************************************************************/        
+        function report_students_achievement()
+        {
+            $this->isAdmin();
+
+            $year_id = $this->input->post( 'year_id' );
+            if ($year_id == '') {
+                $year_id = $this->runningYear;
+            }
+            
+            $page_data['year_id']       = $year_id;            
+            $page_data['page_name']     = 'report_students_achievement';
+            $page_data['page_title']    = getPhrase('report_students_achievement');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function report_students_placement_test()
+        {
+            $this->isAdmin();
+
+            $year_id = $this->input->post( 'year_id' );
+            if ($year_id == '') {
+                $year_id = $this->runningYear;
+            }
+
+            $semester_id = $this->input->post( 'semester_id' );
+            if ( $semester_id == '' ) {
+                $semester_id = $this->runningSemester;
+            }
+            
+            $page_data['year_id']       = $year_id;
+            $page_data['semester_id']   = $semester_id;
+            $page_data['page_name']     = 'report_students_placement_test';
+            $page_data['page_title']    = getPhrase('report_students_placement_test');
+            $this->load->view('backend/index', $page_data);
+        }
+
+/***** Module Academic Settings **********************************************************************************************************************/
+        
+        //Update academic settings function.
+        function academic_settings($param1 = '', $param2 = '', $param3 = '')
+        {
+            $this->isAdmin();
+            if ($param1 == 'do_update') 
+            {
+                $this->crud->updateAcademicSettings();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/academic_settings/', 'refresh');
+            }
+            $page_data['page_name']  = 'academic_settings';
+            $page_data['page_title'] = getPhrase('academic_settings');
+            $page_data['settings']   = $this->db->get('settings')->result_array();
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //Update academic settings function.
+        function academic_settings_semester_enroll($param1 = '', $param2 = '', $param3 = '')
+        {
+            $this->isAdmin();
+            if ($param1 == 'do_update') 
+            {
+                $this->crud->updateAcademicSettings();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/academic_settings/', 'refresh');
+            }
+            $page_data['page_name']  = 'academic_settings_semester_enroll';
+            $page_data['page_title'] = getPhrase('semester_enroll');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function semester_enroll($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            if ($param1 == 'create') 
+            {
+                $this->academic->create_semester_enroll();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+            }
+
+            redirect(base_url() . 'admin/academic_settings_semester_enroll/', 'refresh');
+        }
+        
+                
+        //Grade Levels function.
+        function academic_settings_grade($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            if ($param1 == 'create') 
+            {
+                $this->academic->createLevel();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'admin/academic_settings_grade/', 'refresh');
+            }
+            if ($param1 == 'update') 
+            {
+                $this->academic->updateLevel($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/academic_settings_grade/', 'refresh');
+            }
+            if ($param1 == 'delete') 
+            {
+                $this->academic->deleteLevel($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                redirect(base_url() . 'admin/academic_settings_grade/', 'refresh');
+            }
+            $page_data['page_name']  = 'academic_settings_grade';
+            $page_data['page_title'] = getPhrase('grades');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //GPA function.
+        function academic_settings_gpa($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            if ($param1 == 'create') 
+            {
+                $this->academic->createGPA()();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'admin/academic_settings_gpa/', 'refresh');
+            }
+            if ($param1 == 'update') 
+            {
+                $this->academic->updateGPA()($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/academic_settings_gpa/', 'refresh');
+            }
+            if ($param1 == 'delete') 
+            {
+                $this->academic->deleteGPA()($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                redirect(base_url() . 'admin/academic_settings_gpa/', 'refresh');
+            }
+            $page_data['page_name']  = 'academic_settings_gpa';
+            $page_data['page_title'] = getPhrase('gpa');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //Manage semesters function.
+        function academic_settings_semesters($param1 = '', $param2 = '' , $param3 = '')
+        {
+            $this->isAdmin();
+            if ($param1 == 'create') 
+            {
+                $this->academic->createSemester();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'admin/academic_settings_semesters/', 'refresh');
+            }
+            if ($param1 == 'update') 
+            {
+                $this->academic->updateSemester($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/academic_settings_semesters/', 'refresh');
+            }
+            if ($param1 == 'delete') 
+            {
+                $this->academic->deleteSemester($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                redirect(base_url() . 'admin/academic_settings_semesters/', 'refresh');
+            }
+            $page_data['page_name']  = 'academic_settings_semesters';
+            $page_data['page_title'] = getPhrase('units');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //Manage units function.
+        function academic_settings_units($param1 = '', $param2 = '' , $param3 = '')
+        {
+            $this->isAdmin();
+            if ($param1 == 'create') 
+            {
+                $this->academic->createUnit();
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'admin/academic_settings_units/', 'refresh');
+            }
+            if ($param1 == 'update') 
+            {
+                $this->academic->updateUnit($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/academic_settings_units/', 'refresh');
+            }
+            if ($param1 == 'delete') 
+            {
+                $this->academic->deleteUnit($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                redirect(base_url() . 'admin/academic_settings_units/', 'refresh');
+            }
+            $page_data['page_name']  = 'academic_settings_units';
+            $page_data['page_title'] = getPhrase('units');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //Manage school sections function.
+        function academic_settings_sections($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+            $class = $this->input->post('class_id');
+            if ($class == '')
+            {
+                $class = $this->db->get('class')->first_row()->class_id;
+            }
+            $year_id = $this->input->post('year_id');
+            if ($year_id == '')
+            {
+                $year_id = $this->runningYear;
+            }
+            $semester_id = $this->input->post('semester_id');
+            if ($semester_id == '')
+            {
+                $semester_id = $this->runningSemester;
+            }
+            
+            if ($param1 == 'create') 
+            {
+                $new_year_id = $this->input->post('new_year_id');
+                $new_semester_id = $this->input->post('new_semester_id');
+
+                $this->academic->createSection($new_year_id, $new_semester_id);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'admin/academic_settings_sections/' . $this->input->post('class_id') ."/", 'refresh');
+            }
+            if($param1 == 'update')
+            {
+                $this->academic->updateSection($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/academic_settings_sections/', 'refresh');
+            }
+            if ($param1 == 'delete') 
+            {
+                $this->academic->deleteSection($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                redirect(base_url() . 'admin/academic_settings_sections/' , 'refresh');
+            }
+            $page_data['page_name']     = 'academic_settings_sections';
+            $page_data['page_title']    = getPhrase('sections');
+            $page_data['class_id']      = $class;
+            $page_data['year_id']       = $year_id;
+            $page_data['semester_id']   = $semester_id;
+            $this->load->view('backend/index', $page_data);    
+        }
+
+        //Manage school subjects function.
+        function academic_settings_subjects($param1 = '', $param2 = '')
+        {
+            $this->isAdmin();
+
+            $class = $this->input->post('class_id');
+            if ($class == '')
+            {
+                $class = $this->db->get('class')->first_row()->class_id;
+            }
+
+            $year_id = $this->input->post('year_id');
+            if ($year_id == '')
+            {
+                $year_id = $this->runningYear;
+            }
+
+            $semester_id = $this->input->post('semester_id');
+            if ($semester_id == '')
+            {
+                $semester_id = $this->runningSemester;
+            }
+
+            $section_id = $this->input->post('section_id');
+
+            if ($param1 == 'create') 
+            {
+                $new_year_id = $this->input->post('new_year_id');
+                $new_semester_id = $this->input->post('new_semester_id');
+
+                $this->academic->createSubject($new_year_id, $new_semester_id);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'admin/academic_settings_subjects/' . $this->input->post('class_id') ."/", 'refresh');
+            }
+            if($param1 == 'update')
+            {
+                $this->academic->updateCourse($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/academic_settings_subjects/', 'refresh');
+            }
+            if ($param1 == 'delete') 
+            {
+                $this->academic->deleteCourse($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                redirect(base_url() . 'admin/academic_settings_subjects/' , 'refresh');
+            }
+            $page_data['page_name']     = 'academic_settings_subjects';
+            $page_data['page_title']    = getPhrase('subjects');
+            $page_data['class_id']      = $class;
+            $page_data['year_id']       = $year_id;
+            $page_data['section_id']    = $section_id;
+            $page_data['semester_id']   = $semester_id;
+            $this->load->view('backend/index', $page_data);    
+        }
+
+        function academic_settings_semester_subjects($param1 = '', $param2 = '')
+        {
+            $page_data['semester_enroll_id']  = base64_decode($param1);
+            $page_data['page_name']           = 'academic_settings_semester_subjects';
+            $page_data['page_title']          = getPhrase('semester_subjects');            
+            $this->load->view('backend/index', $page_data);
+        }
+
+
+/***** Module Task    ********************************************************************************************************************************/        
         // task Dashboard
         function task_dashboard()
         {
@@ -3972,16 +4314,19 @@
             {
                 $department_id  = "";
                 $priority_id    = "";
-                $status_id      = "";
+                $status_id      = DEFAULT_TASK_OPEN_STATUS;
+                $due_date       = "";
                 $assigned_me    = 1;
             }
             
             if($_SERVER['REQUEST_METHOD'] === 'POST')
             {   
-                $category_id    = $this->input->post('category_id');                
+                $department_id  = $this->input->post('department_id');
+                $category_id    = $this->input->post('category_id');
                 $priority_id    = $this->input->post('priority_id');
                 $status_id      = $this->input->post('status_id');
-                $text           = $this->input->post('text');
+                $text           = $this->input->post('title');
+                $due_date       = $this->input->post('due_date');
                 $assigned_me    = $this->input->post('assigned_me');  
                 $search         = true;              
             }
@@ -3992,6 +4337,7 @@
             $page_data['status_id']     = $status_id;
             $page_data['text']          = $text;
             $page_data['search']        = $search;
+            $page_data['due_date']      = $due_date;
             $page_data['assigned_me']   = $assigned_me;
             $page_data['page_name']     = 'task_list';
             $page_data['page_title']    =  getPhrase('task_list');
@@ -4004,24 +4350,33 @@
             
             if($_SERVER['REQUEST_METHOD'] === 'POST')
             {   
+                $department_id  = $this->input->post('department_id');
                 $category_id    = $this->input->post('category_id');                
                 $priority_id    = $this->input->post('priority_id');
                 $status_id      = $this->input->post('status_id');
-                $text           = $this->input->post('text');
-                $assigned_me    = $this->input->post('assigned_me');                
+                $text           = $this->input->post('title');
+                $type_id        = $this->input->post('type_id');
+                $assigned_me    = $this->input->post('assigned_me');
+                $due_date       = $this->input->post('due_date');           
             }
             else
             {    
-                $department_id  = "_blank";
+                $department_id  = "";                
+                $category_id    = "_blank";
                 $priority_id    = "_blank";
-                $status_id      = "_blank";
-                $assigned_me = 1;
+                $status_id      = DEFAULT_TASK_OPEN_STATUS;
+                $type_id        = "_blank";
+                $assigned_me    = 1;
+                $due_date       = "";
             }
 
+            $page_data['department_id'] = $department_id;
             $page_data['category_id']   = $category_id;
             $page_data['priority_id']   = $priority_id;
             $page_data['status_id']     = $status_id;
             $page_data['text']          = $text;
+            $page_data['type_id']       = $type_id;
+            $page_data['due_date']      = $due_date;
             $page_data['assigned_me']   = $assigned_me;
             $page_data['page_name']     = 'task_applicant';
             $page_data['page_title']    =  getPhrase('task_applicant');
@@ -4034,24 +4389,33 @@
             
             if($_SERVER['REQUEST_METHOD'] === 'POST')
             {   
-                $category_id    = $this->input->post('category_id');                
+                $department_id  = $this->input->post('department_id');
+                $category_id    = $this->input->post('category_id');
                 $priority_id    = $this->input->post('priority_id');
                 $status_id      = $this->input->post('status_id');
-                $text           = $this->input->post('text');
-                $assigned_me    = $this->input->post('assigned_me');                
+                $text           = $this->input->post('title');
+                $program_id     = $this->input->post('program_id');
+                $assigned_me    = $this->input->post('assigned_me');
+                $due_date       = $this->input->post('due_date');
             }
             else
             {    
-                $category_id  = "_blank";
+                $department_id  = "";                
+                $category_id    = "_blank";
                 $priority_id    = "_blank";
-                $status_id      = "_blank";
-                $assigned_me = 1;
+                $status_id      = DEFAULT_TASK_OPEN_STATUS;
+                $program_id     = "_blank";
+                $assigned_me    = 1;
+                $due_date       = "";
             }
 
+            $page_data['department_id'] = $department_id;
             $page_data['category_id']   = $category_id;
             $page_data['priority_id']   = $priority_id;
             $page_data['status_id']     = $status_id;
             $page_data['text']          = $text;
+            $page_data['program_id']    = $program_id;
+            $page_data['due_date']      = $due_date;
             $page_data['assigned_me']   = $assigned_me;
             $page_data['page_name']     = 'task_student';
             $page_data['page_title']    =  getPhrase('task_student');
@@ -4145,13 +4509,24 @@
 
                     if($task_code != '')
                     {
-                        $status_id_old = $this->db->get_where('task' , array('task_code' => $task_code))->row()->status_id;
-        
+                        // Update Status
+                        $task = $this->db->get_where('task' , array('task_code' => $task_code))->row_array();
+                        $status_id_old = $task['status_id'];
+                        
                         $status_id_new = $this->input->post('status_id');
-        
                         if($status_id_old != $status_id_new)
                         {
                             $this->task->update_status($task_code, $status_id_new);
+                        }
+
+                        // Update assignment
+                        $assignment_to = $task['assigned_to_type'] .'|'. $task['assigned_to'];
+
+                        $assignment_to_new = $this->input->post('assigned_to');
+
+                        if($assignment_to != $assignment_to_new)
+                        {
+                            $this->task->update_assignment_to($task_code, $assignment_to_new);
                         }
                     }
 
@@ -4183,7 +4558,167 @@
             echo $options;
         }
 
-/*****System module   ********************************************************************************************************************************/
+/***** Module request permission / vacation / hold ***************************************************************************************************/
+
+        function request_dashboard($param1 = '', $param2 = '')
+        {
+            $this->isAdmin('request_module');
+            
+            $page_data['page_name']    = 'request_dashboard';
+            $page_data['page_title']   = getPhrase('request_dashboard');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        //Permissions request for teachers function.
+        function request($action = "", $request_id = "", $user_type = "", $message ="")
+        {
+            $this->isAdmin();
+                     
+            $url = "admin/request_".$user_type."/";
+
+            if ($action == "accept")
+            {
+                $this->request->accept_request($request_id, $user_type, $message); 
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . $url, 'refresh');
+            }
+            if ($action == "reject")
+            {
+                $this->request->reject_request($request_id, $user_type, $message);
+                $this->session->set_flashdata('flash_message' , getPhrase('rejected_successfully'));
+                redirect(base_url() . $url, 'refresh');
+            }
+            if ($action == "accept_vacation")
+            {
+                $this->request->accept_vacation($request_id, $user_type, $message); 
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . $url, 'refresh');
+            }
+            if ($action == "reject_vacation")
+            {
+                $this->request->reject_vacation($request_id, $user_type, $message);
+                $this->session->set_flashdata('flash_message' , getPhrase('rejected_successfully'));
+                redirect(base_url() . $url, 'refresh');
+            } 
+        }
+
+        //Permissions request for teachers function.
+        function request_student($param1 = "", $param2 = "")
+        {
+            $this->isAdmin();
+
+            $year_id = $this->runningYear;
+            $semester_id = $this->runningSemester;
+            
+            parse_str(substr(strrchr($_SERVER['REQUEST_URI'], "?"), 1), $_GET);
+            if(html_escape($_GET['id']) != "")
+            {
+                $this->notification->update(html_escape($_GET['id']), 1);
+            } 
+            
+            // by default show pending 
+            $status_id = 1;
+            $assigned_me = 1;
+
+            if ($_POST)
+            {
+                $year_id        = $this->input->post('year_id');
+                $semester_id    = $this->input->post('semester_id');
+                $status_id      = $this->input->post('status_id');
+                $assigned_me    = $this->input->post('assigned_me');
+            }
+
+            $data['year_id']        = $year_id;
+            $data['semester_id']    = $semester_id;
+            $data['assigned_me']    = $assigned_me;
+            $data['status_id']      = $status_id;
+            $data['page_name']      = 'request_student';
+            $data['page_title']     = getPhrase('permissions');
+            $this->load->view('backend/index', $data);
+        }
+
+        //Permissions request for teachers function.
+        function request_vacation($param1 = "", $param2 = "")
+        {
+            $this->isAdmin();
+            
+            $year_id = $this->runningYear;
+            $semester_id = $this->runningSemester;
+
+            parse_str(substr(strrchr($_SERVER['REQUEST_URI'], "?"), 1), $_GET);
+            if(html_escape($_GET['id']) != "")
+            {
+                $this->notification->update(html_escape($_GET['id']), 1);
+            } 
+            
+            // by default show pending 
+            $status_id = 1;
+            $assigned_me = 1;
+
+            if ($_POST)
+            {
+                $year_id        = $this->input->post('year_id');
+                $semester_id    = $this->input->post('semester_id');
+                $status_id      = $this->input->post('status_id');
+                $assigned_me    = $this->input->post('assigned_me');
+            }
+
+            $data['year_id']        = $year_id;
+            $data['semester_id']    = $semester_id;
+            $data['assigned_me']    = $assigned_me;
+            $data['status_id']      = $status_id;
+            $data['page_name']      = 'request_vacation';
+            $data['page_title']     = getPhrase('vacation');
+            $this->load->view('backend/index', $data);
+        }
+    
+        //Permissions request for students function.
+        function request_reports($param1 = "", $param2 = "")
+        {
+            $this->isAdmin();
+            parse_str(substr(strrchr($_SERVER['REQUEST_URI'], "?"), 1), $_GET);
+            if(html_escape($_GET['id']) != "")
+            {
+                $notify['status'] = 1;
+                $this->db->where('id', html_escape($_GET['id']));
+                $this->db->update('notification', $notify);
+
+                $table      = 'notification';
+                $action     = 'update';
+                $update_id  = html_escape($_GET['id']);
+                $this->crud->save_log($table, $action, $update_id, $notify);
+
+            }
+            if ($param1 == "accept")
+            {
+                $this->crud->acceptStudentRequest($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'admin/request/', 'refresh');
+            }
+            if ($param1 == "reject")
+            {
+                $this->crud->rejectStudentRequest($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('rejected_successfully'));
+                redirect(base_url() . 'admin/request/', 'refresh');
+            }
+            if($param1 == 'delete')
+            {
+                $this->crud->deletePermission($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                redirect(base_url() . 'admin/request_reports/', 'refresh');
+            }
+            if($param1 == 'delete_teacher')
+            {
+                $this->crud->deleteTeacherPermission($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                redirect(base_url() . 'admin/request_reports/', 'refresh');
+            }
+            $data['page_name']  = 'request_reports';
+            $data['page_title'] = getPhrase('reports');
+            $this->load->view('backend/index', $data);
+        }
+
+/***** Module System  ********************************************************************************************************************************/
        
         //System settings function.
         function system_settings($param1 = '', $param2 = '', $param3 = '')
@@ -4356,7 +4891,7 @@
             {
                 $this->crud->emailTemplate($param2);
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-                redirect(base_url() . 'admin/email/', 'refresh');
+                redirect(base_url() . 'admin/system_email/', 'refresh');
             }
             $page_data['page_name']  = 'system_email';
             $page_data['current_email_template_id']  = 1;
@@ -4402,7 +4937,7 @@
             $this->load->view('backend/index', $page_data);
         }
 
-/*****HelpDesk functions *****************************************************************************************************************************/
+/***** HelpDesk functions ****************************************************************************************************************************/
         // ticket Dashboard
         function helpdesk_dashboard()
         {
@@ -4431,7 +4966,7 @@
             $page_data['assigned_me']   = $assigned_me;
             $page_data['page_name']     = 'helpdesk_dashboard';
             $page_data['page_title']    =  getPhrase('help_desk_dashboard');
-            $this->load->view('backend/index', $page_data);
+            $this->load->view('backend/helpdesk/index', $page_data);
         }
 
         function helpdesk_ticket_list($param1 = '')
@@ -4474,7 +5009,7 @@
             $page_data['assigned_me']   = $assigned_me;
             $page_data['page_name']     = 'helpdesk_ticket_list';
             $page_data['page_title']    =  getPhrase('helpdesk_ticket_list');
-            $this->load->view('backend/index', $page_data);
+            $this->load->view('backend/helpdesk/index', $page_data);
 
             // echo '<pre>';
             // var_dump($array);
@@ -4487,7 +5022,7 @@
             $page_data['ticket_code']   = $ticket_code;
             $page_data['page_name']     = 'helpdesk_ticket_info';
             $page_data['page_title']    = getPhrase('ticket_info');
-            $this->load->view('backend/index', $page_data);
+            $this->load->view('backend/helpdesk/index', $page_data);
         }
 
         function helpdesk_ticket($action, $ticket_id = '', $return_url = '')
@@ -4587,10 +5122,11 @@
     
             $page_data['page_name']  = 'helpdesk_tutorial';
             $page_data['page_title'] = getPhrase( 'video_tutorial' ); 
-            $this->load->view( 'backend/index', $page_data );
+            $this->load->view('backend/helpdesk/index', $page_data);
         }
 
-/*****Tools functions ********************************************************************************************************************************/
+
+/***** Tools functions *******************************************************************************************************************************/
 
         // unset Admin cookies
         function unset_admin(){
@@ -4651,6 +5187,23 @@
             }
         }
 
+        function get_class_section_saturdays($class_id = '', $pYear = '', $pSemesterId = '')
+        {
+            $year       =   $pYear == '' ? $this->runningYear : $pYear;
+            $SemesterId =   $pSemesterId == '' ? $this->runningSemester : $pSemesterId;
+            
+            $sections = $this->db->get_where('section' , array('class_id' => $class_id, 'year' => $year, 'semester_id' => $SemesterId))->result_array();
+            echo '<option value="">' . getPhrase('select') . '</option>';
+            foreach ($sections as $row) 
+            {
+                $text = strtolower($row['name']);
+
+                if(strpos($text, 'saturday') !== false )
+                    echo '<option value="' . $row['section_id'] .'">' . $row['name'] . '</option>';
+
+            }
+        }
+
         function get_class_section($class_id = '', $pYear = '', $pSemesterId = '')
         {
             $year       =   $pYear == '' ? $this->runningYear : $pYear;
@@ -4664,23 +5217,8 @@
             }
         }
 
-        //Get sections by classId and teacherID of the current semester.
-        function get_class_section_by_teacher($class_id = '', $teacher_id = '')
-        {
-            $year       =   $this->runningYear;
-            $SemesterId =   $this->runningSemester;
-            
-            $sections = $this->db->query("SELECT section_id, section_name FROM v_subject WHERE class_id = '$class_id' AND teacher_id = '$teacher_id' AND year = '$year' AND semester_id = '$SemesterId' GROUP BY section_id")->result_array();
-            
-            echo '<option value="">' . getPhrase('select') . '</option>';
-            foreach ($sections as $row) 
-            {
-                echo '<option value="' . $row['section_id'] . '">' . $row['section_name'] . '</option>';
-            }
-        }
-
         //Get subjects by classId and sectionId.
-        function get_class_section_subjects($class_id = '', $section_id = '', $pYear = '', $pSemesterId = '')
+        function get_class_section_subjects($class_id = '', $section_id = '', $pYear = '', $pSemesterId = '' )
         {
             $year       =   $pYear == '' ? $this->runningYear : $pYear;
             $SemesterId =   $pSemesterId == '' ? $this->runningSemester : $pSemesterId;
@@ -4689,6 +5227,48 @@
             
             foreach ( $subject as $row )  {
                 echo '<option value="' . $row['subject_id'] . '">' . $row['name'] . ' (' . $this->crud->get_name('teacher', $row['teacher_id']) . ')' . '</option>';
+            }
+        }
+
+        function get_class_section_subjects_modality($class_id = '', $section_id = '', $pYear = '', $pSemesterId = '', $pModality = '')
+        {
+            $year       =   $pYear == '' ? $this->runningYear : $pYear;
+            $SemesterId =   $pSemesterId == '' ? $this->runningSemester : $pSemesterId;
+
+            // $subject = $this->db->get_where( 'subject', array( 'class_id' => $class_id, 'section_id' => $section_id, 'year' => $year, 'semester_id' => $SemesterId, 'modality_id' => $pModality) )->result_array();
+            $this->db->reset_query();            
+            $this->db->where('class_id', $class_id);
+            $this->db->where('section_id', $section_id);
+            $this->db->where('year', $year);
+            $this->db->where('semester_id', $SemesterId);
+            $this->db->where('modality_id', $pModality);
+            $subject = $this->db->get('subject');
+            
+            if($subject->num_rows() > 0)
+            {
+                $count = 0;
+                foreach ( $subject->result_array() as $row )  
+                {
+                    
+                    // Get total register to know the subject_capacity
+                    $nroStudents = $this->academic->countStudentsSubject($class_id, $section_id, $row['subject_id']);
+                    $teacher_name = $nroStudents .' | '. $row['subject_capacity']; // $this->crud->get_name('teacher', $row['teacher_id']);
+
+                    if($nroStudents < $row['subject_capacity'])
+                    {
+                        echo '<option value="' . $row['subject_id'] . '">' . $row['name'] . ' (' . $teacher_name . ')' . '</option>';
+                        $count++;
+                    }
+                }
+
+                if($count == 0)
+                {
+                    echo '<option value="">No Class Available</option>';
+                }
+            }
+            else
+            {
+                echo '<option value="">No Class Available</option>';
             }
         }
 
@@ -4720,21 +5300,6 @@
                 $html .= '</select> </div> </div> </div>';
             }
             echo $html;
-        }
-
-        //Get Students by sectionId function of the current semester.
-        function get_class_students($section_id = '')
-        {
-            $year       =   $this->runningYear;
-            $SemesterId =   $this->runningSemester;
-
-            // $students = $this->db->get_where('enroll' , array('section_id' => $section_id))->result_array();
-            $students = $this->db->query("SELECT student_id, full_name FROM v_enroll WHERE section_id = '$section_id' AND year = '$year' AND semester_id = '$SemesterId' GROUP BY student_id")->result_array();;
-
-            foreach ($students as $row) 
-            {
-                echo '<option value="' . $row['student_id'] . '">' . $row['full_name'] . '</option>';
-            }
         }
 
         //Get subjects by sectionId function.
@@ -4870,5 +5435,40 @@
             // echo '</pre>';
         }
 
+        //Get Students by SectionId
+        function get_cost_tuition($program_type_id = '')
+        {
+            $program_type = $this->agreement->get_program_type_info($program_type_id);
+            
+            echo $program_type['price'];
+        }
+
+        function agreement_template($student_id)
+        {          
+
+            $data = array(
+                'student_id' => $student_id,
+                'pw' => base64_encode('hello_world')
+            );
+
+            $this->load->view('backend/template',$data); 
+        }
+
+        function email_test($first_name, $email, $payment_id)
+        {
+            $em = base64_decode($email);
+            $this->crud->student_new_invoice($first_name, $em, $payment_id);
+        }
+
+        function grades_vacations($student_id)
+        {
+            $result = $this->academic->get_student_grades_vacations($student_id);
+
+            echo '<pre>';
+            var_dump($result);
+            echo '</pre>';
+
+        }
+        
         //End of Admin.php content. 
     }

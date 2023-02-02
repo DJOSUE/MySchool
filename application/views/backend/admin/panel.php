@@ -12,17 +12,17 @@
                                     <div class="tab-content">
                                         <div class="edu-wall-content ng-scope" id="new_post">
                                             <div class="tab-pane active show">
-                                                <?php echo form_open(base_url() . 'admin/news/create/', array('enctype' => 'multipart/form-data')); ?>
+                                                <?= form_open(base_url() . 'admin/news/create/', array('enctype' => 'multipart/form-data')); ?>
                                                 <div class="author-thumb" style="padding-right:15px;">
-                                                    <img src="<?php echo $this->crud->get_image_url('admin', $this->session->userdata('login_user_id'));?>"
+                                                    <img src="<?= $this->crud->get_image_url('admin', $this->session->userdata('login_user_id'));?>"
                                                         class="imgwidth">
                                                 </div>
                                                 <div class="form-group with-icon label-floating is-empty"
                                                     style="padding-left:10px; padding-right:10px;">
                                                     <label for="ckeditor1" style="margin-top: 35px;margin-left: 70px;margin-bottom: 20px;">
-                                                        <?php echo getPhrase('hi');?>
-                                                        <?php echo $this->db->get_where('admin', array('admin_id' => $this->session->userdata('login_user_id')))->row()->first_name;?>
-                                                        <?php echo getPhrase('what_publish');?>
+                                                        <?= getPhrase('hi');?>
+                                                        <?= $this->db->get_where('admin', array('admin_id' => $this->session->userdata('login_user_id')))->row()->first_name;?>
+                                                        <?= getPhrase('what_publish');?>
                                                     </label>
                                                     <textarea id="ckeditor1" name="description" required=""></textarea>
                                                     <span class="material-input"></span>
@@ -33,7 +33,7 @@
                                                         style="display:none">
                                                     <label style="font-size:15px;" for="userfile"><i
                                                             class="os-icon picons-thin-icon-thin-0042_attachment"></i>
-                                                        <span><?php echo getPhrase('upload_image');?>...</span></label>
+                                                        <span><?= getPhrase('upload_image');?>...</span></label>
                                                 </div>
                                                 <center><img id="logoPreview" src="" width="40%"
                                                         style="display:none;border-radius:5%;border:2px solid #eee;padding:5px" />
@@ -42,42 +42,42 @@
                                                     style="padding:10px 5px;">
                                                     <a href="javascript:void(0);" class="options-message"
                                                         onclick="post()" data-toggle="tooltip" data-placement="top"
-                                                        data-original-title="<?php echo getPhrase('news');?>">
+                                                        data-original-title="<?= getPhrase('news');?>">
                                                         <i class="os-icon picons-thin-icon-thin-0032_flag"></i>
                                                     </a>
                                                     <a href="javascript:void(0);" class="options-message"
                                                         onclick="poll()" data-toggle="tooltip" data-placement="top"
-                                                        data-original-title="<?php echo getPhrase('polls');?>">
+                                                        data-original-title="<?= getPhrase('polls');?>">
                                                         <i
                                                             class="os-icon picons-thin-icon-thin-0385_graph_pie_chart_statistics"></i>
                                                     </a>
                                                     <a href="javascript:void(0);" class="options-message"
                                                         onclick="video()" data-toggle="tooltip" data-placement="top"
-                                                        data-original-title="<?php echo getPhrase('youtube_video');?>">
+                                                        data-original-title="<?= getPhrase('youtube_video');?>">
                                                         <i
                                                             class="os-icon picons-thin-icon-thin-0593_video_play_youtube"></i>
                                                     </a>
                                                     <button class="btn btn-rounded btn-edu" style="float:right"><i
                                                             class="picons-thin-icon-thin-0317_send_post_paper_plane"
                                                             style="font-size:12px"></i>
-                                                        <?php echo getPhrase('publish');?></button>
+                                                        <?= getPhrase('publish');?></button>
                                                 </div>
-                                                <?php echo form_close();?>
+                                                <?= form_close();?>
                                             </div>
                                         </div>
                                         <div class="edu-wall-content ng-scope" id="new_video" style="display: none;">
                                             <div class="tab-pane show">
-                                                <?php echo form_open(base_url() . 'admin/news/create_video/', array('enctype' => 'multipart/form-data')); ?>
+                                                <?= form_open(base_url() . 'admin/news/create_video/', array('enctype' => 'multipart/form-data')); ?>
                                                 <input type="hidden" name="embed" id="embed">
                                                 <div class="author-thumb" style="padding-right:15px;">
-                                                    <img src="<?php echo $this->crud->get_image_url('admin', $this->session->userdata('login_user_id'));?>"
+                                                    <img src="<?= $this->crud->get_image_url('admin', $this->session->userdata('login_user_id'));?>"
                                                         class="imgwidth">
                                                 </div>
                                                 <div class="form-group with-icon label-floating is-empty"
                                                     style="padding-left:10px;">
                                                     <textarea onkeyup="textAreaAdjust(this)" style="overflow:hidden"
                                                         class="form-control"
-                                                        placeholder="<?php echo getPhrase('hi');?> <?php echo $this->db->get_where('admin', array('admin_id' => $this->session->userdata('login_user_id')))->row()->first_name;?> <?php echo getPhrase('what_publish');?>"
+                                                        placeholder="<?= getPhrase('hi');?> <?= $this->db->get_where('admin', array('admin_id' => $this->session->userdata('login_user_id')))->row()->first_name;?> <?= getPhrase('what_publish');?>"
                                                         name="description" required=""></textarea>
                                                     <span class="material-input"></span>
                                                 </div>
@@ -90,40 +90,40 @@
                                                     style="padding:10px 5px;">
                                                     <a href="javascript:void(0);" class="options-message"
                                                         onclick="post()" data-toggle="tooltip" data-placement="top"
-                                                        data-original-title="<?php echo getPhrase('news');?>">
+                                                        data-original-title="<?= getPhrase('news');?>">
                                                         <i class="os-icon picons-thin-icon-thin-0032_flag"></i>
                                                     </a>
                                                     <a href="javascript:void(0);" class="options-message"
                                                         onclick="poll()" data-toggle="tooltip" data-placement="top"
-                                                        data-original-title="<?php echo getPhrase('polls');?>">
+                                                        data-original-title="<?= getPhrase('polls');?>">
                                                         <i
                                                             class="os-icon picons-thin-icon-thin-0385_graph_pie_chart_statistics"></i>
                                                     </a>
                                                     <a href="javascript:void(0);" class="options-message"
                                                         onclick="video()" data-toggle="tooltip" data-placement="top"
-                                                        data-original-title="<?php echo getPhrase('youtube_video');?>">
+                                                        data-original-title="<?= getPhrase('youtube_video');?>">
                                                         <i
                                                             class="os-icon picons-thin-icon-thin-0593_video_play_youtube"></i>
                                                     </a>
                                                     <button class="btn btn-rounded btn-edu" style="float:right"><i
                                                             class="picons-thin-icon-thin-0317_send_post_paper_plane"
                                                             style="font-size:12px"></i>
-                                                        <?php echo getPhrase('publish');?></button>
+                                                        <?= getPhrase('publish');?></button>
                                                 </div>
-                                                <?php echo form_close();?>
+                                                <?= form_close();?>
                                             </div>
                                         </div>
                                         <div class="edu-wall-content ng-scope" id="new_poll" style="display: none;">
-                                            <?php echo form_open(base_url() . 'admin/polls/create/' , array('enctype' => 'multipart/form-data'));?>
+                                            <?= form_open(base_url() . 'admin/polls/create/' , array('enctype' => 'multipart/form-data'));?>
                                             <div class="tab-pane active show"><br>
                                                 <div class="col-sm-12">
-                                                    <h5 class="form-header"><?php echo getPhrase('create_poll');?></h5>
+                                                    <h5 class="form-header"><?= getPhrase('create_poll');?></h5>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="col-sm-12">
                                                         <div class="form-group label-floating">
                                                             <label
-                                                                class="control-label"><?php echo getPhrase('question');?></label>
+                                                                class="control-label"><?= getPhrase('question');?></label>
                                                             <input class="form-control" type="text" name="question">
                                                             <span class="material-input"></span>
                                                             <span class="material-input"></span>
@@ -135,10 +135,10 @@
                                                         <div class="form-group">
                                                             <div class="col-sm-12">
                                                                 <label class="col-form-label"
-                                                                    for=""><?php echo getPhrase('options');?></label>
+                                                                    for=""><?= getPhrase('options');?></label>
                                                                 <div class="input-group">
                                                                     <input class="form-control" name="options[]"
-                                                                        placeholder="<?php echo getPhrase('options');?>"
+                                                                        placeholder="<?= getPhrase('options');?>"
                                                                         type="text">
                                                                     <button
                                                                         class="btn btn-sm btn-danger bulk text-center"
@@ -154,26 +154,26 @@
                                                 <center><a href="javascript:void(0);"
                                                         class="btn btn-rounded btn-primary btn-sm"
                                                         onclick="append_student_entry()">+
-                                                        <?php echo getPhrase('more_options');?></a></center><br>
+                                                        <?= getPhrase('more_options');?></a></center><br>
                                                 <div class="form-group">
                                                     <div class="col-sm-12">
                                                         <div class="form-group label-floating is-select">
                                                             <label
-                                                                class="control-label"><?php echo getPhrase('users');?></label>
+                                                                class="control-label"><?= getPhrase('users');?></label>
                                                             <div class="select">
                                                                 <select name="user" id="slct">
-                                                                    <option value=""><?php echo getPhrase('select');?>
+                                                                    <option value=""><?= getPhrase('select');?>
                                                                     </option>
-                                                                    <option value="all"><?php echo getPhrase('all');?>
+                                                                    <option value="all"><?= getPhrase('all');?>
                                                                     </option>
                                                                     <option value="admin">
-                                                                        <?php echo getPhrase('admins');?></option>
+                                                                        <?= getPhrase('admins');?></option>
                                                                     <option value="student">
-                                                                        <?php echo getPhrase('students');?></option>
+                                                                        <?= getPhrase('students');?></option>
                                                                     <option value="parent">
-                                                                        <?php echo getPhrase('parents');?></option>
+                                                                        <?= getPhrase('parents');?></option>
                                                                     <option value="teacher">
-                                                                        <?php echo getPhrase('teachers');?></option>
+                                                                        <?= getPhrase('teachers');?></option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -183,28 +183,28 @@
                                                     style="padding:10px 5px;">
                                                     <a href="javascript:void(0);" class="options-message"
                                                         onclick="post()" data-toggle="tooltip" data-placement="top"
-                                                        data-original-title="<?php echo getPhrase('news');?>">
+                                                        data-original-title="<?= getPhrase('news');?>">
                                                         <i class="os-icon picons-thin-icon-thin-0032_flag"></i>
                                                     </a>
                                                     <a href="javascript:void(0);" class="options-message"
                                                         onclick="poll()" data-toggle="tooltip" data-placement="top"
-                                                        data-original-title="<?php echo getPhrase('poll');?>">
+                                                        data-original-title="<?= getPhrase('poll');?>">
                                                         <i
                                                             class="os-icon picons-thin-icon-thin-0385_graph_pie_chart_statistics"></i>
                                                     </a>
                                                     <a href="javascript:void(0);" class="options-message"
                                                         onclick="video()" data-toggle="tooltip" data-placement="top"
-                                                        data-original-title="<?php echo getPhrase('youtube_video');?>">
+                                                        data-original-title="<?= getPhrase('youtube_video');?>">
                                                         <i
                                                             class="os-icon picons-thin-icon-thin-0593_video_play_youtube"></i>
                                                     </a>
                                                     <button class="btn btn-rounded btn-edu" style="float:right"><i
                                                             class="picons-thin-icon-thin-0317_send_post_paper_plane"
                                                             style="font-size:12px"></i>
-                                                        <?php echo getPhrase('publish');?></button>
+                                                        <?= getPhrase('publish');?></button>
                                                 </div>
                                             </div>
-                                            <?php echo form_close();?>
+                                            <?= form_close();?>
                                         </div>
                                     </div>
                                 </div>
@@ -226,13 +226,13 @@
                                     $admin_id = $this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->admin_id;?>
                                     <article class="hentry post has-post-thumbnail thumb-full-width">
                                         <div class="post__author author vcard inline-items">
-                                            <img src="<?php echo $this->crud->get_image_url('admin', $admin_id);?>">
+                                            <img src="<?= $this->crud->get_image_url('admin', $admin_id);?>">
                                             <div class="author-date">
                                                 <a class="h6 post__author-name fn"
-                                                    href="javascript:void(0);"><?php echo $this->crud->get_name('admin', $admin_id);?></a>
+                                                    href="javascript:void(0);"><?= $this->crud->get_name('admin', $admin_id);?></a>
                                                 <div class="post__date">
                                                     <time class="published"
-                                                        style="color: #0084ff;"><?php echo $this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->date." ".$this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->date2;?></time>
+                                                        style="color: #0084ff;"><?= $this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->date." ".$this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->date2;?></time>
                                                 </div>
                                             </div>
                                             <?php if(has_permission('news_management')):?>
@@ -240,10 +240,10 @@
                                                 <i class="icon-options"></i>
                                                 <ul class="more-dropdown">
                                                     <li><a href="javascript:void(0);"
-                                                            onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_wall/<?php echo $news_code;?>');"><?php echo getPhrase('edit');?></a>
+                                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_wall/<?= $news_code;?>');"><?= getPhrase('edit');?></a>
                                                     </li>
-                                                    <li><a onClick="return confirm('<?php echo getPhrase('confirm_delete');?>')"
-                                                            href="<?php echo base_url();?>admin/news/delete/<?php echo $news_code;?>"><?php echo getPhrase('delete');?></a>
+                                                    <li><a onClick="return confirm('<?= getPhrase('confirm_delete');?>')"
+                                                            href="<?= base_url();?>admin/news/delete/<?= $news_code;?>"><?= getPhrase('delete');?></a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -251,21 +251,21 @@
                                         </div>
                                         <?php if (file_exists('public/uploads/news_images/'.$news_code.'.jpg')):?>
                                         <hr>
-                                        <p><?php echo $this->crud->check_text($wall['description']);?></p>
+                                        <p><?= $this->crud->check_text($wall['description']);?></p>
                                         <div class="post-thumb">
                                             <img
-                                                src="<?php echo base_url();?>public/uploads/news_images/<?php echo $news_code;?>.jpg">
+                                                src="<?= base_url();?>public/uploads/news_images/<?= $news_code;?>.jpg">
                                         </div>
                                         <?php else:?>
                                         <div class="wall-content">
-                                            <p><?php echo $this->crud->check_text($wall['description']);?></p>
+                                            <p><?= $this->crud->check_text($wall['description']);?></p>
                                         </div>
                                         <?php endif;?>
                                         <div class="control-block-button post-control-button">
                                             <a href="javascript:void(0);" class="btn btn-control"
                                                 style="background-color:#001b3d; color:#fff;" data-toggle="tooltip"
                                                 data-placement="top"
-                                                data-original-title="<?php echo getPhrase('news');?>">
+                                                data-original-title="<?= getPhrase('news');?>">
                                                 <i class="picons-thin-icon-thin-0032_flag"></i>
                                             </a>
                                         </div>
@@ -279,10 +279,10 @@
                                                 <li>
                                                     <a href="javascript:void(0);">
                                                         <img loading="lazy"
-                                                            onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_users/<?php echo $wall['news_id'];?>');"
-                                                            title="<?php echo $this->crud->get_name($readed['user_type'], $readed['user_id']);?>"
-                                                            src="<?php echo $this->crud->get_image_url($readed['user_type'], $readed['user_id']);?>"
-                                                            alt="<?php echo $this->crud->get_name($readed['user_type'], $readed['user_id']);?>"
+                                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_users/<?= $wall['news_id'];?>');"
+                                                            title="<?= $this->crud->get_name($readed['user_type'], $readed['user_id']);?>"
+                                                            src="<?= $this->crud->get_image_url($readed['user_type'], $readed['user_id']);?>"
+                                                            alt="<?= $this->crud->get_name($readed['user_type'], $readed['user_id']);?>"
                                                             width="28" height="28">
                                                     </a>
                                                 </li>
@@ -290,10 +290,10 @@
                                             </ul>
                                             <div class="names-people-likes">
                                                 <?php if(count($checkData) > 5):?>
-                                                <?php echo getPhrase('and');?> <?php echo count($checkData)-5;?>
-                                                <?php echo getPhrase('other_people_viewed_this_post');?>.
+                                                <?= getPhrase('and');?> <?= count($checkData)-5;?>
+                                                <?= getPhrase('other_people_viewed_this_post');?>.
                                                 <?php else:?>
-                                                <?php echo getPhrase('have_seen_this_post');?>
+                                                <?= getPhrase('have_seen_this_post');?>
                                                 <?php endif;?>
                                             </div>
                                             <div class="comments-shared">
@@ -313,38 +313,38 @@
                                     $admin_id = $this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->admin_id;?>
                                     <article class="hentry post has-post-thumbnail thumb-full-width">
                                         <div class="post__author author vcard inline-items">
-                                            <img src="<?php echo $this->crud->get_image_url('admin', $admin_id);?>">
+                                            <img src="<?= $this->crud->get_image_url('admin', $admin_id);?>">
                                             <div class="author-date">
                                                 <a class="h6 post__author-name fn"
-                                                    href="javascript:void(0);"><?php echo $this->crud->get_name('admin', $admin_id);?></a>
+                                                    href="javascript:void(0);"><?= $this->crud->get_name('admin', $admin_id);?></a>
                                                 <div class="post__date">
                                                     <time class="published"
-                                                        style="color: #0084ff;"><?php echo $this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->date." ".$this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->date2;?></time>
+                                                        style="color: #0084ff;"><?= $this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->date." ".$this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->date2;?></time>
                                                 </div>
                                             </div>
                                             <div class="more">
                                                 <i class="icon-options"></i>
                                                 <ul class="more-dropdown">
                                                     <li><a href="javascript:void(0);"
-                                                            onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_wall/<?php echo $news_code;?>');"><?php echo getPhrase('edit');?></a>
+                                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_wall/<?= $news_code;?>');"><?= getPhrase('edit');?></a>
                                                     </li>
-                                                    <li><a onClick="return confirm('<?php echo getPhrase('confirm_delete');?>')"
-                                                            href="<?php echo base_url();?>admin/news/delete/<?php echo $news_code;?>"><?php echo getPhrase('delete');?></a>
+                                                    <li><a onClick="return confirm('<?= getPhrase('confirm_delete');?>')"
+                                                            href="<?= base_url();?>admin/news/delete/<?= $news_code;?>"><?= getPhrase('delete');?></a>
                                                     </li>
                                                 </ul>
                                             </div>
                                         </div>
                                         <hr>
-                                        <p><?php echo $this->crud->check_text($wall['description']);?></p>
+                                        <p><?= $this->crud->check_text($wall['description']);?></p>
                                         <div class="post-thumb">
-                                            <iframe src="<?php echo $news_embed;?>" height="360" width="100%"
+                                            <iframe src="<?= $news_embed;?>" height="360" width="100%"
                                                 frameborder="0" allowfullscreen=""></iframe>
                                         </div>
                                         <div class="control-block-button post-control-button">
                                             <a href="javascript:void(0);" class="btn btn-control"
                                                 style="background-color:#001b3d; color:#fff;" data-toggle="tooltip"
                                                 data-placement="top"
-                                                data-original-title="<?php echo getPhrase('news');?>">
+                                                data-original-title="<?= getPhrase('news');?>">
                                                 <i class="picons-thin-icon-thin-0032_flag"></i>
                                             </a>
                                         </div>
@@ -358,10 +358,10 @@
                                                 <li>
                                                     <a href="javascript:void(0);">
                                                         <img loading="lazy"
-                                                            onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_users/<?php echo $wall['news_id'];?>');"
-                                                            title="<?php echo $this->crud->get_name($readed['user_type'], $readed['user_id']);?>"
-                                                            src="<?php echo $this->crud->get_image_url($readed['user_type'], $readed['user_id']);?>"
-                                                            alt="<?php echo $this->crud->get_name($readed['user_type'], $readed['user_id']);?>"
+                                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_users/<?= $wall['news_id'];?>');"
+                                                            title="<?= $this->crud->get_name($readed['user_type'], $readed['user_id']);?>"
+                                                            src="<?= $this->crud->get_image_url($readed['user_type'], $readed['user_id']);?>"
+                                                            alt="<?= $this->crud->get_name($readed['user_type'], $readed['user_id']);?>"
                                                             width="28" height="28">
                                                     </a>
                                                 </li>
@@ -369,10 +369,10 @@
                                             </ul>
                                             <div class="names-people-likes">
                                                 <?php if(count($checkData) > 5):?>
-                                                <?php echo getPhrase('and');?> <?php echo count($checkData)-5;?>
-                                                <?php echo getPhrase('other_people_viewed_this_post');?>.
+                                                <?= getPhrase('and');?> <?= count($checkData)-5;?>
+                                                <?= getPhrase('other_people_viewed_this_post');?>.
                                                 <?php else:?>
-                                                <?php echo getPhrase('have_seen_this_post');?>.
+                                                <?= getPhrase('have_seen_this_post');?>.
                                                 <?php endif;?>
                                             </div>
                                             <div class="comments-shared">
@@ -385,7 +385,7 @@
                                 </div>
                                 <?php endif;?>
                                 <?php if($wall['type'] == 'polls'):?>
-                                <?php echo form_open(base_url() . 'admin/polls/response/' , array('enctype' => 'multipart/form-data'));?>
+                                <?= form_open(base_url() . 'admin/polls/response/' , array('enctype' => 'multipart/form-data'));?>
                                 <?php 
                                         $usrdb = $this->db->get_where('polls', array('id' => $wall['news_id']))->row()->user;
                                         $poll_code = $this->db->get_where('polls', array('id' => $wall['news_id']))->row()->poll_code;
@@ -402,27 +402,27 @@
                                 <?php if($query->num_rows() <= 0):?>
                                 <div class="ui-block paddingtel">
                                     <input type="hidden" name="poll_code" id="poll_code"
-                                        value="<?php echo $poll_code;?>">
+                                        value="<?= $poll_code;?>">
                                     <article class="hentry post">
                                         <div class="post__author author vcard inline-items">
-                                            <img src="<?php echo $this->crud->get_image_url('admin', $admin_id);?>"
+                                            <img src="<?= $this->crud->get_image_url('admin', $admin_id);?>"
                                                 alt="author">
                                             <div class="author-date">
                                                 <a class="h6 post__author-name fn"
-                                                    href="javascript:void(0);"><?php echo $this->crud->get_name('admin', $admin_id);?></a>
+                                                    href="javascript:void(0);"><?= $this->crud->get_name('admin', $admin_id);?></a>
                                                 <div class="post__date">
                                                     <time class="published"
-                                                        style="color: #0084ff;"><?php echo $this->db->get_where('polls', array('id' => $wall['news_id']))->row()->date." ".$this->db->get_where('polls', array('id' => $wall['news_id']))->row()->date2;?></time>
+                                                        style="color: #0084ff;"><?= $this->db->get_where('polls', array('id' => $wall['news_id']))->row()->date." ".$this->db->get_where('polls', array('id' => $wall['news_id']))->row()->date2;?></time>
                                                 </div>
                                             </div>
                                             <div class="more">
                                                 <i class="icon-options"></i>
                                                 <ul class="more-dropdown">
                                                     <li><a
-                                                            href="<?php echo base_url();?>admin/view_poll/<?php echo $poll_code;?>/"><?php echo getPhrase('go_to_details');?></a>
+                                                            href="<?= base_url();?>admin/view_poll/<?= $poll_code;?>/"><?= getPhrase('go_to_details');?></a>
                                                     </li>
-                                                    <li><a onClick="return confirm('<?php echo getPhrase('confirm_delete');?>')"
-                                                            href="<?php echo base_url();?>admin/polls/delete/<?php echo $poll_code;?>"><?php echo getPhrase('delete');?></a>
+                                                    <li><a onClick="return confirm('<?= getPhrase('confirm_delete');?>')"
+                                                            href="<?= base_url();?>admin/polls/delete/<?= $poll_code;?>"><?= getPhrase('delete');?></a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -431,14 +431,14 @@
                                             <a href="javascript:void(0);" class="btn btn-control"
                                                 style="background-color:#99bf2d; color:#fff;" data-toggle="tooltip"
                                                 data-placement="top"
-                                                data-original-title="<?php echo getPhrase('polls');?>">
+                                                data-original-title="<?= getPhrase('polls');?>">
                                                 <i class="picons-thin-icon-thin-0385_graph_pie_chart_statistics"></i>
                                             </a>
                                         </div>
                                         <div class="wall-content">
                                             <ul class="widget w-pool">
                                                 <li>
-                                                    <h4><?php echo $wall['description'];?></h4>
+                                                    <h4><?= $wall['description'];?></h4>
                                                 </li><br>
                                                 <?php 
                                                         $array = ( explode(',' , $options));
@@ -452,12 +452,12 @@
                                                                     <h6>
                                                                         <label>
                                                                             <input type="radio" id="answer"
-                                                                                name="answer<?php echo $poll_code;?>"
-                                                                                value="<?php echo $array[$i];?>"><span
+                                                                                name="answer<?= $poll_code;?>"
+                                                                                value="<?= $array[$i];?>"><span
                                                                                 class="circle"
                                                                                 style="border: 3px solid #ffffff;"></span><span
                                                                                 class="check"></span>
-                                                                            <?php echo $array[$i];?>
+                                                                            <?= $array[$i];?>
                                                                         </label>
                                                                     </h6>
                                                                 </span>
@@ -469,7 +469,7 @@
                                             </ul>
                                             <a href="javascript:void(0);"
                                                 class="btn btn-md-2 btn-vote text-white btn-border-think custom-color c-grey"
-                                                onClick="vote('<?php echo $poll_code;?>')"><?php echo getPhrase('vote');?>
+                                                onClick="vote('<?= $poll_code;?>')"><?= getPhrase('vote');?>
                                                 <div class="ripple-container"></div>
                                             </a>
                                         </div>
@@ -483,10 +483,10 @@
                                                 <li>
                                                     <a href="javascript:void(0);">
                                                         <img loading="lazy"
-                                                            onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_users/<?php echo $wall['news_id'];?>');"
-                                                            title="<?php echo $this->crud->get_name($readed['user_type'], $readed['user_id']);?>"
-                                                            src="<?php echo $this->crud->get_image_url($readed['user_type'], $readed['user_id']);?>"
-                                                            alt="<?php echo $this->crud->get_name($readed['user_type'], $readed['user_id']);?>"
+                                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_users/<?= $wall['news_id'];?>');"
+                                                            title="<?= $this->crud->get_name($readed['user_type'], $readed['user_id']);?>"
+                                                            src="<?= $this->crud->get_image_url($readed['user_type'], $readed['user_id']);?>"
+                                                            alt="<?= $this->crud->get_name($readed['user_type'], $readed['user_id']);?>"
                                                             width="28" height="28">
                                                     </a>
                                                 </li>
@@ -494,10 +494,10 @@
                                             </ul>
                                             <div class="names-people-likes">
                                                 <?php if(count($checkData) > 5):?>
-                                                <?php echo getPhrase('and');?> <?php echo count($checkData)-5;?>
-                                                <?php echo getPhrase('other_people_viewed_this_post');?> .
+                                                <?= getPhrase('and');?> <?= count($checkData)-5;?>
+                                                <?= getPhrase('other_people_viewed_this_post');?> .
                                                 <?php else:?>
-                                                <?php echo getPhrase('have_seen_this_post');?>
+                                                <?= getPhrase('have_seen_this_post');?>
                                                 <?php endif;?>
                                             </div>
                                             <div class="comments-shared">
@@ -513,23 +513,23 @@
                                 <div class="ui-block paddingtel">
                                     <article class="hentry post">
                                         <div class="post__author author vcard inline-items">
-                                            <img src="<?php echo $this->crud->get_image_url('admin', $admin_id);?>">
+                                            <img src="<?= $this->crud->get_image_url('admin', $admin_id);?>">
                                             <div class="author-date">
                                                 <a class="h6 post__author-name fn"
-                                                    href="javascript:void(0);"><?php echo $this->crud->get_name('admin', $admin_id);?></a>
+                                                    href="javascript:void(0);"><?= $this->crud->get_name('admin', $admin_id);?></a>
                                                 <div class="post__date">
                                                     <time class="published"
-                                                        style="color: #0084ff;"><?php echo $this->db->get_where('polls', array('id' => $wall['news_id']))->row()->date." ".$this->db->get_where('polls', array('id' => $wall['news_id']))->row()->date2;?></time>
+                                                        style="color: #0084ff;"><?= $this->db->get_where('polls', array('id' => $wall['news_id']))->row()->date." ".$this->db->get_where('polls', array('id' => $wall['news_id']))->row()->date2;?></time>
                                                 </div>
                                             </div>
                                             <div class="more">
                                                 <i class="icon-options"></i>
                                                 <ul class="more-dropdown">
                                                     <li><a
-                                                            href="<?php echo base_url();?>admin/view_poll/<?php echo $poll_code;?>/"><?php echo getPhrase('go_to_details');?></a>
+                                                            href="<?= base_url();?>admin/view_poll/<?= $poll_code;?>/"><?= getPhrase('go_to_details');?></a>
                                                     </li>
-                                                    <li><a onClick="return confirm('<?php echo getPhrase('confirm_delete');?>')"
-                                                            href="<?php echo base_url();?>admin/polls/delete/<?php echo $poll_code;?>"><?php echo getPhrase('delete');?></a>
+                                                    <li><a onClick="return confirm('<?= getPhrase('confirm_delete');?>')"
+                                                            href="<?= base_url();?>admin/polls/delete/<?= $poll_code;?>"><?= getPhrase('delete');?></a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -538,7 +538,7 @@
                                             <a href="javascript:void(0);" class="btn btn-control"
                                                 style="background-color:#99bf2d; color:#fff;" data-toggle="tooltip"
                                                 data-placement="top"
-                                                data-original-title="<?php echo getPhrase('polls');?>">
+                                                data-original-title="<?= getPhrase('polls');?>">
                                                 <i class="picons-thin-icon-thin-0385_graph_pie_chart_statistics"></i>
                                             </a>
                                         </div>
@@ -546,7 +546,7 @@
                                             <div class="wall-content">
                                                 <ul class="widget w-pool">
                                                     <li>
-                                                        <h4><?php echo $wall['description'];?></h4>
+                                                        <h4><?= $wall['description'];?></h4>
                                                     </li><br>
                                                     <?php 
                                                             $this->db->where('poll_code', $poll_code);
@@ -570,7 +570,7 @@
                                                                         $this->db->where('poll_code', $poll_code);
                                                                         $res = $this->db->count_all_results('poll_response');
                                                                     ?>
-                                                                    <h6><label><?php echo $array[$i];?></label></h6>
+                                                                    <h6><label><?= $array[$i];?></label></h6>
                                                                 </span>
                                                                 <?php 
                                                                     $response = $res/$polls;
@@ -581,13 +581,13 @@
                                                                         data-refresh-interval="50" data-to="62"
                                                                         data-from="0"></span>
                                                                     <span
-                                                                        class="units"><?php echo round($response2);?>/100%</span>
+                                                                        class="units"><?= round($response2);?>/100%</span>
                                                                 </span>
                                                             </div>
                                                             <div class="skills-item-meter">
                                                                 <span
                                                                     class="skills-item-meter-active bg-primary skills-animate"
-                                                                    style="width: <?php echo $response2;?>%; opacity: 1;"></span>
+                                                                    style="width: <?= $response2;?>%; opacity: 1;"></span>
                                                             </div>
                                                         </div>
                                                     </li>
@@ -605,10 +605,10 @@
                                                 <li>
                                                     <a href="javascript:void(0);">
                                                         <img loading="lazy"
-                                                            onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_users/<?php echo $wall['news_id'];?>');"
-                                                            title="<?php echo $this->crud->get_name($readed['user_type'], $readed['user_id']);?>"
-                                                            src="<?php echo $this->crud->get_image_url($readed['user_type'], $readed['user_id']);?>"
-                                                            alt="<?php echo $this->crud->get_name($readed['user_type'], $readed['user_id']);?>"
+                                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_users/<?= $wall['news_id'];?>');"
+                                                            title="<?= $this->crud->get_name($readed['user_type'], $readed['user_id']);?>"
+                                                            src="<?= $this->crud->get_image_url($readed['user_type'], $readed['user_id']);?>"
+                                                            alt="<?= $this->crud->get_name($readed['user_type'], $readed['user_id']);?>"
                                                             width="28" height="28">
                                                     </a>
                                                 </li>
@@ -616,10 +616,10 @@
                                             </ul>
                                             <div class="names-people-likes">
                                                 <?php if(count($checkData) > 5):?>
-                                                <?php echo getPhrase('and');?> <?php echo count($checkData)-5;?>
-                                                <?php echo getPhrase('other_people_viewed_this_post');?>.
+                                                <?= getPhrase('and');?> <?= count($checkData)-5;?>
+                                                <?= getPhrase('other_people_viewed_this_post');?>.
                                                 <?php else:?>
-                                                <?php echo getPhrase('have_seen_this_post');?>
+                                                <?= getPhrase('have_seen_this_post');?>
                                                 <?php endif;?>
                                             </div>
                                             <div class="comments-shared">
@@ -632,7 +632,7 @@
                                 </div>
                                 <?php endif;?>
                                 <?php endif;?>
-                                <?php echo form_close();?>
+                                <?= form_close();?>
                                 <?php endif;?>
                                 <?php endforeach;?>
                             </div>
@@ -645,21 +645,21 @@
                                             <div class="widget w-about">
                                                 <br>
                                                 <a href="javascript:void(0);" class="logo"><img
-                                                        src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('logo');?>"
-                                                        title="<?php echo $this->crud->getInfo('system_name');?>"></a>
+                                                        src="<?= base_url();?>public/uploads/<?= $this->crud->getInfo('logo');?>"
+                                                        title="<?= $this->crud->getInfo('system_name');?>"></a>
                                                 <ul class="socials">
                                                     <li><a class="socialDash fb"
-                                                            href="<?php echo $this->crud->getInfo('facebook');?>"><i
+                                                            href="<?= $this->crud->getInfo('facebook');?>"><i
                                                                 class="fab fa-facebook-square"
                                                                 aria-hidden="true"></i></a></li>
                                                     <li><a class="socialDash tw"
-                                                            href="<?php echo $this->crud->getInfo('twitter');?>"><i
+                                                            href="<?= $this->crud->getInfo('twitter');?>"><i
                                                                 class="fab fa-twitter" aria-hidden="true"></i></a></li>
                                                     <li><a class="socialDash yt"
-                                                            href="<?php echo $this->crud->getInfo('youtube');?>"><i
+                                                            href="<?= $this->crud->getInfo('youtube');?>"><i
                                                                 class="fab fa-youtube" aria-hidden="true"></i></a></li>
                                                     <li><a class="socialDash ig"
-                                                            href="<?php echo $this->crud->getInfo('instagram');?>"><i
+                                                            href="<?= $this->crud->getInfo('instagram');?>"><i
                                                                 class="fab fa-instagram" aria-hidden="true"></i></a>
                                                     </li>
                                                 </ul>
@@ -667,8 +667,38 @@
                                         </div>
                                     </div>
                                     <div class="ui-block paddingtel">
+                                        <div class="pipeline white lined-success">
+                                            <div class="element-wrapper">
+                                                <h6 class="element-header"><?= getPhrase('OUR_MISSION');?></h6>
+                                            </div>
+                                            <div class="content">
+                                                <?= getPhrase('school_mission');?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui-block paddingtel">
+                                        <div class="pipeline white lined-success">
+                                            <div class="element-wrapper">
+                                                <h6 class="element-header"><?= getPhrase('OUR_VISION');?></h6>
+                                            </div>
+                                            <div class="content">
+                                                <?= getPhrase('school_vision');?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui-block paddingtel">
+                                        <div class="pipeline white lined-success">
+                                            <div class="element-wrapper">
+                                                <h6 class="element-header"><?= getPhrase('OUR_VALUES');?></h6>
+                                            </div>
+                                            <div class="content">
+                                                <?= getPhrase('school_values');?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui-block paddingtel">
                                         <div class="ui-block-title">
-                                            <h6 class="title"><?php echo getPhrase('chat groups');?></h6>
+                                            <h6 class="title"><?= getPhrase('chat groups');?></h6>
                                         </div>
                                         <ul class="widget w-friend-pages-added notification-list friend-requests">
                                             <?php  
@@ -681,25 +711,25 @@
                                                 <div class="author-thumb">
                                                     <div class="avatar with-status status-green">
                                                         <div class="circle purple">
-                                                            <?php echo strtoupper($row['group_name'][0]);?></div>
+                                                            <?= strtoupper($row['group_name'][0]);?></div>
                                                     </div>
                                                 </div>
                                                 <div class="notification-event">
-                                                    <a href="<?php echo base_url();?>admin/group/group_message_read/<?php echo $row['group_message_thread_code'];?>/"
-                                                        class="h6 notification-friend"><?php echo $row['group_name'];?></a>
+                                                    <a href="<?= base_url();?>admin/group/group_message_read/<?= $row['group_message_thread_code'];?>/"
+                                                        class="h6 notification-friend"><?= $row['group_name'];?></a>
                                                     <span
-                                                        class="chat-message-item"><?php echo count(json_decode($row['members']));?>
-                                                        <?php echo getPhrase('members_on_this_group');?>.</span>
+                                                        class="chat-message-item"><?= count(json_decode($row['members']));?>
+                                                        <?= getPhrase('members_on_this_group');?>.</span>
                                                 </div>
                                             </li>
                                             <?php endforeach;?>
                                             <?php else:?>
                                             <br>
                                             <center>
-                                                <h5><?php echo getPhrase('create_your_first_group');?></h5>
+                                                <h5><?= getPhrase('create_your_first_group');?></h5>
                                             </center><br>
                                             <center><img
-                                                    src="<?php echo base_url();?>public/uploads/mensajeseducaby.svg"
+                                                    src="<?= base_url();?>public/uploads/mensajeseducaby.svg"
                                                     width="250px"></center>
                                             <br>
                                             <?php endif;?>
@@ -708,7 +738,7 @@
                                     <div class="ui-block paddingtel">
                                         <div class="pipeline white lined-success">
                                             <div class="element-wrapper">
-                                                <h6 class="element-header"><?php echo getPhrase('online_users');?></h6>
+                                                <h6 class="element-header"><?= getPhrase('online_users');?></h6>
                                                 <?php $this->crud->saveUser();?>
                                                 <div class="full-ch at-w">
                                                     <div class="chat-content-w min">
@@ -722,37 +752,37 @@
                                                                     <div class="user-avatar-w min">
                                                                         <div class="user-avatar">
                                                                             <img alt=""
-                                                                                src="<?php echo $this->crud->get_image_url($row['type'], $row['id_usuario']);?>">
+                                                                                src="<?= $this->crud->get_image_url($row['type'], $row['id_usuario']);?>">
                                                                         </div>
                                                                     </div>
                                                                     <div class="user-name">
                                                                         <h6 class="user-title min">
-                                                                            <?php echo $this->crud->get_name($row['type'], $row['id_usuario']);?>
+                                                                            <?= $this->crud->get_name($row['type'], $row['id_usuario']);?>
                                                                         </h6>
                                                                         <div class="user-role min">
                                                                             <?php if($row['type'] == 'student'):?>
                                                                             <span
-                                                                                class="badge badge-warning"><?php echo getPhrase('student');?></span>
+                                                                                class="badge badge-warning"><?= getPhrase('student');?></span>
                                                                             <?php endif;?>
                                                                             <?php if($row['type'] == 'accountant'):?>
                                                                             <span
-                                                                                class="badge badge-info"><?php echo getPhrase('accountant');?></span>
+                                                                                class="badge badge-info"><?= getPhrase('accountant');?></span>
                                                                             <?php endif;?>
                                                                             <?php if($row['type'] == 'librarian'):?>
                                                                             <span
-                                                                                class="badge badge-info"><?php echo getPhrase('librarian');?></span>
+                                                                                class="badge badge-info"><?= getPhrase('librarian');?></span>
                                                                             <?php endif;?>
                                                                             <?php if($row['type'] == 'parent'):?>
                                                                             <span
-                                                                                class="badge badge-purple"><?php echo getPhrase('parent');?></span>
+                                                                                class="badge badge-purple"><?= getPhrase('parent');?></span>
                                                                             <?php endif;?>
                                                                             <?php if($row['type'] == 'admin'):?>
                                                                             <span
-                                                                                class="badge badge-primary"><?php echo getPhrase('admin');?></span>
+                                                                                class="badge badge-primary"><?= getPhrase('admin');?></span>
                                                                             <?php endif;?>
                                                                             <?php if($row['type'] == 'teacher'):?>
                                                                             <span
-                                                                                class="badge badge-success"><?php echo getPhrase('teacher');?></span>
+                                                                                class="badge badge-success"><?= getPhrase('teacher');?></span>
                                                                             <?php endif;?>
                                                                         </div>
                                                                     </div>
@@ -767,7 +797,7 @@
                                     </div>
                                     <div class="ui-block paddingtel">
                                         <div class="ui-block-title">
-                                            <h6 class="title"><?php echo getPhrase('accounting');?></h6>
+                                            <h6 class="title"><?= getPhrase('accounting');?></h6>
                                         </div>
                                         <div class="ui-block-content">
                                             <canvas id="myChart" width="400" height="400"></canvas>
@@ -784,17 +814,17 @@
                                         <div class="today-events calendar ">
                                             <div class="today-events-thumb">
                                                 <div class="date">
-                                                    <div class="day-number"><?php echo date('d');?></div>
-                                                    <div class="day-week"><?php echo getPhrase(date('l'));?></div>
+                                                    <div class="day-number"><?= date('d');?></div>
+                                                    <div class="day-week"><?= getPhrase(date('l'));?></div>
                                                     <div class="month-year" style="color:#FFF">
-                                                        <?php echo getPhrase(date('F'));?>, <?php echo date('Y');?>.
+                                                        <?= getPhrase(date('F'));?>, <?= date('Y');?>.
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="list">
                                                 <?php if(has_permission('calendar_add')):?>
                                                 <div class="control-block-button">
-                                                    <a href="<?php echo base_url();?>admin/calendar/"
+                                                    <a href="<?= base_url();?>admin/calendar/"
                                                         class="btn btn-control bg-breez"
                                                         style="background-color: #22b9ff;">
                                                         <i class="fa fa-plus text-white"></i>
@@ -811,7 +841,7 @@
                                                         <div class="card-header" role="tab" id="headingOne-1">
                                                             <div class="event-time">
                                                                 <h5 class="mb-0 title"><a
-                                                                        href="<?php echo base_url();?>admin/calendar/"><?php echo $event['title'];?></a>
+                                                                        href="<?= base_url();?>admin/calendar/"><?= $event['title'];?></a>
                                                                 </h5>
                                                             </div>
                                                         </div>
@@ -820,8 +850,8 @@
                                                     <?php else:?>
                                                     <center>
                                                         <div style="padding-bottom : 75px;padding-top :75px;">
-                                                            <p><?php echo getPhrase('no_today_events');?></p><img
-                                                                src="<?php echo base_url();?>public/uploads/calendar.png"
+                                                            <p><?= getPhrase('no_today_events');?></p><img
+                                                                src="<?= base_url();?>public/uploads/calendar.png"
                                                                 width="20%" />
                                                         </div>
                                                     </center>
@@ -832,23 +862,23 @@
                                     </div>
                                     <div class="ui-block paddingtel">
                                         <div class="ui-block-title">
-                                            <h6 class="title"><?php echo getPhrase('birthdays');?></h6>
+                                            <h6 class="title"><?= getPhrase('birthdays');?></h6>
                                         </div>
                                         <br><br>
                                         <center>
-                                            <img src="<?php echo base_url();?>public/uploads/icons/cake.svg"
+                                            <img src="<?= base_url();?>public/uploads/icons/cake.svg"
                                                 width="85px"><br><br>
-                                            <h4><?php echo getPhrase('birthdays');?></h4>
-                                            <p><?php echo $this->crud->get_birthdays();?>
-                                                <?php echo getPhrase('users_have_a_birthday_this_month');?>.</p>
-                                            <a href="<?php echo base_url();?>admin/birthdays/"
-                                                style="background-color: #615dfa;line-height: 28px; font-size: .875rem; font-weight: 700;display: inline-block; text-align: center;width: 60%; height: 48px;box-shadow: 4px 7px 12px 0 rgb(97 93 250 / 20%);color:#fff;padding:10px;border-radius:10px;transition: background-color .2s ease-in-out, color .2s ease-in-out, border-color .2s ease-in-out, box-shadow .2s ease-in-out;"><?php echo getPhrase('view_all_birthdays');?></a>
+                                            <h4><?= getPhrase('birthdays');?></h4>
+                                            <p><?= $this->crud->get_birthdays();?>
+                                                <?= getPhrase('users_have_a_birthday_this_month');?>.</p>
+                                            <a href="<?= base_url();?>admin/birthdays/"
+                                                style="background-color: #615dfa;line-height: 28px; font-size: .875rem; font-weight: 700;display: inline-block; text-align: center;width: 60%; height: 48px;box-shadow: 4px 7px 12px 0 rgb(97 93 250 / 20%);color:#fff;padding:10px;border-radius:10px;transition: background-color .2s ease-in-out, color .2s ease-in-out, border-color .2s ease-in-out, box-shadow .2s ease-in-out;"><?= getPhrase('view_all_birthdays');?></a>
                                         </center>
                                         <div class="header-spacer"></div>
                                     </div><br>
                                     <div class="ui-block paddingtel">
                                         <div class="ui-block-title">
-                                            <h6 class="title"><?php echo getPhrase('absent_students');?></h6>
+                                            <h6 class="title"><?= getPhrase('absent_students');?></h6>
                                         </div>
                                         <?php
                                             $check  = array('timestamp' => strtotime(date('Y-m-d')) , 'status' => '2');
@@ -860,14 +890,14 @@
                                             <?php foreach($absent_today as $attendance):?>
                                             <li class="inline-items">
                                                 <div class="author-thumb">
-                                                    <img src="<?php echo $this->crud->get_image_url('student', $attendance['student_id']);?>"
+                                                    <img src="<?= $this->crud->get_image_url('student', $attendance['student_id']);?>"
                                                         alt="author" width="35px">
                                                 </div>
                                                 <div class="notification-event">
-                                                    <a href="<?php echo base_url();?>admin/student_portal/<?php echo $attendance['student_id'];?>/"
-                                                        class="h6 notification-friend"><?php echo $this->crud->get_name('student', $attendance['student_id']);?></a>
+                                                    <a href="<?= base_url();?>admin/student_portal/<?= $attendance['student_id'];?>/"
+                                                        class="h6 notification-friend"><?= $this->crud->get_name('student', $attendance['student_id']);?></a>
                                                     <span
-                                                        class="chat-message-item"><?php echo $this->db->get_where('class', array('class_id' => $attendance['class_id']))->row()->name;?></span>
+                                                        class="chat-message-item"><?= $this->db->get_where('class', array('class_id' => $attendance['class_id']))->row()->name;?></span>
                                                 </div>
                                             </li>
                                             <?php endforeach;?>
@@ -875,8 +905,8 @@
                                         <?php else:?>
                                         <center>
                                             <div style="padding-bottom : 75px;padding-top :75px;">
-                                                <p><?php echo getPhrase('no_absent_students');?></p><img
-                                                    src="<?php echo base_url();?>public/uploads/plan.png" width="20%">
+                                                <p><?= getPhrase('no_absent_students');?></p><img
+                                                    src="<?= base_url();?>public/uploads/plan.png" width="20%">
                                             </div>
                                         </center>
                                         <?php endif;?>
@@ -888,7 +918,7 @@
                     </div>
                 </div>
                 <a class="back-to-top" href="javascript:void(0);">
-                    <img src="<?php echo base_url();?>public/style/olapp/svg-icons/back-to-top.svg" alt="arrow"
+                    <img src="<?= base_url();?>public/style/olapp/svg-icons/back-to-top.svg" alt="arrow"
                         class="back-icon">
                 </a>
             </div>
@@ -900,7 +930,7 @@ function textAreaAdjust(o) {
     o.style.height = (25 + o.scrollHeight) + "px";
 }
     </script>
-    <script src="<?php echo base_url();?>public/style/js/Chart.bundle.js"></script>
+    <script src="<?= base_url();?>public/style/js/Chart.bundle.js"></script>
     <script type="text/javascript">
 var blank_student_entry = '';
 $(document).ready(function() {
@@ -940,11 +970,11 @@ var ctx = document.getElementById('myChart');
 var myChart = new Chart(ctx, {
     type: 'pie',
     data: {
-        labels: ['<?php echo getPhrase('expense');?>', '<?php echo getPhrase('income');?>'],
+        labels: ['<?= getPhrase('expense');?>', '<?= getPhrase('income');?>'],
         datasets: [{
-            label: '#<?php echo getPhrase('accounting');?>',
-            data: [<?php echo $this->crud->get_expense(date('M'));?>,
-                <?php echo $this->crud->get_payments(date('M'));?>
+            label: '#<?= getPhrase('accounting');?>',
+            data: [<?= $this->crud->get_expense(date('M'));?>,
+                <?= $this->crud->get_payments(date('M'));?>
             ],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.7)',
@@ -1006,13 +1036,13 @@ function number_format(number, decimals, dec_point, thousands_point) {
     return number;
 }
 
-var post_message = '<?php echo getPhrase('thank_you_polls');?>';
+var post_message = '<?= getPhrase('thank_you_polls');?>';
 
 function vote(poll_code) {
     answer = $('input[name=answer' + poll_code + ']:checked').val();
     if (answer != "" && poll_code != "") {
         $.ajax({
-            url: "<?php echo base_url();?>admin/polls/response/",
+            url: "<?= base_url();?>admin/polls/response/",
             type: 'POST',
             data: {
                 answer: answer,
@@ -1033,7 +1063,7 @@ function vote(poll_code) {
             }
         });
     } else {
-        alert('<?php echo getPhrase('select_an_option');?>');
+        alert('<?= getPhrase('select_an_option');?>');
     }
 }
 

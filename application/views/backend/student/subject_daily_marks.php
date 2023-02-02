@@ -97,7 +97,7 @@
                     </li>
                     <?php endif;?>
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>student/meet/<?php echo $data;?>/"><i
+                        <a class="navs-links" href="<?php echo base_url();?>student/subject_meet/<?php echo $data;?>/"><i
                                 class="os-icon picons-thin-icon-thin-0591_presentation_video_play_beamer"></i><span><?php echo getPhrase('live');?></span></a>
                     </li>
                     <?php if(!$useGradeAttendance):?>
@@ -120,7 +120,7 @@
                                     <ul>
                                         <?php  
                                             $var = 0;
-                                            $examss = $this->db->get_where('v_class_units', array('class_id' => $class_id))->result_array();
+                                            $examss = $this->crud->get_exam_by_class($class_id);
                                             foreach($examss as $exam):
                                             $var++;
                                         ?>
@@ -167,7 +167,7 @@
                                                                                 AND semester_id = '$running_semester' 
                                                                                 ")->result_array();
                                                 // Math to get Average
-                                                $Total_Sum = array_sum($average[0]);
+                                                $Total_Sum = array_sum($average[0]) - $average[0][labuno];
                                                 $count = 0;
                                                 
                                                 $labouno        = $average[0][labuno];
@@ -182,7 +182,7 @@
                                                 $labodiez       = $average[0][labdiez];
                                     
                                                 // Calculate the average 
-                                                if(is_numeric($labouno)     && $labouno != '-' ) { $count++; } 
+                                                // if(is_numeric($labouno)     && $labouno != '-' ) { $count++; } 
                                                 if(is_numeric($labodos)     && $labodos != '-' ) { $count++; }  
                                                 if(is_numeric($labotres)    && $labotres != '-' ) { $count++; }  
                                                 if(is_numeric($labocuatro)  && $labocuatro != '-' ) { $count++; }  

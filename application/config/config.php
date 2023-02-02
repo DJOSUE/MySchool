@@ -227,6 +227,11 @@ if(!is_file(APPPATH.'controllers/Install.php'))
 	$config['log_threshold'] = $db->get_where('settings' , array('type' => 'logs'))->row()->description;
 	date_default_timezone_set($db->get_where('settings' , array('type' => 'timezone'))->row()->description);
 }
+else
+{
+	date_default_timezone_set('America/Denver');
+}
+
 $config['log_file_extension'] = '';
 $config['log_file_permissions'] = 0644;
 $config['log_date_format'] = 'Y-m-d H:i:s';

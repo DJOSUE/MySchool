@@ -219,6 +219,7 @@ class User extends School
         $data['gender']       = html_escape($this->input->post('gender'));
         $data['phone']        = html_escape($this->input->post('phone'));
         $data['address']      = html_escape($this->input->post('address'));
+
         if($this->input->post('password') != ""){
             $data['password'] = sha1($this->input->post('password'));   
         }
@@ -234,6 +235,7 @@ class User extends School
         if($this->input->post('idcard') != ""){
             $data['idcard']     = $this->input->post('idcard');   
         }
+        
         $data['owner_status'] = $this->input->post('owner_status');
         $this->db->where('admin_id', $adminId);
         $this->db->update('admin', $data);
@@ -485,8 +487,17 @@ class User extends School
     
     public function studentAdmission($p_year = '', $p_semesterId = '')
     {
-        $year       =   $p_year         == '' ? $this->runningYear      : $p_year;
-        $semesterId =   $p_semesterId   == '' ? $this->runningSemester  : $p_semesterId;
+        if($this->input->post('year_id') != "")
+        {            
+            $year       =   intval($this->input->post('year_id')) ;
+            $semesterId =   intval($this->input->post('semester_id'));
+        }
+        else
+        {
+            $year       =   $p_year         == '' ? $this->runningYear      : $p_year;
+            $semesterId =   $p_semesterId   == '' ? $this->runningSemester  : $p_semesterId;
+        }
+
         $quantity_score = intval($this->academic->getInfo('ap_quantity_score'));
         $applicant_id = $this->input->post('applicant_id');
 
@@ -496,17 +507,27 @@ class User extends School
         $user_name  = $this->crud->get_name('admin', $this->session->userdata('login_user_id'));
 
         //Generate the student_code if is blank
-        $student_code = $this->input->post('student_code');
-        if(empty($student_code)){
-            $student_code = 'L'.sprintf('%08d', rand()).$this->runningYear;
-        }
 
+        $last_student_code = $this->studentModel->get_last_student_code();
+        $student_code = 1;
+
+        if(!empty($last_student_code))
+        {
+            $_year = date("y"); 
+            $_month = date("m"); 
+
+            $correlative = intval(substr($last_student_code, -8));
+
+            $student_code = 'A'.$_year.$_month.sprintf('%08d', ($correlative+1));
+        }
+        
         $md5 = md5(date('d-m-Y H:i:s'));
         $data['first_name']        = $this->input->post('first_name');
         $data['last_name']         = $this->input->post('last_name');
         $data['birthday']          = $this->input->post('datetimepicker');
         $data['username']          = $this->input->post('username');
         $data['student_code']      = $student_code;
+        $data['sevis_number']      = $this->input->post('sevis_number');
         $data['student_session']   = 1;
         $data['email']             = $this->input->post('email');
         $data['since']             = $this->crud->getDateFormat();
@@ -585,7 +606,7 @@ class User extends School
             $data4['section_id']   = $this->input->post('section_id');
         }
         
-        $data4['roll']             = $this->input->post('student_code');
+        $data4['roll']             = $student_code;
         $data4['date_added']       = strtotime(date("Y-m-d H:i:s"));
         $data4['year']             = $year;
         $data4['semester_id']      = $semesterId;
@@ -599,8 +620,12 @@ class User extends School
             $table      = 'student';
             $action     = 'insert';            
             $enroll_id  = $this->db->insert( 'enroll', $data4 );
-            $this->crud->save_log($table, $action, $enroll_id, $data);
+            $this->crud->save_log($table, $action, $enroll_id, $data4);
         }
+
+        // echo "<pre>";
+        // var_dump($data4);
+        // echo "</pre>";
 
         //Register the Placement Test
         $data5['type_test']     = 1;
@@ -621,22 +646,25 @@ class User extends School
         // Send Email of Confirmation
         // $this->mail->accountConfirm('student', $student_id);
 
+        $level          = $this->academic->get_class_name($this->input->post('class_id'));
+        $section_name   = $this->academic->get_section_name($this->input->post('section_id'));
+
         // Update the Applicant status
         if($applicant_id > 0)
         {
             $this->applicant->update_status($applicant_id, 3);
 
             //Create a automatic interaction            
-            $_POST['comment']       = $user_name.' convert the applicant to student.';
+            $_POST['comment']       = $user_name.' convert the applicant to student and registered in the '.$level.' level, '.$section_name.' schedule.';
             $this->studentModel->add_interaction($student_id, 'automatic');
         }
         else
         {
             //Create a automatic interaction            
-            $_POST['comment']       = $user_name.' register this student.';
+            $_POST['comment']       = $user_name.' register this student and registered in the '.$level.' level, '.$section_name.' schedule.';
             $this->studentModel->add_interaction($student_id, 'automatic');
         }
-        
+
         return $student_id;
     }
     
@@ -739,7 +767,7 @@ class User extends School
         $data['phone']           = $this->input->post('phone');
         $data['sex']             = $this->input->post('gender');
         $data['username']        = $this->input->post('username');
-        $data['student_code']    = $this->input->post('student_code');
+        $data['sevis_number']    = $this->input->post('sevis_number');
         $data['country_id']      = $this->input->post('country_id');
         if($this->input->post('password') != "")
         {
@@ -764,12 +792,7 @@ class User extends School
 
         $this->db->where('student_id', $studentId);
         $this->db->update('student', $data);
-
-        // $data2['roll']             = $this->input->post('roll');
-        // $data2['class_id']         = $this->input->post('class_id');
-        // $data2['section_id']       = $this->input->post('section_id');
-        // $this->db->where('student_id', $studentId);
-        // $this->db->update('enroll', $data2);
+        
         move_uploaded_file($_FILES['userfile']['tmp_name'], PATH_STUDENT_IMAGE . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
     }
     
@@ -1133,4 +1156,148 @@ class User extends School
         $this->crud->save_log($table, $action, $interaction_id, $data);
     }
 
+    function get_advisor()
+    {
+        $this->db->reset_query();
+        $this->db->select('admin_id, first_name, last_name');
+        $this->db->where('status', '1');
+        $this->db->where('owner_status', '3');
+        $this->db->order_by('first_name');
+        $query = $this->db->get('admin')->result_array();        
+        return $query;        
+    }
+
+    function get_teachers()
+    {
+        $this->db->reset_query();
+        $this->db->select('teacher_id, first_name, last_name');
+        $this->db->where('status', '1');
+        $this->db->order_by('first_name');
+        $query = $this->db->get('teacher')->result_array();        
+        return $query;        
+    }
+
+    function get_students_by_teacher($teacher_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('student_id, full_name');
+        $this->db->from('v_enrollment');
+        $this->db->where('year', $this->runningYear);
+        $this->db->where('semester_id', $this->runningSemester);
+        $this->db->where('teacher_id', $teacher_id);
+        $this->db->group_by('student_id');
+        $this->db->order_by('full_name');
+        $students =  $this->db->get()->result_array(); 
+
+        return $students;  
+    }
+
+    function get_accounters()
+    {
+        $this->db->reset_query();
+        $this->db->select('accountant_id, first_name, last_name');
+        $this->db->where('status', '1');
+        $this->db->order_by('first_name');
+        $query = $this->db->get('accountant')->result_array();        
+        return $query;        
+    }
+
+    function get_cashiers()
+    {
+        
+    }
+
+    public function download_Excel_birthdays($month = 1)
+    {        
+        $objPHPExcel = new PHPExcel();
+        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()->setCellValue('A1', getPhrase('name'));
+        $objPHPExcel->getActiveSheet()->setCellValue('B1', getPhrase('birthday'));
+        $objPHPExcel->getActiveSheet()->setCellValue('C1', getPhrase('type'));
+        $objPHPExcel->getActiveSheet()->setCellValue('D1', getPhrase('class'));
+        $objPHPExcel->getActiveSheet()->setCellValue('E1', getPhrase('schedule'));
+
+        $a = 2; $b =2; $c =2; $d =2; $e =2;
+
+        $array_users = array();
+
+        $text = "DATE_FORMAT(birthday,'%c') = ".$month;
+
+        $this->db->reset_query();
+        $this->db->select("admin_id as user_id, 'office' as type_user, first_name, last_name, birthday");
+        $this->db->where('status', 1);
+        $query_admin = $this->db->get('admin')->result_array();
+        
+        $this->db->reset_query();
+        $this->db->select("teacher_id as user_id, 'teacher' as type_user, first_name, last_name, birthday");
+        $this->db->where('status', 1);
+        $query_teacher = $this->db->get('teacher')->result_array();
+        
+        $this->db->reset_query();
+        $this->db->select("accountant_id as user_id, 'office' as type_user, first_name, last_name, birthday");
+        $this->db->where('status', 1);
+        $query_accountant = $this->db->get('accountant')->result_array();
+
+        $this->db->reset_query();
+        $this->db->select("student_id as user_id, 'student' as type_user, first_name, last_name, birthday");
+        $this->db->where('student_session', 1);
+        $query_student = $this->db->get('student')->result_array();
+                
+        foreach($query_admin as $item)
+        {
+            $name           = $item['first_name'] .' '. $item['first_name'];
+            $array_admin    = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => '', 'schedule' => '');
+            array_push($array_users, $array_admin);
+        }
+
+        foreach($query_teacher as $item)
+        {
+            $name       = $item['first_name'] .' '. $item['first_name'];
+            $array_item = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => '', 'schedule' => '');
+            array_push($array_users, $array_item);
+        }
+
+        foreach($query_accountant as $item)
+        {
+            $name       = $item['first_name'] .' '. $item['first_name'];
+            $array_item = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => '', 'schedule' => '');
+            array_push($array_users, $array_item);
+        }
+
+        foreach($query_student as $item)
+        {
+            $name       = $item['first_name'] .' '. $item['first_name'];
+            $enrolment  = $this->academic->get_student_enrollment($item['user_id']);
+            $class      = $enrolment[0]['class_name'];
+            $schedule   = $enrolment[0]['section_name'];
+            if($schedule !=  '')
+            {
+                $array_item = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => $class, 'schedule' => $schedule);
+                array_push($array_users, $array_item);
+            }
+        }
+
+        foreach($array_users as $row)
+        {
+            $objPHPExcel->getActiveSheet()->setCellValue('A'.$a++, $row['name']);
+            $objPHPExcel->getActiveSheet()->setCellValue('B'.$b++, $row['birthday']);
+            $objPHPExcel->getActiveSheet()->setCellValue('C'.$c++, $row['type_user']);
+            $objPHPExcel->getActiveSheet()->setCellValue('D'.$d++, $row['class']);
+            $objPHPExcel->getActiveSheet()->setCellValue('E'.$e++, $row['schedule']);            
+        }
+        $objPHPExcel->getActiveSheet()->setTitle(getPhrase('students'));
+    
+        header("Pragma: public");
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Content-Type: application/force-download");
+        header("Content-Type: application/octet-stream");
+        header("Content-Type: application/download");
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="export_students_'.date('d-m-y:h:i:s').'.xlsx"');
+        header("Content-Transfer-Encoding: binary ");
+        $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel); 
+        $objWriter->setOffice2003Compatibility(true);
+        $objWriter->save('php://output');        
+    }
 }

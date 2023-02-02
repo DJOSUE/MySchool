@@ -1,46 +1,51 @@
-    <div class="content-w"> 
+    <div class="content-w">
         <?php include 'fancy.php';?>
         <div class="header-spacer"></div>
         <div class="content-i">
             <div class="content-box">
                 <div class="conty">
-                    <div class="row">        
+                    <div class="row">
                         <main class="col col-xl-6 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12">
                             <div id="panel">
-                            <?php 
+                                <?php 
                                 $db = $this->db->query('SELECT description, publish_date, type,news_id FROM news UNION SELECT question,publish_date,type,id FROM polls ORDER BY publish_date DESC')->result_array();
                                 foreach($db as $wall):
                                 $this->crud->setRead($wall['news_id']);
                             ?>
-                            <?php if($wall['type'] == 'news'):?>
-                                <div class="ui-block paddingtel">    
-                                <?php 
+                                <?php if($wall['type'] == 'news'):?>
+                                <div class="ui-block paddingtel">
+                                    <?php 
                                     $news_code = $this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->news_code;
                                     $admin_id = $this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->admin_id;
-                                ?>    
+                                ?>
                                     <article class="hentry post has-post-thumbnail thumb-full-width">
                                         <div class="post__author author vcard inline-items">
-                                            <img src="<?php echo $this->crud->get_image_url('admin', $admin_id);?>">                
+                                            <img src="<?= $this->crud->get_image_url('admin', $admin_id);?>">
                                             <div class="author-date">
-                                                <a class="h6 post__author-name fn" href="javascript:void(0);"><?php echo $this->crud->get_name('admin', $admin_id);?></a>
+                                                <a class="h6 post__author-name fn"
+                                                    href="javascript:void(0);"><?= $this->crud->get_name('admin', $admin_id);?></a>
                                                 <div class="post__date">
-                                                    <time class="published" style="color: #0084ff;"><?php echo $this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->date." ".$this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->date2;?></time>
+                                                    <time class="published"
+                                                        style="color: #0084ff;"><?= $this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->date." ".$this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->date2;?></time>
                                                 </div>
-                                            </div>                
+                                            </div>
                                         </div>
                                         <?php if (file_exists('public/uploads/news_images/'.$news_code.'.jpg')):?>
-                                        <p><?php echo $this->crud->check_text($wall['description']);?></p>
+                                        <p><?= $this->crud->check_text($wall['description']);?></p>
                                         <div class="post-thumb">
-                                            <img src="<?php echo base_url();?>public/uploads/news_images/<?php echo $news_code;?>.jpg">
+                                            <img
+                                                src="<?= base_url();?>public/uploads/news_images/<?= $news_code;?>.jpg">
                                         </div>
                                         <?php else:?>
                                         <div class="wall-content">
-                                            <p><?php echo $this->crud->check_text($wall['description']);?></p>
+                                            <p><?= $this->crud->check_text($wall['description']);?></p>
                                         </div>
                                         <br><br><br>
                                         <?php endif;?>
                                         <div class="control-block-button post-control-button">
-                                            <a href="javascript:void(0);" class="btn btn-control" style="background-color:#001b3d; color:#fff;" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo getPhrase('news');?>">
+                                            <a href="javascript:void(0);" class="btn btn-control"
+                                                style="background-color:#001b3d; color:#fff;" data-toggle="tooltip"
+                                                data-placement="top" data-original-title="<?= getPhrase('news');?>">
                                                 <i class="picons-thin-icon-thin-0032_flag"></i>
                                             </a>
                                         </div>
@@ -48,41 +53,47 @@
                                 </div>
                                 <?php endif;?>
                                 <?php if($wall['type'] == 'video'):?>
-                                <div class="ui-block paddingtel">    
-                                <?php 
+                                <div class="ui-block paddingtel">
+                                    <?php 
                                     $news_code = $this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->news_code;
                                     $news_embed = $this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->embed;
-                                    $admin_id = $this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->admin_id;?>    
+                                    $admin_id = $this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->admin_id;?>
                                     <article class="hentry post has-post-thumbnail thumb-full-width">
                                         <div class="post__author author vcard inline-items">
-                                            <img src="<?php echo $this->crud->get_image_url('admin', $admin_id);?>">                
+                                            <img src="<?= $this->crud->get_image_url('admin', $admin_id);?>">
                                             <div class="author-date">
-                                                <a class="h6 post__author-name fn" href="javascript:void(0);"><?php echo $this->crud->get_name('admin', $admin_id);?></a>
+                                                <a class="h6 post__author-name fn"
+                                                    href="javascript:void(0);"><?= $this->crud->get_name('admin', $admin_id);?></a>
                                                 <div class="post__date">
-                                                    <time class="published" style="color: #0084ff;"><?php echo $this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->date." ".$this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->date2;?></time>
+                                                    <time class="published"
+                                                        style="color: #0084ff;"><?= $this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->date." ".$this->db->get_where('news', array('news_id' => $wall['news_id']))->row()->date2;?></time>
                                                 </div>
-                                            </div>                
-                                        </div><hr>
-                                        <p><?php echo $this->crud->check_text($wall['description']);?></p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <p><?= $this->crud->check_text($wall['description']);?></p>
                                         <div class="post-thumb">
-                                            <iframe src="<?php echo $news_embed;?>" height="360" width="100%" frameborder="0" allowfullscreen=""></iframe>
+                                            <iframe src="<?= $news_embed;?>" height="360" width="100%" frameborder="0"
+                                                allowfullscreen=""></iframe>
                                         </div>
                                         <div class="control-block-button post-control-button">
-                                            <a href="javascript:void(0);" class="btn btn-control" style="background-color:#001b3d; color:#fff;" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo getPhrase('news');?>">
+                                            <a href="javascript:void(0);" class="btn btn-control"
+                                                style="background-color:#001b3d; color:#fff;" data-toggle="tooltip"
+                                                data-placement="top" data-original-title="<?= getPhrase('news');?>">
                                                 <i class="picons-thin-icon-thin-0032_flag"></i>
                                             </a>
                                         </div>
                                     </article>
                                 </div>
-                            <?php endif;?>
-                            <?php if($wall['type'] == 'polls'):?>
-                                <?php echo form_open(base_url() . 'teacher/polls/response/' , array('enctype' => 'multipart/form-data'));?>
+                                <?php endif;?>
+                                <?php if($wall['type'] == 'polls'):?>
+                                <?= form_open(base_url() . 'teacher/polls/response/' , array('enctype' => 'multipart/form-data'));?>
                                 <?php 
                                     $usrdb = $this->db->get_where('polls', array('id' => $wall['news_id']))->row()->user;
                                     $poll_code = $this->db->get_where('polls', array('id' => $wall['news_id']))->row()->poll_code;
                                     $admin_id = $this->db->get_where('polls', array('id' => $wall['news_id']))->row()->admin_id;
                                     $options = $this->db->get_where('polls', array('id' => $wall['news_id']))->row()->options;
-                                ?>  
+                                ?>
                                 <?php if($usrdb == 'teacher' || $usrdb == 'all'):?>
                                 <?php 
                                     $type = 'teacher';
@@ -91,82 +102,100 @@
                                     $query = $this->db->get_where('poll_response', array('poll_code' => $poll_code, 'user' => $user));
                                 ?>
                                 <?php if($query->num_rows() <= 0):?>
-                                    <div class="ui-block paddingtel">
-                                    <input type="hidden" name="poll_code" id="poll_code" value="<?php echo $poll_code;?>">
-                                        <article class="hentry post">
-                                            <div class="post__author author vcard inline-items">
-                                                <img src="<?php echo $this->crud->get_image_url('admin', $admin_id);?>" alt="author">
-                                                <div class="author-date">
-                                                    <a class="h6 post__author-name fn" href="javascript:void(0);"><?php echo $this->crud->get_name('admin', $admin_id);?></a>
-                                                    <div class="post__date">
-                                                        <time class="published" style="color: #0084ff;"><?php echo $this->db->get_where('polls', array('id' => $wall['news_id']))->row()->date." ".$this->db->get_where('polls', array('id' => $wall['news_id']))->row()->date2;?></time>
-                                                    </div>
+                                <div class="ui-block paddingtel">
+                                    <input type="hidden" name="poll_code" id="poll_code" value="<?= $poll_code;?>">
+                                    <article class="hentry post">
+                                        <div class="post__author author vcard inline-items">
+                                            <img src="<?= $this->crud->get_image_url('admin', $admin_id);?>"
+                                                alt="author">
+                                            <div class="author-date">
+                                                <a class="h6 post__author-name fn"
+                                                    href="javascript:void(0);"><?= $this->crud->get_name('admin', $admin_id);?></a>
+                                                <div class="post__date">
+                                                    <time class="published"
+                                                        style="color: #0084ff;"><?= $this->db->get_where('polls', array('id' => $wall['news_id']))->row()->date." ".$this->db->get_where('polls', array('id' => $wall['news_id']))->row()->date2;?></time>
                                                 </div>
                                             </div>
-                                            <div class="control-block-button post-control-button">
-                                                <a href="javascript:void(0);" class="btn btn-control" style="background-color:#99bf2d; color:#fff;" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo getPhrase('polls');?>">
-                                                    <i class="picons-thin-icon-thin-0385_graph_pie_chart_statistics"></i>
-                                                </a>
-                                            </div> 
-                                            <div class="wall-content">
-                                                <div>
-                                                    <ul class="widget w-pool">
-                                                        <li>
-                                                            <h4><?php echo $wall['description'];?></h4>
-                                                        </li><br>
-                                                        <?php 
+                                        </div>
+                                        <div class="control-block-button post-control-button">
+                                            <a href="javascript:void(0);" class="btn btn-control"
+                                                style="background-color:#99bf2d; color:#fff;" data-toggle="tooltip"
+                                                data-placement="top" data-original-title="<?= getPhrase('polls');?>">
+                                                <i class="picons-thin-icon-thin-0385_graph_pie_chart_statistics"></i>
+                                            </a>
+                                        </div>
+                                        <div class="wall-content">
+                                            <div>
+                                                <ul class="widget w-pool">
+                                                    <li>
+                                                        <h4><?= $wall['description'];?></h4>
+                                                    </li><br>
+                                                    <?php 
                                                             $array = ( explode(',' , $options));
                                                             for($i = 0 ; $i<count($array)-1; $i++):
                                                         ?>
-                                                        <li>
-                                                            <div class="skills-item">
-                                                                <div class="skills-item-info">
-                                                                    <span class="skills-item-title">
-                                                                        <span class="radio">
-                                                                            <h6>
-                                                                                <label>
-                                                                                    <input type="radio" id="answer" name="answer<?php echo $poll_code;?>" value="<?php echo $array[$i];?>"><span class="circle" style="border: 3px solid #ffffff;"></span><span class="check"></span>
-                                                                                    <?php echo $array[$i];?>
-                                                                                </label>
-                                                                            </h6>
-                                                                        </span>
+                                                    <li>
+                                                        <div class="skills-item">
+                                                            <div class="skills-item-info">
+                                                                <span class="skills-item-title">
+                                                                    <span class="radio">
+                                                                        <h6>
+                                                                            <label>
+                                                                                <input type="radio" id="answer"
+                                                                                    name="answer<?= $poll_code;?>"
+                                                                                    value="<?= $array[$i];?>"><span
+                                                                                    class="circle"
+                                                                                    style="border: 3px solid #ffffff;"></span><span
+                                                                                    class="check"></span>
+                                                                                <?= $array[$i];?>
+                                                                            </label>
+                                                                        </h6>
                                                                     </span>
-                                                                </div>
-                                                            </div>  
-                                                        </li>
-                                                        <?php endfor;?>
-                                                    </ul>
-                                                </div>
-                                                <a href="javascript:void(0);" class="btn btn-md-2 btn-border-think custom-color c-grey text-white btn-vote" onClick="vote('<?php echo $poll_code;?>')"><?php echo getPhrase('vote');?><div class="ripple-container"></div></a>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <?php endfor;?>
+                                                </ul>
                                             </div>
-                                            <br><br><br>
-                                        </article>
-                                    </div>
+                                            <a href="javascript:void(0);"
+                                                class="btn btn-md-2 btn-border-think custom-color c-grey text-white btn-vote"
+                                                onClick="vote('<?= $poll_code;?>')"><?= getPhrase('vote');?><div
+                                                    class="ripple-container"></div></a>
+                                        </div>
+                                        <br><br><br>
+                                    </article>
+                                </div>
                                 <?php endif;?>
                                 <?php if($query->num_rows() > 0):?>
-                                    <div class="ui-block paddingtel">
-                                        <article class="hentry post">
-                                            <div class="post__author author vcard inline-items">
-                                                <img src="<?php echo $this->crud->get_image_url('admin', $admin_id);?>" alt="author">
-                                                <div class="author-date">
-                                                    <a class="h6 post__author-name fn" href="javascript:void(0);"><?php echo $this->crud->get_name('admin', $admin_id);?></a>
-                                                    <div class="post__date">
-                                                        <time class="published" style="color: #0084ff;"><?php echo $this->db->get_where('polls', array('id' => $wall['news_id']))->row()->date." ".$this->db->get_where('polls', array('id' => $wall['news_id']))->row()->date2;?></time>
-                                                    </div>
+                                <div class="ui-block paddingtel">
+                                    <article class="hentry post">
+                                        <div class="post__author author vcard inline-items">
+                                            <img src="<?= $this->crud->get_image_url('admin', $admin_id);?>"
+                                                alt="author">
+                                            <div class="author-date">
+                                                <a class="h6 post__author-name fn"
+                                                    href="javascript:void(0);"><?= $this->crud->get_name('admin', $admin_id);?></a>
+                                                <div class="post__date">
+                                                    <time class="published"
+                                                        style="color: #0084ff;"><?= $this->db->get_where('polls', array('id' => $wall['news_id']))->row()->date." ".$this->db->get_where('polls', array('id' => $wall['news_id']))->row()->date2;?></time>
                                                 </div>
                                             </div>
-                                            <div class="control-block-button post-control-button">
-                                                <a href="javascript:void(0);" class="btn btn-control" style="background-color:#99bf2d; color:#fff;" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo getPhrase('polls');?>">
-                                                    <i class="picons-thin-icon-thin-0385_graph_pie_chart_statistics"></i>
-                                                </a>
-                                            </div>
-                                            <div class="wall-content">
-                                                <div>
-                                                    <ul class="widget w-pool">
-                                                        <li>
-                                                            <h4><?php echo $wall['description'];?></h4>
-                                                        </li><br>
-                                                        <?php 
+                                        </div>
+                                        <div class="control-block-button post-control-button">
+                                            <a href="javascript:void(0);" class="btn btn-control"
+                                                style="background-color:#99bf2d; color:#fff;" data-toggle="tooltip"
+                                                data-placement="top" data-original-title="<?= getPhrase('polls');?>">
+                                                <i class="picons-thin-icon-thin-0385_graph_pie_chart_statistics"></i>
+                                            </a>
+                                        </div>
+                                        <div class="wall-content">
+                                            <div>
+                                                <ul class="widget w-pool">
+                                                    <li>
+                                                        <h4><?= $wall['description'];?></h4>
+                                                    </li><br>
+                                                    <?php 
                                                             $this->db->where('poll_code', $poll_code);
                                                             $polls = $this->db->count_all_results('poll_response');
                                                             $array = ( explode(',' , $options));
@@ -177,42 +206,47 @@
                                                             $po = $this->db->get_where('poll_response', array('poll_code' => $poll_code))->result_array();
                                                             foreach($po as $p):
                                                         ?>
-                                                        <li>
-                                                            <div class="skills-item">
-                                                                <div class="skills-item-info">
-                                                                    <span class="skills-item-title">
+                                                    <li>
+                                                        <div class="skills-item">
+                                                            <div class="skills-item-info">
+                                                                <span class="skills-item-title">
                                                                     <?php 
                                                                         $this->db->where('answer', $array[$i]);
                                                                         $this->db->where('poll_code', $poll_code);
                                                                         $res = $this->db->count_all_results('poll_response');
                                                                     ?>
-                                                                        <h6><label><?php echo $array[$i];?></label></h6>
-                                                                    </span>
-                                                                    <?php 
+                                                                    <h6><label><?= $array[$i];?></label></h6>
+                                                                </span>
+                                                                <?php 
                                                                         $response = $res/$polls;
                                                                         $response2 = $response*100;
                                                                     ?>
-                                                                    <span class="skills-item-count">
-                                                                        <span class="count-animate" data-speed="1000" data-refresh-interval="50" data-to="62" data-from="0"></span>
-                                                                        <span class="units"><?php echo round($response2);?>/100%</span>
-                                                                    </span>
-                                                                </div>
-                                                                <div class="skills-item-meter">
-                                                                    <span class="skills-item-meter-active bg-primary skills-animate" style="width: <?php echo $response2;?>%; opacity: 1;"></span>
-                                                                </div>
+                                                                <span class="skills-item-count">
+                                                                    <span class="count-animate" data-speed="1000"
+                                                                        data-refresh-interval="50" data-to="62"
+                                                                        data-from="0"></span>
+                                                                    <span
+                                                                        class="units"><?= round($response2);?>/100%</span>
+                                                                </span>
                                                             </div>
-                                                        </li>
+                                                            <div class="skills-item-meter">
+                                                                <span
+                                                                    class="skills-item-meter-active bg-primary skills-animate"
+                                                                    style="width: <?= $response2;?>%; opacity: 1;"></span>
+                                                            </div>
+                                                        </div>
+                                                    </li>
                                                     <?php endforeach;?>
                                                     <?php endfor;?>
-                                                    </ul>
-                                                </div>
+                                                </ul>
                                             </div>
-                                            <br><br><br>
-                                        </article>
-                                    </div>
-                                    <?php endif;?>
-                                    <?php endif;?>
-                                <?php echo form_close();?>
+                                        </div>
+                                        <br><br><br>
+                                    </article>
+                                </div>
+                                <?php endif;?>
+                                <?php endif;?>
+                                <?= form_close();?>
                                 <?php endif;?>
                                 <?php endforeach;?>
                             </div>
@@ -223,30 +257,76 @@
                                     <div class="ui-block paddingtel">
                                         <div class="ui-block-content">
                                             <div class="widget w-about">
-                                                <a href="javascript:void(0);" class="logo"><img src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('logo');?>" title="<?php echo $this->crud->getInfo('system_name');?>"></a>
+                                                <a href="javascript:void(0);" class="logo"><img
+                                                        src="<?= base_url();?>public/uploads/<?= $this->crud->getInfo('logo');?>"
+                                                        title="<?= $this->crud->getInfo('system_name');?>"></a>
                                                 <ul class="socials">
-                                                    <li><a class="socialDash fb" href="<?php echo $this->crud->getInfo('facebook');?>"><i class="fab fa-facebook-square" aria-hidden="true"></i></a></li>
-                                                    <li><a class="socialDash tw" href="<?php echo $this->crud->getInfo('twitter');?>"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
-                                                    <li><a class="socialDash yt" href="<?php echo $this->crud->getInfo('youtube');?>"><i class="fab fa-youtube" aria-hidden="true"></i></a></li>
-                                                    <li><a class="socialDash ig" href="<?php echo $this->crud->getInfo('instagram');?>"><i class="fab fa-instagram" aria-hidden="true"></i></a></li>
+                                                    <li><a class="socialDash fb"
+                                                            href="<?= $this->crud->getInfo('facebook');?>"><i
+                                                                class="fab fa-facebook-square"
+                                                                aria-hidden="true"></i></a></li>
+                                                    <li><a class="socialDash tw"
+                                                            href="<?= $this->crud->getInfo('twitter');?>"><i
+                                                                class="fab fa-twitter" aria-hidden="true"></i></a></li>
+                                                    <li><a class="socialDash yt"
+                                                            href="<?= $this->crud->getInfo('youtube');?>"><i
+                                                                class="fab fa-youtube" aria-hidden="true"></i></a></li>
+                                                    <li><a class="socialDash ig"
+                                                            href="<?= $this->crud->getInfo('instagram');?>"><i
+                                                                class="fab fa-instagram" aria-hidden="true"></i></a>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="ui-block paddingtel">
-				                        <div class="widget w-create-fav-page">
-        					                <div class="icons-block" style="margin-bottom: 10px;">
-						                        <i class="picons-thin-icon-thin-0729_student_degree_science_university_school_graduate text-white" style="font-size:25px;"></i>
-					                        </div>
-					                        <div class="content">
-						                        <h3 class="title"><?php echo getPhrase('welcome_teacher_dashboard');?></h3>
-						                        <a href="<?php echo base_url();?>teacher/grados/" class="btn btn-warning btn-sm"><?php echo getPhrase('go_to_my_classes');?></a>
-					                        </div>
-				                        </div>
-			                        </div>
-			                        <div class="ui-block paddingtel">
-                                        <div class="ui-block-title"><h6 class="title"><?php echo getPhrase('chat_groups');?></h6></div>
-                                            <ul class="widget w-friend-pages-added notification-list friend-requests">
+                                        <div class="pipeline white lined-success">
+                                            <div class="element-wrapper">
+                                                <h6 class="element-header"><?= getPhrase('OUR_MISSION');?></h6>
+                                            </div>
+                                            <div class="content">
+                                                <?= getPhrase('school_mission');?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui-block paddingtel">
+                                        <div class="pipeline white lined-success">
+                                            <div class="element-wrapper">
+                                                <h6 class="element-header"><?= getPhrase('OUR_VISION');?></h6>
+                                            </div>
+                                            <div class="content">
+                                                <?= getPhrase('school_vision');?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui-block paddingtel">
+                                        <div class="pipeline white lined-success">
+                                            <div class="element-wrapper">
+                                                <h6 class="element-header"><?= getPhrase('OUR_VALUES');?></h6>
+                                            </div>
+                                            <div class="content">
+                                                <?= getPhrase('school_values');?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui-block paddingtel">
+                                        <div class="widget w-create-fav-page">
+                                            <div class="icons-block" style="margin-bottom: 10px;">
+                                                <i class="picons-thin-icon-thin-0729_student_degree_science_university_school_graduate text-white"
+                                                    style="font-size:25px;"></i>
+                                            </div>
+                                            <div class="content">
+                                                <h3 class="title"><?= getPhrase('welcome_teacher_dashboard');?></h3>
+                                                <a href="<?= base_url();?>teacher/grados/"
+                                                    class="btn btn-warning btn-sm"><?= getPhrase('go_to_my_classes');?></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui-block paddingtel">
+                                        <div class="ui-block-title">
+                                            <h6 class="title"><?= getPhrase('chat_groups');?></h6>
+                                        </div>
+                                        <ul class="widget w-friend-pages-added notification-list friend-requests">
                                             <?php  
                                                 $this->db->limit(5);
                                                 $group_messages = $this->db->get('group_message_thread')->result_array();
@@ -257,63 +337,76 @@
                                             <li class="inline-items">
                                                 <div class="author-thumb">
                                                     <div class="avatar with-status status-green">
-                          		                        <div class="circle purple"><?php echo strtoupper($row['group_name'][0]);?></div>
-                        		                    </div>
+                                                        <div class="circle purple">
+                                                            <?= strtoupper($row['group_name'][0]);?></div>
+                                                    </div>
                                                 </div>
                                                 <div class="notification-event">
-                                                    <a href="<?php echo base_url();?>teacher/group/group_message_read/<?php echo $row['group_message_thread_code'];?>/" class="h6 notification-friend"><?php echo $row['group_name'];?></a>
-                                                    <span class="chat-message-item"><?php echo count(json_decode($row['members']));?> <?php echo getPhrase('members_on_this_group');?>.</span>
+                                                    <a href="<?= base_url();?>teacher/group/group_message_read/<?= $row['group_message_thread_code'];?>/"
+                                                        class="h6 notification-friend"><?= $row['group_name'];?></a>
+                                                    <span
+                                                        class="chat-message-item"><?= count(json_decode($row['members']));?>
+                                                        <?= getPhrase('members_on_this_group');?>.</span>
                                                 </div>
                                             </li>
                                             <?php endif;?>
                                             <?php endforeach;?>
                                         </ul>
                                     </div>
-                                    <div class="ui-block paddingtel" >
+                                    <div class="ui-block paddingtel">
                                         <div class="pipeline white lined-success">
-                                            <div class="element-wrapper" >
-                                                <h6 class="element-header"><?php echo getPhrase('online_users');?></h6>
-                                                <?php $this->crud->saveUser();?>          
+                                            <div class="element-wrapper">
+                                                <h6 class="element-header"><?= getPhrase('online_users');?></h6>
+                                                <?php $this->crud->saveUser();?>
                                                 <div class="full-ch at-w">
                                                     <div class="chat-content-w min">
-                                                        <div class="chat-content min">  
+                                                        <div class="chat-content min">
                                                             <div class="users-list-w">
-                                                            <?php  
+                                                                <?php  
                                                                 $this->db->group_by('gp');
                                                                 $usuarios = $this->db->get('online_users')->result_array();
                                                                 foreach($usuarios as $row):
                                                             ?>
                                                                 <div class="user-w with-status min status-green">
                                                                     <div class="user-avatar-w min">
-                                                                        <div class="user-avatar" >
-                                                                            <img alt="" src="<?php echo $this->crud->get_image_url($row['type'], $row['id_usuario']);?>">
+                                                                        <div class="user-avatar">
+                                                                            <img alt=""
+                                                                                src="<?= $this->crud->get_image_url($row['type'], $row['id_usuario']);?>">
                                                                         </div>
                                                                     </div>
                                                                     <div class="user-name">
-                                                                        <h6 class="user-title min"><?php echo $this->crud->get_name($row['type'],$row['id_usuario']);?></h6>
+                                                                        <h6 class="user-title min">
+                                                                            <?= $this->crud->get_name($row['type'],$row['id_usuario']);?>
+                                                                        </h6>
                                                                         <div class="user-role min">
-                                                                        <?php if($row['type'] == 'student'):?>
-                                                                            <span class="badge badge-warning"><?php echo getPhrase('student');?></span>
-                                                                        <?php endif;?>
-                                                                        <?php if($row['type'] == 'parent'):?>
-                                                                            <span class="badge badge-purple"><?php echo getPhrase('parent');?></span>
-                                                                        <?php endif;?>
-                                                                        <?php if($row['type'] == 'accountant'):?>
-                                                                            <span class="badge badge-info"><?php echo getPhrase('accountant');?></span>
-                                                                        <?php endif;?>
-                                                                        <?php if($row['type'] == 'librarian'):?>
-                                                                            <span class="badge badge-info"><?php echo getPhrase('librarian');?></span>
-                                                                        <?php endif;?>
-                                                                        <?php if($row['type'] == 'admin'):?>
-                                                                            <span class="badge badge-primary"><?php echo getPhrase('admin');?></span> 
-                                                                        <?php endif;?>
-                                                                        <?php if($row['type'] == 'teacher'):?>
-                                                                            <span class="badge badge-success"><?php echo getPhrase('teacher');?></span>
-                                                                        <?php endif;?>
+                                                                            <?php if($row['type'] == 'student'):?>
+                                                                            <span
+                                                                                class="badge badge-warning"><?= getPhrase('student');?></span>
+                                                                            <?php endif;?>
+                                                                            <?php if($row['type'] == 'parent'):?>
+                                                                            <span
+                                                                                class="badge badge-purple"><?= getPhrase('parent');?></span>
+                                                                            <?php endif;?>
+                                                                            <?php if($row['type'] == 'accountant'):?>
+                                                                            <span
+                                                                                class="badge badge-info"><?= getPhrase('accountant');?></span>
+                                                                            <?php endif;?>
+                                                                            <?php if($row['type'] == 'librarian'):?>
+                                                                            <span
+                                                                                class="badge badge-info"><?= getPhrase('librarian');?></span>
+                                                                            <?php endif;?>
+                                                                            <?php if($row['type'] == 'admin'):?>
+                                                                            <span
+                                                                                class="badge badge-primary"><?= getPhrase('admin');?></span>
+                                                                            <?php endif;?>
+                                                                            <?php if($row['type'] == 'teacher'):?>
+                                                                            <span
+                                                                                class="badge badge-success"><?= getPhrase('teacher');?></span>
+                                                                            <?php endif;?>
                                                                         </div>
-                                                                    </div>            
+                                                                    </div>
                                                                 </div>
-                                                            <?php endforeach;?>
+                                                                <?php endforeach;?>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -332,15 +425,17 @@
                                         <div class="today-events calendar ">
                                             <div class="today-events-thumb">
                                                 <div class="date">
-                                                    <div class="day-number"><?php echo date('d');?></div>
-                                                    <div class="day-week"><?php echo getPhrase(date('l'));?></div>
-                                                    <div class="month-year" style="color:#FFF"><?php echo getPhrase(date('F'));?>, <?php echo date('Y');?>.</div>
+                                                    <div class="day-number"><?= date('d');?></div>
+                                                    <div class="day-week"><?= getPhrase(date('l'));?></div>
+                                                    <div class="month-year" style="color:#FFF">
+                                                        <?= getPhrase(date('F'));?>, <?= date('Y');?>.</div>
                                                 </div>
                                             </div>
                                             <div class="list">
                                                 <?php $date = date('Y-m-d');
                                                 $events = $this->db->get_where('events', array('start >=' => $date.' '.'00:00:00', 'start <=' => $date.' '.'23:59:59')); ?>
-                                                <div id="accordion-1" role="tablist" aria-multiselectable="true" class="day-event" data-month="12" data-day="2">
+                                                <div id="accordion-1" role="tablist" aria-multiselectable="true"
+                                                    class="day-event" data-month="12" data-day="2">
                                                     <?php  if($events->num_rows() > 0):?>
                                                     <?php
                                                         foreach($events->result_array() as $event):
@@ -349,74 +444,87 @@
                                                         <div class="card-header" role="tab" id="headingOne-1">
                                                             <div class="event-time">
                                                                 <h5 class="mb-0 title">
-                                                                    <a href="<?php echo base_url();?>teacher/calendar/">
-                                                                        <?php echo $event['title'];?>
+                                                                    <a href="<?= base_url();?>teacher/calendar/">
+                                                                        <?= $event['title'];?>
                                                                     </a>
                                                                 </h5>
                                                             </div>
-                                                        </div>  
+                                                        </div>
                                                     </div>
                                                     <?php endforeach;?>
                                                     <?php else:?>
                                                     <center>
                                                         <div style="padding-bottom : 75px;padding-top :75px;">
-                                                            <p><?php echo getPhrase('no_today_events');?></p>
-                                                            <img src="<?php echo base_url();?>public/uploads/calendar.png" width="20%"/>
+                                                            <p><?= getPhrase('no_today_events');?></p>
+                                                            <img src="<?= base_url();?>public/uploads/calendar.png"
+                                                                width="20%" />
                                                         </div>
                                                     </center>
-                                                <?php endif;?>
+                                                    <?php endif;?>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="ui-block paddingtel">
-                                        <div class="ui-block-title"><h6 class="title"><?php echo getPhrase('birthdays');?></h6></div>
+                                        <div class="ui-block-title">
+                                            <h6 class="title"><?= getPhrase('birthdays');?></h6>
+                                        </div>
                                         <br><br>
                                         <center>
-                                            <img src="<?php echo base_url();?>public/uploads/icons/cake.svg" width="85px"><br><br>
-                                            <h4><?php echo getPhrase('birthdays');?></h4>
-                                            <p><?php echo $this->crud->get_birthdays();?> <?php echo getPhrase('users_have_a_birthday_this_month');?>.</p>
-                                            <a href="<?php echo base_url();?>teacher/birthdays/" style="background-color: #615dfa;line-height: 28px; font-size: .875rem; font-weight: 700;display: inline-block; text-align: center;width: 60%; height: 48px;box-shadow: 4px 7px 12px 0 rgb(97 93 250 / 20%);color:#fff;padding:10px;border-radius:10px;transition: background-color .2s ease-in-out, color .2s ease-in-out, border-color .2s ease-in-out, box-shadow .2s ease-in-out;"><?php echo getPhrase('view_all_birthdays');?></a>
+                                            <img src="<?= base_url();?>public/uploads/icons/cake.svg"
+                                                width="85px"><br><br>
+                                            <h4><?= getPhrase('birthdays');?></h4>
+                                            <p><?= $this->crud->get_birthdays();?>
+                                                <?= getPhrase('users_have_a_birthday_this_month');?>.</p>
+                                            <a href="<?= base_url();?>teacher/birthdays/"
+                                                style="background-color: #615dfa;line-height: 28px; font-size: .875rem; font-weight: 700;display: inline-block; text-align: center;width: 60%; height: 48px;box-shadow: 4px 7px 12px 0 rgb(97 93 250 / 20%);color:#fff;padding:10px;border-radius:10px;transition: background-color .2s ease-in-out, color .2s ease-in-out, border-color .2s ease-in-out, box-shadow .2s ease-in-out;"><?= getPhrase('view_all_birthdays');?></a>
                                         </center>
                                         <div class="header-spacer"></div>
                                     </div><br>
                                     <br>
                                 </div>
-                            </div> 
+                            </div>
                         </div>
                     </div>
                 </div>
                 <a class="back-to-top" href="#">
-                    <img src="<?php echo base_url();?>public/style/olapp/svg-icons/back-to-top.svg" alt="arrow" class="back-icon">
+                    <img src="<?= base_url();?>public/style/olapp/svg-icons/back-to-top.svg" alt="arrow"
+                        class="back-icon">
                 </a>
             </div>
         </div>
     </div>
-      
-     
+
+
     <script>
-        var post_message        =   '<?php echo getPhrase('thank_you_polls');?>';
-        function vote(poll_code)
-        {
-          answer = $('input[name=answer'+poll_code+']:checked').val();
-          if(answer!="" && poll_code!="")
-          {
-            $.ajax({url:"<?php echo base_url();?>teacher/polls/response/",type:'POST',data:{answer:answer,poll_code:poll_code},success:function(result)
-            {
-              $('#panel').load(document.URL + ' #panel');
-              const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 8000
-                }); 
+var post_message = '<?= getPhrase('thank_you_polls');?>';
+
+function vote(poll_code) {
+    answer = $('input[name=answer' + poll_code + ']:checked').val();
+    if (answer != "" && poll_code != "") {
+        $.ajax({
+            url: "<?= base_url();?>teacher/polls/response/",
+            type: 'POST',
+            data: {
+                answer: answer,
+                poll_code: poll_code
+            },
+            success: function(result) {
+                $('#panel').load(document.URL + ' #panel');
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 8000
+                });
                 Toast.fire({
-                icon: 'success',
-                title: post_message
+                    icon: 'success',
+                    title: post_message
                 })
-            }});
-          }else{
-            alert('<?php echo getPhrase('select_an_option');?>');
-          }
-        }
+            }
+        });
+    } else {
+        alert('<?= getPhrase('select_an_option');?>');
+    }
+}
     </script>

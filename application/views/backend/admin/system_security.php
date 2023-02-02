@@ -1,3 +1,12 @@
+<?php
+
+    $this->db->reset_query();
+    $this->db->where_not_in('role_id', '1');
+    $this->db->order_by('table ASC, name ASC');
+    $roles = $this->db->get('roles')->result_array();
+
+
+?>
 <div class="content-w">
     <?php include 'fancy.php';?>
     <div class="header-spacer"></div>
@@ -48,54 +57,6 @@
         </div>
         <div class="content-i">
             <div class="content-box">
-                <div class="expense">
-                    <button class="btn btn-success btn-rounded btn-upper" data-target="#new_role" data-toggle="modal"
-                        type="button">
-                        +<?= getPhrase('new');?>
-                    </button>
-                </div>
-                <br>
-                <div class="element-wrapper">
-                    <h6 class="element-header"><?= getPhrase('Roles');?></h6>
-                    <div class="element-box-tp">
-                        <div class="table-responsive">
-                            <table class="table table-padded">
-                                <thead>
-                                    <tr>
-                                        <th><?= getPhrase('name');?></th>
-                                        <th><?= getPhrase('table');?></th>
-                                        <th><?= getPhrase('status');?></th>
-                                        <th class="text-center"><?= getPhrase('options');?></th>
-                                    </tr>
-                                </thead>
-                                <?php 
-                                    $roles = $this->db->get('roles')->result_array();
-                                    foreach($roles as $row):
-                                ?>
-                                <tr>
-                                    <td><?= $row['name'];?></td>
-                                    <td><?= $row['table'];?></td>
-                                    <td><?= $row['status'];?></td>
-                                    <td class="row-actions">
-                                        <a href="javascript:void(0);" class="grey"
-                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_system_roles_edit/<?= $row['role_id'];?>');"><i
-                                                class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new"></i></a>
-                                        <!-- <a style="color:grey"
-                                            onClick="return confirm('<?= getPhrase('confirm_delete');?>')"
-                                            href="<?= base_url();?>admin/grade/delete/<?= $row['grade_id'];?>"><i
-                                                class="os-icon picons-thin-icon-thin-0056_bin_trash_recycle_delete_garbage_empty"></i></a> -->
-                                    </td>
-                                </tr>
-                                <?php endforeach;?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="content-i">
-            <div class="content-box">
                 <div class="element-box lined-purple shadow" style="border-radius:10px;">
                     <h4 class="form-header"><i class="picons-thin-icon-thin-0095_file_protected_password_security"></i>
                         <?= getPhrase('role_access');?></h4><br>
@@ -131,6 +92,53 @@
                 </div>
             </div>
         </div>
+        <div class="content-i">
+            <div class="content-box">
+                <div class="expense">
+                    <button class="btn btn-success btn-rounded btn-upper" data-target="#new_role" data-toggle="modal"
+                        type="button">
+                        +<?= getPhrase('new');?>
+                    </button>
+                </div>
+                <br>
+                <div class="element-wrapper">
+                    <h6 class="element-header"><?= getPhrase('Roles');?></h6>
+                    <div class="element-box-tp">
+                        <div class="table-responsive">
+                            <table class="table table-padded">
+                                <thead>
+                                    <tr>
+                                        <th><?= getPhrase('name');?></th>
+                                        <th><?= getPhrase('table');?></th>
+                                        <th><?= getPhrase('status');?></th>
+                                        <th class="text-center"><?= getPhrase('options');?></th>
+                                    </tr>
+                                </thead>
+                                <?php                                     
+                                    foreach($roles as $row):
+                                ?>
+                                <tr>
+                                    <td><?= $row['name'];?></td>
+                                    <td><?= $row['table'];?></td>
+                                    <td><?= $row['status'];?></td>
+                                    <td class="row-actions">
+                                        <a href="javascript:void(0);" class="grey"
+                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_system_roles_edit/<?= $row['role_id'];?>');"><i
+                                                class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new"></i></a>
+                                        <!-- <a style="color:grey"
+                                            onClick="return confirm('<?= getPhrase('confirm_delete');?>')"
+                                            href="<?= base_url();?>admin/grade/delete/<?= $row['grade_id'];?>"><i
+                                                class="os-icon picons-thin-icon-thin-0056_bin_trash_recycle_delete_garbage_empty"></i></a> -->
+                                    </td>
+                                </tr>
+                                <?php endforeach;?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>        
     </div>
 </div>
 
@@ -173,10 +181,10 @@
                         <div class="input-group">
                             <div class="select">
                                 <select name="permissions" required="" style="width: 250px;">
-                                    <option value="0" <?= $row['permissions'] == 0 ? 'selected': ''; ?>>
+                                    <option value="0" >
                                         <?= getPhrase('forbid')?>
                                     </option>
-                                    <option value="1" <?= $row['permissions'] == 1 ? 'selected': ''; ?>>
+                                    <option value="1" selected>
                                         <?= getPhrase('allow')?>
                                     </option>
                                 </select>

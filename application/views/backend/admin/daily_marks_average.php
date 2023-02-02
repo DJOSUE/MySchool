@@ -81,7 +81,7 @@
                     </li>
                     <li class="navs-item">
                         <a class="navs-links active"
-                            href="<?php echo base_url();?>admin/daily_marks_average/<?php echo $data;?>/"><i
+                            href="<?php echo base_url();?>admin/subject_daily_marks_average/<?php echo $data;?>/"><i
                                 class="os-icon picons-thin-icon-thin-0197_layout_grid_view"></i><span><?php echo getPhrase('daily_marks_average');?></span></a>
                     </li>
                     <?php else: ?>
@@ -92,7 +92,7 @@
                     </li>
                     <?php endif; ?>
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>admin/meet/<?php echo $data;?>/"><i
+                        <a class="navs-links" href="<?php echo base_url();?>admin/subject_meet/<?php echo $data;?>/"><i
                                 class="os-icon picons-thin-icon-thin-0591_presentation_video_play_beamer"></i><span><?php echo getPhrase('live');?></span></a>
                     </li>
                     <?php if(!$useGradeAttendance):?>
@@ -125,17 +125,17 @@
                                             <ul>
                                                 <?php  
                                                     $var = 0;
-                                                    $exams = $this->db->get_where('v_class_units', array( 'class_id' => $class_id))->result_array();
+                                                    $exams = $this->crud->get_exam_by_class($class_id);
                                                     foreach($exams as $exam):
                                                     $var++;
                                                 ?>
                                                 <li class='<?php if($exam['unit_id'] == $unit_id) echo "act";?>'><a
-                                                        href="<?php echo base_url();?>admin/daily_marks_average/<?php echo $data.'/'.$exam['unit_id'];?>/"><i
+                                                        href="<?php echo base_url();?>admin/subject_daily_marks_average/<?php echo $data.'/'.$exam['unit_id'];?>/"><i
                                                             class="os-icon picons-thin-icon-thin-0023_calendar_month_day_planner_events"></i><?php echo $exam['unit_name'];?></a>
                                                 </li>
                                                 <?php endforeach;?>
                                                 <li class='<?php if(0 == $unit_id) echo "act";?>'>
-                                                <a href="<?php echo base_url();?>admin/daily_marks_average/<?php echo $data?>/0/"><i
+                                                <a href="<?php echo base_url();?>admin/subject_daily_marks_average/<?php echo $data?>/0/"><i
                                                             class="os-icon picons-thin-icon-thin-0023_calendar_month_day_planner_events"></i><?php echo getPhrase('average')?></a> 
                                                 </li>
                                             </ul>
@@ -224,7 +224,7 @@
                                                             }
                                                             
                                                             // Math to get Average
-                                                            $Total_Sum = array_sum($average[0]);
+                                                            $Total_Sum = array_sum($average[0]) - $average[0][labuno];
                                                             $count = 0;
                                                             
                                                             $labouno        = $average[0][labuno];
@@ -239,7 +239,7 @@
                                                             $labodiez       = $average[0][labdiez];
                                                 
                                                             // Calculate the average 
-                                                            if(is_numeric($labouno)     && $labouno != '-' ) { $count++; } 
+                                                            // if(is_numeric($labouno)     && $labouno != '-' ) { $count++; } 
                                                             if(is_numeric($labodos)     && $labodos != '-' ) { $count++; }  
                                                             if(is_numeric($labotres)    && $labotres != '-' ) { $count++; }  
                                                             if(is_numeric($labocuatro)  && $labocuatro != '-' ) { $count++; }  

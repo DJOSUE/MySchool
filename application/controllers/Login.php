@@ -92,7 +92,7 @@ class Login extends EduAppGT
             $row = $query->row();
             $this->session->set_userdata('role_id', '6');
             $this->session->set_userdata('program_id', $row->program_id);
-            $this->session->set_userdata('student_login', $row->student_session);
+            $this->session->set_userdata('student_login', '1');
             $this->session->set_userdata('student_id', $row->student_id);
             $this->session->set_userdata('login_user_id', $row->student_id);
             $this->session->set_userdata('name', $row->first_name);
@@ -115,7 +115,7 @@ class Login extends EduAppGT
         if ($query->num_rows() > 0) 
         {
             $row = $query->row();
-            $this->session->set_userdata('role_id', '4');
+            $this->session->set_userdata('role_id', $row->role_id);
             $this->session->set_userdata('accountant_login', '1');
             $this->session->set_userdata('accountant_id', $row->accountant_id);
             $this->session->set_userdata('login_user_id', $row->accountant_id);

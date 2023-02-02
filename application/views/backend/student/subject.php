@@ -48,7 +48,9 @@
                                                                 <div class="row">
                                                                     <?php 
                                                                     $this->db->order_by('subject_id', 'desc');
-                                                                    $subjects = $this->db->get_where('subject', array('class_id' => $cl_id, 'section_id' => $section_id))->result_array();
+                                                                    $subjects = $this->db->get_where('v_enrollment' , array('class_id' => $cl_id, 'student_id' => $student_id, 'year' => $running_year, 'semester_id'=> $running_semester))->result_array();
+
+                                                                    //$subjects = $this->db->get_where('subject', array('class_id' => $cl_id, 'section_id' => $section_id))->result_array();
 
                                                                     foreach($subjects as $row2):
                                                                 ?>
@@ -75,7 +77,7 @@
                                                                                         </div>
                                                                                         <div class="author-content">
                                                                                             <a href="<?php echo base_url();?>student/subject_dashboard/<?php echo base64_encode($row2['class_id']."-".$section_id."-".$row2['subject_id']);?>/"
-                                                                                                class="h5 author-name"><?php echo $row2['name'];?></a><br><br>
+                                                                                                class="h5 author-name"><?php echo $row2['subject_name'];?></a><br><br>
                                                                                             <img src="<?php echo $this->crud->get_image_url('teacher', $row2['teacher_id']);?>"
                                                                                                 style="border-radius:50%;width:20px;"><span>
                                                                                                 <?php echo $this->crud->get_name('teacher', $row2['teacher_id']);?></span>

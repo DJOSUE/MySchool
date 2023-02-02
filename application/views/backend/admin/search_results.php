@@ -1,5 +1,7 @@
     <?php 
     $return_url = base64_encode('/admin/search_results?query='.$search_key);
+    $running_year = $this->crud->getInfo('running_year');
+    $running_semester = $this->crud->getInfo('running_semester');
     ?>
     <div class="content-w">
         <?php include 'fancy.php';?>
@@ -39,7 +41,8 @@
                                             <span class="badge badge-success" style="background-color: <?=$row['student_session_color']?>;">
                                                 <?= $row['student_session_name']?>
                                             </span>
-                                            <?php $class_id = $this->db->get_where('enroll', array('student_id' => $row['student_id']))->row()->class_id; 
+                                            <?php $class_id = $this->db->get_where('enroll', array('student_id' => $row['student_id'], 'year' => $running_year, 'semester_id' => $running_semester))->row()->class_id; 
+                                                $class = $this->db->get_where('enroll', array('student_id' => $row['student_id'], 'year' => $running_year, 'semester_id' => $running_semester))->result_array();                                               
 												$class_name = $this->db->get_where('class', array('class_id' => $class_id))->row()->name;
                                                 if($class_id > 0):
 											?>                                            

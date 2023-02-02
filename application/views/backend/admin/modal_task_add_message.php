@@ -15,6 +15,8 @@
     // echo '</pre>';
     
     foreach ($tasks as $row):
+
+        $userList = $this->task->get_user_list_dropbox($row['assigned_to'], $row['assigned_to_type']);
 ?>
 <div class="modal-body">
     <div class="modal-header" style="background-color:#00579c">
@@ -25,7 +27,7 @@
             <h4><?= getPhrase('user');?>: </h4>
             <h6><?= $this->crud->get_name($row['user_type'], $row['user_id']);?></h6>
         </span>
-        <?php echo form_open(base_url() . 'admin/task_message/add/'.$param2.'/'.$return_url , array('enctype' => 'multipart/form-data'));?>
+        <?php echo form_open(base_url() . 'assignment/task_message/add/'.$param2.'/'.$return_url , array('enctype' => 'multipart/form-data'));?>
         <input type="hidden" name="task_code" value="<?= $param2?>">
         <div class="form-group row">
             <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('status');?></label>
@@ -48,6 +50,47 @@
             </div>
         </div>
         <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('category');?></label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <div class="select">
+                        <select name="category_id">
+                            <option value=""><?php echo getPhrase('select');?>
+                            </option>
+                            <?php
+                            $departments = $this->task->get_departments();
+                            foreach($departments as $department):                        
+                            ?>
+                            <optgroup label="<?= $department['name'];?>">
+                                <?php
+                                $categories = $this->task->get_categories($department['department_id']);
+                                foreach($categories as $item):  
+                                ?>
+                                <option value="<?php echo $item['category_id'];?>"
+                                    <?php if($row['category_id'] == $item['category_id']) echo "selected";?>>
+                                    <?php echo $item['name'];?></option>
+
+                                <?php endforeach;?>
+                                <?php endforeach;?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('assigned_to');?></label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <div class="select">
+                        <select name="assigned_to">
+                            <option value=""><?= getPhrase('select');?></option>
+                            <?= $userList?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
             <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('comment');?></label>
             <div class="col-sm-9">
                 <div class="form-group">
@@ -64,6 +107,18 @@
                     </div>
                     <input class="form-control" name="message_file" type="file"
                         accept="image/jpeg,image/png,application/pdf">
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('due_date');?></label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <!-- <div class="input-group-addon">
+                        <i class="picons-thin-icon-thin-0003_write_pencil_new_edit"></i>
+                    </div> -->
+                    <input type='date' 
+                        name="due_date" data-multiple-dates-separator="/" value="<?= $row['due_date'];?>" />
                 </div>
             </div>
         </div>

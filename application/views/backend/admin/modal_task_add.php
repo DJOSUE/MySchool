@@ -12,7 +12,7 @@
 ?>
 <div class="modal-body">
     <div class="modal-header" style="background-color:#00579c">
-        <h6 class="title" style="color:white"><?php echo getPhrase('edit_task');?></h6>
+        <h6 class="title" style="color:white"><?php echo getPhrase('add_task');?></h6>
     </div>
     <div class="ui-block-content">
         <span style="display:inline;">

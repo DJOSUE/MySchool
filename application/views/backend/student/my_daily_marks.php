@@ -14,19 +14,19 @@
             <div class="os-tabs-controls">
                 <ul class="navs navs-tabs">
                     <li class="navs-item">
-                        <a class="navs-links active" href="<?php echo base_url();?>student/my_marks/"><i
+                        <a class="navs-links active" href="<?= base_url();?>student/my_marks/"><i
                                 class="picons-thin-icon-thin-0658_cup_place_winner_award_prize_achievement"></i>
-                            <span><?php echo getPhrase('current_marks');?></span></a>
+                            <span><?= getPhrase('current_marks');?></span></a>
                     </li>
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>student/my_past_marks/"><i
+                        <a class="navs-links" href="<?= base_url();?>student/my_past_marks/"><i
                                 class="picons-thin-icon-thin-0658_cup_place_winner_award_prize_achievement"></i>
-                            <span><?php echo getPhrase('past_marks');?></span></a>
+                            <span><?= getPhrase('past_marks');?></span></a>
                     </li>
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>student/placement_achievement/"><i
+                        <a class="navs-links" href="<?= base_url();?>student/placement_achievement/"><i
                                 class="picons-thin-icon-thin-0658_cup_place_winner_award_prize_achievement"></i>
-                            <span><?php echo getPhrase('placement_and_achievement');?></span></a>
+                            <span><?= getPhrase('placement_and_achievement');?></span></a>
                     </li>
                 </ul>
             </div>
@@ -36,19 +36,20 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="element-box lined-primary shadow">
-                            <h5 class="form-header"><?php echo getPhrase('your_marks');?><br>
+                            <h5 class="form-header"><?= getPhrase('your_marks');?><br>
                                 <small><?= getPhrase('average');?></small>
                             </h5>
                             <div class="table-responsive">
                                 <table class="table table-lightborder">
                                     <thead>
                                         <tr>
-                                            <th><?php echo getPhrase('subject');?></th>
-                                            <th><?php echo getPhrase('teacher');?></th>
-                                            <th><?php echo getPhrase('attendance');?></th>
-                                            <th><?php echo getPhrase('mark');?></th>
-                                            <th><?php echo getPhrase('grade');?></th>
-                                            <th><?php echo getPhrase('gpa');?></th>
+                                            <th><?= getPhrase('class');?></th>
+                                            <th><?= getPhrase('subject');?></th>
+                                            <th><?= getPhrase('teacher');?></th>
+                                            <th class="text-center"><?= getPhrase('attendance');?></th>
+                                            <th class="text-center"><?= getPhrase('mark');?></th>
+                                            <th class="text-center"><?= getPhrase('grade');?></th>
+                                            <th class="text-center"><?= getPhrase('gpa');?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -124,47 +125,55 @@
                                             $mark = $count > 0 ? round(($labototal/$count), (int)$roundPrecision) : '-';
 
 
-                                            // Totals                                            
-                                            $total_mark += $mark;
-                                            $total_count++;
+                                            if($mark != '-'){
+                                                $total_mark += $mark;
+                                                $total_count++; 
+                                            }
+
+                                            if($labouno != '-'){
+                                                $total_labuno += $labouno;
+                                            }
 
                                         ?>
                                         <tr>
                                             <td>
-                                                <?php echo $item['subject_name'];?>
+                                                <?= $item['class_name'];?>
+                                            </td>
+                                            <td>
+                                                <?= $item['subject_name'];?>
                                             </td>
                                             <td>
                                                 <img alt=""
-                                                    src="<?php echo $this->crud->get_image_url('teacher',$item['teacher_id']);?>"
+                                                    src="<?= $this->crud->get_image_url('teacher',$item['teacher_id']);?>"
                                                     width="25px" style="border-radius: 10px;margin-right:5px;">
-                                                <?php echo $item['teacher_name']; ?>
+                                                <?= $item['teacher_name']; ?>
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 <?php if(($labouno < $min || $labouno == 0) && $labouno != '-'):?>
                                                 <a class="btn btn-rounded btn-sm btn-danger"
                                                     style="color:white"><?php if($labouno == 0) echo '0'; else echo $labouno;?></a>
                                                 <?php endif;?>
                                                 <?php if($labouno >= $min):?>
                                                 <a class="btn btn-rounded btn-sm btn-info"
-                                                    style="color:white"><?php echo $labouno;?></a>
+                                                    style="color:white"><?= $labouno;?></a>
                                                 <?php endif;?>
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 <?php if(($mark < $min || $mark == 0) && $mark != '-'):?>
                                                 <a class="btn btn-rounded btn-sm btn-danger"
                                                     style="color:white"><?php if($mark == 0) echo '0'; else echo $mark;?></a>
                                                 <?php endif;?>
                                                 <?php if($mark >= $min):?>
                                                 <a class="btn btn-rounded btn-sm btn-info"
-                                                    style="color:white"><?php echo $mark;?></a>
+                                                    style="color:white"><?= $mark;?></a>
                                                 <?php endif;?>
                                             </td>
-                                            <td>
-                                                <?php echo $this->crud->get_grade($mark);?>
+                                            <td class="text-center">
+                                                <?= $this->crud->get_grade($mark);?>
                                             </td>
-                                            <td>
-                                                <?php echo $this->crud->get_gpa($mark);?>
-                                            </td>    
+                                            <td class="text-center">
+                                                <?= $this->crud->get_gpa($mark);?>
+                                            </td>
                                         </tr>
                                         <?php endforeach;?>
                                         <tr class="form-buttons-w">
@@ -174,70 +183,74 @@
                                             ?>
                                             <td>
                                             </td>
+                                            <td>
+                                            </td>
                                             <td class="text-right">
-                                                <b><?= getPhrase('total');?></b>
+                                                <b><?= getPhrase('average');?></b>
                                             </td>
-                                            <td>
-                                                
+                                            <td class="text-center">
+                                                <?= $total_attendance; ?>
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 <?= $total_average; ?>
                                             </td>
-                                            <td>
-                                                <?php echo $this->crud->get_grade($total_average);?>
+                                            <td class="text-center">
+                                                <?= $this->crud->get_grade($total_average);?>
                                             </td>
-                                            <td>
-                                                <?php echo $this->crud->get_gpa($total_average);?>
+                                            <td class="text-center">
+                                                <?= $this->crud->get_gpa($total_average);?>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                                 <div class="text-right">
                                     <a target="_blank"
-                                        href="<?php echo base_url();?>student/marks_print_all_view/<?php echo base64_encode($student_id.'-'. $row2['unit_id']);?>/"><button
+                                        href="<?= base_url();?>student/marks_print_all_view/<?= base64_encode($student_id.'-'. $row2['unit_id']);?>/"><button
                                             class="btn btn-rounded btn-success" type="submit"><i
                                                 class="picons-thin-icon-thin-0333_printer"></i>
-                                            <?php echo getPhrase('print');?></button></a>
+                                            <?= getPhrase('print');?></button></a>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <?php 
-        				//$student_info = $this->db->get_where('v_enroll' , array('student_id' => $student_id , 'class_id' => $class_id, 'year' => $running_year, 'semester_id' => $running_semester))->result_array();
+                    <?php         				
                         $student_info = $this->db->query("SELECT * FROM v_enroll 
-                                                                    WHERE student_id = '$student_id'
-                                                                    AND class_id = $class_id
-                                                                    AND year = '$running_year'
-                                                                    AND semester_id = '$running_semester'
-                                                                    LIMIT 1
-                                                                    ")->result_array();
+                                                                WHERE student_id = '$student_id'
+                                                                AND class_id = '$class_id'
+                                                                AND year = '$running_year'
+                                                                AND semester_id = '$running_semester'
+                                                                LIMIT 1
+                                                                ")->row_array();
 
-    				    $exams = $this->db->get_where('v_class_units', array('class_id' => $class_id))->result_array();
-
-    				    foreach ($student_info as $row1):
+                        $subjects = $this->db->get_where('v_enrollment' , array('class_id' => $class_id, 'section_id' => $section_id, 'student_id' => $student_id, 'year' => $running_year, 'semester_id' => $running_semester))->result_array();
+                        
+    				    $exams = $this->crud->get_exam_by_class($class_id);			    
+                        $section_id = $student_info['section_id'];
     				    foreach ($exams as $row2):
 				    ?>
                     <div class="col-sm-12">
                         <div class="element-box lined-primary shadow">
-                            <h5 class="form-header"><?php echo getPhrase('your_marks');?><br>
-                                <small><?php echo $row2['unit_name'];?></small>
+                            <h5 class="form-header"><?= getPhrase('your_marks');?><br>
+                                <small><?= $row2['unit_name'];?></small>
                             </h5>
                             <div class="table-responsive">
                                 <table class="table table-lightborder">
                                     <thead>
                                         <tr>
-                                            <th><?php echo getPhrase('subject');?></th>
-                                            <th><?php echo getPhrase('teacher');?></th>
-                                            <th><?php echo getPhrase('mark');?></th>
-                                            <th><?php echo getPhrase('grade');?></th>
-                                            <th><?php echo getPhrase('gpa');?></th>
-                                            <th><?php echo getPhrase('view_all');?></th>
+                                            <th><?= getPhrase('class');?></th>
+                                            <th><?= getPhrase('subject');?></th>
+                                            <th><?= getPhrase('teacher');?></th>
+                                            <th><?= getPhrase('mark');?></th>
+                                            <th><?= getPhrase('grade');?></th>
+                                            <th><?= getPhrase('gpa');?></th>
+                                            <th><?= getPhrase('view_all');?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php 
-                                			$subjects = $this->db->get_where('v_subject' , array('class_id' => $row1['class_id'], 'section_id' => $row1['section_id']))->result_array();
+                                			
+
                             			    foreach ($subjects as $row3): 
 
                                                 $subject_id = $row3['subject_id'];
@@ -292,7 +305,7 @@
                                             if($labodiez    == '' ) { $labodiez     = '-'; }
 
                                             // Calculate the average 
-                                            if(is_numeric($labouno)     && $labouno != '-' ) { $count++; } 
+                                            // if(is_numeric($labouno)     && $labouno != '-' ) { $count++; } 
                                             if(is_numeric($labodos)     && $labodos != '-' ) { $count++; }  
                                             if(is_numeric($labotres)    && $labotres != '-' ) { $count++; }  
                                             if(is_numeric($labocuatro)  && $labocuatro != '-' ) { $count++; }  
@@ -309,13 +322,16 @@
                             		    ?>
                                         <tr>
                                             <td>
-                                                <?php echo $row3['name'];?>
+                                                <?= $row3['class_name'];?>
+                                            </td>
+                                            <td>
+                                                <?= $row3['subject_name'];?>
                                             </td>
                                             <td>
                                                 <img alt=""
-                                                    src="<?php echo $this->crud->get_image_url('teacher',$row3['teacher_id']);?>"
+                                                    src="<?= $this->crud->get_image_url('teacher',$row3['teacher_id']);?>"
                                                     width="25px" style="border-radius: 10px;margin-right:5px;">
-                                                <?php echo $row3['teacher_name']; ?>
+                                                <?= $row3['teacher_name']; ?>
                                             </td>
                                             <td>
                                                 <?php if(($mark < $min || $mark == 0) && $mark != '-'):?>
@@ -324,16 +340,19 @@
                                                 <?php endif;?>
                                                 <?php if($mark >= $min):?>
                                                 <a class="btn btn-rounded btn-sm btn-info"
-                                                    style="color:white"><?php echo $mark;?></a>
+                                                    style="color:white"><?= $mark;?></a>
                                                 <?php endif;?>
                                             </td>
-                                            <td><?php echo $this->crud->get_grade($mark);?>
+                                            <td><?= $this->crud->get_grade($mark);?>
                                             </td>
-                                            <td><?php echo $this->crud->get_gpa($mark);?>
+                                            <td><?= $this->crud->get_gpa($mark);?>
                                             </td>
-                                            <?php $data = base64_encode($row1['class_id']."-".$row1['section_id']."-".$row3['subject_id']); ?>
-                                            <td><a class="btn btn-rounded btn-sm btn-primary" style="color:white"
-                                                    href="<?php echo base_url();?>student/subject_marks/<?php echo $data;?>/<?=$unit_id;?>"><?php echo getPhrase('view_all');?></a>
+                                            <?php $data = base64_encode($class_id."-".$section_id."-".$subject_id); ?>
+                                            <td>
+                                                <a class="btn btn-rounded btn-sm btn-primary" style="color:white"
+                                                    href="<?= base_url();?>student/subject_marks/<?= $data;?>/<?=$unit_id;?>">
+                                                    <?= getPhrase('view_all');?>
+                                                </a>
                                             </td>
                                         </tr>
                                         <?php endforeach;?>
@@ -341,15 +360,15 @@
                                 </table>
                                 <div class="form-buttons-w text-right">
                                     <a target="_blank"
-                                        href="<?php echo base_url();?>student/marks_print_view/<?php echo base64_encode($student_id.'-'. $row2['unit_id']);?>/"><button
+                                        href="<?= base_url();?>student/marks_print_view/<?= base64_encode($student_id.'-'. $row2['unit_id']);?>/"><button
                                             class="btn btn-rounded btn-success" type="submit"><i
                                                 class="picons-thin-icon-thin-0333_printer"></i>
-                                            <?php echo getPhrase('print');?></button></a>
+                                            <?= getPhrase('print');?></button></a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <?php endforeach; endforeach; ?>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </div>

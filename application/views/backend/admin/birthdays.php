@@ -12,14 +12,19 @@
                                         <div class="ae-content-w">
                                             <div class="top-header top-header-favorit">
                                                 <div class="top-header-thumb">
-                                                    <img src="<?php echo base_url();?>public/uploads/bglogin.jpg" class="bgcover">
+                                                    <img src="<?= base_url();?>public/uploads/bglogin.jpg"
+                                                        class="bgcover">
                                                     <div class="top-header-author">
                                                         <div class="author-thumb">
-                                                            <img src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('logo');?>" class="authorCv">
+                                                            <img src="<?= base_url();?>public/uploads/<?= $this->crud->getInfo('logo');?>"
+                                                                class="authorCv">
                                                         </div>
                                                         <div class="author-content">
-                                                            <a href="javascript:void(0);" class="h3 author-name"><?php echo getPhrase('birthdays');?></a>
-                                                            <div class="country"><?php echo $this->crud->getInfo('system_name');?>  |  <?php echo $this->crud->getInfo('system_title');?></div>
+                                                            <a href="javascript:void(0);"
+                                                                class="h3 author-name"><?= getPhrase('birthdays');?></a>
+                                                            <div class="country">
+                                                                <?= $this->crud->getInfo('system_name');?> |
+                                                                <?= $this->crud->getInfo('system_title');?></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -27,10 +32,17 @@
                                                     <div class="control-block-button"></div>
                                                 </div>
                                             </div>
+                                            <div>
+                                                <a href="<?= base_url();?>admin/birthdays_export/">
+                                                    <button id="btnExport" class="btn btn-info btn-sm btn-rounded">
+                                                        <i class="picons-thin-icon-thin-0123_download_cloud_file_sync"
+                                                            style="font-weight: 300; font-size: 25px;"></i>
+                                                </a>
+                                            </div>
                                             <div class="aec-full-message-w">
                                                 <div class="aec-full-message">
                                                     <div class="container-fluid grbg"><br>
-                                                        <div class="col-sm-12">                           
+                                                        <div class="col-sm-12">
                                                             <div class="row">
                                                                 <?php
                                                                     $ma = '00';
@@ -48,10 +60,12 @@
                                                                     if ($i == 11) {$m = getPhrase('november'); $ma = '11';}
                                                                     if ($i == 12) {$m = getPhrase('december');  $ma = '12';}
                                                                 ?>
-                                                                <div class="col col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                                <div
+                                                                    class="col col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                                     <div class="ui-block grbg2">
                                                                         <div class="ui-block-title">
-                                                                            <h6 class="title text-white"><?php echo $m; ?></h6>
+                                                                            <h6 class="title text-white">
+                                                                                <?= $m; ?></h6>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -59,15 +73,20 @@
                                                                     $data = $this->crud->get_birthdays_by_month($i);
                                                                     foreach($data as $day):
                                                                 ?>
-                                                                <div class="col col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+                                                                <div
+                                                                    class="col col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
                                                                     <div class="ui-block">
                                                                         <div class="birthday-item inline-items">
                                                                             <div class="author-thumb">
-                                                                                <img width="35px" src="<?php echo $this->crud->get_image_url($day['type'], $day['user_id']);?>">
+                                                                                <img width="35px"
+                                                                                    src="<?= $this->crud->get_image_url($day['type'], $day['user_id']);?>">
                                                                             </div>
                                                                             <div class="birthday-author-name">
-                                                                                <a href="javascript:void(0);" class="h6 author-name"><?php echo $this->crud->get_name($day['type'], $day['user_id']);?></a>
-                                                                                <div class="birthday-date"><?php echo getPhrase('birthday');?>: <?php echo $day['birthday'];?></div>
+                                                                                <a href="javascript:void(0);"
+                                                                                    class="h6 author-name"><?= $this->crud->get_name($day['type'], $day['user_id']);?></a>
+                                                                                <div class="birthday-date">
+                                                                                    <?= getPhrase('birthday');?>:
+                                                                                    <?= $day['birthday'];?></div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -78,10 +97,10 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>      
-                                        </div>    
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>  
+                                </div>
                             </div>
                         </div>
                     </div>

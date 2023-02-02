@@ -5,7 +5,7 @@
     $admin_type = $role_id;// $this->db->get_where('admin', array('admin_id' => $admin_id))->row()->owner_status;
 
     // Array Pages
-    $task_pages         = array('task_dashboard', 'task_student', 'task_applicant', 'task_info');
+    $task_pages         = array('task_dashboard', 'task_student', 'task_applicant', 'task_info','task_update');
     $message_pages      = array('message', 'group');
     $admissions_pages   = array('admission_dashboard', 'admission_applicants','admission_new_applicant', 'admission_applicant','admission_new_student');
     $routine_pages      = array('class_routine_view', 'teacher_routine');
@@ -20,7 +20,7 @@
     $academic_pages     = array('attendance', 'live', 'exam_room', 'exam_results', 'exam_edit', 'homework', 'homework_room', 'homework_edit', 'homework_details', 'meet', 
                                 'grados', 'upload_marks', 'study_material', 'cursos', 'subject_dashboard', 'forum_room', 'online_exams', 'edit_forum', 'forum', 'daily_marks', 
                                 'daily_marks_average');
-    $reports_pages      = array('reports_general','reports_students', 'reports_attendance', 'reports_accounting', 'reports_tabulation', 'reports_tabulation_daily', 'report_marks');
+    $reports_pages      = array('reports_general','reports_students', 'reports_students_all', 'reports_attendance', 'reports_accounting', 'reports_tabulation', 'reports_tabulation_daily', 'report_marks');
 
     $attendance_pages   = array('teacher_report_view', 'teacher_attendance_view', 'teacher_attendance_report','teacher_attendance');
 
@@ -31,6 +31,13 @@
     $system_pages       = array('system_settings', 'system_security', 'system_sms', 'system_email', 'system_translate', 'system_database');
 
     $helpdesk_pages     = array('helpdesk_dashboard', 'helpdesk_ticket_list', 'helpdesk_ticket_info');
+
+    $accounting_pages   = array('accounting_dashboard', 'accounting_daily_income', 'invoice_details', 'payments', 'students_payments', 'expense', 'new_payment');
+
+    $upload_pages       = array('upload_agreements');
+
+    $student_month_pages = array('student_month_dashboard');
+    
 
 ?>
 <div class="fixed-sidebar">
@@ -187,11 +194,11 @@
                 </li>
                 <?php endif;?>
                 <!-- Behavior Access -->
-                <?php if(has_permission('behavior_module')):?>
+                <?php if(has_permission('request_module')):?>
                 <li <?php if($page_name == 'request_student' || $page_name == 'request' || $page_name == 'looking_report'):?>class="currentItem"
                     <?php endif;?>>
-                    <a href="<?php echo base_url();?>admin/request_student/" data-toggle="tooltip"
-                        data-placement="right" data-original-title="<?php echo getPhrase('behavior');?>">
+                    <a href="<?php echo base_url();?>admin/request_dashboard/" data-toggle="tooltip"
+                        data-placement="right" data-original-title="<?php echo getPhrase('requests');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0389_gavel_hammer_law_judge_court"></i>
                         </div>
@@ -233,10 +240,9 @@
                 <?php endif;?>
                 <!-- Payments Access -->
                 <?php if(has_permission('accounting_module')):?>
-                <li <?php if($page_name == 'invoice_details' || $page_name == 'payments' || $page_name == 'students_payments' || $page_name == 'expense' || $page_name == 'new_payment'):?>class="currentItem"
-                    <?php endif;?>>
-                    <a href="<?php echo base_url();?>admin/payments/" data-toggle="tooltip" data-placement="right"
-                        data-original-title="<?php echo getPhrase('accounting');?>">
+                <li <?php if(in_array($page_name, $accounting_pages)):?>class="currentItem" <?php endif;?>>
+                    <a href="<?php echo base_url();?>admin/accounting_dashboard/" data-toggle="tooltip"
+                        data-placement="right" data-original-title="<?php echo getPhrase('accounting');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0428_money_payment_dollar_bag_cash"></i>
                         </div>
@@ -277,13 +283,35 @@
                     </a>
                 </li>
                 <?php endif;?>
-                <!-- Settings Access -->
+                <!-- HelpDesk Access -->
                 <?php if(has_permission('helpdesk_module')):?>
                 <li <?php if(in_array($page_name, $helpdesk_pages)):?>class="currentItem" <?php endif;?>>
                     <a href="<?php echo base_url();?>admin/helpdesk_dashboard/" data-toggle="tooltip"
                         data-placement="right" data-original-title="<?php echo getPhrase('help_desk');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0309_support_help_talk_call"></i>
+                        </div>
+                    </a>
+                </li>
+                <?php endif;?>
+                <!-- Upload Module Access -->
+                <?php if(has_permission('upload_module')):?>
+                <li <?php if(in_array($page_name, $upload_pages)):?>class="currentItem" <?php endif;?>>
+                    <a href="<?php echo base_url();?>UploadController/upload_agreements/" data-toggle="tooltip"
+                        data-placement="right" data-original-title="<?php echo getPhrase('upload_info');?>">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0124_upload_cloud_file_sync_backup"></i>
+                        </div>
+                    </a>
+                </li>
+                <?php endif;?>
+                <!-- Student of Month Module Access -->
+                <?php if(has_permission('student_month_access')):?>
+                <li <?php if(in_array($page_name, $student_month_pages)):?>class="currentItem" <?php endif;?>>
+                    <a href="<?php echo base_url();?>admin/student_month_dashboard/" data-toggle="tooltip"
+                        data-placement="right" data-original-title="<?php echo getPhrase('student_month');?>">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0659_medal_first_place_winner_award_prize_achievement"></i>
                         </div>
                     </a>
                 </li>
@@ -329,10 +357,10 @@
                     </a>
                 </li>
                 <?php endif;?>
-                 <!-- Tasks -->
-                 <?php if(has_permission('task_module')):?>
+                <!-- Tasks -->
+                <?php if(has_permission('task_module')):?>
                 <li <?= in_array($page_name, $task_pages) ? 'class="currentItem"' : '';?>>
-                    <a href="<?php echo base_url();?>admin/task_dashboard/" >
+                    <a href="<?php echo base_url();?>admin/task_dashboard/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0100_to_do_list_reminder_done"></i>
                         </div>
@@ -448,9 +476,9 @@
                 </li>
                 <?php endif;?>
                 <!-- Behavior Access -->
-                <?php if(has_permission('behavior_module')):?>
+                <?php if(has_permission('request_module')):?>
                 <li>
-                    <a href="<?php echo base_url();?>admin/request_student/">
+                    <a href="<?php echo base_url();?>admin/request_dashboard/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0389_gavel_hammer_law_judge_court"></i>
                         </div>
@@ -532,6 +560,39 @@
                             <i class="picons-thin-icon-thin-0051_settings_gear_preferences"></i>
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('settings');?></span>
+                    </a>
+                </li>
+                <?php endif;?>
+                <!-- helpdesk_module Access -->
+                <?php if(has_permission('helpdesk_module')):?>
+                <li>
+                    <a href="<?php echo base_url();?>admin/helpdesk_dashboard/">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0309_support_help_talk_call"></i>
+                        </div>
+                        <span class="left-menu-title"><?php echo getPhrase('help_desk');?></span>
+                    </a>
+                </li>
+                <?php endif;?>
+                <!-- Settings Access -->
+                <?php if(has_permission('upload_module')):?>
+                <li>
+                    <a href="<?php echo base_url();?>UploadController/upload_agreements/">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0124_upload_cloud_file_sync_backup"></i>
+                        </div>
+                        <span class="left-menu-title"><?php echo getPhrase('upload_info');?></span>
+                    </a>
+                </li>
+                <?php endif;?>
+                <!-- Settings Access -->
+                <?php if(has_permission('student_month_access')):?>
+                <li>
+                    <a href="<?php echo base_url();?>admin/student_month_dashboard/">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0659_medal_first_place_winner_award_prize_achievement"></i>
+                        </div>
+                        <span class="left-menu-title"><?php echo getPhrase('student_month');?></span>
                     </a>
                 </li>
                 <?php endif;?>
@@ -705,9 +766,9 @@
                 </li>
                 <?php endif;?>
                 <!-- Behavior Access -->
-                <?php if(has_permission('behavior_module')):?>
+                <?php if(has_permission('request_module')):?>
                 <li>
-                    <a href="<?php echo base_url();?>admin/request_student/">
+                    <a href="<?php echo base_url();?>admin/request_dashboard/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0389_gavel_hammer_law_judge_court"></i>
                         </div>
@@ -791,7 +852,30 @@
                         <span class="left-menu-title"><?php echo getPhrase('settings');?></span>
                     </a>
                 </li>
-                <?php endif;?><br><br>
+                <?php endif;?>
+                <!-- helpdesk_module Access -->
+                <?php if(has_permission('helpdesk_module')):?>
+                <li>
+                    <a href="<?php echo base_url();?>admin/helpdesk_dashboard/">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0309_support_help_talk_call"></i>
+                        </div>
+                        <span class="left-menu-title"><?php echo getPhrase('help_desk');?></span>
+                    </a>
+                </li>
+                <?php endif;?>
+                <!-- Settings Access -->
+                <?php if(has_permission('student_month_access')):?>
+                <li>
+                    <a href="<?php echo base_url();?>admin/student_month_dashboard/">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0659_medal_first_place_winner_award_prize_achievement"></i>
+                        </div>
+                        <span class="left-menu-title"><?php echo getPhrase('student_month');?></span>
+                    </a>
+                </li>
+                <?php endif;?>
+                <br><br>
                 <li></li>
             </ul>
         </div>

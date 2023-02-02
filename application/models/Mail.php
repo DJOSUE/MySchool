@@ -1,7 +1,7 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
     
 class Mail extends School 
-{
+{ 
     /*
         Software:       MySchool - School Management System
         Author:         DHCoder - Software, Web and Mobile developer.
@@ -80,18 +80,112 @@ class Mail extends School
     }
     
     //Send notifify to students for new invoice.
-    function student_new_invoice($student_name,$student_email)
+    function student_new_invoice($student_name, $student_email, $payment_id = "")
     {
         $email_sub      = $this->db->get_where('email_template' , array('task' => 'student_new_invoice'))->row()->subject;
         $email_msg      = $this->db->get_where('email_template' , array('task' => 'student_new_invoice'))->row()->body;
         $STUDENT_NAME   = $student_name;
         $email_msg      = str_replace('[STUDENT]' , $STUDENT_NAME , $email_msg);
-        $email_to       = $student_email;
+        $email_to       = $student_email;        
+
+
+        // Generate the invoice detail [INVOICE_DETAILS]
+
+        if($payment_id != "")
+        {
+            $payment_info = $this->payment->get_payment_info($payment_id);
+
+            $html  = "<div class='invoice-w' id='invoice_id'>";
+            $html .= "<div class='invoice-heading'>";
+            $html .= "<h3>".getPhrase('invoice')."</h3>";
+            $html .= "<div class='invoice-date'>";
+            $html .= $payment_info['invoice_number'];
+            $html .= "</div>";
+            $html .= "<br/>";
+            $html .= "<br/>";
+            $html .= '<div class="invoice-body">';
+            $html .= '<div class="invoice-table" style="width:100%;">';
+            $html .= '<table class="table">';
+            $html .= '<thead>';
+            $html .= '<tr>';
+            $html .= '<th>'.getPhrase('title').'</th>';
+            $html .= '<th>'.getPhrase('description').'</th>';
+            $html .= '<th class="text-right">'.getPhrase('amount').'</th>';
+            $html .= '</tr>';
+            $html .= '</thead>';
+            $html .= '<tbody>';
+            $html .= '<div>';
+            $html .= '<div>';
+            $html .= '</div>';
+
+
+            $payment_details = $this->payment->get_payment_details($payment_id);
+            $total_details = 0.00;
+            foreach($payment_details as $item)
+            {
+                $total_details += $item['amount'];
+
+                $html .= '<tr>';
+                $html .= '<td>';
+                $html .= $this->payment->get_income_type_name($item['concept_type']);
+                $html .= '</td>';
+                $html .= '<td>';
+                $html .= $item['comment'];
+                $html .= '</td>';
+                $html .= '<td class="text-right">';
+                $html .= $item['amount'];
+                $html .= '</td>';
+                $html .= '</tr>';
+            }
+
+            $payment_discounts = $this->payment->get_payment_discounts($payment_id);
+            $total_discounts = 0.00;
+            foreach($payment_discounts as $item)
+            {
+                $total_discounts += $item['amount'];
+
+                $html .= '<tr>';
+                $html .= '<td>';
+                $html .= $this->payment->get_income_type_name($item['discount_type']);
+                $html .= '</td>';
+                $html .= '<td>';
+                $html .= $item['comment'];
+                $html .= '</td>';
+                $html .= '<td class="text-right">';
+                $html .= $item['amount'];
+                $html .= '</td>';
+                $html .= '</tr>';
+            }
+
+            $total = $total_details - $total_discounts;
+
+            $html .= '</tbody>';
+            $html .= '<tfoot>';
+            $html .= '<tr>';
+            $html .= '<td>';
+            $html .= getPhrase('total');
+            $html .= '</td>';
+            $html .= '<td class="text-right" colspan="2">';
+            $html .= $total;
+            $html .= '</td>';
+            $html .= '</tr>';
+            $html .= '</tfoot>';
+            $html .= '</table>';
+            $html .= '</div>';
+            $html .= '</div>';
+
+
+            $email_msg      = str_replace('[INVOICE_DETAILS]' , $html , $email_msg);
+        
+        }
+
         $data = array(
             'email_msg' => $email_msg
         );
+
+
         if($email_to != '')
-        {
+        {            
             $this->submit($email_to,$email_sub,$data,'notify');
         }
     }
@@ -282,39 +376,152 @@ class Mail extends School
 	//Submit email by SMTP function.
 	function submit($to, $subject, $message, $type)
 	{
-	    $config = Array(
-            'protocol' => $this->db->get_where('settings', array('type' => 'protocol'))->row()->description,
-            'smtp_host' => $this->db->get_where('settings', array('type' => 'smtp_host'))->row()->description,
-            'smtp_port' => $this->db->get_where('settings', array('type' => 'smtp_port'))->row()->description,
-            'smtp_user' => $this->db->get_where('settings', array('type' => 'smtp_user'))->row()->description,
-            'smtp_pass' => $this->db->get_where('settings', array('type' => 'smtp_pass'))->row()->description,
+        $this->load->library('email');
+        // $this->load->library('encrypt');
+        
+        $from = get_settings('system_email');
+        $fromName = get_settings('system_name');
+
+	    $config = array(
+            'protocol'  => get_settings('protocol'), // $this->db->get_where('settings', array('type' => 'protocol'))->row()->description,
+            'smtp_host' => get_settings('smtp_host'), // $this->db->get_where('settings', array('type' => 'smtp_host'))->row()->description,
+            'smtp_port' => get_settings('smtp_port'), // $this->db->get_where('settings', array('type' => 'smtp_port'))->row()->description,
+            'smtp_user' => get_settings('smtp_user'), // $this->db->get_where('settings', array('type' => 'smtp_user'))->row()->description,
+            'smtp_pass' => get_settings('smtp_pass'), // $this->db->get_where('settings', array('type' => 'smtp_pass'))->row()->description,
             'mailtype'  => 'html', 
-            'charset'   => $this->db->get_where('settings', array('type' => 'charset'))->row()->description,
-            'wordwrap' => true
+            'smtp_crypto' => 'ssl',
+            'charset'   => get_settings('charset'), // $this->db->get_where('settings', array('type' => 'charset'))->row()->description
         );
-        $this->load->library('email', $config);
+
+        $this->email->set_header('MIME-Version', 1.0);
+		$this->email->set_header('Content-type', 'text/html');
+		$this->email->set_header('charset', 'UTF-8');
+
         $this->email->initialize($config);
+        $this->email->set_mailtype("html");
         $this->email->set_newline("\r\n");
-        $this->email->from($this->db->get_where('settings', array('type' => 'system_email'))->row()->description, $this->db->get_where('settings', array('type' => 'system_name'))->row()->description);
+
         $this->email->to($to);
+        $this->email->from($from, $fromName);
         $this->email->subject($subject);
-        if($type == 'marks'){
-            $mesg = $this->load->view('backend/mails/marks.php',$message,TRUE);
-            $this->email->message($mesg);
-        }elseif($type == 'accept'){
-            $mesg = $this->load->view('backend/mails/accept.php',$message,TRUE);
-            $this->email->message($mesg);
-        }else{
-            $mesg = $this->load->view('backend/mails/notify.php',$message,true);   
-            $this->email->message($mesg);
+
+        if($type == 'marks')
+        {
+            $msg = $this->load->view('backend/mails/marks.php',$message,TRUE);
+            $this->email->message($msg);
         }
-        if (!$this->email->send()) {
-            show_error($this->email->print_debugger());
+        elseif($type == 'accept')
+        {
+            $msg = $this->load->view('backend/mails/accept.php',$message,TRUE);
+            $this->email->message($msg);
         }
+        else
+        {
+            $msg = $this->load->view('backend/mails/notify.php',$message,true);   
+            $this->email->message($msg);
+        }
+        
+        $this->email->send();
+
+        // if (!$this->email->send()) 
+        // {
+        //     show_error($this->email->print_debugger());
+        // }
 	}
 
     //Sent password to the new student
-    
+
+    //Send attendance notification.
+    function request_approved($user_id, $user_type, $request_type)
+    {
+        if($request_type === 'vacation')
+        {
+            $email_sub      = $this->db->get_where('email_template' , array('task' => 'vacation_approved'))->row()->subject;
+            $email_msg      = $this->db->get_where('email_template' , array('task' => 'vacation_approved'))->row()->body;
+        }
+        else
+        {
+            $email_sub      = $this->db->get_where('email_template' , array('task' => 'request_approved'))->row()->subject;
+            $email_msg      = $this->db->get_where('email_template' , array('task' => 'request_approved'))->row()->body;
+        }
+
+        $STUDENT_NAME   = $this->crud->get_name($user_type, $user_id);        
+
+        $email_msg      = str_replace('[USER_NAME]' , $STUDENT_NAME , $email_msg);
+
+        $email_to       = $this->db->get_where($user_type, array($user_type.'_id' => $user_id))->row()->email;
+        
+        $data = array(
+            'email_msg' => $email_msg
+        );
+
+        if($email_to != '')
+        {
+            $this->submit($email_to,$email_sub,$data,'notify');
+        }
+    }
+
+    function request_approved_to_teacher($user_id, $user_type, $data)
+    {
+        
+        $email_sub      = $this->db->get_where('email_template' , array('task' => 'request_approved_to_teacher'))->row()->subject;
+        $email_msg      = $this->db->get_where('email_template' , array('task' => 'request_approved_to_teacher'))->row()->body;
+        
+
+        $STUDENT_NAME   = $data['STUDENT_NAME'];
+        $LEVEL_NAME     = $data['LEVEL_NAME'];
+        $SCHEDULE       = $data['SCHEDULE'];
+        $SUBJECT        = $data['SUBJECT'];
+        $DATE_START     = $data['DATE_START'];
+        $DATE_END       = $data['DATE_END'];
+
+        $email_msg      = str_replace('[STUDENT_NAME]' , $STUDENT_NAME , $email_msg);
+        $email_msg      = str_replace('[LEVEL_NAME]' , $LEVEL_NAME , $email_msg);
+        $email_msg      = str_replace('[SCHEDULE]' , $SCHEDULE , $email_msg);
+        $email_msg      = str_replace('[SUBJECT]' , $SUBJECT , $email_msg);
+        $email_msg      = str_replace('[DATE_START]' , $DATE_START , $email_msg);
+        $email_msg      = str_replace('[DATE_END]' , $DATE_END , $email_msg);
+
+        $email_to       = $this->db->get_where($user_type, array($user_type.'_id' => $user_id))->row()->email;
+        
+        $data = array(
+            'email_msg' => $email_msg
+        );
+        
+        if($email_to != '')
+        {
+            $this->submit($email_to,$email_sub,$data,'notify');
+        }
+    }
+
+    //Send attendance notification.
+    function request_reject($user_id, $user_type, $request_type)
+    {
+        if($request_type === 'vacation')
+        {
+            $email_sub      = $this->db->get_where('email_template' , array('task' => 'vacation_rejected'))->row()->subject;
+            $email_msg      = $this->db->get_where('email_template' , array('task' => 'vacation_rejected'))->row()->body;
+        }
+        else
+        {
+            $email_sub      = $this->db->get_where('email_template' , array('task' => 'request_rejected'))->row()->subject;
+            $email_msg      = $this->db->get_where('email_template' , array('task' => 'request_rejected'))->row()->body;
+        }
+
+        $STUDENT_NAME   = $this->crud->get_name($user_type, $user_id);        
+
+        $email_msg      = str_replace('[USER_NAME]' , $STUDENT_NAME , $email_msg);
+
+        $email_to       = $this->db->get_where($user_type, array($user_type.'_id' => $user_id))->row()->email;
+        
+        $data = array(
+            'email_msg' => $email_msg
+        );
+        if($email_to != '')
+        {
+            $this->submit($email_to,$email_sub,$data,'notify');
+        }
+    }
     
     //End of Mail.php
 }

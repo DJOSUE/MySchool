@@ -78,6 +78,7 @@
                                         $enrollment = $this->db->get_where('v_enrollment' , array('student_id' => $student_id, 'class_id' => $class_id, 'section_id' => $section_id, 'year' => $year, 'semester_id' => $semester_id))->result_array();
                                         $count_total    =   0;
                                         $mark_total     =   0;
+                                        $labouno_total  =   0;
 
                                         foreach ($enrollment as $row3):
                                             $subject_id = $row3['subject_id'];

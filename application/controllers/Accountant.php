@@ -13,6 +13,7 @@ class Accountant extends EduAppGT
 
     private $runningYear     = '';
     private $runningSemester = '';
+    private $useDailyMarks   = '';
     
 	function __construct()
 	{
@@ -24,6 +25,7 @@ class Accountant extends EduAppGT
 
         $this->runningYear      = $this->crud->getInfo('running_year'); 
         $this->runningSemester  = $this->crud->getInfo('running_semester'); 
+        $this->useDailyMarks    = $this->crud->getInfo('use_daily_marks');
     }
     
     //Index function.
@@ -240,7 +242,7 @@ class Accountant extends EduAppGT
     {
         $this->isAccountant();
         $page_data['page_name']  = 'students_payments';
-        $page_data['page_title'] = getPhrase('student_payments');
+        $page_data['page_title'] = getPhrase('students_payments');
         $this->load->view('backend/index', $page_data); 
     }
     
@@ -347,15 +349,6 @@ class Accountant extends EduAppGT
         $this->load->view('backend/index', $page_data);
     }
     
-    //Manage payments function.
-    function payments($param1 = '' , $param2 = '' , $param3 = '') 
-    {
-        $this->isAccountant();
-        $page_data['page_name']  = 'payments';
-        $page_data['page_title'] = getPhrase('payments');
-        $this->load->view('backend/index', $page_data); 
-    }
-    
     //Accountant dashboard function.
     function panel()
     {
@@ -454,5 +447,439 @@ class Accountant extends EduAppGT
         $page_data['page_title'] = getPhrase( 'time_sheet' );
         $this->load->view( 'backend/index', $page_data );
     }
+
+
+
+    function payment_process($user_id, $user_type)
+    {
+
+        $this->payment->create_payment($user_id, $user_type);
+
+        $page_data['student_id'] =  $user_id;
+        $page_data['page_name']  = 'student_payments';
+        $page_data['page_title'] =  getPhrase('student_payments');
+        
+        $this->load->view('backend/index', $page_data);
+    }
+
+    function payment_invoice($payment_id)
+    {
+        $this->isAccountant();            
+        
+        $page_data['payment_id'] =  base64_decode($payment_id);
+        $page_data['page_name']  = 'payment_invoice';
+        $page_data['page_title'] =  getPhrase('payment_invoice');
+        $this->load->view('backend/print/payment_invoice', $page_data);
+        
+    }
+
     //End of Accountant.php
+
+/***** Student Module ******************************************************************************************************************************/
+    
+    function student($param1 = '', $param2 = '', $param3 = '')
+    {
+        if ($param1 == 'do_update') 
+        {
+            $this->user->updateStudent($param2);
+            $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+            redirect(base_url() . 'accountant/student_profile/'. $param2.'/', 'refresh');
+        }
+    }
+
+    function student_profile($student_id, $param1='')
+    {
+        $this->isAccountant();
+        $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
+        $page_data['page_name']  = 'student_profile';
+        $page_data['page_title'] =  getPhrase('student_profile');
+        $page_data['student_id'] =  $student_id;
+        $page_data['class_id']   =  $class_id;
+        $this->load->view('backend/index', $page_data);
+    }
+
+    //Student update function.
+    function student_update($student_id = '', $param1='')
+    {
+        $this->isAccountant();
+        $page_data['page_name']  = 'student_update';
+        $page_data['page_title'] =  getPhrase('student_portal');
+        $page_data['student_id'] =  $student_id;
+        $this->load->view('backend/index', $page_data);
+    }
+            
+    function student_grades($student_id, $param1='')
+    {
+        $this->isAccountant();
+
+        if($this->useDailyMarks){
+            $page_data['page_name']  = 'student_daily_grades';
+            $page_data['page_title'] =  getPhrase('student_grades');
+            $page_data['student_id'] =  $student_id;
+            $this->load->view('backend/index', $page_data);
+        } 
+        else {
+            $page_data['page_name']  = 'student_marks';
+            $page_data['page_title'] =  getPhrase('student_grades');
+            $page_data['student_id'] =  $student_id;
+            $this->load->view('backend/index', $page_data);
+        }
+    }
+
+    //Student Past Marks
+    function student_past_grades($student_id = '', $param1='')
+    {
+        $this->isAccountant();
+        
+        if($this->useDailyMarks){
+            $page_data['page_name']  = 'student_past_daily_grades_by_semester';
+            $page_data['page_title'] =  getPhrase('student_past_daily_grades_by_semester');
+            $page_data['student_id'] =  $student_id;
+            $this->load->view('backend/index', $page_data);
+        } 
+        else {
+            $page_data['page_name']  = 'student_past_marks';
+            $page_data['page_title'] =  getPhrase('student_past_marks');
+            $page_data['student_id'] =  $student_id;
+            $this->load->view('backend/index', $page_data);
+        }
+    }
+
+    //Student Profile Attendance function.
+    function student_attendance($student_id = '', $param1='', $param2 = '', $param3 = '', $param4 = '', $param5 = '')
+    {
+        $this->isAccountant();
+
+        $page_data['page_name']  = 'student_attendance';
+        $page_data['page_title'] =  getPhrase('student_attendance');
+        $page_data['student_id'] =  $student_id;
+        // $page_data['subject_id'] =  $param3;
+        // $page_data['class_id'] =  $param1;
+        // $page_data['section_id'] =  $param2;
+        $page_data['month'] =  $param1;
+        $page_data['year'] =  $param2;
+        $this->load->view('backend/index', $page_data);
+    }
+
+    //Student attendance report selector function.
+    function student_attendance_report_selector()
+    {
+        $this->isAccountant();
+        // $data['class_id']   = $this->input->post('class_id');
+        // $data['subject_id'] = $this->input->post('subject_id');
+        $data['year']       = $this->input->post('year');
+        $data['month']      = $this->input->post('month');
+        // $data['section_id'] = $this->input->post('section_id');
+
+        redirect(base_url().'accountant/student_attendance/'.$this->input->post('student_id').'/'.$data['month'].'/'.$data['year'].'/','refresh');
+
+        // redirect(base_url().'admin/student_profile_attendance/'.$this->input->post('student_id').'/'.$data['class_id'].'/'.$data['section_id'].'/'.$data['subject_id'].'/'.$data['month'].'/'.$data['year'].'/','refresh');
+    }
+
+    function student_payments($student_id, $param1='')
+    {
+        $this->isAccountant();
+        $class_id     = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->row()->class_id;
+        $page_data['student_id'] =  $student_id;
+        $page_data['class_id']   =  $class_id;
+        
+        $page_data['page_name']  = 'student_payments';
+        $page_data['page_title'] =  getPhrase('student_payments');
+        
+        $this->load->view('backend/index', $page_data);
+    }
+/***** Applicant Module ******************************************************************************************************************************/
+    function applicant_profile($applicant_id, $param1='')
+    {
+        $this->isAccountant();
+        
+        $page_data['page_name']  = 'applicant_profile';
+        $page_data['page_title'] =  getPhrase('applicant_profile');
+        $page_data['applicant_id'] =  $applicant_id;
+        // $page_data['class_id']   =  $class_id;
+        $this->load->view('backend/index', $page_data);
+    }
+
+    function applicant_payment($applicant_id, $param1='')
+    {
+        $this->isAccountant();
+        
+        $page_data['applicant_id'] =  $applicant_id;
+        
+        $page_data['page_name']  = 'applicant_payment';
+        $page_data['page_title'] =  getPhrase('applicant_payment');
+        
+        $this->load->view('backend/index', $page_data);
+    }
+/***** Report Module *******************************************************************************************************************************/
+    //Manage payments function.
+    function report_dashboard($param1 = '' , $param2 = '' , $param3 = '') 
+    {
+        $this->isAccountant();
+
+        if(has_permission('accounting_dashboard'))
+        {
+            $page_data['page_name']  = 'report_dashboard';
+            $page_data['page_title'] = getPhrase('dashboard');
+            $this->load->view('backend/index', $page_data); 
+        }
+        else
+        {
+            redirect(base_url() . 'accountant/report_income', 'refresh');
+        }        
+    }
+
+    function report_income($param1 = '' , $param2 = '' , $param3 = '') 
+    {
+        $this->isAccountant();
+
+        $cashier_all = has_permission('accounting_dashboard');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {        
+            $date_start = html_escape($this->input->post('date_start'));
+            $date_end = html_escape($this->input->post('date_end'));
+
+            if($cashier_all)
+                $cashier_id = html_escape($this->input->post('cashier_id'));
+            else
+                $cashier_id = "accountant:".$this->session->userdata('login_user_id');
+        }
+        else
+        {
+            if($cashier_all)
+            {
+                $date = "";
+                $cashier_id = "";
+            }
+            else
+            {
+                $date = "";
+                $cashier_id = "accountant:".$this->session->userdata('login_user_id');
+            }
+        }
+
+        $page_data['date_start']    = $date_start;
+        $page_data['date_end']      = $date_end;
+        $page_data['cashier_id']    = $cashier_id;
+        $page_data['cashier_all']   = $cashier_all; 
+        $page_data['page_name']     = 'report_income';
+        $page_data['page_title']    = getPhrase('income');
+        $this->load->view('backend/index', $page_data); 
+    }
+
+    function report_monthly_income($param1 = '' , $param2 = '' , $param3 = '') 
+    {
+        $this->isAccountant();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $date = html_escape($this->input->post('date'));
+            $cashier_id = html_escape($this->input->post('cashier_id'));
+        }
+        else
+        {
+            $date = "";
+            $cashier_id = "";
+        }
+
+        $page_data['date']  = $date;
+        $page_data['cashier_id']  = $cashier_id;
+        $page_data['page_name']  = 'report_monthly_income';
+        $page_data['page_title'] = getPhrase('monthly_income');
+        $this->load->view('backend/index', $page_data); 
+    }
+
+    function report_payments($param1 = '' , $param2 = '' , $param3 = '') 
+    {
+        $interval   = date_interval_create_from_date_string('1 days');
+        $objDate    = date_create(date("m/d/Y"));
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $start_date = html_escape($this->input->post('start_date'));
+            $end_date   = html_escape($this->input->post('end_date'));
+        }
+        else
+        {
+            $start_date = date_format($objDate, "m/d/Y");
+            $end_date   = date_format(date_add($objDate, $interval), "m/d/Y");
+        }
+
+        $this->isAccountant();
+        $page_data['start_date'] = $start_date;
+        $page_data['end_date']   = $end_date;
+        $page_data['page_name']  = 'report_payments';
+        $page_data['page_title'] = getPhrase('payments');
+        $this->load->view('backend/index', $page_data); 
+    }
+
+/***** HelpDesk functions **************************************************************************************************************************/
+
+    // ticket Dashboard
+    function helpdesk_dashboard()
+    {
+        $this->isAccountant('helpdesk_module');
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST')
+        {   
+            $department_id  = $this->input->post('department_id');                
+            $priority_id    = $this->input->post('priority_id');
+            $status_id      = $this->input->post('status_id');
+            $text           = $this->input->post('text');
+            $assigned_me    = $this->input->post('assigned_me');                
+        }
+        else
+        {    
+            $department_id  = "_blank";
+            $priority_id    = "_blank";
+            $status_id      = "_blank";
+            $assigned_me = 1;
+        }
+
+        $page_data['department_id'] = $department_id;
+        $page_data['priority_id']   = $priority_id;
+        $page_data['status_id']     = $status_id;
+        $page_data['text']          = $text;
+        $page_data['assigned_me']   = $assigned_me;
+        $page_data['page_name']     = 'helpdesk_dashboard';
+        $page_data['page_title']    =  getPhrase('help_desk_dashboard');
+        $this->load->view('backend/helpdesk/index', $page_data);
+    }
+
+    function helpdesk_ticket_list($param1 = '')
+    {
+        $this->isAccountant('helpdesk_module');
+
+        if($param1 != '')
+        {
+            $array      = explode('|',base64_decode($param1));
+
+            $status_id      = $array[0] != '-' ? $array[0] : '';
+            $priority_id    = $array[1] != '-' ? $array[1] : '';
+            $assigned_me    = $array[2] != '-' ? $array[2] : 0;
+            $department_id  = "";
+        }
+        else
+        {
+            $department_id  = "";
+            $priority_id    = "";
+            $status_id      = "";
+            $assigned_me    = 1;
+        }
+        
+        if($_SERVER['REQUEST_METHOD'] === 'POST')
+        {   
+            $category_id    = $this->input->post('category_id');                
+            $priority_id    = $this->input->post('priority_id');
+            $status_id      = $this->input->post('status_id');
+            $text           = $this->input->post('text');
+            $assigned_me    = $this->input->post('assigned_me');  
+            $search         = true;              
+        }
+
+        $page_data['department_id'] = $department_id;
+        $page_data['category_id']   = $category_id;
+        $page_data['priority_id']   = $priority_id;
+        $page_data['status_id']     = $status_id;
+        $page_data['text']          = $text;
+        $page_data['search']        = $search;
+        $page_data['assigned_me']   = $assigned_me;
+        $page_data['page_name']     = 'helpdesk_ticket_list';
+        $page_data['page_title']    =  getPhrase('helpdesk_ticket_list');
+        $this->load->view('backend/helpdesk/index', $page_data);
+
+        // echo '<pre>';
+        // var_dump($array);
+        // echo '</pre>';
+    }
+
+    function helpdesk_ticket_info($ticket_code = '', $param2 = '')
+    {
+        $this->isAccountant('helpdesk_module');
+        $page_data['ticket_code']   = $ticket_code;
+        $page_data['page_name']     = 'helpdesk_ticket_info';
+        $page_data['page_title']    = getPhrase('ticket_info');
+        $this->load->view('backend/helpdesk/index', $page_data);
+    }
+    
+    function helpdesk_tutorial()
+    {
+        $this->isAccountant();
+
+        $page_data['page_name']  = 'helpdesk_tutorial';
+        $page_data['page_title'] = getPhrase( 'video_tutorial' ); 
+        $this->load->view('backend/helpdesk/index', $page_data);
+    }
+
+/***** Search functions ****************************************************************************************************************************/
+
+    //Search query function.
+    function search_query($search_key = '') 
+    {        
+        if ($_POST)
+        {
+            redirect(base_url() . 'accountant/search_results?query=' . base64_encode(html_escape($this->input->post('search_key'))), 'refresh');
+        }
+    }
+
+    //Search results function.
+    function search_results()
+    {
+        $this->isAccountant();
+
+        parse_str(substr(strrchr($_SERVER['REQUEST_URI'], "?"), 1), $_GET);
+        if (html_escape($_GET['query']) == "")
+        {
+            redirect(base_url(), 'refresh');
+        }
+
+        $page_data['search_key'] =  html_escape($_GET['query']);
+        $page_data['page_name']  =  'search_results';
+        $page_data['page_title'] =  getPhrase('search_results');
+        $this->load->view('backend/index', $page_data);
+    }
+
+    function admission_applicant_interaction($action, $applicant_id = '', $interaction_id = '', $return_url = '')
+    {
+        $this->isAccountant();
+
+        $message = '';
+        switch ($action) {
+            case 'add':
+                if($return_url == '')
+                {
+                    if($applicant_id != '')
+                        $return_url = 'accountant/admission_applicant/'.$applicant_id;
+                    else
+                        $return_url = 'accountant/admission_applicants';
+                }
+
+                $this->applicant->add_interaction();
+                $message =  getPhrase('successfully_added');
+
+                if($applicant_id != '')
+                {
+                    $status_id_old = $this->db->get_where('v_applicants' , array('applicant_id' => $applicant_id) )->row()->status;
+    
+                    $status_id_new = $this->input->post('status_id');
+    
+                    if($status_id_old != $status_id_new)
+                    {
+                        $this->applicant->update_status($applicant_id, $status_id_new);
+                    }                       
+                }
+
+                break;
+            case 'update':
+                if($return_url == '')
+                    $return_url = 'accountant/admission_applicant/'.$applicant_id;
+                $this->applicant->update_interaction($interaction_id);
+                $message =  getPhrase('successfully_added');
+
+            default:
+                # code...
+                break;
+        }
+
+        $this->session->set_flashdata('flash_message' , $message);
+        redirect(base_url() . $return_url, 'refresh');
+    }
 }

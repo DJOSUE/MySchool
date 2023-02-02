@@ -1,0 +1,75 @@
+
+    .titulosincss {
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .imagen {
+        position: absolute;
+        right: 5px;
+        top: 10px;
+    }
+
+    .mediano {
+        font-size: 11px;
+    }
+
+    .grande {
+        font-size: 13px;
+    }
+
+    .tablatitulo {
+        padding: 10px 0;
+    }
+
+    td.descripcion {
+        font-weight: bold;
+    }
+
+    td.nota {
+        text-align: center;
+    }
+
+    td.notapromedio {
+        text-align: center;
+        font-weight: bold;
+        padding: 3px;
+    }
+
+    td.notapromediofinal {
+        text-align: center;
+        font-weight: bold;
+        font-size: 14px;
+        padding: 5px;
+    }
+
+    .firmadirector {
+        padding: 40px 0 20px 0;
+        font-weight: bold;
+        float: right;
+        width: 300px;
+    }
+
+    .firma {
+        border-bottom: 1px solid #000;
+    }
+
+    .firmadirector .texto {
+        text-align: center;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    .negrita {
+        font-weight: bold;
+    }
+
+    .cuadro {
+        width: 100%;
+    }
+
+    .min-width {
+        min-width: 150px;
+    }

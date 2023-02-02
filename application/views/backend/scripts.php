@@ -11,7 +11,8 @@
                 toast: true,
                 position: 'top-end',
                 showConfirmButton: false,
-                timer: 8000
+                timerProgressBar: true,
+                timer: 3000
             }); 
             Toast.fire({
                 icon: 'success',
@@ -19,6 +20,24 @@
             })
         </script>
     <?php endif;?>
+
+    <?php if ($this->session->flashdata('flash_error_message') != ""):?>
+        <script>
+            "use strict";
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timerProgressBar: true,
+                timer: 3000
+            }); 
+            Toast.fire({
+                icon: 'error',
+                title: '<?php echo $this->session->flashdata("flash_error_message");?>'
+            })
+        </script>
+    <?php endif;?>
+
     <script src="<?php echo base_url();?>public/style/cms/bower_components/popper.js/dist/umd/popper.min.js"></script>
     <script src="<?php echo base_url();?>public/style/cms/bower_components/moment/moment.js"></script>
     <script src="<?php echo base_url();?>public/style/cms/bower_components/tether/dist/js/tether.min.js"></script>

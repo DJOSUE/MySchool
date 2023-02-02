@@ -18,16 +18,17 @@
             <div class="col-sm-6">
                 <div class="input-group">
                     <div class="select">
-                        <select name="status_id" required="" style="width: 150px;">
+                    <select name="status_id" required="" style="width: 150px;">
                             <?php
                         $status = $this->applicant->get_applicant_status_update($row['status']);
                         foreach($status as $status_row):
+                            if($status_row['status_id'] != 3):
                         ?>
                             <option value="<?= $status_row['status_id']?>"
                                 <?= $status_row['status_id'] == $row['status'] ? 'selected': ''; ?>>
                                 <?= $status_row['name']?>
                             </option>
-                            <?php endforeach;?>
+                            <?php endif; endforeach;?>
                         </select>
                     </div>
                     <!-- <input class="form-control" name="status" value="<?php echo $row['status'];?>" required="" type="text"> -->
