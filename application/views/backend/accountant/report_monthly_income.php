@@ -271,9 +271,6 @@ td {
                                                         </td>
 
                                                     </tr>
-                                                    
-                                                </thead>
-                                                <tbody class="text-center">
                                                     <tr>
                                                         <td class="text-center">
                                                         </td>
@@ -304,142 +301,9 @@ td {
                                                             
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td>
-                                                            International Program
-                                                        </td>
-                                                        <td>
-                                                            <span class="currency">
-                                                                <?= $currency.' '.number_format($tuition_int, 2);?>
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            <b>Day's earnings</b>
-                                                        </td>
-                                                        <td>
-                                                            <span class="currency bold">
-                                                                <?= $currency.' '.number_format($total_payment, 2);?>
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            Local Program
-                                                        </td>
-                                                        <td>
-                                                            <span class="currency">
-                                                                <?= $currency.' '.number_format($tuition_local, 2);?>
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            Cash
-                                                        </td>
-                                                        <td>
-                                                            <span class="currency">
-                                                                <?= $currency.' '.number_format($cash, 2);?>
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            Legal Service
-                                                        </td>
-                                                        <td>
-                                                            <span class="currency">
-                                                                <?= $currency.' '.number_format($legal_service, 2);?>
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            Card
-                                                        </td>
-                                                        <td>
-                                                            <span class="currency">
-                                                                <?= $currency.' '.number_format($card, 2);?>
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            Application fee International
-                                                        </td>
-                                                        <td>
-                                                            <span class="currency">
-                                                                <?= $currency.' '.number_format($application_int, 2);?>
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            Check
-                                                        </td>
-                                                        <td>
-                                                            <span class="currency">
-                                                                <?= $currency.' '.number_format($check, 2);?>
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            Application fee Local
-                                                        </td>
-                                                        <td>
-                                                            <span class="currency">
-                                                                <?= $currency.' '.number_format($application_local, 2);?>
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            Venmo
-                                                        </td>
-                                                        <td>
-                                                            <span class="currency">
-                                                                <?= $currency.' '.number_format($venmo, 2);?>
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            Books
-                                                        </td>
-                                                        <td>
-                                                            <span class="currency">
-                                                                <?= $currency.' '.number_format($books, 2);?>
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            Transfer
-                                                        </td>
-                                                        <td>
-                                                            <span class="currency">
-                                                                <?= $currency.' '.number_format($transfer, 2);?>
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <b>Total of the day</b>
-                                                        </td>
-                                                        <td>
-                                                            <span class="currency bold">
-                                                                <?= $currency.' '.number_format($total_income, 2);?>
-                                                            </span>
-                                                        </td>
-                                                        <td colspan="2">
+                                                </thead>
+                                                <tbody class="text-center">
 
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            
-                                                        </td>
-                                                        <td>
-                                                            <br />
-                                                            <br />
-                                                            <b>Approved by</b>
-                                                        </td>
-                                                        <td colspan="2">
-                                                            <br />
-                                                            <br />
-                                                            Victor Ochoa
-                                                        </td>
-                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>

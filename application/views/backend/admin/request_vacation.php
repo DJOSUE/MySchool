@@ -1,5 +1,4 @@
 <?php 
-    
     $user_id     = $this->session->userdata('login_user_id');
     $account_type   =   get_table_user($this->session->userdata('role_id'));
 
@@ -21,13 +20,22 @@
         $this->db->where('status', $status_id);
     }
 
+    if($year_id != "")
+    {
+        $this->db->where('year', $year_id);
+    }
+    if($semester_id != "")
+    {
+        $this->db->where('semester_id', $semester_id);
+    }
+
     if($assigned_me == 1)
     {
         $checked = 'checked';
         $this->db->where('assigned_to', $user_id);
         $this->db->where('assigned_to_type', $account_type);
     }
-
+    
     $this->db->where('request_type', '1');
     $requests = $this->db->get('student_request')->result_array();
 ?>
@@ -50,6 +58,38 @@
                                 <div class="content-box">
                                     <?= form_open(base_url() . 'admin/request_vacation/', array('class' => 'form m-b'));?>
                                     <div class="row" style="margin-top: -30px; border-radius: 5px;">
+                                        <div class="col-sm-2">
+                                            <div class="form-group label-floating is-select">
+                                                <label class="control-label"><?= getPhrase('status');?></label>
+                                                <div class="select">
+                                                    <select name="year_id">
+                                                        <?php $class = $this->db->get_where('years', array('status' => '1'))->result_array();
+                                                        foreach ($class as $row): ?>
+                                                        <option value="<?php echo $row['year']; ?>"
+                                                            <?php if($year_id == $row['year']) echo "selected";?>>
+                                                            <?php echo $row['year']; ?>
+                                                        </option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="form-group label-floating is-select">
+                                                <label class="control-label"><?= getPhrase('status');?></label>
+                                                <div class="select">
+                                                    <select name="semester_id">
+                                                        <?php  $class = $this->db->get('semesters')->result_array();
+                                                        foreach ($class as $row): ?>
+                                                        <option value="<?php echo $row['semester_id']; ?>"
+                                                            <?php if($semester_id == $row['semester_id']) echo "selected";?>>
+                                                            <?php echo $row['name']; ?>
+                                                        </option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-sm-2">
                                             <div class="form-group label-floating is-select">
                                                 <label class="control-label"><?= getPhrase('status');?></label>
@@ -94,9 +134,17 @@
                             </div>
                         </div>
                         <div>
-                            <a href="#" id="btnExport"><button class="btn btn-info btn-sm btn-rounded"><i
-                                        class="picons-thin-icon-thin-0123_download_cloud_file_sync"
-                                        style="font-weight: 300; font-size: 25px;"></i></button>
+                            <a href="#" id="btnExport">
+                                <button class="btn btn-info btn-sm btn-rounded">
+                                    <i class="picons-thin-icon-thin-0123_download_cloud_file_sync"
+                                        style="font-weight: 300; font-size: 25px;"></i>
+                                </button>
+                            </a>
+                            <a href="/PrintDocument/vacation_request_all/<?=$year_id.'/'.$semester_id?>" id="print">
+                                <button class="btn btn-info btn-sm btn-rounded">
+                                    <i class="picons-thin-icon-thin-0333_printer"
+                                        style="font-weight: 300; font-size: 25px;"></i>
+                                </button>
                             </a>
                         </div>
                         <br />
@@ -126,9 +174,10 @@
                                                     echo $row['description'];?>
                                             </td>
                                             <td class="cell-with-media">
-                                                <img alt=""
-                                                    src="<?= $this->crud->get_image_url('student', $row['student_id']);?>"
-                                                    style="height: 25px;">
+                                                <a href="/admin/student_past_marks/<?=$row['student_id']?>" target="_blank">
+                                                    <img src="<?= $this->crud->get_image_url('student', $row['student_id']);?>"
+                                                        style="height: 25px;">
+                                                </a>
                                                 <span>
                                                     <?= $this->crud->get_name('student', $row['student_id']);?>
                                                 </span>
@@ -173,6 +222,13 @@
                                                     <i
                                                         class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible"></i>
                                                 </a>
+                                                <?php if($row['status'] == 2) { ?>
+                                                <a href="<?= base_url().'PrintDocument/vacation_request/'.base64_encode($row['request_id']);?>"
+                                                    class="grey" data-toggle="tooltip" data-placement="top"
+                                                    data-original-title="<?= getPhrase('view');?>">
+                                                    <i class="os-icon picons-thin-icon-thin-0333_printer"></i>
+                                                </a>
+                                                <?php } ?>
                                                 <?php if($row['status'] == 1) { ?>
                                                 <a data-toggle="tooltip" data-placement="top"
                                                     data-original-title="<?= getPhrase('approve');?>"
@@ -218,7 +274,7 @@ function confirm_delete(request_id) {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: "<?= getPhrase('delete');?>"
+        confirmButtonText: "<?= getPhrase('reject');?>"
     }).then((result) => {
         msg = btoa(result.value);
         if (result.value) {

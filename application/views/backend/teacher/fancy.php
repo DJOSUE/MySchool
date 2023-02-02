@@ -165,6 +165,12 @@
                                         <span><?= getPhrase('logout');?></span>
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="<?php echo base_url();?>helpdesk/helpdesk_tutorial/">
+                                        <i class="picons-thin-icon-thin-0308_support_help"></i>
+                                        <span><?php echo getPhrase('help');?></span>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>

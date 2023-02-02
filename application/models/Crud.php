@@ -596,7 +596,7 @@ class Crud extends School
             $end   = $_POST['end'];
         	$color = $_POST['color'];
             $this->db->query("INSERT INTO events(title, start, end, color) values ('$title', '$start', '$end', '$color')");
-            $this->crud->send_calendar_notify();
+            // $this->crud->send_calendar_notify();
         }
     }
     
@@ -1360,7 +1360,7 @@ class Crud extends School
         foreach($query_admins as $row)
         {
             $birthDate = $row['birthday'];
-            $array_admins= array('name' => $row['first_name'],'user_id' => $row['admin_id'],'birthday' => $row['birthday'], 'type' => 'admin');
+            $array_admins= array('name' => $row['first_name'],'user_id' => $row['admin_id'],'birthday' => $row['birthday'], 'type' => 'admin', 'status' => 1);
             array_push($array_users,$array_admins);
         }
         $query_teachers = $this->db->query("SELECT teacher_id, first_name, last_name, birthday FROM teacher WHERE substring_index(birthday, '/', 1) = ".$month."")->result_array();
@@ -1368,7 +1368,7 @@ class Crud extends School
         {
             $birthDate = $row2['birthday'];
             $time = strtotime($birthDate);
-            $array_teachers = array('name' => $row2['first_name'],'user_id' => $row2['teacher_id'],'birthday' => $row2['birthday'], 'type' => 'teacher');
+            $array_teachers = array('name' => $row2['first_name'],'user_id' => $row2['teacher_id'],'birthday' => $row2['birthday'], 'type' => 'teacher', 'status' => 1);
             array_push($array_users,$array_teachers);
         }
         $query_accountant = $this->db->query("SELECT accountant_id, first_name, last_name, birthday FROM accountant WHERE substring_index(birthday, '/', 1) = ".$month."")->result_array();
@@ -1376,7 +1376,7 @@ class Crud extends School
         {
             $birthDate = $row3['birthday'];
             $time = strtotime($birthDate);
-            $array_accountant = array('name' => $row3['first_name'],'user_id' => $row3['accountant_id'],'birthday' => $row3['birthday'], 'type' => 'accountant');
+            $array_accountant = array('name' => $row3['first_name'],'user_id' => $row3['accountant_id'],'birthday' => $row3['birthday'], 'type' => 'accountant', 'status' => 1);
             array_push($array_users,$array_accountant);
         }
         $query_librarian = $this->db->query("SELECT librarian_id, first_name, last_name, birthday FROM librarian WHERE substring_index(birthday, '/', 1) = ".$month."")->result_array();
@@ -1384,7 +1384,7 @@ class Crud extends School
         {
             $birthDate = $row4['birthday'];
             $time = strtotime($birthDate);
-            $array_librarian = array('name' => $row4['first_name'], 'user_id' => $row4['librarian_id'],'birthday' => $row4['birthday'], 'type' => 'librarian');
+            $array_librarian = array('name' => $row4['first_name'], 'user_id' => $row4['librarian_id'],'birthday' => $row4['birthday'], 'type' => 'librarian', 'status' => 1);
             array_push($array_users,$array_librarian);
         }
         $query_student = $this->db->query("SELECT student_id, birthday FROM student WHERE substring_index(birthday, '/', 1) = ".$month."")->result_array();
@@ -1392,7 +1392,7 @@ class Crud extends School
         {
             $birthDate = $row5['birthday'];
             $time = strtotime($birthDate);
-            $array_stduent = array('name' => $this->get_name('student', $row5['student_id']), 'birthday' => $row5['birthday'], 'user_id' => $row5['student_id'], 'type' => 'student');
+            $array_stduent = array('name' => $this->get_name('student', $row5['student_id']), 'birthday' => $row5['birthday'], 'user_id' => $row5['student_id'], 'type' => 'student', 'student_session' => 1);
             array_push($array_users,$array_stduent);
         }
         return $array_users;
@@ -3400,10 +3400,22 @@ class Crud extends School
         return $name;
     }
 
+    function get_program_name($program_id)
+    {        
+        $name = $this->db->get_where('program', array('program_id' => $program_id))->row()->name;
+        return $name;
+    }
+
     function get_name_attribute($type = '', $id = '')
     {
         $query = $this->db->get_where(''.$type.'',array($type."_id" => $id))->row();
         $name = $query->name;
         return $name;
+    }
+
+    function get_country_name($country_id)
+    {
+        $country_name = $this->db->get_where('countries', array('country_id' => $country_id))->row()->name;
+        return $country_name;
     }
 }

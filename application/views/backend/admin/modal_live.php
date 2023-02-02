@@ -11,7 +11,7 @@
                 <h6 class="title" style="color:white"><?php echo getPhrase('update_live');?></h6>
             </div>
             <div class="ui-block-content">
-        	    <?php echo form_open(base_url() . 'admin/meet/update/'.$param2.'/'.$data, array('enctype' => 'multipart/form-data')); ?>
+        	    <?php echo form_open(base_url() . 'admin/subject_meet/update/'.$param2.'/'.$data, array('enctype' => 'multipart/form-data')); ?>
 	                <div class="row">
                         <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
                 		    <div class="form-group">

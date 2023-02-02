@@ -15,26 +15,26 @@
         </div>
         <div class="content-i">
             <div class="content-box">
-                <h5 class="form-header"><?php echo getPhrase('class_report');?></h5>
+                <h5 class="form-header"><?= getPhrase('class_report');?></h5>
                 <div class="row">
                     <div class="content-i">
                         <div class="content-box">
-                            <?php echo form_open(base_url() . 'admin/reports_general/', array('class' => 'form m-b'));?>
+                            <?= form_open(base_url() . 'admin/reports_general/', array('class' => 'form m-b'));?>
                             <div class="row" style="margin-top: -30px; border-radius: 5px;">
                                 <div class="col-sm-5">
                                     <div class="form-group label-floating is-select">
-                                        <label class="control-label"><?php echo getPhrase('class');?></label>
+                                        <label class="control-label"><?= getPhrase('class');?></label>
                                         <div class="select">
                                             <select name="class_id" required=""
                                                 onchange="get_class_sections(this.value)">
-                                                <option value=""><?php echo getPhrase('select');?></option>
+                                                <option value=""><?= getPhrase('select');?></option>
                                                 <?php
 													$classes = $this->db->get('class')->result_array();
 													foreach($classes as $row):                        
 										        ?>
-                                                <option value="<?php echo $row['class_id'];?>"
+                                                <option value="<?= $row['class_id'];?>"
                                                     <?php if($class_id == $row['class_id']) echo "selected";?>>
-                                                    <?php echo $row['name'];?></option>
+                                                    <?= $row['name'];?></option>
                                                 <?php endforeach;?>
                                             </select>
                                         </div>
@@ -42,22 +42,22 @@
                                 </div>
                                 <div class="col-sm-5">
                                     <div class="form-group label-floating is-select">
-                                        <label class="control-label"><?php echo getPhrase('section');?></label>
+                                        <label class="control-label"><?= getPhrase('section');?></label>
                                         <div class="select">
                                             <?php if($section_id == ""):?>
                                             <select name="section_id" required id="section_holder">
-                                                <option value=""><?php echo getPhrase('select');?></option>
+                                                <option value=""><?= getPhrase('select');?></option>
                                             </select>
                                             <?php else:?>
                                             <select name="section_id" required id="section_holder">
-                                                <option value=""><?php echo getPhrase('select');?></option>
+                                                <option value=""><?= getPhrase('select');?></option>
                                                 <?php 
 													$sections = $this->db->get_where('section', array('class_id' => $class_id, 'year' => $running_year, 'semester_id' => $running_semester))->result_array();
 													foreach ($sections as $key):
 												?>
-                                                <option value="<?php echo $key['section_id'];?>"
+                                                <option value="<?= $key['section_id'];?>"
                                                     <?php if($section_id == $key['section_id']) echo "selected";?>>
-                                                    <?php echo $key['name'];?></option>
+                                                    <?= $key['name'];?></option>
                                                 <?php endforeach;?>
                                             </select>
                                             <?php endif;?>
@@ -67,17 +67,17 @@
                                 <div class="col-sm-2">
                                     <div class="form-group">
                                         <button class="btn btn-success btn-upper" style="margin-top:20px"
-                                            type="submit"><span><?php echo getPhrase('get_report');?></span></button>
+                                            type="submit"><span><?= getPhrase('get_report');?></span></button>
                                     </div>
                                 </div>
                             </div>
-                            <?php echo form_close();?>
+                            <?= form_close();?>
                             <?php if($class_id != "" && $section_id != ""):?>
                             <div class="row">
                                 <div class="text-center col-sm-6"><br>
-                                    <h4><?php echo $this->db->get_where('class', array('class_id' => $class_id))->row()->name;?>
-                                        - <?php echo getPhrase('section');?>:
-                                        <?php echo $this->db->get_where('section', array('section_id' => $section_id))->row()->name;?>
+                                    <h4><?= $this->db->get_where('class', array('class_id' => $class_id))->row()->name;?>
+                                        - <?= getPhrase('section');?>:
+                                        <?= $this->db->get_where('section', array('section_id' => $section_id))->row()->name;?>
                                     </h4>
                                     <p>
                                         <b>
@@ -88,20 +88,20 @@
 											echo $this->db->count_all_results('enroll');
 										?>
                                         </b>
-                                        <?php echo getPhrase('students');?> |
+                                        <?= getPhrase('students');?> |
                                         <b>
                                             <?php 
 											$this->db->where('class_id', $class_id);
 											$this->db->where('section_id', $section_id); 
 											echo $this->db->count_all_results('subject');?>
                                         </b>
-                                        <?php echo getPhrase('subjects');?>.
+                                        <?= getPhrase('subjects');?>.
                                         <br>
-                                        <b><?php echo getPhrase('running_year');?>:</b>
-                                        <?php echo $running_year;?>
+                                        <b><?= getPhrase('running_year');?>:</b>
+                                        <?= $running_year;?>
                                         <br>
-                                        <b><?php echo getPhrase('running_semester');?>:</b>
-                                        <?php echo $this->db->get_where('semesters', array('semester_id' => $running_semester))->row()->name;;?>
+                                        <b><?= getPhrase('running_semester');?>:</b>
+                                        <?= $this->db->get_where('semesters', array('semester_id' => $running_semester))->row()->name;;?>
                                     </p>
                                 </div>
                                 <div class="col-sm-6 text-center">
@@ -125,27 +125,30 @@
                                 <hr>
                                 <!-- <div class="col-sm-6">
                                     <div class="element-box">
-                                        <h5 class="form-header"><?php echo getPhrase('gender');?></h5>
+                                        <h5 class="form-header"><?= getPhrase('gender');?></h5>
                                         <canvas id="myChart" width="100" height="100"></canvas>
                                     </div>
                                 </div> -->
                                 <div class="col-sm-6">
                                     <div class="element-box">
                                         <div class="form-header">
-                                            <h6><?php echo getPhrase('subjects');?></h6>
+                                            <h6><?= getPhrase('subjects');?></h6>
                                         </div>
                                         <div class="table-responsive">
                                             <table width="100%" class="table table-lightborder table-lightfont">
                                                 <thead>
                                                     <tr>
                                                         <th style="text-align: left;">
-                                                            <?php echo getPhrase('subject');?>
+                                                            <?= getPhrase('subject');?>
                                                         </th>
                                                         <th style="text-align: center;">
-                                                            <?php echo getPhrase('teacher');?>
+                                                            <?= getPhrase('modality');?>
                                                         </th>
                                                         <th style="text-align: center;">
-                                                            <?php echo getPhrase('total');?>
+                                                            <?= getPhrase('teacher');?>
+                                                        </th>
+                                                        <th style="text-align: center;">
+                                                            <?= getPhrase('total');?>
                                                         </th>
                                                     </tr>
                                                 </thead>
@@ -154,11 +157,17 @@
    												        $subjects = $this->db->get_where('subject',array('class_id' => $class_id, 'section_id' => $section_id))->result_array();
    												        foreach ($subjects as $subject): ?>
                                                     <tr>
-                                                        <td style="text-align: left;"><?php echo $subject['name'];?>
+                                                        <td style="text-align: left;">
+                                                            <?= $subject['name'];?>
                                                         </td>
-                                                        <td style="text-align: center;"><a
-                                                                class="btn btn-rounded btn-sm btn-purple"
-                                                                style="color:white"><?php echo $this->crud->get_name('teacher', $subject['teacher_id']);?></a>
+                                                        <td style="text-align: center;">
+                                                            <?= $this->academic->get_modality_name($subject['modality_id']);?>
+                                                        </td>
+                                                        <td style="text-align: center;">
+                                                            <a class="btn btn-rounded btn-sm btn-purple"
+                                                                style="color:white">
+                                                                <?= $this->crud->get_name('teacher', $subject['teacher_id']);?>
+                                                            </a>
                                                         </td>
                                                         <td style="text-align: center;">
                                                             <?= $this->academic->countStudentsSubject($class_id, $section_id, $subject['subject_id']);?>
@@ -197,7 +206,7 @@
 <script type="text/javascript">
 function get_class_sections(class_id) {
     $.ajax({
-        url: '<?php echo base_url();?>admin/get_class_section/' + class_id,
+        url: '<?= base_url();?>admin/get_class_section/' + class_id,
         success: function(response) {
             jQuery('#section_holder').html(response);
         }
@@ -209,10 +218,10 @@ var ctx = document.getElementById("myChart");
 var myChart = new Chart(ctx, {
     type: 'pie',
     data: {
-        labels: ["<?php echo getPhrase('female');?>", "<?php echo getPhrase('male');?>"],
+        labels: ["<?= getPhrase('female');?>", "<?= getPhrase('male');?>"],
         datasets: [{
             label: '#',
-            data: [<?php echo $female;?>, <?php echo $male;?>],
+            data: [<?= $female;?>, <?= $male;?>],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.7)',
                 'rgba(54, 162, 235, 0.7)'

@@ -33,7 +33,7 @@
         }
 
         //Live classes function.
-        function meet($task = "", $document_id = "")
+        function subject_meet($task = "", $document_id = "")
         {
             $this->isStudent();
             $data['page_name']              = 'meet';
@@ -1041,8 +1041,11 @@
             }
             if ($param1 == "vacation") 
             {
-                $this->request->student_vacation_request();
-                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                //Validate if has more of 2
+                // if($this->){
+                    $this->request->student_vacation_request();
+                    $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));                
+                //}
                 redirect(base_url() . 'student/request/', 'refresh');
             }
 
@@ -1114,5 +1117,13 @@
             }
         }
         
+        function my_agreements()
+        {
+            $this->isStudent();   
+            $page_data['student_id'] = $this->session->userdata('student_id');
+            $page_data['page_name']  = 'my_agreements';
+            $page_data['page_title'] = getPhrase('my_agreements');
+            $this->load->view('backend/index', $page_data);
+        }
         //End of Student.php
     }

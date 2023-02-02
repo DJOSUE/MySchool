@@ -42,10 +42,6 @@ th {
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="row" style="justify-content: flex-end;">
-                                                <!-- <div class="form-buttons">
-                                                <button class="btn btn-rounded btn-primary">
-                                                    <?= getPhrase('print_agreement');?></button>
-                                            </div> &nbsp;&nbsp;&nbsp;&nbsp; -->
                                                 <div class="form-buttons">
                                                     <button class="btn btn-rounded btn-success"
                                                         onclick="create_payment()">
@@ -58,12 +54,24 @@ th {
                             </div>
                             <div id="create_payment_div" style="display:none;">
                                 <div class="ui-block">
+                                    <?= form_open(base_url() . 'admin/payment_process/'.$applicant_id.'/applicant/');?>
                                     <div class="ui-block-title">
-                                        <div class="col-sm-2">
+                                        <div class="col-sm-4">
                                             <h6 class="title"><?= getPhrase('new_payment');?></h6>
                                         </div>
+                                        <div class="col-sm-1">
+                                            <div class="description-toggle" style="justify-content: flex-end;">
+                                                <div class="description-toggle-content">
+                                                    <div class="h6"><?= getPhrase('send_email');?></div>
+                                                </div>
+                                                <div class="togglebutton">
+                                                    <label>
+                                                        <input name="send_email" value="1" type="checkbox" checked>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <?= form_open(base_url() . 'admin/payment_process/'.$applicant_id.'/applicant/');?>
                                     <div class="ui-block-content">
                                         <div class="row" id="">
                                             <div class="col" id="amounts">
@@ -358,23 +366,30 @@ th {
                                                 <thead>
                                                     <tr>
                                                         <th class="orderby"><?= getPhrase('invoice_number');?></th>
+                                                        <th class="orderby"><?= getPhrase('invoice_date');?></th>
                                                         <th class="orderby"><?= getPhrase('amount');?></th>
                                                         <th class="orderby"><?= getPhrase('comment');?></th>
                                                         <th class="orderby"><?= getPhrase('created_by');?></th>
                                                         <th class="orderby"><?= getPhrase('created_at');?></th>
-                                                        <th></th>
+                                                        <th><?= getPhrase('action');?></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                $this->db->reset_query();                                                
-                                                $this->db->order_by('created_at' , 'desc');
-                                                $invoices = $this->db->get_where('payment', array('user_type' => 'applicant','user_id' => $row['applicant_id']))->result_array();
-                                                foreach($invoices as $row2): 
-                                            ?>
+                                                        $this->db->reset_query();
+                                                        $this->db->order_by('created_at' , 'desc');
+                                                        $invoices = $this->db->get_where('payment', array('user_type' => 'applicant','user_id' => $row['applicant_id']))->result_array();
+                                                        foreach($invoices as $row2): 
+                                                            $delete_url     = base_url().'payments/delete/'.$row2['payment_id'].'/'.base64_encode('accountant/student_payments/'.$row['student_id']);
+                                                            $invoice_url    = base_url().'accountant/payment_invoice/'.base64_encode($row2['payment_id']);
+                                                            $return_url     = base64_encode('accountant/student_payments/'.$student_id.'/');
+                                                    ?>
                                                     <tr>
                                                         <td>
                                                             <?= $row2['invoice_number'];?>
+                                                        </td>
+                                                        <td>
+                                                            <?= $row2['invoice_date'];?>
                                                         </td>
                                                         <td>
                                                             <a class="badge badge-primary" href="javascript:void(0);">
@@ -391,7 +406,7 @@ th {
                                                             <?= $this->crud->get_name($row2['created_by_type'], $row2['created_by']);?>
                                                         </td>
                                                         <td class="row-actions">
-                                                            <a href="<?php echo base_url();?>admin/payment_invoice/<?= base64_encode($row2['payment_id']);?>"
+                                                            <a href="<?php echo base_url();?>accountant/payment_invoice/<?= base64_encode($row2['payment_id']);?>"
                                                                 target="_blank" class="grey" data-toggle="tooltip"
                                                                 data-placement="top"
                                                                 data-original-title="<?php echo getPhrase('view_invoice');?>">
@@ -399,6 +414,24 @@ th {
                                                                     class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible">
                                                                 </i>
                                                             </a>
+                                                            <?php if(has_permission('management_payments')):?>
+                                                            <a class="grey" href="javascript:void(0);"
+                                                                data-toggle="tooltip" data-toggle="tooltip"
+                                                                data-placement="top"
+                                                                data-original-title="<?= getPhrase('edit_invoice');?>"
+                                                                onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_payment_invoice_update/<?= $row2['payment_id'].'/'.$return_url;?>');">
+                                                                <i
+                                                                    class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new">
+                                                                </i>
+                                                            </a>
+                                                            <a class="grey" data-toggle="tooltip" data-placement="top"
+                                                                data-original-title="<?= getPhrase('delete_invoice');?>"
+                                                                onClick="return confirm('<?= getPhrase('confirm_delete');?>')"
+                                                                href="<?= $delete_url;?>">
+                                                                <i
+                                                                    class="os-icon picons-thin-icon-thin-0056_bin_trash_recycle_delete_garbage_empty"></i>
+                                                            </a>
+                                                            <?php endif;?>
                                                         </td>
                                                     </tr>
                                                     <?php endforeach;?>
@@ -498,22 +531,22 @@ function apply_fee() {
     var sel = document.getElementById("card_type_2");
     var text = sel.options[sel.selectedIndex].text;
 
-    if (text != 'Visa') {
-        var total = ((parseFloat(amount) * 5) / 100);
-        var totalFee = parseFloat(total) + parseFloat(amount);
+    // if (text != 'Visa') {
+    var total = ((parseFloat(amount) * 5) / 100);
+    var totalFee = parseFloat(total) + parseFloat(amount);
 
-        if (total > 0) {
-            document.getElementById('totalCardFee').innerText = parseFloat(total).toFixed(2);
-            var htmlFee = "<b style='color:#ff214f'> Card Fee : $" + parseFloat(total).toFixed(2) + "</b>";
-            document.getElementById('card_fee').innerHTML = htmlFee;
-            var htmlFee = "<b style='color:#ff214f'> Total Card : $" + parseFloat(totalFee).toFixed(2) + "</b>";
-            document.getElementById('total_fee').innerHTML = htmlFee;
-        }
-    } else {
-        document.getElementById('card_fee').innerText = ""
-        document.getElementById('total_fee').innerText = ""
-        document.getElementById('totalCardFee').innerText = '00.00';
+    if (total > 0) {
+        document.getElementById('totalCardFee').innerText = parseFloat(total).toFixed(2);
+        var htmlFee = "<b style='color:#ff214f'> Card Fee : $" + parseFloat(total).toFixed(2) + "</b>";
+        document.getElementById('card_fee').innerHTML = htmlFee;
+        var htmlFee = "<b style='color:#ff214f'> Total Card : $" + parseFloat(totalFee).toFixed(2) + "</b>";
+        document.getElementById('total_fee').innerHTML = htmlFee;
     }
+    // } else {
+    //     document.getElementById('card_fee').innerText = ""
+    //     document.getElementById('total_fee').innerText = ""
+    //     document.getElementById('totalCardFee').innerText = '00.00';
+    // }
 
     update_total();
 }

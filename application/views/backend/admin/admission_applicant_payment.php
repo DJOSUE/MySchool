@@ -61,12 +61,24 @@ th {
                             </div>
                             <div id="create_payment_div" style="display:none;">
                                 <div class="ui-block">
+                                    <?= form_open(base_url() . 'admin/payment_process/'.$applicant_id.'/applicant/');?>
                                     <div class="ui-block-title">
-                                        <div class="col-sm-2">
+                                        <div class="col-sm-4">
                                             <h6 class="title"><?= getPhrase('new_payment');?></h6>
                                         </div>
+                                        <div class="col-sm-1">
+                                            <div class="description-toggle" style="justify-content: flex-end;">
+                                                <div class="description-toggle-content">
+                                                    <div class="h6"><?= getPhrase('send_email');?></div>
+                                                </div>
+                                                <div class="togglebutton">
+                                                    <label>
+                                                        <input name="send_email" value="1" type="checkbox" checked>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <?= form_open(base_url() . 'admin/payment_process/'.$applicant_id.'/applicant/');?>
                                     <div class="ui-block-content">
                                         <div class="row" id="">
                                             <div class="col" id="amounts">
@@ -501,22 +513,22 @@ function apply_fee() {
     var sel = document.getElementById("card_type_2");
     var text = sel.options[sel.selectedIndex].text;
 
-    if (text != 'Visa') {
-        var total = ((parseFloat(amount) * 5) / 100);
-        var totalFee = parseFloat(total) + parseFloat(amount);
+    // if (text != 'Visa') {
+    var total = ((parseFloat(amount) * 5) / 100);
+    var totalFee = parseFloat(total) + parseFloat(amount);
 
-        if (total > 0) {
-            document.getElementById('totalCardFee').innerText = parseFloat(total).toFixed(2);
-            var htmlFee = "<b style='color:#ff214f'> Card Fee : $" + parseFloat(total).toFixed(2) + "</b>";
-            document.getElementById('card_fee').innerHTML = htmlFee;
-            var htmlFee = "<b style='color:#ff214f'> Total Card : $" + parseFloat(totalFee).toFixed(2) + "</b>";
-            document.getElementById('total_fee').innerHTML = htmlFee;
-        }
-    } else {
-        document.getElementById('card_fee').innerText = ""
-        document.getElementById('total_fee').innerText = ""
-        document.getElementById('totalCardFee').innerText = '00.00';
+    if (total > 0) {
+        document.getElementById('totalCardFee').innerText = parseFloat(total).toFixed(2);
+        var htmlFee = "<b style='color:#ff214f'> Card Fee : $" + parseFloat(total).toFixed(2) + "</b>";
+        document.getElementById('card_fee').innerHTML = htmlFee;
+        var htmlFee = "<b style='color:#ff214f'> Total Card : $" + parseFloat(totalFee).toFixed(2) + "</b>";
+        document.getElementById('total_fee').innerHTML = htmlFee;
     }
+    // } else {
+    //     document.getElementById('card_fee').innerText = ""
+    //     document.getElementById('total_fee').innerText = ""
+    //     document.getElementById('totalCardFee').innerText = '00.00';
+    // }
 
     update_total();
 }

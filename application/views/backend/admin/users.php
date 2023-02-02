@@ -19,8 +19,8 @@
                                     <div class="ae-content-w grbg">
                                         <div class="top-header top-header-favorit">
                                             <div class="top-header-thumb">
-                                                <img src="<?= base_url();?>public/uploads/bglogin.jpg"
-                                                    alt="nature" class="bgcover">
+                                                <img src="<?= base_url();?>public/uploads/bglogin.jpg" alt="nature"
+                                                    class="bgcover">
                                                 <div class="top-header-author">
                                                     <div class="author-thumb">
                                                         <img src="<?= base_url();?>public/uploads/<?= $this->crud->getInfo('logo');?>"
@@ -50,18 +50,6 @@
                                                                 <div class="ui-block" data-mh="friend-groups-item">
                                                                     <div class="friend-item friend-groups">
                                                                         <div class="friend-item-content">
-                                                                            <?php if($admin_type == 1):?>
-                                                                            <div class="more">
-                                                                                <i
-                                                                                    class="icon-feather-more-horizontal"></i>
-                                                                                <ul class="more-dropdown">
-                                                                                    <li><a data-toggle="modal"
-                                                                                            data-target="#access_admin"
-                                                                                            href="javascript:void(0);"><?= getPhrase('permissions');?></a>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                            <?php endif;?>
                                                                             <div class="friend-avatar">
                                                                                 <div class="author-thumb">
                                                                                     <img src="<?= base_url();?>public/uploads/icons/admins.svg"
@@ -87,24 +75,22 @@
                                                                 </div>
                                                             </div>
                                                             <?php endif;?>
-                                                            <?php if(has_permission('advisor_users')) : ?>
+
+                                                            <?php 
+                                                            if(has_permission('advisor_users')) : 
+                                                                $this->db->reset_query();
+                                                                $this->db->where('table', 'admin');
+                                                                $this->db->where_not_in('role_id', array('1','2'));
+                                                                $admins = $this->db->get('roles')->result_array();
+                                                                
+                                                                foreach($admins as $admin):    
+                                                            ?>
+
                                                             <div
                                                                 class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                                                 <div class="ui-block" data-mh="friend-groups-item">
                                                                     <div class="friend-item friend-groups">
                                                                         <div class="friend-item-content">
-                                                                            <?php if($admin_type == 1):?>
-                                                                            <div class="more">
-                                                                                <i
-                                                                                    class="icon-feather-more-horizontal"></i>
-                                                                                <ul class="more-dropdown">
-                                                                                    <li><a data-toggle="modal"
-                                                                                            data-target="#access_admin"
-                                                                                            href="javascript:void(0);"><?= getPhrase('permissions');?></a>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                            <?php endif;?>
                                                                             <div class="friend-avatar">
                                                                                 <div class="author-thumb">
                                                                                     <img src="<?= base_url();?>public/uploads/icons/admins.svg"
@@ -112,17 +98,17 @@
                                                                                         style="background-color:#fff;padding:15px; border-radius:0px;">
                                                                                 </div>
                                                                                 <div class="author-content">
-                                                                                    <a href="<?= base_url().'admin/admins/'.base64_encode('3');?>"
-                                                                                        class="h5 author-name"><?= getPhrase('advisors');?></a>
+                                                                                    <a href="<?= base_url().'admin/admins/'.base64_encode($admin['role_id']);?>"
+                                                                                        class="h5 author-name"><?= $admin['name'];?></a>
                                                                                     <div class="country">
                                                                                         <?php 
                                                                                         $this->db->reset_query();
-                                                                                        $this->db->where('status', '0');
-                                                                                        $this->db->where('owner_status', '3');
+                                                                                        $this->db->where('status', '1');
+                                                                                        $this->db->where('owner_status', $admin['role_id']);
                                                                                         $this->db->from('admin');
                                                                                         echo $this->db->count_all_results();
                                                                                         ?>
-                                                                                        <?= getPhrase('advisors');?>
+                                                                                        <?= $admin['name'];?>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -130,6 +116,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            <?php endforeach;?>
                                                             <?php endif;?>
                                                             <?php if(has_permission('teacher_users')) : ?>
                                                             <div
@@ -182,33 +169,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <?php endif;?>
-                                                            <?php if(has_permission('parent_users')):?>
-                                                            <div
-                                                                class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                                                                <div class="ui-block" data-mh="friend-groups-item">
-                                                                    <div class="friend-item friend-groups">
-                                                                        <div class="friend-item-content">
-                                                                            <div class="friend-avatar">
-                                                                                <div class="author-thumb">
-                                                                                    <img src="<?= base_url();?>public/uploads/icons/parents.svg"
-                                                                                        width="110px"
-                                                                                        style="background-color:#fff;padding:15px; border-radius:0px;">
-                                                                                </div>
-                                                                                <div class="author-content">
-                                                                                    <a href="<?= base_url();?>admin/parents/"
-                                                                                        class="h5 author-name"><?= getPhrase('parents');?></a>
-                                                                                    <div class="country">
-                                                                                        <?= $this->db->count_all_results('parent');?>
-                                                                                        <?= getPhrase('parents');?>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <?php endif;?>
+                                                            <?php endif;?>                                                            
                                                             <?php if(has_permission('accountant_users')) : ?>
                                                             <div
                                                                 class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
@@ -304,8 +265,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="access_admin" tabindex="-1" role="dialog" aria-labelledby="access_admin"
-    aria-hidden="true">
+<div class="modal fade" id="access_admin" tabindex="-1" role="dialog" aria-labelledby="access_admin" aria-hidden="true">
     <div class="modal-dialog window-popup edit-my-poll-popup" role="document">
         <div class="modal-content">
             <?= form_open(base_url() . 'admin/users/permissions/' , array('enctype' => 'multipart/form-data'));?>
@@ -335,7 +295,7 @@
                             </div>
                         </div>
                     </div>
-                    <br/>
+                    <br />
                     <div class="row">
                         <div class="col-sm-3">
                             <div class="checkbox">

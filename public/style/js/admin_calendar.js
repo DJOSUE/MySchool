@@ -52,8 +52,8 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         loading: function(bool) {},
         select: function(start, end) {
-            $('#ModalAdd #start').val(moment(start).format('YYYY-MM-DD HH:mm:ss'));
-            $('#ModalAdd #end').val(moment(end).format('YYYY-MM-DD HH:mm:ss'));
+            $('#ModalAdd #start').val(moment(start['start']).format('YYYY-MM-DD HH:mm:ss'));
+            $('#ModalAdd #end').val(moment(start['end']).format('YYYY-MM-DD HH:mm:ss'));
             $('#ModalAdd').modal('show');
         },
     });

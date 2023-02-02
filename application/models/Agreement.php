@@ -92,8 +92,18 @@ class Agreement extends School
     public function create_agreement($student_id)
     {
         $md5 = md5(date('d-m-y H:i:s'));
-        $year        = html_escape($this->input->post('year_id'));
-        $semester_id = html_escape($this->input->post('semester_id'));
+        $year        = intval(html_escape($this->input->post('year_id')));
+        $semester_id = intval(html_escape($this->input->post('semester_id')));
+
+        $has_down_payment = html_escape($this->input->post('has_down_payment'));
+        $has_automatic_payment = html_escape($this->input->post('automatic_payment'));
+
+        //DownPayment add the payment
+        if($has_down_payment == 1)
+        {
+            $down_payment = floatval($this->input->post('amount_1'));
+            $data['down_payment'] = $down_payment;
+        }
 
         // Get the enrolment ID
         $semester_enroll = $this->academic->get_semester_enroll($year, $semester_id);
@@ -110,6 +120,7 @@ class Agreement extends School
         $data['program_type_id']    = html_escape($this->input->post('program_type_id'));
         $data['number_payments']    = html_escape($this->input->post('number_payments'));
         $data['payment_date']       = html_escape($this->input->post('payment_date'));
+        $data['automatic_payment']  = $has_automatic_payment;
         $data['created_by']         = $this->session->userdata('login_user_id');        
         $data['year']               = $year;
         $data['semester_id']        = $semester_id;
@@ -130,13 +141,12 @@ class Agreement extends School
 
         $month = intval(date_format($objDate, "m"));
 
-        $data1['agreement_id']     = $agreement_id;
-
+        // Create payment Schedule
         for ($i=1; $i <= $number_payments; $i++) 
         {
-            if($month == 12 )
+            if($has_down_payment == 1 &&  $i == 1)
             {
-                $date = $start_semester['end_date'];
+                $date = date("Y-m-d");
             }
             else
             {
@@ -146,18 +156,89 @@ class Agreement extends School
             $amount     = 'amount_'.$i;
             $due_date   = date_create($date);
 
-            $data1['amortization_no'] = $i;
-            $data1['amount']          = html_escape($this->input->post($amount));
-            $data1['due_date']        = date_format($due_date, "Y-m-d");
-            $data1['orig_due_date']   = date_format($due_date, "Y-m-d");
+            $dataAmortization['amortization_no'] = $i;
+            $dataAmortization['agreement_id']     = $agreement_id;
+            $dataAmortization['amount']          = html_escape($this->input->post($amount));
+            $dataAmortization['due_date']        = date_format($due_date, "Y-m-d");
+            $dataAmortization['orig_due_date']   = date_format($due_date, "Y-m-d");
 
-            $this->db->insert('agreement_amortization', $data1);
+            if($i == 1)
+            {                
+                $fees       = floatval($data['fees']);
+                $materials  = floatval($data['materials']);
+                $amount     = floatval($dataAmortization['amount']) - $fees - $materials;
+
+                $dataAmortization['amount']     = $amount;
+                $dataAmortization['materials']  = $materials;
+                $dataAmortization['fees']       = $fees;
+            }
+            else
+            {                
+                $dataAmortization['materials']  = null;
+                $dataAmortization['fees']       = null;
+            }
+
+            $this->db->insert('agreement_amortization', $dataAmortization);
 
             $table      = 'agreement_amortization';
             $action     = 'insert';
             $insert_id  = $this->db->insert_id();
-            $this->crud->save_log($table, $action, $insert_id, $data);
+            $this->crud->save_log($table, $action, $insert_id, $dataAmortization);
             $month++;
-        }        
+
+            if($has_down_payment == 1 &&  $i == 1)
+            {
+                $down_payment_id = $insert_id;
+            }
+        }
+
+        //DownPayment add the payment
+        if($has_down_payment == 1)
+        {
+            $down_payment = floatval($this->input->post('amount_1'));
+            $fees = floatval($data['fees']);
+            $materials = floatval($data['materials']);
+            
+            $this->payment->create_down_payment($student_id, 'student', $agreement_id, $down_payment_id, $down_payment, $materials, $fees);
+        }
+
+        //Add Card info(Automatic payment)
+        if($has_automatic_payment == 1)
+        {
+            $dataCard['agreement_id']       = $agreement_id;
+            $dataCard['type_card_id']       = $this->input->post('type_card_id');
+            $dataCard['card_holder']        = $this->input->post('card_holder');
+            $dataCard['card_number']        = get_encrypt($this->input->post('card_number'));
+            $dataCard['security_code']      = get_encrypt($this->input->post('security_code'));
+            $dataCard['expiration_date']    = get_encrypt($this->input->post('expiration_date'));
+            $dataCard['zip_code']           = get_encrypt($this->input->post('zip_code'));
+
+            $this->db->insert('agreement_card', $dataCard);
+
+            $table      = 'agreement_card';
+            $action     = 'insert';
+            $table_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $table_id, $data);            
+        }
+        
+        return $agreement_id;
+    }
+
+    public function get_agreement_info($agreement_id)
+    {
+        $this->db->reset_query();
+        $this->db->where('agreement_id', $agreement_id);
+        $query = $this->db->get('agreement')->row_array();
+        
+        return $query;
+    }
+
+    public function get_student_agreements($student_id)
+    {
+        $this->db->reset_query();        
+        $this->db->where('student_id', $student_id);
+        $agreements = $this->db->get('agreement')->result_array();
+
+        return $agreements;
     }
 }

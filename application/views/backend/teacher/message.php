@@ -40,7 +40,7 @@
                             <div class="user-list">
                                 <?php 
                          			$current_user = $this->session->userdata('login_type') . '-' . $this->session->userdata('login_user_id');
-                          		    $this->db->where('status', '1');
+                          		    // $this->db->where('status', '1');
                           		    $this->db->or_where('reciever', $current_user);
                           		    $message_threads = $this->db->get('message_thread')->result_array();
                           		    foreach ($message_threads as $row):

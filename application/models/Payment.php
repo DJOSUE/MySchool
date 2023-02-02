@@ -329,10 +329,14 @@ class Payment extends School
         $this->crud->save_log($table, $action, $insert_id, $data2);
     }
     
-    /*** *****************************************************************************************************************************/
+/********************** New Payment *****************************************************************************************************************************/
+    
     public function create_payment($user_id, $user_type)
     {
         $invoice_number = $this->get_next_invoice_number();
+
+        $send_email = intval($this->input->post('send_email'));
+        $payment_no_agreement = intval($this->input->post('previous_semester_payment'));
 
         $data_payment['invoice_number']  = $invoice_number;
         $data_payment['invoice_date']    = date("Y-m-d");
@@ -356,7 +360,6 @@ class Payment extends School
             $this->crud->save_log($table, $action, $payment_id, $data_payment);
 
             // payment_details
-
             $income_types = $this->payment->get_income_types();
             foreach($income_types as $item)
             {
@@ -365,19 +368,112 @@ class Payment extends School
 
                 if($amount > 0)
                 {
-                    $payment_details['payment_id']      = $payment_id;
-                    $payment_details['concept_type']    = $this->input->post('income_type_'.$id);
-                    // $payment_details['comment']         = html_escape($this->input->post('income_comment_'.$id));
-                    $payment_details['amount']          = $amount;
+                    $concept_type = $this->input->post('income_type_'.$id);
 
-                    $this->db->insert('payment_details', $payment_details);
+                    // If is tuition
 
-                    $table      = 'payment_details';
-                    $action     = 'insert';
-                    $insert_id  = $this->db->insert_id();
-                    $this->crud->save_log($table, $action, $insert_id, $payment_details);
+                    if($concept_type == CONCEPT_TUITION_ID)
+                    {
+                        if($payment_no_agreement == 0)
+                        {
+                            $amortization_id = $this->input->post('amortization_id');
+                            
+                            if($amortization_id != "")
+                            {
+                                //Calculate paid
+                                $this->db->reset_query();
+                                $this->db->select_sum('amount');
+                                $this->db->where('amortization_id =', $amortization_id);
+                                $this->db->where('concept_type =', CONCEPT_TUITION_ID);
+                                $paid = $this->db->get('payment_details')->row()->amount; 
+
+                                // Calculate the amount
+                                $this->db->reset_query();
+                                $this->db->select_sum('amount');
+                                $this->db->where('amortization_id =', $amortization_id);
+                                $payment = $this->db->get('agreement_amortization')->row()->amount;
+
+                                $dif = $payment - $paid;
+
+                                if($dif > 0 && $amount <= $dif)
+                                {
+                                    $this->insert_payment_details($payment_id, $concept_type, $amount, $amortization_id);
+                                }
+                                else if($dif > 0 && $amount > $dif)
+                                {                                
+                                    $this->insert_payment_details($payment_id, $concept_type, $dif, $amortization_id);
+
+                                    $_dif = $amount - $dif;
+
+                                    while ($_dif > 0)
+                                    {
+                                        $amortization = $this->get_next_amortization($user_id);
+                                        $_amount = $amortization['amount'];
+                                        $_amortization_id = $amortization['amortization_id'];
+
+                                        if($_dif <= $_amount)
+                                        {
+                                            $this->insert_payment_details($payment_id, $concept_type, $_dif, $_amortization_id);
+                                            $_dif = 0;
+                                        }
+
+                                        if($_dif > $_amount)
+                                        {
+                                            $_dif = $_dif - $_amount; 
+                                            $this->insert_payment_details($payment_id, $concept_type, $_amount, $_amortization_id);
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                $amortization = $this->get_next_amortization($user_id);
+                                $_amount = $amortization['amount'];
+                                $_amortization_id = $amortization['amortization_id'];
+
+                                if($amount <= $_amount)
+                                {
+                                    $this->insert_payment_details($payment_id, $concept_type, $amount, $_amortization_id);
+                                }
+                                else
+                                {
+                                    $_dif = $amount - $_amount;
+                                    $this->insert_payment_details($payment_id, $concept_type, $_amount, $_amortization_id);
+
+                                    while ($_dif > 0)
+                                    {
+                                        $amortization = $this->get_next_amortization($user_id);
+                                        $_amount = $amortization['amount'];
+                                        $_amortization_id = $amortization['amortization_id'];
+
+                                        if($_dif <= $_amount)
+                                        {
+                                            $this->insert_payment_details($payment_id, $concept_type, $_dif, $_amortization_id);
+                                            $_dif = 0;
+                                        }
+
+                                        if($_dif > $_amount)
+                                        {
+                                            $_dif = $_dif - $_amount; 
+                                            $this->insert_payment_details($payment_id, $concept_type, $_amount, $_amortization_id);
+                                        }
+                                    }
+                                }
+
+
+
+                            }
+                        }
+                        else
+                        {
+                            $this->insert_payment_details($payment_id, $concept_type, $$amount);
+                        }
+                    }
+                    else
+                    {
+                        $this->insert_payment_details($payment_id, $concept_type, $amount);
+                    }
                 }
-
             }        
 
             // Discounts
@@ -423,14 +519,14 @@ class Payment extends School
                         $payment_transaction['card_type']       = $this->input->post('card_type_'.$id);
 
                         // add a new concept
-                        $card_name = $this->get_credit_card_name($payment_transaction['card_type'] );
+                        $fee = $this->get_credit_card_fee($payment_transaction['card_type'] );
 
-                        if($card_name != 'Visa')
+                        if($fee > 0 )
                         {
                             $payment_fee['payment_id']      = $payment_id;
                             $payment_fee['concept_type']    = CONCEPT_CARD_ID;
                             // $payment_fee['comment']         = html_escape($this->input->post('income_comment_'.$id));
-                            $payment_fee['amount']          = round((($amount * 5)/100), 2);
+                            $payment_fee['amount']          = round((($amount * $fee)/100), 2);
 
                             $this->db->insert('payment_details', $payment_fee);
 
@@ -451,8 +547,11 @@ class Payment extends School
                 }
             }
 
-            $user_info = $this->crud->get_user_info($user_type, $user_id);
-            $this->crud->student_new_invoice($user_info['first_name'], "".$user_info['email']."", $payment_id);
+            if($send_email == 1)
+            {
+                $user_info = $this->crud->get_user_info($user_type, $user_id);
+                $this->crud->student_new_invoice($user_info['first_name'], "".$user_info['email']."", $payment_id);
+            }
 
             $created_by       = $this->session->userdata('login_user_id');
             $created_by_type  = $data_payment['created_by_type'];
@@ -474,8 +573,8 @@ class Payment extends School
         
         }
     }
-    
-    public function update_payment($user_id, $user_type)
+
+    public function _update_payment($user_id, $user_type)
     {
         $invoice_number = $this->get_next_invoice_number();
 
@@ -562,14 +661,14 @@ class Payment extends School
                     $payment_transaction['card_type']       = $this->input->post('card_type_'.$id);
 
                     // add a new concept
-                    $card_name = $this->get_credit_card_name($payment_transaction['card_type'] );
+                    $fee = $this->get_credit_card_fee($payment_transaction['card_type'] );
 
-                    if($card_name != 'Visa')
+                    if($fee > 0 )
                     {
                         $payment_fee['payment_id']      = $payment_id;
                         $payment_fee['concept_type']    = CONCEPT_CARD_ID;
                         // $payment_fee['comment']         = html_escape($this->input->post('income_comment_'.$id));
-                        $payment_fee['amount']          = round((($amount * 5)/100), 2);
+                        $payment_fee['amount']          = round((($amount * $fee)/100), 2);
 
                         $this->db->insert('payment_details', $payment_fee);
 
@@ -589,6 +688,357 @@ class Payment extends School
                 $this->crud->save_log($table, $action, $insert_id, $payment_transaction);
             }
         }
+    }
+
+    public function update_payment($payment_id)
+    {
+
+        $invoice_number = $this->input->post('invoice_number'); 
+
+        $this->db->reset_query();        
+        $this->db->where('invoice_number', $invoice_number);        
+        $query = $this->db->get('payment');
+
+        if($query->num_rows() == 0)
+        {
+            $created =  explode(':', $this->input->post('cashier_id'));
+
+            $user_id      = $this->session->userdata('login_user_id');
+            $user_type    = get_table_user($this->session->userdata('role_id'));
+
+            $data['created_by']         = $created[1];
+            $data['created_by_type']    = $created[0];
+            $data['invoice_date']       = $this->input->post('invoice_date');
+            $data['invoice_number']     = $this->input->post('invoice_number');        
+
+            $data['updated_by']         = $user_id;
+            $data['updated_by_type']    = $user_type;
+
+            $this->db->where('payment_id', $payment_id);
+            $this->db->update('payment', $data);
+
+            $table      = 'payment';
+            $action     = 'update';
+            $this->crud->save_log($table, $action, $payment_id, $data);
+
+            $this->session->set_flashdata('flash_message' , getPhrase('successfully_update'));
+        }
+        else
+        {
+            $this->session->set_flashdata('flash_error_message' , getPhrase('invoice_number_duplicate'));
+        }
+
+    }
+
+    public function delete_payment($payment_id)
+    {
+        $amortization_id = '';
+        $this->db->reset_query();        
+        $this->db->where('payment_id =', $payment_id);
+        $this->db->where('concept_type =', CONCEPT_TUITION_ID);
+        $amortization_id = $this->db->get('payment_details')->row()->amortization_id;
+
+        $this->db->where('payment_id', $payment_id);
+        $this->db->delete('payment');
+
+        $table      = 'payment';
+        $action     = 'delete';
+        $this->crud->save_log($table, $action, $payment_id, []);
+
+        // payment_details
+        $this->db->where('payment_id', $payment_id);
+        $this->db->delete('payment_details');
+
+        $table      = 'payment_details';
+        $action     = 'delete';
+        $this->crud->save_log($table, $action, $payment_id, []);
+
+        // payment_discounts
+        $this->db->where('payment_id', $payment_id);
+        $this->db->delete('payment_discounts');
+
+        $table      = 'payment_discounts';
+        $action     = 'delete';
+        $this->crud->save_log($table, $action, $payment_id, []);
+
+        // payment_transaction
+        $this->db->where('payment_id', $payment_id);
+        $this->db->delete('payment_transaction');
+
+        $table      = 'payment_transaction';
+        $action     = 'delete';
+        $this->crud->save_log($table, $action, $payment_id, []);
+
+        if($amortization_id != '')
+        {
+            $this->update_amortization_status_delete($amortization_id);
+        }
+        
+    }
+
+    public function create_down_payment($user_id, $user_type, $agreement_id, $amortization_id, $down_payment, $books, $fees)
+    {
+        $invoice_number = $this->get_next_invoice_number();
+
+        $agreement = $this->agreement->get_agreement_info($agreement_id);
+
+        $amount = floatval($down_payment);
+        
+        $tuition = (floatval($down_payment) - floatval($books) - floatval($fees));
+
+        $data_payment['invoice_number']  = $invoice_number;
+        $data_payment['invoice_date']    = date("Y-m-d");
+        $data_payment['user_id']         = $user_id;
+        $data_payment['user_type']       = $user_type;
+        $data_payment['year']            = $agreement['year'];
+        $data_payment['semester_id']     = $agreement['semester_id'];
+        $data_payment['comment']         = "Down payment";
+        $data_payment['amount']          = $amount;
+        $data_payment['created_by']      = $this->session->userdata('login_user_id');
+        $data_payment['created_by_type'] = get_table_user($this->session->userdata('role_id'));
+
+        $this->db->insert('payment', $data_payment);
+
+        $table      = 'payment';
+        $action     = 'insert';
+        $payment_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $payment_id, $data_payment);
+
+        // Update the amortization
+        $this->update_amortization_by_down_payment($amortization_id, $tuition, $books, $fees);
+
+        // payment_details
+        if(floatval($tuition) > 0)
+            $this->insert_payment_details($payment_id, CONCEPT_TUITION_ID, $tuition, $amortization_id );
+        if(floatval($books) > 0)
+            $this->insert_payment_details($payment_id, CONCEPT_BOOKS_ID, $books);
+        if(floatval($fees) > 0)
+            $this->insert_payment_details($payment_id, CONCEPT_ENROL_FEE_ID, $fees);
+
+        // payment_transaction
+        $transaction_types = $this->payment->get_transaction_types();
+        foreach($transaction_types as $item)
+        {
+            $id     = $item['transaction_type_id'];
+            $amount = floatval($this->input->post('payment_amount_'.$id));
+
+            if($amount > 0)
+            {
+                $payment_transaction['payment_id']          = $payment_id;
+                $payment_transaction['transaction_type']    = $this->input->post('payment_type_'.$id);
+                $payment_transaction['transaction_code']    = $this->input->post('transaction_code_'.$id);
+                // $payment_transaction['comment']             = html_escape($this->input->post('comment_'.$id));
+                $payment_transaction['amount']              = $this->input->post('payment_amount_'.$id);
+
+                if($item['name'] == 'Card')
+                {
+                    $payment_transaction['card_type']       = $this->input->post('card_type_'.$id);
+
+                    // add a new concept
+                    $fee = $this->get_credit_card_fee($payment_transaction['card_type'] );
+
+                    if($fee > 0)
+                    {
+                        $payment_fee['payment_id']      = $payment_id;
+                        $payment_fee['concept_type']    = CONCEPT_CARD_ID;
+                        // $payment_fee['comment']         = html_escape($this->input->post('income_comment_'.$id));
+                        $payment_fee['amount']          = round((($amount * $fee)/100), 2);
+
+                        $this->db->insert('payment_details', $payment_fee);
+
+                        $table      = 'payment_details';
+                        $action     = 'insert';
+                        $insert_id  = $this->db->insert_id();
+                        $this->crud->save_log($table, $action, $insert_id, $payment_fee);
+
+                    }
+                }
+
+                $this->db->insert('payment_transaction', $payment_transaction);
+
+                $table      = 'payment_transaction';
+                $action     = 'insert';
+                $insert_id  = $this->db->insert_id();
+                $this->crud->save_log($table, $action, $insert_id, $payment_transaction);
+            }
+        }
+
+        //Send Invoice
+        $user_info = $this->crud->get_user_info($user_type, $user_id);
+        $this->crud->student_new_invoice($user_info['first_name'], "".$user_info['email']."", $payment_id);
+
+        //Add automatic interaction
+        $created_by       = $this->session->userdata('login_user_id');
+        $created_by_type  = $data_payment['created_by_type'];
+        $created_name     = $this->crud->get_name($created_by_type, $created_by);            
+        $comment          = $created_name.' posted a payment of $ '. $data_payment['amount'];
+        $_POST['comment'] = $comment;
+
+        if($user_type == 'applicant')
+        {
+            $_POST['applicant_id']  = $user_id;
+            
+            $this->applicant->add_interaction('automatic');
+        }
+        else
+        {
+            $this->studentModel->add_interaction($user_id, 'automatic');
+        }
+    }
+
+    public function update_amortization_by_down_payment($amortization_id, $amount, $materials, $fees)
+    {
+        $data = array();
+        $data['amount']     = $amount;
+        $data['materials']  = $materials;
+        $data['fees']       = $fees;
+
+        $this->db->reset_query();
+        $this->db->where('amortization_id', $amortization_id);
+        $this->db->update('agreement_amortization', $data);
+    }
+
+    public function insert_payment_details($payment_id, $concept_type, $amount, $amortization_id = "")
+    {
+        $payment_details['payment_id']      = $payment_id;
+        $payment_details['concept_type']    = $concept_type;
+        $payment_details['amount']          = $amount;
+
+        if($amortization_id != "")
+        {
+            $payment_details['amortization_id'] = $amortization_id;
+            
+        }
+
+        $this->db->insert('payment_details', $payment_details);
+
+        $table      = 'payment_details';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $payment_details);
+
+        if($amortization_id != "")
+        {
+            $this->update_amortization_status($amortization_id);
+        }
+    }
+    
+    public function get_next_amortization($user_id)
+    {
+        $this->db->reset_query();        
+        $this->db->where('student_id', $user_id);
+        $this->db->where('year', $this->runningYear);
+        $this->db->where('semester_id', $this->runningSemester);
+        $agreement = $this->db->get('agreement')->row_array();
+
+        $this->db->reset_query();
+        $this->db->order_by('due_date' , 'ASC');
+        $this->db->where('agreement_id =', $agreement['agreement_id']);
+        $this->db->where('status_id <>', '0');
+        $amortization = $this->db->get('agreement_amortization')->row_array();
+
+        return $amortization;
+    }
+
+    public function update_amortization_status($amortization_id)
+    {
+        $this->db->reset_query();
+        $this->db->order_by('due_date' , 'ASC');
+        $this->db->where('amortization_id =', $amortization_id);
+        $this->db->where('status_id <>', '0');
+        $amortization = floatval($this->db->get('agreement_amortization')->row()->amount);
+
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('amortization_id =', $amortization_id);
+        $this->db->where('concept_type =', CONCEPT_TUITION_ID);
+        $paid = floatval($this->db->get('payment_details')->row()->amount);
+
+        // echo '<pre>';
+        // var_dump($amortization);
+        // echo '</pre>';
+
+        if($paid > 0)
+        {
+            if($amortization == $paid)
+            {
+                $data['status_id'] = DEFAULT_AMORTIZATION_PAID; // PAID ALL
+                $this->db->where('amortization_id', $amortization_id);
+                $this->db->update('agreement_amortization', $data);
+            }
+            else if($amortization > $paid)
+            {
+                $data['status_id'] = DEFAULT_AMORTIZATION_PARTIAL; // PAID PARTIAL
+                $this->db->where('amortization_id', $amortization_id);
+                $this->db->update('agreement_amortization', $data);
+            }
+            else if($amortization < $paid)
+            {
+                $data['status_id'] = DEFAULT_AMORTIZATION_PAID; // PAID ALL
+                $this->db->where('amortization_id', $amortization_id);
+                $this->db->update('agreement_amortization', $data);
+            }
+        }
+        else
+        {
+            $data['status_id'] = DEFAULT_AMORTIZATION_PENDING; // PAID ALL
+            $this->db->where('amortization_id', $amortization_id);
+            $this->db->update('agreement_amortization', $data);
+        }
+
+        $table      = 'agreement_amortization';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $amortization_id, $data);
+    }
+
+    public function update_amortization_status_delete($amortization_id)
+    {
+        $this->db->reset_query();
+        $this->db->order_by('due_date' , 'ASC');
+        $this->db->where('amortization_id =', $amortization_id);        
+        $amortization = floatval($this->db->get('agreement_amortization')->row()->amount);
+
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('amortization_id =', $amortization_id);
+        $this->db->where('concept_type =', CONCEPT_TUITION_ID);
+        $paid = floatval($this->db->get('payment_details')->row()->amount);
+
+        // echo '<pre>';
+        // var_dump($amortization);
+        // echo '</pre>';
+
+        if($paid > 0)
+        {
+            if($amortization == $paid)
+            {
+                $data['status_id'] = DEFAULT_AMORTIZATION_PAID; // PAID ALL
+                $this->db->where('amortization_id', $amortization_id);
+                $this->db->update('agreement_amortization', $data);
+            }
+            else if($amortization > $paid)
+            {
+                $data['status_id'] = DEFAULT_AMORTIZATION_PARTIAL; // PAID PARTIAL
+                $this->db->where('amortization_id', $amortization_id);
+                $this->db->update('agreement_amortization', $data);
+            }
+            else if($amortization < $paid)
+            {
+                $data['status_id'] = DEFAULT_AMORTIZATION_PAID; // PAID ALL
+                $this->db->where('amortization_id', $amortization_id);
+                $this->db->update('agreement_amortization', $data);
+            }
+        }
+        else
+        {
+            $data['status_id'] = DEFAULT_AMORTIZATION_PENDING; // PAID ALL
+            $this->db->where('amortization_id', $amortization_id);
+            $this->db->update('agreement_amortization', $data);
+        }
+
+        $table      = 'agreement_amortization';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $amortization_id, $data);
     }
 
     public function get_payment_info($payment_id)
@@ -622,7 +1072,6 @@ class Payment extends School
         $query = $this->db->get('payment_transaction')->result_array();
         return $query;        
     }
-
 
     public function get_income_types()
     {
@@ -721,6 +1170,16 @@ class Payment extends School
         return $query->name;
     }
 
+    public function get_credit_card_fee($creditcard_id)
+    {
+        $fee = 0;
+
+        $query = $this->db->get_where('parameters', array('parameter_id' => 'CREDITCARD_TYPE', 'code' => $creditcard_id))->row();
+        $fee = floatval($query->value_2);
+
+        return  $fee;
+    }
+
     public function get_discount_types()
     {
         $this->db->reset_query();
@@ -763,7 +1222,6 @@ class Payment extends School
         return $query->name;
     }
     
-
     public function get_next_invoice_number()
     {
         $this->db->reset_query();
@@ -775,4 +1233,34 @@ class Payment extends School
         return str_pad(($invoice_number + 1),  8, '0', STR_PAD_LEFT);   
         
     }
+
+    public function get_payment_schedule_statuses()
+    {
+        $this->db->reset_query();
+        $this->db->select('code as status_id, name, value_1 as color');
+        $this->db->where('parameter_id', 'PAYMENT_SCHEDULE_STATUS');
+        $query = $this->db->get('parameters')->result_array();
+        return $query;
+    }
+
+    public function get_payment_schedule_status_info($status_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('code as status_id, name, value_1 as color');
+        $this->db->where('parameter_id', 'PAYMENT_SCHEDULE_STATUS');
+        $this->db->where('code', $status_id);
+        $query = $this->db->get('parameters')->row_array();
+        return $query;
+    }
+
+    public function get_payment_schedule_status_name($status_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('name');
+        $this->db->where('parameter_id', 'PAYMENT_SCHEDULE_STATUS');
+        $this->db->where('code', $status_id);
+        $query = $this->db->get('parameters')->row();
+        return $query->name;
+    }
+
 }

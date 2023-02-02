@@ -103,7 +103,19 @@ class StudentModel extends School
         
         return $query;
     }
-    
+
+    function add_interaction_data($data)
+    {
+        $this->db->insert('student_interaction', $data);
+
+        $table      = 'student_interaction';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+
+        return $insert_id;
+    }
+
     /**** functions */
 
     public function get_status()
@@ -144,6 +156,16 @@ class StudentModel extends School
         $query = $this->db->get('program')->row_array();
         
         return $query;
+    }
+
+    public function get_program_name($program_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('program_id, name, color, icon');
+        $this->db->where('program_id', $program_id);
+        $query = $this->db->get('program')->row_array();
+        
+        return $query['name'];
     }
 
     public function get_request_types()
@@ -316,5 +338,50 @@ class StudentModel extends School
 
     }
 
+    public function get_last_student_code()
+    {
+        $this->db->reset_query();
+        $this->db->order_by('student_id', 'DESC');
+        $query = $this->db->get('student')->first_row();        
+        return $query->student_code;
+    }
 
+    public function generate_student_code()
+    {
+        $student_code = 1;
+
+        $last_student_code = $this->get_last_student_code();
+
+        if(!empty($last_student_code))
+        {
+            $year = date("y"); 
+            $month = date("m"); 
+
+            $correlative = intval(substr($last_student_code, -8));
+
+            $student_code = 'A'.$year.$month.sprintf('%08d', ($correlative+1));
+        }
+
+        return $student_code;
+    }
+
+    public function get_student_id_by_email($email)
+    {
+        $this->db->reset_query();
+        $this->db->select('student_id');
+        $this->db->where('email', $email);
+        $student_id = $this->db->get('student')->row()->student_id;
+        
+        return $student_id;
+    }
+
+    public function get_student_id($student_code)
+    {
+        $this->db->reset_query();
+        $this->db->select('student_id');
+        $this->db->where('student_code', $student_code);
+        $student_id = $this->db->get('student')->row()->student_id;
+        
+        return $student_id;
+    }
 }

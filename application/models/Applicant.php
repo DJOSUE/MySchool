@@ -67,21 +67,39 @@ class Applicant extends School
         $this->crud->save_log($table, $action, $insert_id, $data);
 
 
-        // create an interaction 
-        if($data['is_imported'])
-        {
-            $account_type   =   get_table_user($this->session->userdata('role_id'));
-            $user_name  = $this->crud->get_name($account_type, $this->session->userdata('login_user_id'));            
+        // create an interaction
+        $account_type   =   get_table_user($this->session->userdata('role_id'));
+        $user_name  = $this->crud->get_name($account_type, $this->session->userdata('login_user_id'));  
+        $_POST['applicant_id']  = $insert_id;
 
-            $_POST['applicant_id']  = $insert_id;
-            $_POST['comment']       = $user_name.' imported to this applicant';
-            
-            $this->applicant->add_interaction('automatic');
+        if($data['is_imported'])
+        {            
+            $_POST['comment']       = $user_name.' imported this applicant';
+        }
+        else
+        {
+            $_POST['comment']       = $user_name.' registered this applicant';
         }
 
-        return $insert_id;
-        
+        $this->applicant->add_interaction('automatic');
 
+        // Create an Automate Task
+        if(!empty($this->input->post('contact_date')))
+        {
+            // create_follow_up
+            $data_task['category_id']   = DEFAULT_TASK_FOLLOW_UP_CATEGORY;
+            $data_task['status_id']     = DEFAULT_TASK_FOLLOW_UP_STATUS;
+            $data_task['priority_id']   = DEFAULT_TASK_FOLLOW_UP_PRIORITY;
+            $data_task['description']   = getPhrase('follow_up_message');
+            $data_task['title']         = getPhrase('follow_up_title');
+            $data_task['due_date']      = html_escape($this->input->post('contact_date'));
+            $data_task['user_type']     = 'applicant';
+            $data_task['user_id']       = $insert_id;
+            $this->task->create_follow_up($data_task);
+        }
+
+
+        return $insert_id;
     }
 
     function update($applicant_id)
@@ -323,6 +341,17 @@ class Applicant extends School
         return $query;
     }
 
+    public function get_type_name($type_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('code as type_id, name, value_1 as color, value_2 as icon, value_4 as program_id');
+        $this->db->where('parameter_id', 'TYPEAPPLIC');
+        $this->db->where('code', $type_id);
+        $query = $this->db->get('parameters')->row_array();
+        
+        return $query['name'];
+    }
+
     // Get the list of the info pf the applicants
     public function get_applicant_status()
     {
@@ -397,6 +426,14 @@ class Applicant extends School
         return $query;
     }
 
-
+    function get_interactions($applicant_id)
+    {
+        $this->db->reset_query();
+        $this->db->order_by('created_at', 'desc');   
+        $this->db->where('applicant_id', $applicant_id);
+        $query = $this->db->get('applicant_interaction')->result_array();;
+        
+        return $query;
+    }
     
 }

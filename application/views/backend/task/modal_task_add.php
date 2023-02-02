@@ -27,9 +27,7 @@
             <div class="col-sm-6">
                 <div class="input-group">
                     <div class="select">
-                        <select name="department_id" style="width: 200px;"
-                            onchange="get_categories(this.value);"
-                        >
+                        <select name="department_id" style="width: 200px;" onchange="get_categories(this.value);">
                             <option value=""><?php echo getPhrase('select');?></option>
                             <?php $departments = $this->task->get_departments();
                                 foreach($departments as $department):
@@ -121,8 +119,15 @@
                     <div class="input-group-addon">
                         <i class="picons-thin-icon-thin-0003_write_pencil_new_edit"></i>
                     </div>
-                    <input class="form-control" name="task_file" type="file"
-                        accept="<?=FILES_ALLOWED_ATTACHMENT?>">
+                    <input class="form-control" name="task_file" type="file" accept="<?=FILES_ALLOWED_ATTACHMENT?>">
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('due_date');?></label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <input type='date' name="due_date" />
                 </div>
             </div>
         </div>
@@ -135,25 +140,22 @@
 <?php echo form_close();?>
 <?php endforeach; ?>
 <script>
+if ($('#ckeditor2').length) {
+    CKEDITOR.replace('ckeditor2', {
+        toolbar: 'Basic'
+    });
 
-    if ($('#ckeditor2').length) 
-    {
-        CKEDITOR.replace('ckeditor2', { toolbar: 'Basic' });
+    var t = "<?=html_entity_decode($message);?>";
 
-        var t = "<?=html_entity_decode($message);?>";
+    CKEDITOR.instances.ckeditor2.setData(t.replace(/(\r\n|\n|\r)/gm, ""));
+}
 
-        CKEDITOR.instances.ckeditor2.setData(t.replace(/(\r\n|\n|\r)/gm, ""));
-    }
-
-    function get_categories(department_id) 
-    {        
-        $.ajax({
-            url: '<?php echo base_url();?>admin/get_category_dropdown/' + department_id + '/',
-            success: function(response) {
-                jQuery('#category_holder').html(response);
-            }
-        });
-    }
-
+function get_categories(department_id) {
+    $.ajax({
+        url: '<?php echo base_url();?>admin/get_category_dropdown/' + department_id + '/',
+        success: function(response) {
+            jQuery('#category_holder').html(response);
+        }
+    });
+}
 </script>
-

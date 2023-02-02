@@ -74,7 +74,7 @@
                     </li>
                     <?php endif;?>
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>student/meet/<?php echo $data;?>/"><i
+                        <a class="navs-links" href="<?php echo base_url();?>student/subject_meet/<?php echo $data;?>/"><i
                                 class="os-icon picons-thin-icon-thin-0591_presentation_video_play_beamer"></i><span><?php echo getPhrase('live');?></span></a>
                     </li>                    
                     <?php if(!$useGradeAttendance):?>

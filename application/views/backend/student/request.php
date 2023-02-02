@@ -252,6 +252,10 @@
                                                 <textarea class="form-control" rows="4" name="description"
                                                     required=""></textarea>
                                             </div>
+                                            <div class="form-group">
+                                                <label for=""> <?= getPhrase('file');?></label>
+                                                <input type='file' class="form-control" name="vacation_request_file" />
+                                            </div>
                                             <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
                                                 <div class="description-toggle">
                                                     <div class="description-toggle-content">

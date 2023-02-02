@@ -1,82 +1,12 @@
 <?php 
 	// $period =  $this->db->get_where( 'settings', array( 'type' => 'running_period' ) )->row()->description;
-	// $running_year = $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;?>
-<style type="text/css">
-.titulosincss {
-    text-align: center;
-    font-weight: bold;
-}
+	// $running_year = $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;
 
-.imagen {
-    position: absolute;
-    right: 5px;
-    top: 10px;
-}
+    
+?>
 
-.mediano {
-    font-size: 11px;
-}
+<link href="<?php echo base_url();?>public/style/print/report.css" media="all" rel="stylesheet">
 
-.grande {
-    font-size: 13px;
-}
-
-.tablatitulo {
-    padding: 10px 0;
-}
-
-td.descripcion {
-    font-weight: bold;
-}
-
-td.nota {
-    text-align: center;
-}
-
-td.notapromedio {
-    text-align: center;
-    font-weight: bold;
-    padding: 3px;
-}
-
-td.notapromediofinal {
-    text-align: center;
-    font-weight: bold;
-    font-size: 14px;
-    padding: 5px;
-}
-
-.firmadirector {
-    padding: 40px 0 20px 0;
-    font-weight: bold;
-    float: right;
-    width: 300px;
-}
-
-.firma {
-    border-bottom: 1px solid #000;
-}
-
-.firmadirector .texto {
-    text-align: center;
-}
-
-table {
-    width: 100%;
-}
-
-.negrita {
-    font-weight: bold;
-}
-
-.cuadro {
-    width: 100%;
-}
-
-.min-width {
-    min-width: 150px;
-}
-</style>
 <div class="content-w">
     <?php include 'fancy.php';?>
     <div class="header-spacer"></div>

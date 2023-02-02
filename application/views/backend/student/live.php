@@ -10,7 +10,7 @@
             <div class="content-i">
                 <div class="content-box">
                     <div class="back">
-                        <a href="<?php echo base_url();?>student/meet/<?php echo base64_encode($row['class_id']."-".$row['section_id']."-".$row['subject_id']);?>/"><i class="picons-thin-icon-thin-0131_arrow_back_undo"></i></a>
+                        <a href="<?php echo base_url();?>student/subject_meet/<?php echo base64_encode($row['class_id']."-".$row['section_id']."-".$row['subject_id']);?>/"><i class="picons-thin-icon-thin-0131_arrow_back_undo"></i></a>
                     </div>
                     <div class="row">
                         <div class="col col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">

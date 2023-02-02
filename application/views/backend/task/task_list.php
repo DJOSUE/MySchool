@@ -1,11 +1,19 @@
 <?php 
-    $this->db->reset_query();
 
     $fancy_path         =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/'.$account_type.'/';
     $account_type       =   get_table_user($this->session->userdata('role_id'));
 
     $user_id = $this->session->userdata('login_user_id');
 
+    $this->db->reset_query();
+    $this->db->order_by('created_at', 'desc');
+
+    if($department_id != '')
+    {
+        $array = $this->task->get_categories_where($department_id);
+        $this->db->where_in('category_id', $array);
+    }
+    
     if($category_id != '')
     {
         $this->db->where('category_id', $category_id);
@@ -21,6 +29,10 @@
     if($text != '')
     {
         $this->db->like('description' , str_replace("%20", " ", $text));
+    }
+    if($due_date != '')
+    {
+        $this->db->where('due_date', $due_date);
     }
     if($assigned_me == 1)
     {
@@ -63,8 +75,26 @@ th {
                                     <div class="row" style="margin-top: -30px; border-radius: 5px;">
                                         <div class="col-sm-2">
                                             <div class="form-group label-floating is-select">
-                                                <label
-                                                    class="control-label"><?php echo getPhrase('department');?></label>
+                                                <label class="control-label"><?= getPhrase('department');?></label>
+                                                <div class="select">
+                                                    <select name="department_id" style="width: 200px;"
+                                                        onchange="get_categories(this.value);">
+                                                        <option value=""><?= getPhrase('select');?></option>
+                                                        <?php $departments = $this->task->get_departments();
+                                                            foreach($departments as $department):
+                                                        ?>
+                                                        <option value="<?= $department['department_id']?>"
+                                                            <?php if($department_id == $department['department_id']) echo "selected";?>>
+                                                            <?= $department['name']?>
+                                                        </option>
+                                                        <?php endforeach;?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="form-group label-floating is-select">
+                                                <label class="control-label"><?php echo getPhrase('category');?></label>
                                                 <div class="select">
                                                     <select name="category_id"
                                                         onchange="get_class_sections(this.value)">
@@ -132,10 +162,19 @@ th {
                                         <div class="col-sm-2">
                                             <div class="form-group label-floating"
                                                 style="border: 1px solid #EAEAF5; border-radius: 5px; background: white;">
+                                                <label class="control-label"><?php echo getPhrase('due_date');?></label>
+                                                <input type='text' class="datepicker-here" data-position="top left"
+                                                    data-language='en' name="due_date" data-multiple-dates-separator="/"
+                                                    value="<?= $due_date;?>" />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="form-group label-floating"
+                                                style="border: 1px solid #EAEAF5; border-radius: 5px; background: white;">
                                                 <label class="control-label"><?php echo getPhrase('text');?></label>
                                                 <input class="form-control" name="name" type="text" value="<?= $text?>">
                                             </div>
-                                        </div>
+                                        </div>                                        
                                         <!-- <div class="col-sm-2">
                                             <div class="description-toggle">
                                                 <div class="description-toggle-content">
@@ -180,6 +219,7 @@ th {
                                             <th class="text-center"><?php echo getPhrase('user')?></th>
                                             <th class="text-center"><?php echo getPhrase('status')?></th>
                                             <th class="text-center"><?php echo getPhrase('priority')?></th>
+                                            <th class="text-center"><?php echo getPhrase('due_date')?></th>
                                             <th class="text-center"><?php echo getPhrase('assigned_to')?></th>
                                             <th class="text-center"><?php echo getPhrase('created_by')?></th>
                                             <th class="text-center"><?php echo getPhrase('created_at')?></th>
@@ -217,13 +257,18 @@ th {
                                                     <?= $this->task->get_status($row['status_id']);?>
                                                 </center>
                                             </td>
-                                            <td>                                                
+                                            <td>
                                                 <center>
                                                     <?php $priority_info = $this->task->get_priority_info($row['priority_id']);?>
                                                     <div class="value badge badge-pill badge-primary"
                                                         style="background-color: <?= $priority_info['color']?>;">
                                                         <?= $priority_info['name'];?>
                                                     </div>
+                                                </center>
+                                            </td>
+                                            <td>
+                                                <center>
+                                                    <?= $row['due_date'];?>
                                                 </center>
                                             </td>
                                             <td>

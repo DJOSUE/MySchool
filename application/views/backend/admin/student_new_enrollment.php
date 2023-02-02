@@ -75,7 +75,8 @@
                                                         <div class="togglebutton">
                                                             <label>
                                                                 <input id="update_info" name="update_info" value="1"
-                                                                    type="checkbox" onchange="update_info_enable_fields()">
+                                                                    type="checkbox"
+                                                                    onchange="update_info_enable_fields()">
                                                             </label>
                                                         </div>
                                                     </div>
@@ -213,8 +214,8 @@
                                                             <div class="select">
                                                                 <select name="program_type_id" id="program_type_id"
                                                                     required=""
-                                                                    <?= $is_international == true ?  'readonly ': ''?>>
-                                                                    </option>
+                                                                    <?= $is_international == true ?  'readonly ': ''?>
+                                                                    onchange="rest_selection()">
                                                                     <?php 
                                                                         $programs = $this->studentModel->get_program_type();
                                                                         foreach($programs as $item):
@@ -233,10 +234,10 @@
                                                             <label class="control-label"><?= getPhrase('modality');?>
                                                             </label>
                                                             <div class="select">
-                                                                <select name="modality_id" id="modality_id" required="">
-                                                                    </option>
+                                                                <select name="modality_id" id="modality_id" required=""
+                                                                    onchange="rest_selection()">
                                                                     <?php 
-                                                                        $modalities = $this->studentModel->get_modality();
+                                                                        $modalities = $this->academic->get_modality();
                                                                         foreach($modalities as $item):
                                                                     ?>
                                                                     <option value="<?= $item['modality_id']; ?>">
@@ -267,7 +268,8 @@
                                                             <label class="control-label"><?= getPhrase('year');?>
                                                             </label>
                                                             <div class="select">
-                                                                <select name="year_id" id="year_id" required="">
+                                                                <select name="year_id" id="year_id" required=""
+                                                                    onchange="rest_selection()">
                                                                     <option value=""><?= getPhrase('select');?>
                                                                     </option>
                                                                     <?php 
@@ -287,7 +289,8 @@
                                                             <label
                                                                 class="control-label"><?= getPhrase('semester');?></label>
                                                             <div class="select">
-                                                                <select name="semester_id" id="semester_id" required="">
+                                                                <select name="semester_id" id="semester_id" required=""
+                                                                    onchange="rest_selection()">
                                                                     <option value=""><?= getPhrase('select');?>
                                                                     </option>
                                                                     <?php 
@@ -375,11 +378,21 @@
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <div class="form-group label-floating">
                                                             <label class="control-label">
+                                                                <?= getPhrase('books_fee');?>
+                                                            </label>
+                                                            <input class="form-control" name="books_fee"
+                                                                id="cost_books_fee" value="75"
+                                                                onfocusout="agreement_amount_total()" type="text">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class="form-group label-floating">
+                                                            <label class="control-label">
                                                                 <?= getPhrase('scholarship');?>
                                                             </label>
                                                             <input class="form-control" name="discount_scholarship"
-                                                                id="discount_scholarship" onfocusout="amount_total()"
-                                                                type="text">
+                                                                id="discount_scholarship"
+                                                                onfocusout="agreement_amount_total()" type="text">
                                                         </div>
                                                     </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -388,46 +401,44 @@
                                                                 <?= getPhrase('discount');?>
                                                             </label>
                                                             <input class="form-control" name="discount" id="discount"
-                                                                onfocusout="amount_total()" type="text">
+                                                                onfocusout="agreement_amount_total()" type="text">
                                                         </div>
                                                     </div>
+
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                        <div class="form-group label-floating">
-                                                            <label class="control-label">
-                                                                <?= getPhrase('books_fee');?>
-                                                            </label>
-                                                            <input class="form-control" name="books_fee"
-                                                                id="cost_books_fee" value="75"
-                                                                onfocusout="amount_total()" type="text">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                    </div>
-                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                        <div class="form-group label-floating">
-                                                            <label class="control-label">
-                                                                <?= getPhrase('total_payment');?>
-                                                            </label>
-                                                            <input class="form-control" name="total_payment" value="0"
-                                                                id="total_payment" type="text" required="" readonly>
-                                                        </div>
                                                     </div>
                                                 </div>
                                                 <hr />
                                                 <div class="row">
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                        <div class="form-group label-floating is-select">
-                                                            <label
-                                                                class="control-label"><?= getPhrase('number_of_payments');?>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class="form-group label-floating">
+                                                            <label class="control-label">
+                                                                <?= getPhrase('total_agreement');?>
                                                             </label>
-                                                            <div class="select">
-                                                                <select name="number_payments" id="number_payments"
-                                                                    required="" onchange="add_fees()">
-                                                                    <option value="1">1</option>
-                                                                    <option value="2">2</option>
-                                                                    <option value="3">3</option>
-                                                                    <option value="4">4</option>
-                                                                </select>
+                                                            <input class="form-control" name="total_agreement" value="0"
+                                                                id="total_agreement" type="text" required="" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                                <br />
+                                                <h3>Payment Schedule</h3>
+                                                <br />
+                                                <div class="row">
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class="description-toggle">
+                                                            <div class="description-toggle-content">
+                                                                <div class="h6"><?= getPhrase('has_down_payment');?>
+                                                                </div>
+                                                            </div>
+                                                            <div class="togglebutton">
+                                                                <label>
+                                                                    <input id="has_down_payment" name="has_down_payment"
+                                                                        value="1" type="checkbox"
+                                                                        onchange="enable_down_payment()">
+                                                                </label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -450,18 +461,195 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
+
+                                                <div class="row" id="schedule_without_down_payment">
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class="form-group label-floating is-select">
+                                                            <label
+                                                                class="control-label"><?= getPhrase('number_of_payments');?>
+                                                            </label>
+                                                            <div class="select">
+                                                                <select name="number_payments" id="number_payments"
+                                                                    required="" onchange="add_fees()">
+                                                                    <option value="1">1</option>
+                                                                    <option value="2">2</option>
+                                                                    <option value="3">3</option>
+                                                                    <option value="4">4</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row" id="schedule_with_down_payment">
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <div class="form-group label-floating">
                                                             <label class="control-label">
-                                                                Payment 1
+                                                                <?= getPhrase('payment_1');?>
                                                             </label>
                                                             <input class="form-control" name="amount_1" id="amount_1"
-                                                                type="text" required="" value="0" readonly>
+                                                                onfocusout="validate_amount_1()" type="text" required=""
+                                                                value="0" readOnly="">
+                                                            <small>
+                                                                <span id="amount_error"></span>
+                                                            </small>
                                                         </div>
-                                                    </div>                                                    
+                                                    </div>
+
                                                 </div>
+
                                                 <div class="row" id="payment_schedule">
 
+                                                </div>
+                                                <hr />
+                                                <div class="row" id="create_payment_div" style="display:none;">
+                                                    <h3>Payment Transaction</h3>
+                                                    <div class="row">
+                                                        <div class="col" id="transactions">
+                                                            <div class="row" style="padding: 0 10px;">
+                                                                <div class="table-responsive">
+                                                                    <table id="items" class="table table-padded">
+                                                                        <thead>
+                                                                            <th><?=getPhrase('type')?></th>
+                                                                            <th><?=getPhrase('amount')?></th>
+                                                                            <th></th>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <?php 
+                                                                        $transaction_types = $this->payment->get_transaction_types();
+                                                                        foreach($transaction_types as $item):
+                                                                        ?>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <select class="custom-select"
+                                                                                        tabindex="-1"
+                                                                                        id="payment_type_<?=$item['transaction_type_id']?>"
+                                                                                        name="payment_type_<?=$item['transaction_type_id']?>">
+                                                                                        <option
+                                                                                            value="<?=$item['transaction_type_id']?>">
+                                                                                            <?=$item['name']?></option>
+                                                                                    </select>
+                                                                                    <?php if($item['name'] == 'Card'):?>
+                                                                                    <select class="custom-select"
+                                                                                        style="width: 200px;"
+                                                                                        id="card_type_<?=$item['transaction_type_id']?>"
+                                                                                        name="card_type_<?=$item['transaction_type_id']?>"
+                                                                                        onchange="apply_card_fee()"
+                                                                                        tabindex="-1">
+                                                                                        <?php 
+                                                                                    $card_types = $this->payment->get_credit_cards();
+                                                                                    foreach($card_types as $card):
+                                                                                    ?>
+                                                                                        <option
+                                                                                            value="<?=$card['creditcard_id']?>">
+                                                                                            <?=$card['name']?></option>
+                                                                                        <?php endforeach;?>
+                                                                                    </select>
+                                                                                    <?php endif;?>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input style="width: 150px;"
+                                                                                        id="payment_amount_<?=$item['transaction_type_id']?>"
+                                                                                        name="payment_amount_<?=$item['transaction_type_id']?>"
+                                                                                        type="text" class="currency"
+                                                                                        placeholder="00.00"
+                                                                                        onfocusout="payment_total()" />
+                                                                                    <?php if($item['name'] == 'Card'):?>
+                                                                                    <span id="card_fee"
+                                                                                        class="currency"></span>
+                                                                                    <span id="total_fee"
+                                                                                        class="currency"></span>
+                                                                                    <?php endif;?>
+                                                                                </td>
+                                                                                <?php if($item['name'] != 'Cash'):?>
+                                                                                <td>
+                                                                                    <input
+                                                                                        name="transaction_code_<?=$item['transaction_type_id']?>"
+                                                                                        type="text"
+                                                                                        style="width: 150px;" />
+                                                                                </td>
+                                                                                <?php endif;?>
+                                                                            </tr>
+                                                                            <?php endforeach;?>
+                                                                            <tr>
+                                                                                <td class="currency">
+                                                                                    <b style='color:#ff214f'>Remaining
+                                                                                        to
+                                                                                        pay:</b>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <span id="remainingAmount"
+                                                                                        class="currency">00.00</span>
+                                                                                    <input id="total_payment"
+                                                                                        class="currency" type="hidden"
+                                                                                        disabled />
+                                                                                </td>
+                                                                                <td>
+                                                                                    <span
+                                                                                        id="txtRemainingAmount"></span>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col">
+                                                            <div class="">
+                                                                <div class="form-group">
+                                                                    <label
+                                                                        for="comment"><?=getPhrase('comment')?></label>
+                                                                    <textarea class="form-control" name="comment"
+                                                                        rows="3" require></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <br /><br />
+                                                            <div class="" style="margin-right: 50px;">
+                                                                <h6 class="title"><?= getPhrase('payment_summary');?>
+                                                                </h6>
+                                                                <table>
+                                                                    <thead>
+                                                                        <th></th>
+                                                                        <th></th>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>Total Down Payment
+                                                                            </td>
+                                                                            <td>
+                                                                                <span id="totalAmount"
+                                                                                    class="currency">00.00</span>
+                                                                                <input id="txtTotalAmount"
+                                                                                    type="hidden" />
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Credit card fee
+                                                                            </td>
+                                                                            <td>
+                                                                                <span id="totalCardFee"
+                                                                                    class="currency">00.00</span>
+                                                                                <input id="txtTotalCardFee"
+                                                                                    type="hidden" />
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr style="border-top: 1px solid;">
+                                                                            <td>Total to pay
+                                                                            </td>
+                                                                            <td>
+                                                                                <span id="total"
+                                                                                    class="currency">00.00</span>
+                                                                                <input id="txtTotal" name="txtTotal"
+                                                                                    type="hidden" />
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <small><span id="payment_error"></span></small>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <hr />
                                                 <div class="row">
@@ -473,14 +661,17 @@
                                                             </div>
                                                             <div class="togglebutton">
                                                                 <label>
-                                                                    <input id="automatic_payment" name="automatic_payment" value="1"
-                                                                        type="checkbox" onchange="automatic_payment_enable_fields()">
+                                                                    <input id="automatic_payment"
+                                                                        name="automatic_payment" value="1"
+                                                                        type="checkbox"
+                                                                        onchange="automatic_payment_enable_fields()">
                                                                 </label>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="row" id="automatic_payment_div" style="display: none;">
+
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <div class="form-group label-floating is-select">
                                                             <label class="control-label"><?= getPhrase('type_card');?>
@@ -514,8 +705,8 @@
                                                             <label class="control-label"><?= getPhrase('card_number');?>
                                                             </label>
                                                             <input class="form-control" name="card_number"
-                                                                id="card_number" type="text" minlength="10"
-                                                                maxlength="19">
+                                                                id="card_number" type="text" minlength="15"
+                                                                maxlength="16">
                                                         </div>
                                                     </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -547,7 +738,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-buttons-w text-right">
-                                                    <button class="btn btn-rounded btn-success" type="submit">
+                                                    <button class="btn btn-rounded btn-success" type="submit"
+                                                        id="btn_save">
                                                         <?= getPhrase('save');?>
                                                     </button>
                                                 </div>
@@ -570,9 +762,264 @@
 
 <?php endforeach;?>
 
-
-
 <script type="text/javascript">
+function rest_selection() {
+
+    document.getElementById("class_id").selectedIndex = 0;
+    document.getElementById("section_selector_holder").selectedIndex = 0;
+    jQuery('#subject_selector_holder').html('').selectpicker('refresh');
+
+}
+
+$(function() {
+
+    var keyStop = {
+        8: ":not(input:text, textarea, input:file, input:password)", // stop backspace = back
+        13: "input:text, input:password", // stop enter = submit 
+
+        end: null
+    };
+    $(document).bind("keydown", function(event) {
+        var selector = keyStop[event.which];
+
+        if (selector !== undefined && $(event.target).is(selector)) {
+            event.preventDefault(); //stop event
+        }
+        return true;
+    });
+});
+
+function agreement_amount_total() {
+
+    var tuition = parseFloat(document.getElementById("tuition").value);
+    var total = ((tuition + totalCost()) - totalDiscount());
+
+    var nro_payments = parseFloat(document.getElementById("number_payments").value);
+
+    var amount_1 = (tuition / nro_payments) + (total - tuition);
+
+    document.getElementById('total_agreement').value = total;
+    document.getElementById('amount_1').value = amount_1;
+    document.getElementById("amount_1").min = amount_1;
+
+    add_fees();
+}
+
+function enable_down_payment() {
+    var checked = document.getElementById("has_down_payment").checked;
+
+    if (!checked) {
+        document.getElementById("amount_1").readOnly = 'true';
+        document.getElementById("create_payment_div").style.display = 'none';
+        document.getElementById("btn_save").disabled = false;
+    } else {
+        document.getElementById("amount_1").removeAttribute('readOnly');
+        document.getElementById("create_payment_div").style.display = 'flex';
+        document.getElementById("btn_save").disabled = true;
+    }
+}
+
+function add_fees() {
+    let index = 2
+    var nro = document.getElementById("number_payments").value;
+    var amount = parseFloat(document.getElementById("tuition").value);
+    var downPayment = parseFloat(document.getElementById("amount_1").value);
+
+    var costs = parseFloat(totalCost());
+    var discounts = parseFloat(totalDiscount());
+
+    var total = amount;
+
+    var quota = (amount / parseInt(nro));
+
+    if (nro == 1) {
+        document.getElementById('amount_1').value               = ((quota + costs) - discounts);
+        document.getElementById('amount_1').min                 = ((quota + costs) - discounts);
+        document.getElementById("payment_schedule").innerHTML   = "";
+    } else {
+        document.getElementById('amount_1').value               = (quota + costs);
+        document.getElementById('amount_1').min                 = (quota + costs);
+        document.getElementById("payment_schedule").innerHTML   = "";
+    }
+
+    if (nro > 1) {
+        for (index; index <= nro; index++) {
+            let html = '<div class="col col-lg-6 col-md-6 col-sm-12 col-12">'
+            html += '    <div class="form-group label-floating">'
+            html += '        <label class="control-label">'
+            html += '            Payment ' + index
+            html += '        </label>'
+            html += '        <input class="form-control" name="amount_' + index + '"'
+            html += '            id="amount_' + index + '" value="' + quota + '"type="text" required="" readonly >'
+            html += '    </div>'
+            html += '</div>'
+            document.getElementById("payment_schedule").innerHTML += html;
+        }
+        var name = "amount_" + (parseInt(index) - 1);
+        document.getElementById(name).value = (quota - discounts);
+    }
+
+    validate_amount_1();
+
+}
+
+function validate_amount_1() {
+    var checked = document.getElementById("has_down_payment").checked;
+
+    if (checked) {
+        var min = parseFloat(document.getElementById("amount_1").min);
+        var amount = parseFloat(document.getElementById("amount_1").value);
+        var error = "";
+
+        if (amount < min) {
+            error = "<b style='color:#ff214f'>The amount must be equal to or greater than " + min + " </b>";
+            document.getElementById("btn_save").disabled = true;
+        } else {
+            console.log('disable ');
+            document.getElementById("btn_save").disabled = false;
+        }
+
+        add_fees_with_dow();
+        $("#amount_error").html(error);
+
+        document.getElementById("totalAmount").innerText = (amount);
+
+        payment_total();
+
+        reset_total_payment();
+    }
+}
+
+function add_fees_with_dow() {
+    let index = 2
+    var nro = document.getElementById("number_payments").value;
+    var amount = parseFloat(document.getElementById("tuition").value);
+    var downPayment = parseFloat(document.getElementById("amount_1").value);
+    var costs = parseFloat(totalCost());
+    var discounts = parseFloat(totalDiscount());
+
+    var total = amount - (downPayment - costs);
+    var quota = parseFloat((total / (parseInt(nro) - 1))).toFixed(2);
+
+    // document.getElementById('amount_1').value = (quota + costs);
+    document.getElementById("payment_schedule").innerHTML = "";
+
+    if (nro > 1) {
+        for (index; index <= nro; index++) {
+            let html = '<div class="col col-lg-6 col-md-6 col-sm-12 col-12">'
+            html += '    <div class="form-group label-floating">'
+            html += '        <label class="control-label">'
+            html += '            Payment ' + index
+            html += '        </label>'
+            html += '        <input class="form-control" name="amount_' + index + '"'
+            html += '            id="amount_' + index + '" value="' + quota + '"type="text" required="" readonly >'
+            html += '    </div>'
+            html += '</div>'
+            document.getElementById("payment_schedule").innerHTML += html;
+
+        }
+
+        var last_index = parseInt(index) - 1;
+
+        var total_quota = parseFloat(quota * (last_index - 2)).toFixed(2);
+        var last_quota = parseFloat((total - total_quota) - discounts).toFixed(2);
+
+        var name = "amount_" + last_index;
+        document.getElementById(name).value = last_quota;
+    }
+
+}
+
+function payment_total() {
+    var array = document.querySelectorAll('input[id^="payment_amount_"]');
+    var total = 0.00;
+    for (var i = 0; i < array.length; i++) {
+        if (parseFloat(array[i].value)) {
+            total += parseFloat(array[i].value);
+        }
+
+        if (array[i].id == 'payment_amount_2') {
+            apply_card_fee();
+        }
+    }
+
+    document.getElementById('total_payment').value = total;
+    update_total();
+}
+
+function reset_total_payment() {
+    var array = document.querySelectorAll('input[id^="payment_amount_"]');
+    var total = 0.00;
+
+    for (var i = 0; i < array.length; i++) {
+        document.getElementById(array[i].id).value = '';
+    }
+}
+
+function apply_card_fee() {
+    var amount = document.getElementById('payment_amount_2').value;
+    var sel = document.getElementById("card_type_2");
+    var text = sel.options[sel.selectedIndex].text;
+
+    document.getElementById('card_fee').innerText = ""
+    document.getElementById('total_fee').innerText = ""
+    document.getElementById('totalCardFee').innerText = '00.00';
+
+    if (text != 'Visa') {
+        var total = ((parseFloat(amount) * 5) / 100);
+        var totalFee = parseFloat(total) + parseFloat(amount);
+
+        if (total > 0) {
+            document.getElementById('totalCardFee').innerText = parseFloat(total).toFixed(2);
+            var htmlFee = "<b style='color:#ff214f'> Card Fee : $" + parseFloat(total).toFixed(2) + "</b>";
+            document.getElementById('card_fee').innerHTML = htmlFee;
+            var htmlFee = "<b style='color:#ff214f'> Total Card : $" + parseFloat(totalFee).toFixed(2) + "</b>";
+            document.getElementById('total_fee').innerHTML = htmlFee;
+        }
+    } else {
+        document.getElementById('card_fee').innerText = ""
+        document.getElementById('total_fee').innerText = ""
+        document.getElementById('totalCardFee').innerText = '00.00';
+    }
+
+    update_total();
+}
+
+function update_total() {
+    var totalAmount = parseFloat(document.getElementById('amount_1').value);
+    var totalDiscount = 0;
+    var totalCardFee = parseFloat(document.getElementById('totalCardFee').innerText);
+    var totalPayment = parseFloat(document.getElementById('total_payment').value);
+
+    var totalToPay = (totalAmount + totalCardFee) - totalDiscount;
+    var subtotal = totalAmount - totalDiscount;
+
+    var remainingAmount = (totalPayment > 0 ? totalPayment : 0) - subtotal;
+
+    document.getElementById('txtTotal').value = totalToPay;
+    document.getElementById('total').innerText = totalToPay;
+
+    if (remainingAmount > 0) {
+        var txtRemainingAmount = "<b style='color:#ff214f'> Payment Exceeds </b>";
+        document.getElementById('txtRemainingAmount').innerHTML = txtRemainingAmount;
+    } else {
+        document.getElementById('txtRemainingAmount').innerHTML = "";
+    }
+
+    document.getElementById('remainingAmount').innerText = remainingAmount;
+
+
+    if (totalPayment == subtotal) {
+        document.getElementById("btn_save").disabled = false;
+        document.getElementById("payment_error").innerHTML = '';
+    } else {
+        document.getElementById("btn_save").disabled = true;
+        document.getElementById("payment_error").innerHTML =
+            "<b style='color:#ff214f'>Validate that \"Remaining to Pay\" is 00.00</b>";
+    }
+
+}
+
 function update_info_enable_fields() {
 
     var checked = document.getElementById("update_info").checked;
@@ -589,50 +1036,17 @@ function update_info_enable_fields() {
 
 }
 
-function get_price() {
-
-}
-
-function add_fees() {
-    let index = 2
-    var nro = document.getElementById("number_payments").value;
-    var amount = parseFloat(document.getElementById("tuition").value);
-    var costs = parseFloat(totalCost());
-    var discounts = parseFloat(totalDiscount());
-
-    var quota = (amount / parseInt(nro));
-
-    document.getElementById('amount_1').value = (quota + costs);
-    document.getElementById("payment_schedule").innerHTML = "";
-
-    if (nro > 1) {
-        for (index; index <= nro; index++) {
-            let html = '<div class="col col-lg-6 col-md-6 col-sm-12 col-12">'
-            html += '    <div class="form-group label-floating">'
-            html += '        <label class="control-label">'
-            html += '            Payment ' + index
-            html += '        </label>'
-            html += '        <input class="form-control" name="amount_' + index + '"'
-            html += '            id="amount_' + index + '" value="' + quota + '"type="text" required="" readonly >'
-            html += '    </div>'
-            html += '</div>'
-            document.getElementById("payment_schedule").innerHTML += html;
-        }
-        var name = "amount_" + (parseInt(index) - 1);
-        console.log(name);
-
-        document.getElementById(name).value = (quota - discounts);
-    }
-
-}
 
 function automatic_payment_enable_fields() {
     var checked = document.getElementById("automatic_payment").checked;
 
-    if (checked)
+    if (checked) {
+        // document.getElementById("btn_save").disabled = true;
         document.getElementById("automatic_payment_div").style.display = 'flex';
-    else
+    } else {
+        // document.getElementById("btn_save").disabled = false;
         document.getElementById("automatic_payment_div").style.display = 'none';
+    }
 }
 
 function create_agreement() {
@@ -732,15 +1146,7 @@ function get_tuition() {
     });
 }
 
-function amount_total() {
 
-    var tuition = parseFloat(document.getElementById("tuition").value);
-
-    var total = ((tuition + totalCost()) - totalDiscount());
-
-    document.getElementById('total_payment').value = total;
-    document.getElementById('amount_1').value = total;
-}
 
 function totalCost() {
     var arrCost = document.querySelectorAll('input[id^="cost_"]');
@@ -759,6 +1165,7 @@ function totalDiscount() {
     var totalDiscount = 0.00;
 
     for (var i = 0; i < arrDiscount.length; i++) {
+        
         if (parseFloat(arrDiscount[i].value))
             totalDiscount += parseFloat(arrDiscount[i].value);
     }

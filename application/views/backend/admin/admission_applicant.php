@@ -64,6 +64,12 @@
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <ul class="widget w-personal-info item-block">
                                                             <li>
+                                                                <span class="title"><?= getPhrase('country');?>:</span>
+                                                                <span class="text">
+                                                                <?= $this->db->get_where('countries', array('country_id' => $row['country_id']))->row()->name;?>
+                                                                </span>
+                                                            </li>
+                                                            <li>
                                                                 <span class="title"><?= getPhrase('phone');?>:</span>
                                                                 <span class="text"><?= $row['phone'];?></span>
                                                             </li>

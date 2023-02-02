@@ -208,7 +208,7 @@
 <script type="text/javascript">
 function get_class_sections(class_id) {
     $.ajax({
-        url: '<?php echo base_url();?>admin/get_class_section_by_teacher/' + class_id + '/<?=$teacher_id;?>',
+        url: '<?php echo base_url();?>tools/get_class_section_by_teacher/' + class_id + '/<?=$teacher_id;?>',
         success: function(response) {
             jQuery('#section_selector_holder').html(response);
         }
@@ -219,7 +219,7 @@ function get_class_sections(class_id) {
 <script type="text/javascript">
 function get_class_students(class_id) {
     $.ajax({
-        url: '<?php echo base_url(); ?>admin/get_class_students/' + class_id,
+        url: '<?php echo base_url(); ?>tools/get_class_students/' + class_id,
         success: function(response) {
             jQuery('#students_holder').html(response);
         }

@@ -10,10 +10,8 @@
         $return_url = '-/'.$param3;
     }
     
-    // echo '<pre>';
-    // var_dump($tasks);
-    // echo '</pre>';
-    
+    $userList = $this->task->get_user_list();
+
     foreach ($tasks as $row):
 ?>
 <div class="modal-body">
@@ -34,12 +32,58 @@
                     <div class="select">
                         <select name="status_id" required="" style="width: 150px;">
                             <?php
-                        $status = $this->db->get('v_task_status')->result_array();
-                        foreach($status as $status_row):
-                        ?>
+                            $status = $this->db->get('v_task_status')->result_array();
+                            foreach($status as $status_row):
+                            ?>
                             <option value="<?= $status_row['status_id']?>"
                                 <?= $status_row['status_id'] == $row['status_id'] ? 'selected': ''; ?>>
                                 <?= $status_row['name']?>
+                            </option>
+                            <?php endforeach;?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('category');?></label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <div class="select">
+                        <select name="category_id">
+                            <option value=""><?php echo getPhrase('select');?>
+                            </option>
+                            <?php
+                            $departments = $this->task->get_departments();
+                            foreach($departments as $department):                        
+                            ?>
+                            <optgroup label="<?= $department['name'];?>">
+                                <?php
+                                $categories = $this->task->get_categories($department['department_id']);
+                                foreach($categories as $item):  
+                                ?>
+                                <option value="<?php echo $item['category_id'];?>"
+                                    <?php if($row['category_id'] == $item['category_id']) echo "selected";?>>
+                                    <?php echo $item['name'];?></option>
+
+                                <?php endforeach;?>
+                                <?php endforeach;?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('assigned_to');?></label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <div class="select">
+                        <select name="assigned_to">
+                            <option value=""><?= getPhrase('select');?></option>
+                            <?php foreach($userList as $user): ?>
+                            <option value="<?= $user['user_type'].'|'.$user['user_id']?>"
+                                <?php if($user['user_id'] == $row['assigned_to']) echo "selected";?>>
+                                <?= $user['first_name'].' '.$user['last_name']?>
                             </option>
                             <?php endforeach;?>
                         </select>
@@ -64,6 +108,18 @@
                     </div>
                     <input class="form-control" name="message_file" type="file"
                         accept="image/jpeg,image/png,application/pdf">
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('due_date');?></label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <!-- <div class="input-group-addon">
+                        <i class="picons-thin-icon-thin-0003_write_pencil_new_edit"></i>
+                    </div> -->
+                    <input type='date' 
+                        name="due_date" data-multiple-dates-separator="/" value="<?= $row['due_date'];?>" />
                 </div>
             </div>
         </div>

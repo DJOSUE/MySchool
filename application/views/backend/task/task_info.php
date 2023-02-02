@@ -8,6 +8,11 @@
     $account_type       =   get_table_user($this->session->userdata('role_id'));
 
 ?>
+<style>
+th {
+    cursor: pointer;
+}
+</style>
 <div class="content-w">
     <?php include $fancy_path.'fancy.php';?>
     <div class="header-spacer"></div>
@@ -76,7 +81,7 @@
                                                             style="background-color: <?= $status_info['color']?>;">
                                                             <?= $status_info['name'];?>
                                                         </div>
-                                                    </div>                                                    
+                                                    </div>
                                                     <div class="value-pair">
                                                         <div><?= getPhrase('type_user');?>:</div>
                                                         <div class="value badge-status badge-pill badge-primary">
@@ -86,14 +91,14 @@
                                                             $applicant = $this->db->get_where('applicant', array('applicant_id' => $row['user_id']))->row_array();
                                                             $status_applicant =  $this->applicant->get_type_info($applicant['type_id']);
                                                         ?>
-                                                            <br>
-                                                            <div class="value badge-status badge-pill badge-primary"
-                                                                style="background-color: <?= $status_applicant['color']?>;">
-                                                                <?=$status_applicant['name']; ?>
-                                                            </div>
+                                                        <br>
+                                                        <div class="value badge-status badge-pill badge-primary"
+                                                            style="background-color: <?= $status_applicant['color']?>;">
+                                                            <?=$status_applicant['name']; ?>
+                                                        </div>
                                                         <?endif;?>
                                                     </div>
-                                                    
+
                                                     <div class="value-pair">
                                                         <div><?= getPhrase('user_status');?>:</div>
                                                         <?php 
@@ -125,13 +130,53 @@
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <ul class="widget w-personal-info item-block">
                                                             <li>
-                                                                <span
-                                                                    class="title"><?= getPhrase('assigned_to');?>:</span>
-                                                                <span
-                                                                    class="text"><?= $this->crud->get_name($row['assigned_to_type'],$row['assigned_to']);?></span>
+                                                                <span class="title">
+                                                                    <?= getPhrase('assigned_to');?>:
+                                                                </span>
+                                                                <span class="text">
+                                                                <?= $row['assigned_to_type'] != "" ? $this->crud->get_name($row['assigned_to_type'],$row['assigned_to']) : '';?>
+                                                                </span>
                                                             </li>
                                                         </ul>
                                                     </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <ul class="widget w-personal-info item-block">
+                                                            <li>
+                                                                <span class="title">
+                                                                    <?= getPhrase('department');?>:
+                                                                </span>
+                                                                <span class="text">
+                                                                    <?= $this->task->get_department_by_category($row['category_id']);?>
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <ul class="widget w-personal-info item-block">
+                                                            <li>
+                                                                <span class="title">
+                                                                    <?= getPhrase('category');?>:
+                                                                </span>
+                                                                <span class="text">
+                                                                    <?= $this->task->get_category($row['category_id']);?>
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <ul class="widget w-personal-info item-block">
+                                                            <li>
+                                                                <span class="title">
+                                                                    <?= getPhrase('due_date');?>:
+                                                                </span>
+                                                                <span class="text">
+                                                                    <?= $row['due_date'];?>
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <ul class="widget w-personal-info item-block">
                                                             <li>
@@ -140,7 +185,6 @@
                                                                 <span class="text"><?= $description;?></span>
                                                             </li>
                                                         </ul>
-
                                                     </div>
                                                 </div>
                                                 <?php if($row['task_file']):?>
@@ -152,8 +196,9 @@
                                                                     <?= getPhrase('file');?>:
                                                                 </span>
                                                                 <span class="text">
-                                                                    <a href="<?= base_url().PATH_TASK_FILES;?><?= $row['task_file'];?>" class="grey"
-                                                                        data-toggle="tooltip" data-placement="top" target="_blank"
+                                                                    <a href="<?= base_url().PATH_TASK_FILES;?><?= $row['task_file'];?>"
+                                                                        class="grey" data-toggle="tooltip"
+                                                                        data-placement="top" target="_blank"
                                                                         data-original-title="<?= getPhrase('view_file');?>">
                                                                         <i
                                                                             class="os-icon picons-thin-icon-thin-0075_document_file_paper_text_article_blog_template"></i>
@@ -258,7 +303,9 @@
                                                             </thead>
                                                             <tbody>
                                                                 <?php 
-                                                                $interactions = $this->db->get_where('task_message', array('task_code' => $task_code))->result_array();
+                                                                $this->db->order_by('task_message_id', 'desc');
+                                                                $this->db->where('task_code', $task_code);
+                                                                $interactions = $this->db->get('task_message')->result_array();
                                                                 
                                                                 // echo '<pre>';
                                                                 // var_dump($interactions);
@@ -336,37 +383,7 @@
                         </main>
                         <?php endforeach;?>
                         <div class="col col-xl-3 order-xl-1 col-lg-12 order-lg-2 col-md-12 col-sm-12 col-12">
-                            <div class="eduappgt-sticky-sidebar">
-                                <div class="sidebar__inner">
-                                    <div class="ui-block paddingtel">
-                                        <div class="ui-block-content">
-                                            <div class="help-support-block">
-                                                <h3 class="title"><?= getPhrase('quick_links');?></h3>
-                                                <ul class="help-support-list">
-                                                    <li>
-                                                        <i class="picons-thin-icon-thin-0133_arrow_right_next menu_left_selected_icon"
-                                                            style="font-size:20px;"></i> &nbsp;&nbsp;&nbsp;
-                                                        <a class="menu_left_selected_text"
-                                                            href="<?= base_url();?>assignment/task_info/<?= $task_code;?>/">
-                                                            <?= getPhrase('task_information');?>
-                                                        </a>
-                                                    </li>
-                                                    <?php if(!$allow_actions):?>
-                                                    <li>
-                                                        <i class="picons-thin-icon-thin-0133_arrow_right_next"
-                                                            style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
-                                                        <a
-                                                            href="<?= base_url();?>assignment/task_update/<?= $task_code;?>/">
-                                                            <?= getPhrase('update_task');?>
-                                                        </a>
-                                                    </li>
-                                                    <?php endif;?>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <?php include 'task__menu.php'?>
                         </div>
                     </div>
                 </div>
@@ -374,3 +391,28 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+$('th').click(function() {
+    var table = $(this).parents('table').eq(0)
+    var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+    this.asc = !this.asc
+    if (!this.asc) {
+        rows = rows.reverse()
+    }
+    for (var i = 0; i < rows.length; i++) {
+        table.append(rows[i])
+    }
+})
+
+function comparer(index) {
+    return function(a, b) {
+        var valA = getCellValue(a, index),
+            valB = getCellValue(b, index)
+        return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+    }
+}
+
+function getCellValue(row, index) {
+    return $(row).children('td').eq(index).text()
+}
+</script>

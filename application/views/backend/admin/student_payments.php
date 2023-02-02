@@ -9,16 +9,16 @@
     $class_id = $student_enroll[0]['class_id'];
     $section_id = $student_enroll[0]['section_id'];
 
-    // myschool.dhcoder.com/public/assets/plugins
-
     foreach($student_info as $row): 
         $status_info = $this->studentModel->get_status_info($row['student_session']);
         $program_info = $this->studentModel->get_program_info($row['program_id']);
-?>
 
-<link rel="stylesheet" type="text/css" href="public/assets/plugins/DataTables/datatables.min.css"/>
- 
-<script type="text/javascript" src="public/assets/plugins/DataTables/datatables.min.js"></script>
+        $this->db->reset_query();        
+        $this->db->where('student_id', $student_id);
+        $this->db->where('year', $running_year);
+        $this->db->where('semester_id', $running_semester);
+        $agreement = $this->db->get('agreement')->row_array();
+?>
 
 <style>
 .currency {
@@ -57,19 +57,14 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- add payment -->
-                        <div>
+                        <div id="payment_schedule" style="display: block;">
                             <div class="ui-block">
                                 <div class="ui-block-title">
                                     <div class="col-sm-2">
-                                        <h6 class="title"><?= getPhrase('payments');?></h6>
+                                        <h6 class="title"><?= getPhrase('payment_schedule');?></h6>
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="row" style="justify-content: flex-end;">
-                                            <!-- <div class="form-buttons">
-                                                <button class="btn btn-rounded btn-primary">
-                                                    <?= getPhrase('print_agreement');?></button>
-                                            </div> &nbsp;&nbsp;&nbsp;&nbsp; -->
                                             <div class="form-buttons">
                                                 <button class="btn btn-rounded btn-success" onclick="create_payment()">
                                                     <?= getPhrase('create_payment');?></button>
@@ -77,16 +72,158 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="ui-block-content">
+                                    <div class="table-responsive">
+                                        <table class="table table-padded" id="tblPayments">
+                                            <thead>
+                                                <tr>
+                                                    <th class="orderby"><?= getPhrase('nro');?></th>
+                                                    <th class="orderby"><?= getPhrase('amount');?></th>
+                                                    <th class="orderby"><?= getPhrase('due_date');?></th>
+                                                    <th class="orderby"><?= getPhrase('status_id');?></th>
+                                                    <th class="orderby"></th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                <?php
+                                                $this->db->reset_query();                                                
+                                                $this->db->order_by('due_date' , 'ASC');
+                                                $this->db->where('agreement_id', $agreement['agreement_id']);
+                                                $agreement = $this->db->get('agreement_amortization')->result_array();
+
+                                                $next_agreement = $this->payment->get_next_amortization($student_id);
+
+                                                foreach($agreement as $row2):
+                                                    $allow_payment      = true;
+                                                    $overdue            = 0;
+                                                    $color_due          = 'primary';
+                                                    $status_id          = $row2['status_id'];
+                                                    $amount             = floatval($row2['amount']);
+                                                    $materials          = floatval($row2['materials']);
+                                                    $fees               = floatval($row2['fees']);
+                                                    $amortization_id    = $row2['amortization_id'];    
+                                                    $status_info        = $this->payment->get_payment_schedule_status_info($row2['status_id']);
+
+                                                    $total = $amount + $materials + $fees;
+
+                                                    // Partial Payment
+                                                    if($status_id == 2)
+                                                    {                                                      
+                                                        $this->db->reset_query();
+                                                        $this->db->select_sum('amount');
+                                                        $this->db->where('amortization_id =', $amortization_id);
+                                                        $this->db->where('concept_type =', '1');
+                                                        $paid = $this->db->get('payment_details')->row()->amount; 
+
+                                                        $total = $total - $paid;
+                                                    }
+                                                    
+                                                    //Due date
+                                                    if($row2['due_date'] < date("Y-m-d") && $status_id != 0)
+                                                    {
+                                                        $color_due = "danger";
+
+                                                        $earlier = new DateTime($row2['due_date']);
+                                                        $later = new DateTime(date("Y-m-d"));
+
+                                                        $diff = $later->diff($earlier)->format("%a");
+
+                                                        if($diff >= LATE_FEE_DAYS )
+                                                        {
+                                                            $overdue = 1;
+                                                        }
+                                                    }
+
+                                                    if ($next_agreement['amortization_id'] == $row2['amortization_id'])
+                                                    {
+                                                        $allow_payment      = true;
+                                                    }
+                                                    else if ($row2['due_date'] > date("Y-m-d"))
+                                                    {
+                                                        $allow_payment      = false;
+                                                    }
+                                                ?>
+                                                <tr>
+                                                    <td>
+                                                        <?= $row2['amortization_no'];?>
+                                                    </td>
+                                                    <td>
+                                                        $ <?= number_format($total, 2); ?>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge badge-<?=$color_due;?>">
+                                                            <?= $row2['due_date'];?>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="value badge badge-pill badge-primary"
+                                                            style="background-color: <?=$status_info['color']?>;">
+                                                            <?= $status_info['name'];?>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <?php if($row2['status_id'] != 0  && $allow_payment):?>
+                                                        <a onclick="make_payment(<?=$amortization_id.','.$amount.','.$materials.','.$fees.','.$overdue;?>)"
+                                                            class="btn btn-rounded btn-success" data-toggle="tooltip"
+                                                            style="color: white;"
+                                                            data-placement="top"
+                                                            data-original-title="<?php echo getPhrase('make_payment');?>">
+                                                            <i
+                                                                class="os-icon picons-thin-icon-thin-0408_wallet_money_payment">
+                                                            </i>
+                                                            <?= getPhrase('pay_now')?>
+                                                        </a>
+                                                        <?php endif;?>
+                                                    </td>
+                                                </tr>
+                                                <?php endforeach;?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div id="create_payment_div" style="display:none;">
                             <div class="ui-block">
+                                <?= form_open(base_url() . 'admin/payment_process/'.$student_id.'/student/');?>
                                 <div class="ui-block-title">
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-4">
                                         <h6 class="title"><?= getPhrase('new_payment');?></h6>
                                     </div>
+                                    <div class="col-sm-1">
+                                        <div class="description-toggle" style="justify-content: flex-end;">
+                                            <div class="description-toggle-content">
+                                                <div class="h6"><?= getPhrase('send_email');?></div>
+                                            </div>
+                                            <div class="togglebutton">
+                                                <label>
+                                                    <input name="send_email" value="1" type="checkbox" checked>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <div class="description-toggle" style="justify-content: flex-end;">
+                                            <div class="description-toggle-content">
+                                                <div class="h6"><?= getPhrase('previous_semester_payment');?></div>
+                                            </div>
+                                            <div class="togglebutton">
+                                                <label>
+                                                    <input name="previous_semester_payment" value="1" type="checkbox">
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <div class="row" style="justify-content: flex-end;">
+                                            <div class="form-buttons">
+                                                <a class="btn btn-rounded btn-warring" onclick="create_payment()">
+                                                    <?= getPhrase('cancel');?></a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <?= form_open(base_url() . 'admin/payment_process/'.$student_id.'/student/');?>
                                 <div class="ui-block-content">
                                     <div class="row" id="">
                                         <div class="col" id="amounts">
@@ -95,6 +232,7 @@
                                                 </h6>
                                             </div>
                                             <div class="row" style="padding: 0 50px;">
+                                                <input type="hidden" id="amortization_id" name="amortization_id">
                                                 <div class="table-responsive">
                                                     <table id="items" class="table table-padded">
                                                         <thead>
@@ -104,7 +242,7 @@
                                                         </thead>
                                                         <tbody>
                                                             <?php 
-                                                            $income_types = $this->payment->get_income_types();
+                                                            $income_types = $this->payment->get_income_types_by_user('student');
                                                             foreach($income_types as $item):
                                                             ?>
                                                             <tr>
@@ -117,11 +255,15 @@
                                                                     </select>
                                                                 </td>
                                                                 <td>
+                                                                    <?php 
+                                                                        $attribute = $item['name'] == CONCEPT_LATE_FEE_NAME ? 'readonly' : "";
+                                                                    
+                                                                    ?>
                                                                     <input
                                                                         id="income_amount_<?=$item['income_type_id']?>"
                                                                         name="income_amount_<?=$item['income_type_id']?>"
                                                                         type="text" class="currency" placeholder="00.00"
-                                                                        onfocusout="amount_total()" />
+                                                                        onfocusout="amount_total()" <?= $attribute;?> />
                                                                 </td>
                                                                 <!-- <td>
                                                                     <i
@@ -286,7 +428,8 @@
                                             <div class="">
                                                 <div class="form-group">
                                                     <label for="comment"><?=getPhrase('comment')?></label>
-                                                    <textarea class="form-control" name="comment" rows="3" require></textarea>
+                                                    <textarea class="form-control" name="comment" rows="3"
+                                                        require></textarea>
                                                 </div>
                                             </div>
                                             <br /><br />
@@ -358,12 +501,13 @@
                                 <?= form_close()?>
                             </div>
                         </div>
-
                         <!-- payments history -->
                         <div id="payments_history_div" style="display:block;">
                             <div class="ui-block">
-                                <div class="ui-block-content">
-                                    
+                                <div class="ui-block-title">
+                                    <div class="col-sm-2">
+                                        <h6 class="title"><?= getPhrase('payment_history');?></h6>
+                                    </div>
                                 </div>
                                 <div class="ui-block-content">
                                     <div class="table-responsive">
@@ -390,9 +534,9 @@
                                                         <?= $row2['invoice_number'];?>
                                                     </td>
                                                     <td>
-                                                        <a class="badge badge-primary" href="javascript:void(0);">
+                                                        <span class="badge badge-primary">
                                                             <?= $this->crud->getInfo('currency');?><?= $row2['amount'];?>
-                                                        </a>
+                                                        </span>
                                                     </td>
                                                     <td>
                                                         <?= $row2['comment'];?>
@@ -430,9 +574,37 @@
 </div>
 <?php endforeach;?>
 <script type="text/javascript">
+function make_payment(amortization_id, amount, materials, fees, overdue) {
+
+    document.getElementById('income_amount_1').value = amount;
+    document.getElementById('amortization_id').value = amortization_id;
+
+    document.getElementById('income_amount_2').value = materials;
+    document.getElementById('income_amount_3').value = fees;
+
+    if (overdue == 1) {
+        late_fee = 'income_amount_' + '<?=CONCEPT_LATE_FEE_ID;?>';
+        document.getElementById(late_fee).value = <?= CONCEPT_LATE_FEE;?>;
+    }
+
+    amount_total();
+    create_payment();
+}
+
 function create_payment() {
-    document.getElementById("create_payment_div").style.display = 'block';
-    document.getElementById("payments_history_div").style.display = 'none';
+
+    var current = document.getElementById("payment_schedule").style.display;
+
+    if (current == 'block') {
+        document.getElementById("payment_schedule").style.display = 'none';
+        document.getElementById("payments_history_div").style.display = 'none';
+        document.getElementById("create_payment_div").style.display = 'block';
+    } else {
+        document.getElementById("payment_schedule").style.display = 'block';
+        document.getElementById("payments_history_div").style.display = 'block';
+        document.getElementById("create_payment_div").style.display = 'none';
+    }
+
 }
 
 $('.currency').keyup(function() {
@@ -496,16 +668,16 @@ function apply_fee() {
     var text = sel.options[sel.selectedIndex].text;
 
     if (text != 'Visa') {
-        var total = ((parseFloat(amount) * 5) / 100);
-        var totalFee = parseFloat(total) + parseFloat(amount);
+    var total = ((parseFloat(amount) * 5) / 100);
+    var totalFee = parseFloat(total) + parseFloat(amount);
 
-        if (total > 0) {
-            document.getElementById('totalCardFee').innerText = parseFloat(total).toFixed(2);
-            var htmlFee = "<b style='color:#ff214f'> Card Fee : $" + parseFloat(total).toFixed(2) + "</b>";
-            document.getElementById('card_fee').innerHTML = htmlFee;
-            var htmlFee = "<b style='color:#ff214f'> Total Card : $" + parseFloat(totalFee).toFixed(2) + "</b>";
-            document.getElementById('total_fee').innerHTML = htmlFee;
-        }
+    if (total > 0) {
+        document.getElementById('totalCardFee').innerText = parseFloat(total).toFixed(2);
+        var htmlFee = "<b style='color:#ff214f'> Card Fee : $" + parseFloat(total).toFixed(2) + "</b>";
+        document.getElementById('card_fee').innerHTML = htmlFee;
+        var htmlFee = "<b style='color:#ff214f'> Total Card : $" + parseFloat(totalFee).toFixed(2) + "</b>";
+        document.getElementById('total_fee').innerHTML = htmlFee;
+    }
     } else {
         document.getElementById('card_fee').innerText = ""
         document.getElementById('total_fee').innerText = ""

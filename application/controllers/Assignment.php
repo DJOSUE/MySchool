@@ -86,16 +86,19 @@ class Assignment extends EduAppGT
         {
             $department_id  = "";
             $priority_id    = "";
-            $status_id      = "";            
+            $due_date       = "";
+            $status_id      = DEFAULT_TASK_OPEN_STATUS;
         }
         
         if($_SERVER['REQUEST_METHOD'] === 'POST')
         {   
-            $category_id    = $this->input->post('category_id');                
+            $department_id  = $this->input->post('department_id');
+            $category_id    = $this->input->post('category_id');
             $priority_id    = $this->input->post('priority_id');
             $status_id      = $this->input->post('status_id');
             $text           = $this->input->post('text');
-            $assigned_me    = $this->input->post('assigned_me');  
+            $due_date       = $this->input->post('due_date');
+            $assigned_me    = $this->input->post('assigned_me');
             $search         = true;              
         }
 
@@ -106,6 +109,7 @@ class Assignment extends EduAppGT
         $page_data['priority_id']   = $priority_id;
         $page_data['status_id']     = $status_id;
         $page_data['text']          = $text;
+        $page_data['due_date']      = $due_date;
         $page_data['search']        = $search;
         $page_data['assigned_me']   = $assigned_me;
         $page_data['page_name']     = 'task_list';
@@ -135,17 +139,12 @@ class Assignment extends EduAppGT
     {
         $this->isLogin();
 
-        if($return_url == '')
-        {
-            $task_code = $this->task->get_task_code($task_id);
-            $return_url = 'task_info/'.$task_code;
-        }
-
         $message = '';
         switch ($action) {
             case 'register':                
-                $this->task->create();
-                $message =  getPhrase('successfully_added');                
+                $task_id = $this->task->create();
+                $message =  getPhrase('successfully_added');                 
+                $this->task->get_task_code($task_id);
                 break;
             case 'update':
                 $this->task->update($task_id);
@@ -155,6 +154,12 @@ class Assignment extends EduAppGT
             default:
                 # code...
                 break;
+        }
+
+        if($return_url == '')
+        {
+            $task_code = $this->task->get_task_code($task_id);
+            $return_url = 'task_info/'.$task_code;
         }
 
         $this->session->set_flashdata('flash_message' , $message);
@@ -187,13 +192,38 @@ class Assignment extends EduAppGT
 
                 if($task_code != '')
                 {
-                    $status_id_old = $this->db->get_where('task' , array('task_code' => $task_code))->row()->status_id;
-    
+                    //Update Status
+                    $status_id_old = $this->task->get_current_status($task_code);    
                     $status_id_new = $this->input->post('status_id');
     
                     if($status_id_old != $status_id_new)
                     {
                         $this->task->update_status($task_code, $status_id_new);
+                    }
+
+                    //Update Category
+                    $current_category = $this->task->get_current_category($task_code);
+                    $category_id = $this->input->post('category_id');
+
+                    if($current_category != $category_id)
+                    {
+                        $this->task->update_category($task_code, $category_id);
+                    }
+
+                    // Update Assigned to
+                    $current_assigned = $this->task->get_current_assigned($task_code);
+                    $assigned_to = $this->input->post('assigned_to');
+
+                    if($current_assigned != $assigned_to)
+                    {
+                        $this->task->update_assignment_to($task_code, $assigned_to);
+                    }
+
+                    //Update Due Date 
+                    if(!empty($this->input->post('due_date')))
+                    {
+                        $due_date = $this->input->post('due_date');
+                        $this->task->update_due_date($task_code, $due_date);
                     }
                 }
 

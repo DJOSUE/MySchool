@@ -16,6 +16,15 @@
     $count = 1;
     $this->db->order_by('request_id', 'desc');
 
+    if($year_id != "")
+    {
+        $this->db->where('year', $year_id);
+    }
+    if($semester_id != "")
+    {
+        $this->db->where('semester_id', $semester_id);
+    }
+
     if($status_id != "")
     {
         $this->db->where('status', $status_id);
@@ -50,6 +59,38 @@
                                 <div class="content-box">
                                     <?= form_open(base_url() . 'admin/request_student/', array('class' => 'form m-b'));?>
                                     <div class="row" style="margin-top: -30px; border-radius: 5px;">
+                                        <div class="col-sm-2">
+                                            <div class="form-group label-floating is-select">
+                                                <label class="control-label"><?= getPhrase('status');?></label>
+                                                <div class="select">
+                                                    <select name="year_id">
+                                                        <?php $class = $this->db->get_where('years', array('status' => '1'))->result_array();
+                                                        foreach ($class as $row): ?>
+                                                        <option value="<?php echo $row['year']; ?>"
+                                                            <?php if($year_id == $row['year']) echo "selected";?>>
+                                                            <?php echo $row['year']; ?>
+                                                        </option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="form-group label-floating is-select">
+                                                <label class="control-label"><?= getPhrase('status');?></label>
+                                                <div class="select">
+                                                    <select name="semester_id">
+                                                        <?php  $class = $this->db->get('semesters')->result_array();
+                                                        foreach ($class as $row): ?>
+                                                        <option value="<?php echo $row['semester_id']; ?>"
+                                                            <?php if($semester_id == $row['semester_id']) echo "selected";?>>
+                                                            <?php echo $row['name']; ?>
+                                                        </option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-sm-2">
                                             <div class="form-group label-floating is-select">
                                                 <label class="control-label"><?= getPhrase('status');?></label>
@@ -100,7 +141,7 @@
                                             style="font-weight: 300; font-size: 25px;"></i></button>
                                 </a>
                             </div>
-                            <br/>
+                            <br />
                             <div class="table-responsive">
                                 <table class="table table-padded" id="dvData">
                                     <thead>
@@ -129,9 +170,12 @@
                                                     echo $row['description'];?>
                                             </td>
                                             <td class="cell-with-media">
-                                                <img alt=""
-                                                    src="<?= $this->crud->get_image_url('student', $row['student_id']);?>"
-                                                    style="height: 25px;"><span><?= $this->crud->get_name('student', $row['student_id']);?></span>
+                                                <a href="/admin/student_portal/<?=$row['student_id']?>" target="_blank">
+                                                    <img alt=""
+                                                        src="<?= $this->crud->get_image_url('student', $row['student_id']);?>"
+                                                        style="height: 25px;">
+                                                </a>
+                                                <span><?= $this->crud->get_name('student', $row['student_id']);?></span>
                                             </td>
                                             <td>
                                                 <?= $this->crud->get_email('student', $row['student_id']);?>

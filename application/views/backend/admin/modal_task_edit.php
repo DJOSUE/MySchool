@@ -3,11 +3,12 @@
     $this->db->where('task_code' , $param2);
     $task_query = $this->db->get('task');
     $edit_data = $task_query->result_array();
-        
+
     foreach ($edit_data as $task):
+        $userList = $this->task->get_user_list_dropbox($task['assigned_to'], $task['assigned_to_type']);
+
         $message =   str_replace(array("\r", "\n"), '', $task['description']);
-        $category_id = $task['category_id'];
-        
+        $category_id = $task['category_id'];        
 ?>
 <div class="modal-body">
     <div class="modal-header" style="background-color:#00579c">
@@ -15,7 +16,7 @@
     </div>
     <div class="ui-block-content">
         <?php echo form_open(base_url() . 'admin/task/update/'.$task['task_id'].'/'.$param3 , array('enctype' => 'multipart/form-data'));?>
-        <input type="hidden" name="task_id" value="<?= $task['task_id']?>">        
+        <input type="hidden" name="task_id" value="<?= $task['task_id']?>">
         <div class="form-group row">
             <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('status');?></label>
             <div class="col-sm-6">
@@ -69,16 +70,9 @@
             <div class="col-sm-6">
                 <div class="input-group">
                     <div class="select">
-                        <select name="assigned_to" style="width: 150px;">
+                        <select name="assigned_to" style="width: 350px;">
                             <option value=""><?= getPhrase('select');?></option>
-                            <?php $advisors = $this->db->get_where('admin', array('status' => 1, 'owner_status' => '3'))->result_array();
-                            foreach($advisors as $advisor):
-                            ?>
-                            <option value="<?= $advisor['admin_id']?>"
-                                <?= $advisor['admin_id'] == $task['assigned_to'] ? 'selected': ''; ?>>
-                                <?= $advisor['first_name']?>
-                            </option>
-                            <?php endforeach;?>
+                            <?= $userList; ?>
                         </select>
                     </div>
                 </div>
@@ -132,6 +126,18 @@
                         <i class="picons-thin-icon-thin-0003_write_pencil_new_edit"></i>
                     </div>
                     <input class="form-control" name="task_file" type="file" accept="<?=FILES_ALLOWED_ATTACHMENT?>">
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('due_date');?></label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <!-- <div class="input-group-addon">
+                        <i class="picons-thin-icon-thin-0003_write_pencil_new_edit"></i>
+                    </div> -->
+                    <input type='date' 
+                        name="due_date" data-multiple-dates-separator="/" value="<?= $task['due_date'];?>" />
                 </div>
             </div>
         </div>

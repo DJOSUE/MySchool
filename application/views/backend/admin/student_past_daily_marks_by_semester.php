@@ -131,11 +131,10 @@
 
                                                             if($mark != '-'){
                                                                 $mark_total += $mark;
-                                                                $count_total++; 
                                                             }
-                
                                                             if($labouno != '-'){
                                                                 $labouno_total += $labouno;
+                                                                $count_total++; 
                                                             }
                                                     ?>
                                                     <tr>

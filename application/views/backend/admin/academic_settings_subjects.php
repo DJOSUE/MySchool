@@ -111,13 +111,19 @@
                                                         onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_subject/<?php echo $row['subject_id'];?>');"><?php echo getPhrase('edit');?></a>
                                                 </li>
                                                 <li><a onClick="return confirm('<?php echo getPhrase('confirm_delete');?>')"
-                                                        href="<?php echo base_url();?>admin/section/delete/<?php echo $row['subject_id'];?>"><?php echo getPhrase('delete');?></a>
+                                                        href="<?php echo base_url();?>admin/subject/delete/<?php echo $row['subject_id'];?>"><?php echo getPhrase('delete');?></a>
                                                 </li>
                                             </ul>
                                         </div>
                                         <div class="birthday-item inline-items">
                                             <div class="circle blue"><?php echo $row['name'][0];?></div>&nbsp;
                                             <div class="birthday-author-name">
+                                                <div>
+                                                    <b><?php echo getPhrase('class');?>:</b>
+                                                    <span class="badge badge-info" style="font-size:12px">
+                                                        <?php echo $this->db->get_where('class', array('class_id' => $row['class_id']))->row()->name;?>
+                                                    </span>
+                                                </div>
                                                 <div>
                                                     <b><?php echo getPhrase('section');?>:</b>
                                                     <?php echo $row['section_name'];?>
@@ -131,6 +137,10 @@
                                                     <?php echo $row['teacher_name'];?>
                                                 </div>
                                                 <div>
+                                                    <b><?php echo getPhrase('modality');?>:</b>
+                                                    <?php echo $row['modality_id'];?>
+                                                </div>
+                                                <div>
                                                     <b><?php echo getPhrase('students');?>:</b>
                                                     <?php 
                                                         $this->db->where('subject_id', $row['subject_id']); 
@@ -138,10 +148,7 @@
                                                         echo $this->db->count_all_results('enroll');
                                                     ?>.
                                                 </div>
-                                                <div><b><?php echo getPhrase('class');?>:</b> <span
-                                                        class="badge badge-info"
-                                                        style="font-size:12px"><?php echo $this->db->get_where('class', array('class_id' => $row['class_id']))->row()->name;?></span>
-                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -277,7 +284,8 @@
                         <div class="col col-sm-6">
                             <div class="form-group label-floating">
                                 <label class="control-label"><?php echo getPhrase('subject_capacity');?></label>
-                                <input class="form-control" placeholder="" name="subject_capacity" type="number" value="20" required>
+                                <input class="form-control" placeholder="" name="subject_capacity" type="number"
+                                    value="20" required>
                             </div>
                         </div>
                         <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
@@ -299,31 +307,32 @@
 </div>
 
 <script>
-    function get_sections() {
-        var year        = document.getElementById("year_id").value;
-        var semester_id = document.getElementById("semester_id").value;
-        var class_id    = document.getElementById("class_id").value;
+function get_sections() {
+    var year = document.getElementById("year_id").value;
+    var semester_id = document.getElementById("semester_id").value;
+    var class_id = document.getElementById("class_id").value;
 
-        $.ajax({
-            url: '<?php echo base_url();?>admin/get_class_section/' + class_id + '/' + year + '/' + semester_id,
-            success: function(response) {
-                jQuery('#section_holder').html(response);
-            }
-        });
-    }
+    $.ajax({
+        url: '<?php echo base_url();?>admin/get_class_section/' + class_id + '/' + year + '/' + semester_id,
+        success: function(response) {
+            jQuery('#section_holder').html(response);
+        }
+    });
+}
 
-    function c_get_sections() {
-        var new_year        = document.getElementById("new_year_id").value;
-        var new_semester_id = document.getElementById("new_semester_id").value;
-        var new_class_id    = document.getElementById("new_class_id").value;
+function c_get_sections() {
+    var new_year = document.getElementById("new_year_id").value;
+    var new_semester_id = document.getElementById("new_semester_id").value;
+    var new_class_id = document.getElementById("new_class_id").value;
 
-        $.ajax({
-            url: '<?php echo base_url();?>admin/get_class_section/' + new_class_id + '/' + new_year + '/' + new_semester_id,
-            success: function(response) {
-                jQuery('#new_section_holder').html(response);
-            }
-        });
-    }
+    $.ajax({
+        url: '<?php echo base_url();?>admin/get_class_section/' + new_class_id + '/' + new_year + '/' +
+            new_semester_id,
+        success: function(response) {
+            jQuery('#new_section_holder').html(response);
+        }
+    });
+}
 </script>
 
 <?php 

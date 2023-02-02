@@ -55,12 +55,6 @@
                                                         </li>
                                                         <li>
                                                             <span
-                                                                class="title"><?= getPhrase('classroom');?>:</span>
-                                                            <span
-                                                                class="text"><?= $this->db->get_where('class_room', array('classroom_id' => $row['classroom_id']))->row()->name;?></span>
-                                                        </li>
-                                                        <li>
-                                                            <span
                                                                 class="title"><?= getPhrase('allergies');?>:</span>
                                                             <span class="text"><?= $row['allergies'];?></span>
                                                         </li>

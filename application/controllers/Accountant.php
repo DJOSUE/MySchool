@@ -13,6 +13,7 @@ class Accountant extends EduAppGT
 
     private $runningYear     = '';
     private $runningSemester = '';
+    private $useDailyMarks   = '';
     
 	function __construct()
 	{
@@ -24,6 +25,7 @@ class Accountant extends EduAppGT
 
         $this->runningYear      = $this->crud->getInfo('running_year'); 
         $this->runningSemester  = $this->crud->getInfo('running_semester'); 
+        $this->useDailyMarks    = $this->crud->getInfo('use_daily_marks');
     }
     
     //Index function.
@@ -474,6 +476,17 @@ class Accountant extends EduAppGT
     //End of Accountant.php
 
 /***** Student Module ******************************************************************************************************************************/
+    
+    function student($param1 = '', $param2 = '', $param3 = '')
+    {
+        if ($param1 == 'do_update') 
+        {
+            $this->user->updateStudent($param2);
+            $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+            redirect(base_url() . 'accountant/student_profile/'. $param2.'/', 'refresh');
+        }
+    }
+
     function student_profile($student_id, $param1='')
     {
         $this->isAccountant();
@@ -483,6 +496,84 @@ class Accountant extends EduAppGT
         $page_data['student_id'] =  $student_id;
         $page_data['class_id']   =  $class_id;
         $this->load->view('backend/index', $page_data);
+    }
+
+    //Student update function.
+    function student_update($student_id = '', $param1='')
+    {
+        $this->isAccountant();
+        $page_data['page_name']  = 'student_update';
+        $page_data['page_title'] =  getPhrase('student_portal');
+        $page_data['student_id'] =  $student_id;
+        $this->load->view('backend/index', $page_data);
+    }
+            
+    function student_grades($student_id, $param1='')
+    {
+        $this->isAccountant();
+
+        if($this->useDailyMarks){
+            $page_data['page_name']  = 'student_daily_grades';
+            $page_data['page_title'] =  getPhrase('student_grades');
+            $page_data['student_id'] =  $student_id;
+            $this->load->view('backend/index', $page_data);
+        } 
+        else {
+            $page_data['page_name']  = 'student_marks';
+            $page_data['page_title'] =  getPhrase('student_grades');
+            $page_data['student_id'] =  $student_id;
+            $this->load->view('backend/index', $page_data);
+        }
+    }
+
+    //Student Past Marks
+    function student_past_grades($student_id = '', $param1='')
+    {
+        $this->isAccountant();
+        
+        if($this->useDailyMarks){
+            $page_data['page_name']  = 'student_past_daily_grades_by_semester';
+            $page_data['page_title'] =  getPhrase('student_past_daily_grades_by_semester');
+            $page_data['student_id'] =  $student_id;
+            $this->load->view('backend/index', $page_data);
+        } 
+        else {
+            $page_data['page_name']  = 'student_past_marks';
+            $page_data['page_title'] =  getPhrase('student_past_marks');
+            $page_data['student_id'] =  $student_id;
+            $this->load->view('backend/index', $page_data);
+        }
+    }
+
+    //Student Profile Attendance function.
+    function student_attendance($student_id = '', $param1='', $param2 = '', $param3 = '', $param4 = '', $param5 = '')
+    {
+        $this->isAccountant();
+
+        $page_data['page_name']  = 'student_attendance';
+        $page_data['page_title'] =  getPhrase('student_attendance');
+        $page_data['student_id'] =  $student_id;
+        // $page_data['subject_id'] =  $param3;
+        // $page_data['class_id'] =  $param1;
+        // $page_data['section_id'] =  $param2;
+        $page_data['month'] =  $param1;
+        $page_data['year'] =  $param2;
+        $this->load->view('backend/index', $page_data);
+    }
+
+    //Student attendance report selector function.
+    function student_attendance_report_selector()
+    {
+        $this->isAccountant();
+        // $data['class_id']   = $this->input->post('class_id');
+        // $data['subject_id'] = $this->input->post('subject_id');
+        $data['year']       = $this->input->post('year');
+        $data['month']      = $this->input->post('month');
+        // $data['section_id'] = $this->input->post('section_id');
+
+        redirect(base_url().'accountant/student_attendance/'.$this->input->post('student_id').'/'.$data['month'].'/'.$data['year'].'/','refresh');
+
+        // redirect(base_url().'admin/student_profile_attendance/'.$this->input->post('student_id').'/'.$data['class_id'].'/'.$data['section_id'].'/'.$data['subject_id'].'/'.$data['month'].'/'.$data['year'].'/','refresh');
     }
 
     function student_payments($student_id, $param1='')
@@ -497,7 +588,7 @@ class Accountant extends EduAppGT
         
         $this->load->view('backend/index', $page_data);
     }
-/***** Student Module ******************************************************************************************************************************/
+/***** Applicant Module ******************************************************************************************************************************/
     function applicant_profile($applicant_id, $param1='')
     {
         $this->isAccountant();

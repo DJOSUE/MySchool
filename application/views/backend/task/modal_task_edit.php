@@ -3,8 +3,11 @@
     $this->db->where('task_code' , $param2);
     $task_query = $this->db->get('task');
     $edit_data = $task_query->result_array();
-        
+
     foreach ($edit_data as $task):
+
+        $userList = $this->task->get_user_list_dropbox($task['assigned_to'], $task['assigned_to_type']);
+
         $message        =   str_replace(array("\r", "\n"), '', $task['description']);
         $category_id    = $task['category_id'];
         $category_info  = $this->task->get_category_info($category_id);
@@ -73,17 +76,9 @@
             <div class="col-sm-6">
                 <div class="input-group">
                     <div class="select">
-                        <select name="assigned_to" style="width: 150px;">
+                        <select name="assigned_to">                        
                             <option value=""><?= getPhrase('select');?></option>
-                            <?php $users = $this->db->get_where($df_user_table, array('status' => 1))->result_array();
-                            foreach($users as $user):
-                                $id = $df_user_table.'_id';
-                            ?>
-                            <option value="<?= $df_user_table.'|'.$user[$id];?>"
-                                <?= $user[$id] == $task['assigned_to'] ? 'selected': ''; ?>>
-                                <?= $user['first_name']?>
-                            </option>
-                            <?php endforeach;?>
+                            <?= $userList; ?>
                         </select>
                     </div>
                 </div>
@@ -126,6 +121,18 @@
             <div class="col-sm-9">
                 <div class="form-group">
                     <textarea id="ckeditor2" name="description" required=""></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('due_date');?></label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <!-- <div class="input-group-addon">
+                        <i class="picons-thin-icon-thin-0003_write_pencil_new_edit"></i>
+                    </div> -->
+                    <input type='date' 
+                        name="due_date" data-multiple-dates-separator="/" value="<?= $task['due_date'];?>" />
                 </div>
             </div>
         </div>

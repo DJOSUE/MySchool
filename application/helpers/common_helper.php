@@ -180,7 +180,7 @@ if (!function_exists('get_table_user'))
     {
         $CI	=&	get_instance();
 		$CI->load->database();
-
+        $CI->db->reset_query();
         $query = $CI->db->get_where('roles', array('role_id' => $role_id))->row();
         return $query->table;
     } 
@@ -215,3 +215,78 @@ if (!function_exists('get_settings')) {
         return $result;
     }
 }
+
+if(!function_exists('get_encrypt'))
+{
+    function get_encrypt($text)
+    {
+        // Store the cipher method
+        $ciphering = CIPHER_METHOD;
+        $options = 0;
+
+        // Non-NULL Initialization Vector for encryption 1234567891011121
+        $encryption_iv = ENCRYPTION_IV;
+
+        // Store the encryption key
+        $encryption_key = ENCRYPTION_KEY;
+
+        // Use openssl_encrypt() function to encrypt the data
+        $encryption = openssl_encrypt($text, $ciphering, $encryption_key, $options, $encryption_iv);
+
+		return $encryption;
+    }
+}
+
+if(!function_exists('get_decrypt'))
+{
+    function get_decrypt($encryption)
+    {
+        // Store the cipher method
+        $ciphering = CIPHER_METHOD;
+        $options = 0;
+        
+        // Non-NULL Initialization Vector for decryption
+        $decryption_iv = ENCRYPTION_IV;
+
+        // Store the decryption key
+        $decryption_key = ENCRYPTION_KEY;
+
+        // Use openssl_decrypt() function to decrypt the data
+        $decryption = openssl_decrypt ($encryption, $ciphering, $decryption_key, $options, $decryption_iv);
+
+		return $decryption;
+    }
+}
+
+if(!function_exists('ordinal'))
+{
+    function ordinal($number) {
+        $ends = array('th','st','nd','rd','th','th','th','th','th','th');
+        if ((($number % 100) >= 11) && (($number%100) <= 13))
+            return $number. 'th';
+        else
+            return $number. $ends[$number % 10];
+    }
+}
+
+if(!function_exists('get_month_name'))
+{
+    function get_month_name($monthNum) {
+
+        $dateObj   = DateTime::createFromFormat('!m', $monthNum);
+        $monthName = $dateObj->format('F'); // March
+
+        return $monthName;
+    }
+}
+
+
+
+
+/**
+ * 
+ * 
+ * $monthNum  = 3;
+ * $dateObj   = DateTime::createFromFormat('!m', $monthNum);
+ * $monthName = $dateObj->format('F'); // March
+ */

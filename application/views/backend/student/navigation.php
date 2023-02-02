@@ -117,6 +117,15 @@
                         </div>
                     </a>
                 </li>
+
+                <li <?php if($page_name == 'my_agreements'):?>class="currentItem" <?php endif;?>>
+                    <a href="<?php echo base_url();?>student/my_agreements/" data-toggle="tooltip" data-placement="right"
+                        data-original-title="<?php echo getPhrase('my_agreements');?>">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0394_business_handshake_deal_contract_sign"></i>
+                        </div>
+                    </a>
+                </li>
                 <?php if(menu_option_visible('payment_module')):?>
                 <li <?php if($page_name == 'invoice' || $page_name == 'view_invoice'):?>class="currentItem"
                     <?php endif;?>>
@@ -255,6 +264,14 @@
                             <i class="picons-thin-icon-thin-0021_calendar_month_day_planner"></i>
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('calendar');?></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo base_url();?>student/my_agreements/">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0394_business_handshake_deal_contract_sign"></i>
+                        </div>
+                        <span class="left-menu-title"><?php echo getPhrase('my_agreements');?></span>
                     </a>
                 </li>
                 <?php if(menu_option_visible('payment_module')):?>
@@ -402,6 +419,14 @@
                             <i class="picons-thin-icon-thin-0021_calendar_month_day_planner"></i>
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('calendar');?></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo base_url();?>student/my_agreements/">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0394_business_handshake_deal_contract_sign"></i>
+                        </div>
+                        <span class="left-menu-title"><?php echo getPhrase('my_agreements');?></span>
                     </a>
                 </li>
                 <?php if(menu_option_visible('payment_module')):?>

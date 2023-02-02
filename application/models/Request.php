@@ -76,6 +76,15 @@ class Request extends School
         $data['assigned_to']      = $program['user_notify_id'];
         $data['assigned_to_type'] = $program['user_notify_type'];
 
+        if($_FILES['vacation_request_file']['name'] != '')
+        {
+            $data['file_name']  = $md5.str_replace(' ', '', $_FILES['vacation_request_file']['name']);
+            $path_to = PATH_REQUEST_FILES .$data['file_name'];
+            $path_from = $_FILES['vacation_request_file']['tmp_name'];
+
+            move_uploaded_file($path_from, $path_to);
+        }
+
         $this->db->insert('student_request', $data);
 
         $table      = 'student_request';
@@ -107,17 +116,18 @@ class Request extends School
         $this->crud->save_log($table, $action, $request_id, $data);
 
         //Notify the teacher
-        if($table === 'student')
-        {
+        if($user_type === 'student')
+        {            
             $enrollments = $this->studentModel->get_enrollment($user_id);
             $teacher_id = "";
+
             foreach($enrollments as $item)
             {
                 if($teacher_id != $item['teacher_id'])
                 {
                     $teacher_id = $item['teacher_id'];
                     $request_info = $this->get_request_info($request_id, $user_type);
-                    $this->notification->teacher_student_request('absence_approved_teacher', $user_name,$teacher_id, 'teacher', '', $request_info['start_date'], $request_info['end_date']);                    
+                    $this->notification->teacher_student_request('absence_approved_teacher', $user_name, $teacher_id, 'teacher', $request_info['start_date'], $request_info['end_date']);                    
         
                     $data['STUDENT_NAME'] = $user_name;
                     $data['LEVEL_NAME']   = $item['class_name'];
@@ -126,7 +136,7 @@ class Request extends School
                     $data['DATE_START']   = $request_info['start_date'];
                     $data['DATE_END']     = $request_info['end_date'];
 
-                    $this->mail->request_approved_to_teacher($user_id, $user_type, $data);
+                    $this->mail->request_approved_to_teacher($teacher_id, 'teacher', $data);
 
                 }
             }
@@ -246,15 +256,35 @@ class Request extends School
         {
             $this->db->reset_query();            
             $this->db->where('request_id', $request_id);
-            $query = $this->db->get('student_request')->row()->student_id;
+            $query = $this->db->get('student_request')->row_array();
         }
         else if($user_type == 'teacher')
         {
             $this->db->reset_query();            
             $this->db->where('request_id', $request_id);
-            $query = $this->db->get('teacher_request')->row()->teacher_id;
+            $query = $this->db->get('teacher_request')->row_array();
         }
 
         return $query;
+    }
+
+    public function can_request($year, $semester_id, $request_type, $student_id)
+    {
+        $this->db->reset_query();            
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $this->db->where('request_type', $request_type);
+        $this->db->where('student_id', $student_id);
+        $query = $this->db->get('student_request')->num_rows();
+
+        if($query > 2)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+
     }
 }

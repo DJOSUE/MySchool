@@ -14,19 +14,19 @@
             <div class="os-tabs-controls">
                 <ul class="navs navs-tabs">
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>student/my_marks/"><i
+                        <a class="navs-links" href="<?= base_url();?>student/my_marks/"><i
                                 class="picons-thin-icon-thin-0658_cup_place_winner_award_prize_achievement"></i>
-                            <span><?php echo getPhrase('current_marks');?></span></a>
+                            <span><?= getPhrase('current_marks');?></span></a>
                     </li>
                     <li class="navs-item">
-                        <a class="navs-links active" href="<?php echo base_url();?>student/my_past_marks/"><i
+                        <a class="navs-links active" href="<?= base_url();?>student/my_past_marks/"><i
                                 class="picons-thin-icon-thin-0658_cup_place_winner_award_prize_achievement"></i>
-                            <span><?php echo getPhrase('past_marks');?></span></a>
+                            <span><?= getPhrase('past_marks');?></span></a>
                     </li>
                     <li class="navs-item">
-                        <a class="navs-links" href="<?php echo base_url();?>student/placement_achievement/"><i
+                        <a class="navs-links" href="<?= base_url();?>student/placement_achievement/"><i
                                 class="picons-thin-icon-thin-0658_cup_place_winner_award_prize_achievement"></i>
-                            <span><?php echo getPhrase('placement_and_achievement');?></span></a>
+                            <span><?= getPhrase('placement_and_achievement');?></span></a>
                     </li>
                 </ul>
             </div>
@@ -35,12 +35,12 @@
             <div class="content-box">
                 <div class="row">
                     <?php 
-        				$student_enrollment = $this->db->query("SELECT class_id, class_name, section_id, section_name, year, semester_name FROM v_enroll 
-                                                                    WHERE student_id = '$student_id'
-                                                                    GROUP BY class_id, section_id 
-                                                                    ")->result_array();
+                    $student_enrollment = $this->db->query("SELECT class_id, class_name, section_id, section_name, year, semester_name FROM v_enroll 
+                                                                WHERE student_id = '$student_id'
+                                                                GROUP BY class_id, section_id 
+                                                                ")->result_array();                   
 
-    				    foreach ($student_enrollment as $row1):
+                    foreach ($student_enrollment as $row1):
 				    ?>
                     <div class="col-sm-12">
                         <div class="element-box lined-primary shadow">
@@ -51,17 +51,19 @@
                                 <table class="table table-lightborder">
                                     <thead>
                                         <tr>
-                                            <th><?php echo getPhrase('subject');?></th>
-                                            <th><?php echo getPhrase('teacher');?></th>
-                                            <th><?php echo getPhrase('attendance');?></th>
-                                            <th><?php echo getPhrase('mark');?></th>
-                                            <th><?php echo getPhrase('grade');?></th>
-                                            <th><?php echo getPhrase('gpa');?></th>
+                                            <th><?= getPhrase('class');?></th>
+                                            <th><?= getPhrase('subject');?></th>
+                                            <th><?= getPhrase('teacher');?></th>
+                                            <th><?= getPhrase('attendance');?></th>
+                                            <th><?= getPhrase('mark');?></th>
+                                            <th><?= getPhrase('grade');?></th>
+                                            <th><?= getPhrase('gpa');?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php 
-                                			$subjects = $this->db->get_where('v_subject' , array('class_id' => $row1['class_id'], 'section_id' => $row1['section_id']))->result_array();
+                                			$subjects = $this->db->get_where('v_enrollment' , array('class_id' => $row1['class_id'], 'section_id' => $row1['section_id'], 'student_id' => $student_id))->result_array();
+
                             			    foreach ($subjects as $row3): 
 
                                                 $class_id   = $row1['class_id'];
@@ -89,58 +91,68 @@
                                                                                 AND semester_id = '$semester'
                                                                             ")->first_row();
 
-                                            // Calculate the average 
-                                            $count = 0;
-                                            $Total_Sum = array_sum($average);
+                                                // Calculate the average 
+                                                $count = 0;
+                                                $Total_Sum = array_sum($average);
 
-                                            $labouno        = $average->labuno;
-                                            $labodos        = $average->labdos;
-                                            $labotres       = $average->labtres;
-                                            $labocuatro     = $average->labcuatro;
-                                            $labocinco      = $average->labcinco;
-                                            $laboseis       = $average->labseis;
-                                            $labosiete      = $average->labsiete;
-                                            $laboocho       = $average->labocho;
-                                            $labonueve      = $average->labnueve;
-                                            $labodiez       = $average->labdiez;
+                                                $labouno        = $average->labuno;
+                                                $labodos        = $average->labdos;
+                                                $labotres       = $average->labtres;
+                                                $labocuatro     = $average->labcuatro;
+                                                $labocinco      = $average->labcinco;
+                                                $laboseis       = $average->labseis;
+                                                $labosiete      = $average->labsiete;
+                                                $laboocho       = $average->labocho;
+                                                $labonueve      = $average->labnueve;
+                                                $labodiez       = $average->labdiez;
 
-                                            // Validate values
-                                            if($labouno     == '' ) { $labouno      = '-'; } 
-                                            if($labodos     == '' ) { $labodos      = '-'; }  
-                                            if($labotres    == '' ) { $labotres     = '-'; }  
-                                            if($labocuatro  == '' ) { $labocuatro   = '-'; }  
-                                            if($labocinco   == '' ) { $labocinco    = '-'; }
-                                            if($laboseis    == '' ) { $laboseis     = '-'; } 
-                                            if($labosiete   == '' ) { $labosiete    = '-'; }  
-                                            if($laboocho    == '' ) { $laboocho     = '-'; }  
-                                            if($labonueve   == '' ) { $labonueve    = '-'; }  
-                                            if($labodiez    == '' ) { $labodiez     = '-'; }
+                                                // Validate values
+                                                if($labouno     == '' ) { $labouno      = '-'; } 
+                                                if($labodos     == '' ) { $labodos      = '-'; }  
+                                                if($labotres    == '' ) { $labotres     = '-'; }  
+                                                if($labocuatro  == '' ) { $labocuatro   = '-'; }  
+                                                if($labocinco   == '' ) { $labocinco    = '-'; }
+                                                if($laboseis    == '' ) { $laboseis     = '-'; } 
+                                                if($labosiete   == '' ) { $labosiete    = '-'; }  
+                                                if($laboocho    == '' ) { $laboocho     = '-'; }  
+                                                if($labonueve   == '' ) { $labonueve    = '-'; }  
+                                                if($labodiez    == '' ) { $labodiez     = '-'; }
 
-                                            // Calculate the average 
-                                            // if(is_numeric($labouno)     && $labouno != '-' ) { $count++; } 
-                                            if(is_numeric($labodos)     && $labodos != '-' ) { $count++; }  
-                                            if(is_numeric($labotres)    && $labotres != '-' ) { $count++; }  
-                                            if(is_numeric($labocuatro)  && $labocuatro != '-' ) { $count++; }  
-                                            if(is_numeric($labocinco)   && $labocinco != '-') { $count++; }
-                                            if(is_numeric($laboseis)    && $laboseis != '-' ) { $count++; } 
-                                            if(is_numeric($labosiete)   && $labosiete != '-' ) { $count++; }  
-                                            if(is_numeric($laboocho)    && $laboocho != '-' ) { $count++; }  
-                                            if(is_numeric($labonueve)   && $labonueve != '-' ) { $count++; }  
-                                            if(is_numeric($labodiez)    && $labodiez != '-') { $count++; }
+                                                // Calculate the average 
+                                                // if(is_numeric($labouno)     && $labouno != '-' ) { $count++; } 
+                                                if(is_numeric($labodos)     && $labodos != '-' ) { $count++; }  
+                                                if(is_numeric($labotres)    && $labotres != '-' ) { $count++; }  
+                                                if(is_numeric($labocuatro)  && $labocuatro != '-' ) { $count++; }  
+                                                if(is_numeric($labocinco)   && $labocinco != '-') { $count++; }
+                                                if(is_numeric($laboseis)    && $laboseis != '-' ) { $count++; } 
+                                                if(is_numeric($labosiete)   && $labosiete != '-' ) { $count++; }  
+                                                if(is_numeric($laboocho)    && $laboocho != '-' ) { $count++; }  
+                                                if(is_numeric($labonueve)   && $labonueve != '-' ) { $count++; }  
+                                                if(is_numeric($labodiez)    && $labodiez != '-') { $count++; }
 
-                                            $labototal      = (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
-                                            
-                                            $mark = $count > 0 ? round(($labototal/$count), (int)$roundPrecision) : '-';
+                                                $labototal      = (float)$labodos + (float)$labotres + (float)$labocuatro + (float)$labocinco + (float)$laboseis + (float)$labosiete + (float)$laboocho + (float)$labonueve + (float)$labodiez;
+                                                
+                                                $mark = $count > 0 ? round(($labototal/$count), (int)$roundPrecision) : '-';
+
+                                                $url_parameter = base64_encode($student_id.'-'.$class_id.'-'.$section_id.'-'.$year.'-'.$semester);
+
+                                                $count_total++;
+                                                $mark_total += $mark;
+                                                $attendance_total += $labototal;
+                                                
                             		    ?>
                                         <tr>
                                             <td>
-                                                <?php echo $row3['name'];?>
+                                                <?= $row3['class_name'];?>
+                                            </td>
+                                            <td>
+                                                <?= $row3['subject_name'];?>
                                             </td>
                                             <td>
                                                 <img alt=""
-                                                    src="<?php echo $this->crud->get_image_url('teacher',$row3['teacher_id']);?>"
+                                                    src="<?= $this->crud->get_image_url('teacher',$row3['teacher_id']);?>"
                                                     width="25px" style="border-radius: 10px;margin-right:5px;">
-                                                <?php echo $row3['teacher_name']; ?>
+                                                <?= $row3['teacher_name']; ?>
                                             </td>
                                             <td>
                                                 <?= $labouno;?>
@@ -152,7 +164,7 @@
                                                 <?php endif;?>
                                                 <?php if($mark >= $min):?>
                                                 <a class="btn btn-rounded btn-sm btn-info"
-                                                    style="color:white"><?php echo $mark;?></a>
+                                                    style="color:white"><?= $mark;?></a>
                                                 <?php endif;?>
                                             </td>
                                             <td>
@@ -167,10 +179,26 @@
                                 </table>
                                 <div class="form-buttons-w text-right">
                                     <a target="_blank"
-                                        href="<?php echo base_url();?>student/past_marks_print_view/<?php echo base64_encode($student_id.'-'.$class_id.'-'.$section_id.'-'.$year.'-'.$semester);?>/"><button
-                                            class="btn btn-rounded btn-success" type="submit"><i
+                                        href="<?= base_url();?>student/past_marks_print_view/<?= $url_parameter;?>/">
+                                        <button class="btn btn-rounded btn-success" type="submit"><i
                                                 class="picons-thin-icon-thin-0333_printer"></i>
-                                            <?php echo getPhrase('print');?></button></a>
+                                            <?= getPhrase('print');?>
+                                        </button>
+                                    </a>
+                                    <?php 
+                                    
+                                    $mark_final = $count_total > 0 ? round(($mark_total/$count_total), (int)$roundPrecision) : '-';
+                                    
+
+                                    if($mark_final >= $min):?>
+                                    <a target="_blank"
+                                        href="<?= base_url();?>PrintDocument/student_certificate/<?= $url_parameter;?>/">
+                                        <button class="btn btn-rounded btn-success" type="submit"><i
+                                                class="picons-thin-icon-thin-0333_printer"></i>
+                                            <?= getPhrase('print_certificate');?>
+                                        </button>
+                                    </a>
+                                    <?php endif;?>
                                 </div>
                             </div>
                         </div>

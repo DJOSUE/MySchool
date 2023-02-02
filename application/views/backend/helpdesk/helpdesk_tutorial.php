@@ -55,11 +55,19 @@
                                                 <br />
                                                 <div class="row">
                                                     <div class="col">
+                                                        <?php if($value['type'] != 'youtube'): ?>
                                                         <video width="100%" controls>
                                                             <source src="<?=$value['path'];?>"
                                                                 type="<?=$value['type'];?>">
                                                             Your browser does not support the video tag.
                                                         </video>
+                                                        <?php else:?>
+                                                        <iframe width="560" height="315"
+                                                            src="<?= $value['path']?>"
+                                                            title="YouTube video player" frameborder="0"
+                                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                                            allowfullscreen></iframe>
+                                                        <?php endif;?>
                                                     </div>
                                                     <div class="col">
                                                         <?=$value['description'];?>

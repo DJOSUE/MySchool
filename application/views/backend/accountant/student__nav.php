@@ -36,7 +36,38 @@
                                     href="<?= base_url();?>accountant/student_profile/<?= $student_id;?>/">
                                     <?= getPhrase('personal_information');?>
                                 </a>
-                            </li>                            
+                            </li>
+                            <li <?= $page_name == 'student_update' ? 'class="menu-left-selected-icon"' : ''?>>
+                                <i class="picons-thin-icon-thin-0133_arrow_right_next"
+                                    style="font-size:20px;"></i> &nbsp;&nbsp;&nbsp;
+                                <a
+                                    href="<?= base_url();?>accountant/student_update/<?= $student_id;?>/">
+                                    <?= getPhrase('update_information');?>
+                                </a>
+                            </li>
+                            <li <?= $page_name == 'student_grades' ? 'class="menu-left-selected-icon"' : ''?>>
+                                <i class="picons-thin-icon-thin-0133_arrow_right_next"
+                                    style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
+                                <a
+                                    href="<?= base_url();?>accountant/student_grades/<?= $student_id;?>/">
+                                    <?= getPhrase('student_grades');?>
+                                </a>
+                            </li>
+                            <li <?= $page_name == 'student_past_marks' ? 'class="menu-left-selected-icon"' : ''?>>
+                                <i class="picons-thin-icon-thin-0133_arrow_right_next" style="font-size:20px"></i>
+                                &nbsp;&nbsp;&nbsp;
+                                <a href="<?= base_url();?>accountant/student_past_grades/<?= $student_id;?>/">
+                                    <?= getPhrase('past_grades');?>
+                                </a>
+                            </li>
+                            <li <?= $page_name == 'student_attendance' ? 'class="menu-left-selected-icon"' : ''?>>
+                                <i class="picons-thin-icon-thin-0133_arrow_right_next"
+                                    style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
+                                <a
+                                    href="<?= base_url();?>accountant/student_attendance/<?= $student_id;?>/">
+                                    <?= getPhrase('student_attendance');?>
+                                </a>
+                            </li>
                             <li <?= $page_name == 'student_payments' ? 'class="menu-left-selected-icon"' : ''?>>
                                 <i class="picons-thin-icon-thin-0133_arrow_right_next"
                                     style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;

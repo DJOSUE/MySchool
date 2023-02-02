@@ -1,4 +1,7 @@
-<?php 
+<?php
+
+use function PHPSTORM_META\map;
+
     $running_year       = $this->crud->getInfo('running_year');
     $running_semester   = $this->crud->getInfo('running_semester'); 
 
@@ -86,9 +89,8 @@
                                                         AND semester_id = '$running_semester'
                                                         GROUP BY student_id")->result_array();
 
-                                                        $List = implode(', ', $students);
-
-
+                                                        $student_ids = array_column($students, 'student_id');
+                                                        $List = implode(', ', $student_ids);
 
                                                         $test_students = $this->db->get_where('pa_test' , array('class_id' => $ex[0], 'section_id' => $ex[1],'year' => $running_year,'semester_id' => $running_semester))->result_array();
                                                         foreach($test_students as $row):

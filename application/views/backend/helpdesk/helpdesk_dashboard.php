@@ -6,8 +6,8 @@
     $is_helpdesk_admin  = has_permission('helpdesk_admin_module');
     $is_helpdesk_team   = has_permission('helpdesk_team');
     $user_id            = $this->session->userdata('login_user_id');
-    $account_type       =   $this->session->userdata('login_type'); 
-
+    $account_type       = $this->session->userdata('login_type'); 
+    
 ?>
 <div class="content-w">
     <?php include $fancy_path.'fancy.php';?>

@@ -46,6 +46,7 @@
                                             <table class="table table-lightborder">
                                                 <thead>
                                                     <tr>
+                                                        <th><?php echo getPhrase('class');?></th>
                                                         <th><?php echo getPhrase('subject');?></th>
                                                         <th><?php echo getPhrase('teacher');?></th>
                                                         <th><?php echo getPhrase('attendance');?></th>
@@ -55,7 +56,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                <?php 
+                                                    <?php 
                                                         $enrollment_average = $this->db->get_where('v_enrollment' , array('student_id' => $student_id, 'class_id' => $class_id, 'section_id' => $section_id, 'year' => $running_year, 'semester_id' => $running_semester))->result_array();
                                                         
                                                         foreach ($enrollment_average as $row_average): 
@@ -123,6 +124,9 @@
                                                     ?>
                                                     <tr>
                                                         <td>
+                                                            <?= $row_average['class_name'];?>
+                                                        </td>
+                                                        <td>
                                                             <?= $row_average['subject_name'];?>
                                                         </td>
                                                         <td>
@@ -179,6 +183,7 @@
                                             <table class="table table-lightborder">
                                                 <thead>
                                                     <tr>
+                                                        <th><?php echo getPhrase('class');?></th>
                                                         <th><?php echo getPhrase('subject');?></th>
                                                         <th><?php echo getPhrase('teacher');?></th>
                                                         <th><?php echo getPhrase('attendance');?></th>
@@ -261,6 +266,9 @@
                                                             $mark = $count > 0 ? round(($labototal/$count), (int)$roundPrecision) : '-';
                                                     ?>
                                                     <tr>
+                                                        <td>
+                                                            <?= $row_average['class_name'];?>
+                                                        </td>
                                                         <td>
                                                             <?= $row3['subject_name'];?>
                                                         </td>

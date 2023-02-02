@@ -13,29 +13,29 @@
                     <?php endif; ?>
                     <?php if($this->academic->getInfo('show_online_exams') == 1) :?>
                     <li class="navs-item">
-                        <a class="navs-links <?= $page_name == 'subject_online_exams' ? 'active' : ''?>"
-                            href="<?php echo base_url();?>teacher/subject_online_exams/<?php echo $data;?>/"><i
+                        <a class="navs-links <?= $page_name == 'online_exams' ? 'active' : ''?>"
+                            href="<?php echo base_url();?>teacher/online_exams/<?php echo $data;?>/"><i
                                 class="os-icon picons-thin-icon-thin-0207_list_checkbox_todo_done"></i><span><?php echo getPhrase('online_exams');?></span></a>
                     </li>
                     <?php endif; ?>
                     <?php if($this->academic->getInfo('show_homework') == 1) :?>
                     <li class="navs-item">
-                        <a class="navs-links <?= $page_name == 'subject_homework' ? 'active' : ''?>"
-                            href="<?php echo base_url();?>teacher/subject_homework/<?php echo $data;?>/"><i
+                        <a class="navs-links <?= $page_name == 'homework' ? 'active' : ''?>"
+                            href="<?php echo base_url();?>teacher/homework/<?php echo $data;?>/"><i
                                 class="os-icon picons-thin-icon-thin-0004_pencil_ruler_drawing"></i><span><?php echo getPhrase('homework');?></span></a>
                     </li>
                     <?php endif; ?>
                     <?php if($this->academic->getInfo('show_forum') == 1) :?>
                     <li class="navs-item">
-                        <a class="navs-links <?= $page_name == 'subject_forum' ? 'active' : ''?>"
-                            href="<?php echo base_url();?>teacher/subject_forum/<?php echo $data;?>/"><i
+                        <a class="navs-links <?= $page_name == 'forum' ? 'active' : ''?>"
+                            href="<?php echo base_url();?>teacher/forum/<?php echo $data;?>/"><i
                                 class="os-icon picons-thin-icon-thin-0281_chat_message_discussion_bubble_reply_conversation"></i><span><?php echo getPhrase('forum');?></span></a>
                     </li>
                     <?php endif; ?>
                     <?php if($this->academic->getInfo('show_study_material') == 1) :?>
                     <li class="navs-item">
-                        <a class="navs-links <?= $page_name == 'subject_study_material' ? 'active' : ''?>"
-                            href="<?php echo base_url();?>teacher/subject_study_material/<?php echo $data;?>/"><i
+                        <a class="navs-links <?= $page_name == 'study_material' ? 'active' : ''?>"
+                            href="<?php echo base_url();?>teacher/study_material/<?php echo $data;?>/"><i
                                 class="os-icon picons-thin-icon-thin-0003_write_pencil_new_edit"></i><span><?php echo getPhrase('study_material');?></span></a>
                     </li>
                     <?php endif; ?>

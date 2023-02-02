@@ -11,7 +11,7 @@
             <div class="content-box">
                 <div class="back">
                     <a
-                        href="<?php echo base_url();?>admin/meet/<?php echo base64_encode($row['class_id']."-".$row['section_id']."-".$row['subject_id']);?>/"><i
+                        href="<?php echo base_url();?>admin/subject_meet/<?php echo base64_encode($row['class_id']."-".$row['section_id']."-".$row['subject_id']);?>/"><i
                             class="picons-thin-icon-thin-0131_arrow_back_undo"></i></a>
                 </div>
                 <div class="row">

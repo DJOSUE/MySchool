@@ -21,7 +21,7 @@
         </script>
     <?php endif;?>
 
-    <?php if ($this->session->flashdata('flash_message_error') != ""):?>
+    <?php if ($this->session->flashdata('flash_error_message') != ""):?>
         <script>
             "use strict";
             const Toast = Swal.mixin({
@@ -33,7 +33,7 @@
             }); 
             Toast.fire({
                 icon: 'error',
-                title: '<?php echo $this->session->flashdata("flash_message_error");?>'
+                title: '<?php echo $this->session->flashdata("flash_error_message");?>'
             })
         </script>
     <?php endif;?>

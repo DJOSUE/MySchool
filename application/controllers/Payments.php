@@ -418,4 +418,24 @@ class Payments extends EduAppGT
         $this->load->view('backend/index', $page_data);
     }
     
+    public function update_amortization_status($payment_id)
+    {
+        echo '<pre>';
+        var_dump($this->payment->update_amortization_status_delete($payment_id));
+        echo '</pre>';
+    }
+
+    public function delete($payment_id, $return_url)
+    {
+        $this->payment->delete_payment($payment_id);
+
+        redirect(base_url() . base64_decode($return_url), 'refresh');
+    }
+
+    public function update($payment_id, $return_url)
+    {
+        $this->payment->update_payment($payment_id);
+        redirect(base_url() . base64_decode($return_url), 'refresh');
+    }
+
 }

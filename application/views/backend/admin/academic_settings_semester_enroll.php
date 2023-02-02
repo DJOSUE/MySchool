@@ -1,5 +1,7 @@
 <?php
-
+    $this->db->reset_query();
+    $this->db->order_by('start_date', 'desc');
+    $semester_enrolls = $this->db->get('semester_enroll')->result_array();
 ?>
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -32,23 +34,21 @@
                                             <th class="text-center"><?= getPhrase('options');?></th>
                                         </tr>
                                     </thead>
-                                    <?php 
-                                                $grades = $this->db->get('semester_enroll')->result_array();
-                                                foreach($grades as $row):
-                                            ?>
+                                    <?php foreach($semester_enrolls as $row):?>
                                     <tr>
                                         <td><?= $row['year'];?></td>
                                         <td><?= $this->academic->get_semester_name($row['semester_id']);?></td>
                                         <td><?= $row['start_date'];?></td>
                                         <td><?= $row['end_date'];?></td>
                                         <td class="row-actions">
-                                            <!-- <a href="javascript:void(0);" class="grey"
-                                                onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_edit_grade/<?= $row['grade_id'];?>');"><i
-                                                    class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new"></i></a>
-                                            <a style="color:grey"
-                                                onClick="return confirm('<?= getPhrase('confirm_delete');?>')"
-                                                href="<?= base_url();?>admin/grade/delete/<?= $row['grade_id'];?>"><i
-                                                    class="os-icon picons-thin-icon-thin-0056_bin_trash_recycle_delete_garbage_empty"></i></a> -->
+                                            <a href="<?php echo base_url();?>admin/academic_settings_semester_subjects/<?= base64_encode($row['semester_enroll_id']);?>"
+                                                target="_blank" class="grey" data-toggle="tooltip" data-placement="top"
+                                                data-original-title="<?php echo getPhrase('view_invoice');?>">
+                                                <i
+                                                    class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible">
+                                                </i>
+                                            </a>
+
                                         </td>
                                     </tr>
                                     <?php endforeach;?>
@@ -74,10 +74,10 @@
                                         <div class="select">
                                             <select name="year" required>
                                                 <?php 
-                                                            $running_year = $this->crud->getInfo('running_year');
-                                                            $years = $this->crud->get_years(1);
-                                                            foreach($years as $year):
-                                                        ?>
+                                                    $running_year = $this->crud->getInfo('running_year');
+                                                    $years = $this->crud->get_years(1);
+                                                    foreach($years as $year):
+                                                ?>
                                                 <option value="<?= $year['year'];?>"
                                                     <?php if($running_year == $year['year']) echo 'selected';?>>
                                                     <?= $year['year'];?></option>
@@ -130,7 +130,7 @@
                                     <div class="form-group label-floating is-select">
                                         <label class="control-label"><?= getPhrase('schedule');?></label>
                                         <div>
-                                            <select name="schedule[]" id="schedule" multiple 
+                                            <select name="schedule[]" id="schedule" multiple
                                                 class="selectpicker form-control" title="" required>
                                                 <?php 
                                                     $programs = $this->academic->get_schedule_type();
@@ -162,14 +162,14 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col col-lg-3 col-md-3 col-sm-12 col-12">
+                                <!-- <div class="col col-lg-3 col-md-3 col-sm-12 col-12">
                                     <div class="form-group label-floating is-select" style="background-color: #fff;">
                                         <label class="control-label"><?php echo getPhrase('number_class');?></label>
                                         <div class="form-group date-time-picker">
                                             <input type="number" name="number_class" id="number_class" required>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="row">
                                 <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -179,7 +179,6 @@
                                             <input type="text" autocomplete="off" class="datepicker-here" required
                                                 data-position="bottom left" data-language='en' name="date_start"
                                                 id="date_start">
-
                                         </div>
                                     </div>
                                 </div>
@@ -190,7 +189,6 @@
                                             <input type="text" autocomplete="off" class="datepicker-here" required
                                                 data-position="bottom left" data-language='en' name="date_end"
                                                 id="date_end">
-
                                         </div>
                                     </div>
                                 </div>

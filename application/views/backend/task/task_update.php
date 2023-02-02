@@ -6,7 +6,7 @@
 
     $fancy_path         =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/'.$account_type.'/';
     $account_type       =   get_table_user($this->session->userdata('role_id'));
-
+    $userList = $this->task->get_user_list();
 ?>
 <div class="content-w">
     <?php include $fancy_path.'fancy.php';?>
@@ -32,7 +32,7 @@
                             $df_user_table  = $default_user[0];
 
                             // echo '<pre>';
-                            // var_dump($default_user);
+                            // var_dump($row);
                             // echo '</pre>';
                         ?>
                         <main class="col col-xl-9 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12">
@@ -105,7 +105,7 @@
                                                 </h6>
                                             </div>
                                             <div class="ui-block-content">
-                                            <?php echo form_open(base_url() . 'assignment/task/update/'.$row['task_id'].'/' , array('enctype' => 'multipart/form-data'));?>
+                                                <?php echo form_open(base_url() . 'assignment/task/update/'.$row['task_id'].'/' , array('enctype' => 'multipart/form-data'));?>
                                                 <div class="row">
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <div class="form-group label-floating">
@@ -119,22 +119,82 @@
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <div class="form-group label-floating is-select">
                                                             <label
-                                                                class="control-label"><?php echo getPhrase('assigned_to');?></label>
+                                                                class="control-label"><?php echo getPhrase('category');?></label>
+                                                            <div class="select">
+                                                                <select name="category_id">
+                                                                    <option value=""><?php echo getPhrase('select');?>
+                                                                    </option>
+                                                                    <?php
+                                                                    $departments = $this->task->get_departments();
+                                                                    foreach($departments as $department):                        
+                                                                    ?>
+                                                                    <optgroup label="<?= $department['name'];?>">
+                                                                        <?php
+                                                                        $categories = $this->task->get_categories($department['department_id']);
+                                                                        foreach($categories as $item):  
+                                                                        ?>
+                                                                        <option
+                                                                            value="<?php echo $item['category_id'];?>"
+                                                                            <?php if($row['category_id'] == $item['category_id']) echo "selected";?>>
+                                                                            <?php echo $item['name'];?></option>
+                                                                        <?php endforeach;?>
+                                                                        <?php endforeach;?>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class="form-group label-floating is-select">
+                                                            <label class="control-label">
+                                                                <?php echo getPhrase('assigned_to');?>
+                                                            </label>
                                                             <div class="select">
                                                                 <select name="assigned_to">
                                                                     <option value=""><?= getPhrase('select');?></option>
-                                                                    <?php $default_users = $this->db->get_where($df_user_table, array('status' => 1))->result_array();
-                                                                    foreach($default_users as $item):
-                                                                        $id = $df_user_table.'_id';
+                                                                    <?php 
+                                                                    foreach($userList as $user):
                                                                     ?>
-                                                                    <option value="<?= $df_user_table.'|'.$item[$id];?>"
-                                                                        <?= $item[$id] == $row['assigned_to'] ? 'selected': ''; ?>>
-                                                                        <?= $item['first_name']?>
+                                                                    <option
+                                                                        value="<?= $user['user_type'].'|'.$user['user_id']?>"
+                                                                        <?php if($user['user_id'] == $row['assigned_to']) echo "selected";?>>
+                                                                        <?= $user['first_name'].' '.$user['last_name']?>
                                                                     </option>
                                                                     <?php endforeach;?>
                                                                 </select>
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class="form-group label-floating is-select">
+                                                            <label class="control-label">
+                                                                <?php echo getPhrase('priority');?>
+                                                            </label>
+                                                            <div class="select">
+                                                                <select name="priority_id">
+                                                                    <?php
+                                                                    $priorities = $this->task->get_priorities();
+                                                                    foreach($priorities as $priority_row):
+                                                                    ?>
+                                                                    <option value="<?= $priority_row['priority_id']?>"
+                                                                        <?= $priority_row['priority_id'] == $task['priority_id'] ? 'selected': ''; ?>>
+                                                                        <?= $priority_row['name']?>
+                                                                    </option>
+                                                                    <?php endforeach;?>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class="form-group label-floating">
+                                                            <label
+                                                                class="control-label"><?php echo getPhrase('due_date');?></label>
+                                                                <input type='text' class="datepicker-here"
+                                                                data-position="top left" data-language='en'
+                                                                name="due_date" data-multiple-dates-separator="/"
+                                                                value="<?= $row['due_date'];?>" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                     </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <div class="form-group">
@@ -157,86 +217,13 @@
                                                 <?php echo form_close();?>
                                             </div>
                                         </div>
-                                        <div class="ui-block">
-                                            <div class="ui-block-title">
-                                                <h6 class="title"><?= getPhrase('personal_information');?>
-                                                </h6>
-                                            </div>
-                                            <div class="ui-block-content">
-                                                <div class="row">
-                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                        <ul class="widget w-personal-info item-block">
-                                                            <li>
-                                                                <span class="title"><?= getPhrase('name');?>:</span>
-                                                                <span class="text"><?= $user_info['first_name'];?>
-                                                                    <?= $user_info['last_name'];?></span>
-                                                            </li>
-                                                            <li>
-                                                                <span class="title"><?= getPhrase('email');?>:</span>
-                                                                <span class="text"><?= $user_info['email'];?></span>
-                                                            </li>
-                                                            <li>
-                                                                <span class="title"><?= getPhrase('address');?>:</span>
-                                                                <span class="text"><?= $user_info['address'];?></span>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                        <ul class="widget w-personal-info item-block">
-                                                            <li>
-                                                                <span class="title"><?= getPhrase('phone');?>:</span>
-                                                                <span class="text"><?= $user_info['phone'];?></span>
-                                                            </li>
-                                                            <li>
-                                                                <span class="title"><?= getPhrase('birthday');?>:</span>
-                                                                <span class="text"><?= $user_info['birthday'];?></span>
-                                                            </li>
-                                                            <li>
-                                                                <span class="title"><?= getPhrase('gender');?>:</span>
-                                                                <span
-                                                                    class="text"><?= $this->crud->get_gender_user($user_info['gender']);?></span>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </main>
                         <?php endforeach;?>
                         <div class="col col-xl-3 order-xl-1 col-lg-12 order-lg-2 col-md-12 col-sm-12 col-12">
-                            <div class="eduappgt-sticky-sidebar">
-                                <div class="sidebar__inner">
-                                    <div class="ui-block paddingtel">
-                                        <div class="ui-block-content">
-                                            <div class="help-support-block">
-                                                <h3 class="title"><?= getPhrase('quick_links');?></h3>
-                                                <ul class="help-support-list">
-                                                    <li>
-                                                        <i class="picons-thin-icon-thin-0133_arrow_right_next"
-                                                            style="font-size:20px;"></i> &nbsp;&nbsp;&nbsp;
-                                                        <a href="<?= base_url();?>assignment/task_info/<?= $task_code;?>/">
-                                                            <?= getPhrase('task_information');?>
-                                                        </a>
-                                                    </li>
-                                                    <?php if(!$allow_actions):?>
-                                                    <li>
-                                                        <i class="picons-thin-icon-thin-0133_arrow_right_next menu_left_selected_icon"
-                                                            style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
-                                                        <a class="menu_left_selected_text"
-                                                            href="<?= base_url();?>assignment/task_update/<?= $task_code;?>/">
-                                                            <?= getPhrase('update_task');?>
-                                                        </a>
-                                                    </li>
-                                                    <?php endif;?>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <?php include 'task__menu.php'?>
                         </div>
                     </div>
                 </div>

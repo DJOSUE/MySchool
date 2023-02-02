@@ -1283,7 +1283,7 @@ class Teacher extends EduAppGT
         $filter = $this->academic->uploadAchievementBatch($datainfo, $student_id);
 
         $this->session->set_flashdata( 'flash_message', getPhrase( 'successfully_updated' ) );
-        redirect( base_url().'teacher/achievement_test/'.$datainfo.'/', 'refresh' );
+        redirect( base_url().'teacher/subject_achievement_test/'.$datainfo.'/', 'refresh' );
         
     }
 
@@ -1424,6 +1424,54 @@ class Teacher extends EduAppGT
         $this->session->set_flashdata( 'flash_message', getPhrase( 'successfully_added' ) );
         redirect( base_url().'teacher/subject_update_daily_marks/'.$data, 'refresh' );
     }
+
+    function student_month($param1 = '', $param2 = '')
+    {
+        $this->isTeacher();
+
+        $page_data['page_name']  = 'student_month';
+        $page_data['page_title'] = getPhrase( 'student_month' );
+        $this->load->view( 'backend/index', $page_data );
+    }
     
+    function student_month_action($param1 = '', $param2 = '')
+    {
+        $this->isTeacher();
+
+        switch ($param1) {
+            case 'delete':
+                $this->academic->delete_student_month($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                break;
+            
+            case 'add':
+                //Validate if exist a Student of the month
+
+                $data['year']           = $this->runningYear;
+                $data['semester_id']    = $this->runningSemester;
+                $data['class_id']       = $this->input->post('class_id');
+                $data['section_id']     = $this->input->post('section_id');
+                $data['subject_id']     = $this->input->post('subject_id');
+                $data['month']          = $this->input->post('month');
+
+                
+                $query = $this->db->get_where('student_month', $data);
+                if ($query->num_rows() > 0) 
+                {
+                    $this->session->set_flashdata('flash_message' , getPhrase('duplicate'));                    
+                }
+                else
+                {
+                    $this->academic->create_student_month();
+                    $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                }
+                
+                break;
+        }
+        
+        redirect(base_url() . 'teacher/student_month/', 'refresh');
+        
+    }
+
     //End of Teacher.php
 }

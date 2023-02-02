@@ -47,7 +47,7 @@ class Notification extends School
         $user_name = $this->crud->get_name($original_type, $original_id);
         // $url = base64_decode($url_encode);
 
-        $notify['notify']        = "<strong>". $student_name ."</strong>". "". getPhrase($message_code). " <br/> From: ". $start_date . " <br/> To: " . $end_date;
+        $notify['notify']        = "<strong>". $user_name ."</strong>". " ". getPhrase($message_code). " ".$student_name." <br/> From: ". $start_date . " <br/> To: " . $end_date;
         $notify['user_id']       = $user_id;
         $notify['user_type']     = $user_type;
         $notify['date']          = $this->crud->getDateFormat();

@@ -5,7 +5,7 @@
     $class_id           = $ex[1];
     $section_id         = $ex[2];
     $year               = $ex[3];
-    $semester_id           = $ex[4];
+    $semester_id        = $ex[4];
 
     $roundPrecision     =   $this->crud->getInfo('round_precision');
 	$class_name		 	= 	$this->db->get_where('class' , array('class_id' => $class_id))->row()->name;

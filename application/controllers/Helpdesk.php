@@ -130,6 +130,28 @@ class Helpdesk extends EduAppGT
         redirect(base_url() . $return_url, 'refresh');
     }
 
+    function helpdesk_dashboard()
+    {
+        $page_data['page_name']     = 'helpdesk_dashboard';
+        $page_data['page_title']    =  getPhrase('helpdesk_dashboard');
+        $this->load->view('backend/helpdesk/index', $page_data);
+    }
+
+    function helpdesk_ticket_list()
+    {
+        $page_data['page_name']     = 'helpdesk_ticket_list';
+        $page_data['page_title']    =  getPhrase('helpdesk_ticket_list');
+        $this->load->view('backend/helpdesk/index', $page_data);
+    }
+
+    function helpdesk_tutorial()
+    {
+        $page_data['page_name']     = 'helpdesk_tutorial';
+        $page_data['page_title']    =  getPhrase('helpdesk_tutorial');
+        $this->load->view('backend/helpdesk/index', $page_data);
+    }
+
+
     //Check session function.
     function isLogin()
     {

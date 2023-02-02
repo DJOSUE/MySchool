@@ -38,8 +38,7 @@
                     href="<?= base_url();?>student/subject_dashboard/<?= base64_encode($fancy_cl_id.'-'.$fancy_section_id.'-'.$fancy_row2['subject_id']);?>/">
                     <div class="fancy-selector-option">
                         <div class="fs-img">
-                            <img alt=""
-                                src="<?= base_url();?>public/uploads/subject_icon/<?= $fancy_row2['icon'];?>">
+                            <img alt="" src="<?= base_url();?>public/uploads/subject_icon/<?= $fancy_row2['icon'];?>">
                         </div>
                         <div class="fs-main-info">
                             <div class="fs-name">
@@ -152,6 +151,12 @@
                                     <a href="<?= base_url();?>login/logout/">
                                         <i class="picons-thin-icon-thin-0040_exit_logout_door_emergency_outside"></i>
                                         <span><?= getPhrase('logout');?></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="<?php echo base_url();?>helpdesk/helpdesk_tutorial/">
+                                        <i class="picons-thin-icon-thin-0308_support_help"></i>
+                                        <span><?php echo getPhrase('help');?></span>
                                     </a>
                                 </li>
                             </ul>
