@@ -33,7 +33,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="documents">
+                        <div id="documents" style="display: none;">
                             <div class="ui-block">
                                 <div class="ui-block-title">
                                     <div class="col-sm-2">

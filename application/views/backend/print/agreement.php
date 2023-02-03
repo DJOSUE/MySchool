@@ -1334,6 +1334,7 @@
         <br /><br /><br />
     </div>
 
+    <?php if($agreement['automatic_payment']):?>
     <div id="card_information" class=WordSection1>
         <div id="logo">
             <p class="MsoNormal" align="center" style='text-align:center;line-height:normal; border:none;padding:0in'>
@@ -1460,6 +1461,7 @@
         </p>
 
     </div>
+    <?php endif;?>
 </body>
 
 </html>

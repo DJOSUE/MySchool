@@ -2,10 +2,12 @@
     
     $advisor    = $this->user->get_advisor();
     $accounters = $this->user->get_accounters();
+
     $edit_data	= $this->db->get_where('payment' , array('payment_id' => $param2) )->result_array();
     
     foreach ($edit_data as $data):
         $cashier_id = $data["created_by_type"].':'.$data["created_by"];
+        $userList = $this->task->get_user_list_dropbox($data['created_by'], $data['created_by_type']);
 ?>
 <div class="modal-body">
     <?php echo form_open(base_url() . 'payments/update/'.$data['payment_id'].'/'.$param3, array('enctype' => 'multipart/form-data')); ?>
@@ -21,16 +23,7 @@
                         <div class="select">
                             <select name="cashier_id">
                                 <option value=""><?= getPhrase('select');?></option>
-                                <?php foreach($advisor as $row): ?>
-                                <option value="admin:<?= $row['admin_id'];?>"
-                                    <?php if($cashier_id == ('admin:'.$row['admin_id'])) echo "selected";?>>
-                                    <?= $row['first_name'].' '.$row['last_name'];?></option>
-                                <?php endforeach;?>
-                                <?php foreach($accounters as $item): ?>
-                                <option value="accountant:<?= $item['accountant_id'];?>"
-                                    <?php if($cashier_id == ('accountant:'.$item['accountant_id'])) echo "selected";?>>
-                                    <?= $item['first_name'].' '.$item['last_name'];?></option>
-                                <?php endforeach;?>
+                                <?= $userList?>
                             </select>
                         </div>
                     </div>

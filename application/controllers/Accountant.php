@@ -508,6 +508,17 @@ class Accountant extends EduAppGT
         $this->load->view('backend/index', $page_data);
     }
             
+    //Student Enrollments function.
+    function student_agreements($student_id, $param1='') 
+    {
+        $this->isAccountant();           
+        $page_data['page_name']  = 'student_agreements';
+        $page_data['page_title'] =  getPhrase('student_agreements');
+        $page_data['student_id'] =  $student_id;
+        // $page_data['class_id']   =  $class_id;
+        $this->load->view('backend/index', $page_data);
+    }
+
     function student_grades($student_id, $param1='')
     {
         $this->isAccountant();

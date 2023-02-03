@@ -139,6 +139,13 @@ class Agreement extends School
 
         $objDate = date_create($start_semester);
 
+        $current_date = date_create(date("Y-m-d"));
+
+        if( $current_date > $objDate)
+        {
+            $objDate = $current_date;
+        }
+
         $month = intval(date_format($objDate, "m"));
 
         // Create payment Schedule
@@ -147,6 +154,7 @@ class Agreement extends School
             if($has_down_payment == 1 &&  $i == 1)
             {
                 $date = date("Y-m-d");
+                $month = intval($date, "m");
             }
             else
             {

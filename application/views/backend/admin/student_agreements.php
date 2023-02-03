@@ -63,10 +63,11 @@
                                     <div class="table-responsive">
                                         <table class="table table-padded">
                                             <thead>
-                                                <tr>
+                                                <tr class="text-center">
                                                     <th><?= getPhrase('date');?></th>
-                                                    <th><?= getPhrase('modality');?></th>
-                                                    <th><?= getPhrase('book');?></th>
+                                                    <th><?= getPhrase('amount');?></th>
+                                                    <th># <?= getPhrase('payments');?></th>
+                                                    <th><?= getPhrase('card_info');?></th>
                                                     <th><?= getPhrase('program_type');?></th>
                                                     <th><?= getPhrase('payment_date');?></th>
                                                     <th><?= getPhrase('year');?></th>
@@ -77,18 +78,22 @@
                                             </thead>
                                             <tbody>
                                                 <?php 
-                                        foreach ($agreements as $key => $value):                                            
-                                        ?>
+                                                foreach ($agreements as $key => $value):
+                                                    $amount = ((floatval($value['tuition']) - floatval($value['materials']) - floatval($value['fees'])) - (floatval($value['discounts']) + floatval($value['scholarship'])));
+                                                ?>
                                                 <tr class="text-center">
                                                     <td>
                                                         <?= $value['agreement_date'];?>
                                                     </td>
                                                     <td>
-                                                        <?= $this->academic->get_modality_name($value['modality_id']);?>
+                                                        $<?= number_format($amount, 2);?>
                                                     </td>
                                                     <td>
-                                                        <?= $value['book_type'];?>
-                                                    </td>
+                                                        <?= $value['number_payments'];?>
+                                                    </td> 
+                                                    <td>
+                                                        <?= intval($value['automatic_payment']) == 0 ? 'No': 'Yes';?>
+                                                    </td>                                                    
                                                     <td>
                                                         <?= $this->academic->get_program_type_name($value['program_type_id']);?>
                                                     </td>

@@ -466,7 +466,7 @@ class Payment extends School
                         }
                         else
                         {
-                            $this->insert_payment_details($payment_id, $concept_type, $$amount);
+                            $this->insert_payment_details($payment_id, $concept_type, $amount);
                         }
                     }
                     else
