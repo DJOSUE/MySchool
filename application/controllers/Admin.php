@@ -355,10 +355,10 @@
             $this->load->view('backend/index', $page_data);
         }
 
-        function birthdays_export()
+        function birthdays_export($param1 = '')
         {
             $this->isAdmin();
-            $data = $this->user->download_Excel_birthdays();                       
+            $data = $this->user->download_Excel_birthdays($param1);                       
         }
 
         //Manage Librarians function.

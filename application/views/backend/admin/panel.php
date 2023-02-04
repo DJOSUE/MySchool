@@ -5,7 +5,7 @@
             <div class="content-box">
                 <div class="conty">
                     <div class="row">
-                        <main class="col col-xl-6 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12" >
+                        <main class="col col-xl-6 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12">
                             <?php if(has_permission('news_management')):?>
                             <div class="ui-block paddingtel">
                                 <div class="news-feed-form">
@@ -19,7 +19,8 @@
                                                 </div>
                                                 <div class="form-group with-icon label-floating is-empty"
                                                     style="padding-left:10px; padding-right:10px;">
-                                                    <label for="ckeditor1" style="margin-top: 35px;margin-left: 70px;margin-bottom: 20px;">
+                                                    <label for="ckeditor1"
+                                                        style="margin-top: 35px;margin-left: 70px;margin-bottom: 20px;">
                                                         <?= getPhrase('hi');?>
                                                         <?= $this->db->get_where('admin', array('admin_id' => $this->session->userdata('login_user_id')))->row()->first_name;?>
                                                         <?= getPhrase('what_publish');?>
@@ -264,8 +265,7 @@
                                         <div class="control-block-button post-control-button">
                                             <a href="javascript:void(0);" class="btn btn-control"
                                                 style="background-color:#001b3d; color:#fff;" data-toggle="tooltip"
-                                                data-placement="top"
-                                                data-original-title="<?= getPhrase('news');?>">
+                                                data-placement="top" data-original-title="<?= getPhrase('news');?>">
                                                 <i class="picons-thin-icon-thin-0032_flag"></i>
                                             </a>
                                         </div>
@@ -337,14 +337,13 @@
                                         <hr>
                                         <p><?= $this->crud->check_text($wall['description']);?></p>
                                         <div class="post-thumb">
-                                            <iframe src="<?= $news_embed;?>" height="360" width="100%"
-                                                frameborder="0" allowfullscreen=""></iframe>
+                                            <iframe src="<?= $news_embed;?>" height="360" width="100%" frameborder="0"
+                                                allowfullscreen=""></iframe>
                                         </div>
                                         <div class="control-block-button post-control-button">
                                             <a href="javascript:void(0);" class="btn btn-control"
                                                 style="background-color:#001b3d; color:#fff;" data-toggle="tooltip"
-                                                data-placement="top"
-                                                data-original-title="<?= getPhrase('news');?>">
+                                                data-placement="top" data-original-title="<?= getPhrase('news');?>">
                                                 <i class="picons-thin-icon-thin-0032_flag"></i>
                                             </a>
                                         </div>
@@ -401,8 +400,7 @@
                                     ?>
                                 <?php if($query->num_rows() <= 0):?>
                                 <div class="ui-block paddingtel">
-                                    <input type="hidden" name="poll_code" id="poll_code"
-                                        value="<?= $poll_code;?>">
+                                    <input type="hidden" name="poll_code" id="poll_code" value="<?= $poll_code;?>">
                                     <article class="hentry post">
                                         <div class="post__author author vcard inline-items">
                                             <img src="<?= $this->crud->get_image_url('admin', $admin_id);?>"
@@ -430,8 +428,7 @@
                                         <div class="control-block-button post-control-button">
                                             <a href="javascript:void(0);" class="btn btn-control"
                                                 style="background-color:#99bf2d; color:#fff;" data-toggle="tooltip"
-                                                data-placement="top"
-                                                data-original-title="<?= getPhrase('polls');?>">
+                                                data-placement="top" data-original-title="<?= getPhrase('polls');?>">
                                                 <i class="picons-thin-icon-thin-0385_graph_pie_chart_statistics"></i>
                                             </a>
                                         </div>
@@ -537,8 +534,7 @@
                                         <div class="control-block-button post-control-button">
                                             <a href="javascript:void(0);" class="btn btn-control"
                                                 style="background-color:#99bf2d; color:#fff;" data-toggle="tooltip"
-                                                data-placement="top"
-                                                data-original-title="<?= getPhrase('polls');?>">
+                                                data-placement="top" data-original-title="<?= getPhrase('polls');?>">
                                                 <i class="picons-thin-icon-thin-0385_graph_pie_chart_statistics"></i>
                                             </a>
                                         </div>
@@ -728,8 +724,7 @@
                                             <center>
                                                 <h5><?= getPhrase('create_your_first_group');?></h5>
                                             </center><br>
-                                            <center><img
-                                                    src="<?= base_url();?>public/uploads/mensajeseducaby.svg"
+                                            <center><img src="<?= base_url();?>public/uploads/mensajeseducaby.svg"
                                                     width="250px"></center>
                                             <br>
                                             <?php endif;?>
@@ -868,9 +863,13 @@
                                         <center>
                                             <img src="<?= base_url();?>public/uploads/icons/cake.svg"
                                                 width="85px"><br><br>
-                                            <h4><?= getPhrase('birthdays');?></h4>
-                                            <p><?= $this->crud->get_birthdays();?>
-                                                <?= getPhrase('users_have_a_birthday_this_month');?>.</p>
+                                            <h4>
+                                                <?= getPhrase('birthdays');?>
+                                            </h4>
+                                            <p>
+                                                <?= $this->crud->get_birthdays();?>
+                                                <?= getPhrase('users_have_a_birthday_this_month');?>.
+                                            </p>
                                             <a href="<?= base_url();?>admin/birthdays/"
                                                 style="background-color: #615dfa;line-height: 28px; font-size: .875rem; font-weight: 700;display: inline-block; text-align: center;width: 60%; height: 48px;box-shadow: 4px 7px 12px 0 rgb(97 93 250 / 20%);color:#fff;padding:10px;border-radius:10px;transition: background-color .2s ease-in-out, color .2s ease-in-out, border-color .2s ease-in-out, box-shadow .2s ease-in-out;"><?= getPhrase('view_all_birthdays');?></a>
                                         </center>

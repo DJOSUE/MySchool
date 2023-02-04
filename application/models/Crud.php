@@ -1343,11 +1343,11 @@ class Crud extends School
     {
         $year = $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;
         $array_users = 0;
-        $query_admins = $this->db->query("SELECT admin_id, first_name, last_name FROM admin WHERE substring_index(birthday, '/', 1) = ".date('m')."")->num_rows();
-        $query_teachers = $this->db->query("SELECT teacher_id, first_name, last_name FROM teacher WHERE substring_index(birthday, '/', 1) = ".date('m')."")->num_rows();
-        $query_accountant = $this->db->query("SELECT accountant_id, first_name, last_name FROM accountant WHERE substring_index(birthday, '/', 1) = ".date('m')."")->num_rows();
-        $query_librarian = $this->db->query("SELECT librarian_id, first_name, last_name FROM librarian WHERE substring_index(birthday, '/', 1) = ".date('m')."")->num_rows();
-        $query_student = $this->db->query("SELECT student_id FROM student WHERE substring_index(birthday, '/', 1) = ".date('m')."")->num_rows();
+        $query_admins = $this->db->query("SELECT admin_id, first_name, last_name FROM admin WHERE status = 1 AND MONTH(birthday) = ".date('m')."")->num_rows();
+        $query_teachers = $this->db->query("SELECT teacher_id, first_name, last_name FROM teacher WHERE status = 1 AND MONTH(birthday) = ".date('m')."")->num_rows();
+        $query_accountant = $this->db->query("SELECT accountant_id, first_name, last_name FROM accountant WHERE status = 1 AND MONTH(birthday) = ".date('m')."")->num_rows();
+        $query_librarian = $this->db->query("SELECT librarian_id, first_name, last_name FROM librarian WHERE status = 1 AND MONTH(birthday) = ".date('m')."")->num_rows();
+        $query_student = $this->db->query("SELECT student_id FROM student WHERE student_session = 1 AND MONTH(birthday) = ".date('m')."")->num_rows();
         $array_users = $query_admins+$query_teachers+$query_accountant+$query_librarian+$query_student;
         return $array_users;
     }
@@ -1356,43 +1356,43 @@ class Crud extends School
     {
         $year = $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;
         $array_users = array();
-        $query_admins = $this->db->query("SELECT admin_id, first_name, last_name, birthday FROM admin WHERE substring_index(birthday, '/', 1) = ".$month."")->result_array();
+        $query_admins = $this->db->query("SELECT admin_id, first_name, last_name, birthday FROM admin WHERE status = 1 AND MONTH(birthday) = ".$month."")->result_array();
         foreach($query_admins as $row)
         {
             $birthDate = $row['birthday'];
-            $array_admins= array('name' => $row['first_name'],'user_id' => $row['admin_id'],'birthday' => $row['birthday'], 'type' => 'admin', 'status' => 1);
+            $array_admins= array('name' => $row['first_name'],'user_id' => $row['admin_id'],'birthday' => $row['birthday'], 'type' => 'admin');
             array_push($array_users,$array_admins);
         }
-        $query_teachers = $this->db->query("SELECT teacher_id, first_name, last_name, birthday FROM teacher WHERE substring_index(birthday, '/', 1) = ".$month."")->result_array();
+        $query_teachers = $this->db->query("SELECT teacher_id, first_name, last_name, birthday FROM teacher WHERE status = 1 AND MONTH(birthday) = ".$month."")->result_array();
         foreach($query_teachers as $row2)
         {
             $birthDate = $row2['birthday'];
             $time = strtotime($birthDate);
-            $array_teachers = array('name' => $row2['first_name'],'user_id' => $row2['teacher_id'],'birthday' => $row2['birthday'], 'type' => 'teacher', 'status' => 1);
+            $array_teachers = array('name' => $row2['first_name'],'user_id' => $row2['teacher_id'],'birthday' => $row2['birthday'], 'type' => 'teacher');
             array_push($array_users,$array_teachers);
         }
-        $query_accountant = $this->db->query("SELECT accountant_id, first_name, last_name, birthday FROM accountant WHERE substring_index(birthday, '/', 1) = ".$month."")->result_array();
+        $query_accountant = $this->db->query("SELECT accountant_id, first_name, last_name, birthday FROM accountant WHERE status = 1 AND MONTH(birthday) = ".$month."")->result_array();
         foreach($query_accountant as $row3)
         {
             $birthDate = $row3['birthday'];
             $time = strtotime($birthDate);
-            $array_accountant = array('name' => $row3['first_name'],'user_id' => $row3['accountant_id'],'birthday' => $row3['birthday'], 'type' => 'accountant', 'status' => 1);
+            $array_accountant = array('name' => $row3['first_name'],'user_id' => $row3['accountant_id'],'birthday' => $row3['birthday'], 'type' => 'accountant');
             array_push($array_users,$array_accountant);
         }
-        $query_librarian = $this->db->query("SELECT librarian_id, first_name, last_name, birthday FROM librarian WHERE substring_index(birthday, '/', 1) = ".$month."")->result_array();
+        $query_librarian = $this->db->query("SELECT librarian_id, first_name, last_name, birthday FROM librarian WHERE status = 1 AND MONTH(birthday) = ".$month."")->result_array();
         foreach($query_librarian as $row4)
         {
             $birthDate = $row4['birthday'];
             $time = strtotime($birthDate);
-            $array_librarian = array('name' => $row4['first_name'], 'user_id' => $row4['librarian_id'],'birthday' => $row4['birthday'], 'type' => 'librarian', 'status' => 1);
+            $array_librarian = array('name' => $row4['first_name'], 'user_id' => $row4['librarian_id'],'birthday' => $row4['birthday'], 'type' => 'librarian');
             array_push($array_users,$array_librarian);
         }
-        $query_student = $this->db->query("SELECT student_id, birthday FROM student WHERE substring_index(birthday, '/', 1) = ".$month."")->result_array();
+        $query_student = $this->db->query("SELECT student_id, birthday FROM student WHERE student_session = 1 AND MONTH(birthday) = ".$month."")->result_array();
         foreach($query_student as $row5)
         {
             $birthDate = $row5['birthday'];
             $time = strtotime($birthDate);
-            $array_stduent = array('name' => $this->get_name('student', $row5['student_id']), 'birthday' => $row5['birthday'], 'user_id' => $row5['student_id'], 'type' => 'student', 'student_session' => 1);
+            $array_stduent = array('name' => $this->get_name('student', $row5['student_id']), 'birthday' => $row5['birthday'], 'user_id' => $row5['student_id'], 'type' => 'student');
             array_push($array_users,$array_stduent);
         }
         return $array_users;

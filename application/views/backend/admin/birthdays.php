@@ -32,11 +32,12 @@
                                                     <div class="control-block-button"></div>
                                                 </div>
                                             </div>
-                                            <div>
+                                            <div style="padding-left: 50px; padding-bottom: 10px;">
                                                 <a href="<?= base_url();?>admin/birthdays_export/">
                                                     <button id="btnExport" class="btn btn-info btn-sm btn-rounded">
                                                         <i class="picons-thin-icon-thin-0123_download_cloud_file_sync"
                                                             style="font-weight: 300; font-size: 25px;"></i>
+                                                    </button>
                                                 </a>
                                             </div>
                                             <div class="aec-full-message-w">
@@ -64,8 +65,19 @@
                                                                     class="col col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                                     <div class="ui-block grbg2">
                                                                         <div class="ui-block-title">
+
                                                                             <h6 class="title text-white">
-                                                                                <?= $m; ?></h6>
+                                                                                <?= $m; ?>
+                                                                            </h6>
+                                                                            <div style="float: right;">
+                                                                                <a href="<?= base_url()."admin/birthdays_export/".intval($ma)?>"
+                                                                                    <button id="btnExport"
+                                                                                    class="btn btn-info btn-sm btn-rounded">
+                                                                                    <i class="picons-thin-icon-thin-0123_download_cloud_file_sync"
+                                                                                        style="font-weight: 300; font-size: 25px;"></i>
+                                                                                    </button>
+                                                                                </a>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>

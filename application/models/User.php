@@ -1207,7 +1207,7 @@ class User extends School
         
     }
 
-    public function download_Excel_birthdays($month = 1)
+    public function download_Excel_birthdays($month = 0)
     {        
         $objPHPExcel = new PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
@@ -1226,21 +1226,29 @@ class User extends School
         $this->db->reset_query();
         $this->db->select("admin_id as user_id, 'office' as type_user, first_name, last_name, birthday");
         $this->db->where('status', 1);
+        if($month != 0)
+            $this->db->where('MONTH(birthday)', $month);
         $query_admin = $this->db->get('admin')->result_array();
         
         $this->db->reset_query();
         $this->db->select("teacher_id as user_id, 'teacher' as type_user, first_name, last_name, birthday");
         $this->db->where('status', 1);
+        if($month != 0)
+            $this->db->where('MONTH(birthday)', $month);
         $query_teacher = $this->db->get('teacher')->result_array();
         
         $this->db->reset_query();
         $this->db->select("accountant_id as user_id, 'office' as type_user, first_name, last_name, birthday");
         $this->db->where('status', 1);
+        if($month != 0)
+            $this->db->where('MONTH(birthday)', $month);
         $query_accountant = $this->db->get('accountant')->result_array();
 
         $this->db->reset_query();
         $this->db->select("student_id as user_id, 'student' as type_user, first_name, last_name, birthday");
         $this->db->where('student_session', 1);
+        if($month != 0)
+            $this->db->where('MONTH(birthday)', $month);
         $query_student = $this->db->get('student')->result_array();
                 
         foreach($query_admin as $item)
