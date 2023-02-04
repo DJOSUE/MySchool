@@ -531,7 +531,7 @@ function apply_fee() {
     var sel = document.getElementById("card_type_2");
     var text = sel.options[sel.selectedIndex].text;
 
-    // if (text != 'Visa') {
+    if (text != 'Visa') {
     var total = ((parseFloat(amount) * 5) / 100);
     var totalFee = parseFloat(total) + parseFloat(amount);
 
@@ -542,11 +542,11 @@ function apply_fee() {
         var htmlFee = "<b style='color:#ff214f'> Total Card : $" + parseFloat(totalFee).toFixed(2) + "</b>";
         document.getElementById('total_fee').innerHTML = htmlFee;
     }
-    // } else {
-    //     document.getElementById('card_fee').innerText = ""
-    //     document.getElementById('total_fee').innerText = ""
-    //     document.getElementById('totalCardFee').innerText = '00.00';
-    // }
+    } else {
+        document.getElementById('card_fee').innerText = ""
+        document.getElementById('total_fee').innerText = ""
+        document.getElementById('totalCardFee').innerText = '00.00';
+    }
 
     update_total();
 }

@@ -2321,6 +2321,7 @@ class Academic extends School
         $data['section_id']     = $this->input->post('section_id');
         $data['subject_id']     = $this->input->post('subject_id');
         $data['month']          = $this->input->post('month');
+        $data['reason']         = $this->input->post('reason');
         $data['created_by']     = $this->session->userdata('login_user_id');
 
         $this->db->insert('student_month', $data);

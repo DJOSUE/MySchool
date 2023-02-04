@@ -1345,7 +1345,7 @@
         </div>
         <br>
         <br>
-        <p class="MsoNormal" align="center" style='l'>
+        <p class="MsoNormal" align="center">
             <span lang=EN style='font-size:14.0pt;font-family:"Montserrat ExtraBold"'>
                 CREDIT CARD INFORMATION
             </span>

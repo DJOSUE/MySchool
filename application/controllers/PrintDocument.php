@@ -60,10 +60,10 @@
             );
             $today = date('d-m-Y_h:i:s');
             $html = $this->load->view('backend/print/student_month_certificate.php',$data, TRUE); 
-            $stylesheet = file_get_contents(base_url().'public/style/print/student_month_certificate.css');
+            $stylesheet = file_get_contents(base_url().'/public/style/print/smc.css');
             $pdfFilePath = "agreement_".$id.".pdf";
             $this->load->library('M_pdf');
-            $mpdf = new mPDF('utf-8', 'Letter-L', 0, '', 10, 10, 10, 10, 10, 'L'); 
+            $mpdf = new mPDF('utf-8', 'Letter-L', 0, '', 0, 0, 0, 0, 0, 'L'); 
             $mpdf->packTableData = true;
 
             $mpdf->WriteHTML($stylesheet,1);

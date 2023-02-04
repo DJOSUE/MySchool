@@ -173,7 +173,13 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="form-group label-floating">
+                                <label class="control-label"><?php echo getPhrase('reason');?>:</label>
+                                <textarea class="form-control" name="reason" rows="3"></textarea>
+                                <span class="material-input"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -213,7 +219,7 @@ function get_class_sections_subjects(section_id) {
     });
 }
 
-function get_subject_students(subject_id) {    
+function get_subject_students(subject_id) {
     $.ajax({
         url: '<?= base_url(); ?>tools/get_class_section_subject_students/' + subject_id,
         success: function(response) {

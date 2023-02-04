@@ -14,11 +14,14 @@
 
 <body class="c10 doc-content">
     <div>
-        <p class="c5"><span
-                style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 735.00px; height: 97.28px;"><img
-                    alt="" src="/public/style/print/images/image1.png"
+        <p class="c5">
+            <span
+                style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 735.00px; height: 97.28px;">
+                <img alt="" src="/public/style/print/images/image1.png"
                     style="width: 735.00px; height: 120.57px; margin-left: -0.00px; margin-top: -23.28px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
-                    title=""></span></p>
+                    title="">
+            </span>
+        </p>
     </div>
     <p class="c2"><span class="c8"></span></p>
     <p class="c2"><span class="c8"></span></p>
@@ -40,10 +43,10 @@
             students will be required to bring proof of previous programs attended.</span></p>
     <p class="c3"><span class="c12">&nbsp;</span></p>
     <p class="c6"><span class="c9">&nbsp;</span></p>
-    <br/><br/><br/><br/>
+    <br /><br /><br /><br />
     <p class="c6"><span class="c7">DSO/PDSO signature</span></p>
     <p class="c5 c11"><span class="c9"></span></p>
-    <br/><br/>
+    <br /><br />
     <div>
         <p class="c5">
             <span

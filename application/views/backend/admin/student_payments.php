@@ -166,8 +166,7 @@
                                                         <?php if($row2['status_id'] != 0  && $allow_payment):?>
                                                         <a onclick="make_payment(<?=$amortization_id.','.$amount.','.$materials.','.$fees.','.$overdue;?>)"
                                                             class="btn btn-rounded btn-success" data-toggle="tooltip"
-                                                            style="color: white;"
-                                                            data-placement="top"
+                                                            style="color: white;" data-placement="top"
                                                             data-original-title="<?php echo getPhrase('make_payment');?>">
                                                             <i
                                                                 class="os-icon picons-thin-icon-thin-0408_wallet_money_payment">
@@ -210,7 +209,8 @@
                                             </div>
                                             <div class="">
                                                 <label>
-                                                    <input name="previous_semester_payment" value="1" type="checkbox" checked hidden>
+                                                    <input name="previous_semester_payment" value="1" type="checkbox"
+                                                        checked hidden>
                                                 </label>
                                             </div>
                                         </div>
@@ -668,16 +668,16 @@ function apply_fee() {
     var text = sel.options[sel.selectedIndex].text;
 
     if (text != 'Visa') {
-    var total = ((parseFloat(amount) * 5) / 100);
-    var totalFee = parseFloat(total) + parseFloat(amount);
+        var total = ((parseFloat(amount) * 5) / 100);
+        var totalFee = parseFloat(total) + parseFloat(amount);
 
-    if (total > 0) {
-        document.getElementById('totalCardFee').innerText = parseFloat(total).toFixed(2);
-        var htmlFee = "<b style='color:#ff214f'> Card Fee : $" + parseFloat(total).toFixed(2) + "</b>";
-        document.getElementById('card_fee').innerHTML = htmlFee;
-        var htmlFee = "<b style='color:#ff214f'> Total Card : $" + parseFloat(totalFee).toFixed(2) + "</b>";
-        document.getElementById('total_fee').innerHTML = htmlFee;
-    }
+        if (total > 0) {
+            document.getElementById('totalCardFee').innerText = parseFloat(total).toFixed(2);
+            var htmlFee = "<b style='color:#ff214f'> Card Fee : $" + parseFloat(total).toFixed(2) + "</b>";
+            document.getElementById('card_fee').innerHTML = htmlFee;
+            var htmlFee = "<b style='color:#ff214f'> Total Card : $" + parseFloat(totalFee).toFixed(2) + "</b>";
+            document.getElementById('total_fee').innerHTML = htmlFee;
+        }
     } else {
         document.getElementById('card_fee').innerText = ""
         document.getElementById('total_fee').innerText = ""
