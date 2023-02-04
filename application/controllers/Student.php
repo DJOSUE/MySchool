@@ -1020,7 +1020,8 @@
         function request($param1 = "", $param2 = "")
         {
             $this->isStudent();
-            parse_str(substr(strrchr($_SERVER['REQUEST_URI'], "?"), 1), $_GET);
+            $student_id = $this->session->userdata('login_user_id');
+            parse_str(substr(strrchr($_SERVER['REQUEST_URI'], "?"), 1), $_GET);            
 
             if(html_escape($_GET['id']) != "")
             {
@@ -1041,12 +1042,21 @@
             }
             if ($param1 == "vacation") 
             {
-                //Validate if has more of 2
-                // if($this->){
+                $year           = $this->input->post('year');
+                $semester_id    = $this->input->post('semester_id');
+                $can_request    = $this->request->can_request($year, $semester_id, 'vacation', $student_id);
+
+                // echo $can_request;
+                // Validate if has more of 2
+                if($can_request == false){
                     $this->request->student_vacation_request();
-                    $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));                
-                //}
-                redirect(base_url() . 'student/request/', 'refresh');
+                    $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                }
+                else
+                {
+                    $this->session->set_flashdata('flash_error_message' , getPhrase('reached_limit_vacation'));
+                }
+                
             }
 
             $data['page_name']  = 'request';

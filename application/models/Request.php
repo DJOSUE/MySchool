@@ -279,11 +279,11 @@ class Request extends School
 
         if($query > 2)
         {
-            return false;
+            return 'true';
         }
         else
         {
-            return true;
+            return 'false';
         }
 
     }
