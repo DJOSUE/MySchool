@@ -689,5 +689,93 @@ class Task extends School
         }
         
         return $dropbox;
-    }    
+    }
+
+    function get_count($department_id = '', $category_id = '', $priority_id = '', $status_id = '', $text = '', $assigned_me = '', $due_date = '')
+    {
+        $user_id            = $this->session->userdata('login_user_id');
+        $account_type       =   get_table_user($this->session->userdata('role_id'));  
+
+        $this->db->reset_query();
+        $this->db->order_by('created_at', 'desc');
+        
+        if($department_id != '')
+        {
+            $array = $this->task->get_categories_where($department_id);
+            $this->db->where_in('category_id', $array);
+        }    
+        if($category_id != '')
+        {
+            $this->db->where('category_id', $category_id);
+        }
+        if($priority_id != '')
+        {
+            $this->db->where('priority_id', $priority_id);
+        }
+        if($status_id != '')
+        {   
+            $this->db->where('status_id', $status_id);
+        }
+        if($text != '')
+        {
+            $this->db->like('title' , str_replace("%20", " ", $text));
+        }
+        if($assigned_me == 1)
+        {
+            $this->db->where('assigned_to_type', $account_type);
+            $this->db->where('assigned_to' , $user_id);
+            
+        } 
+        if($due_date != '')
+        {
+            $this->db->where('due_date' , $due_date);
+        }
+        $query = $this->db->get("task");
+        return $query->num_rows();
+    }
+
+    function get_task_list($limit, $start, $department_id = '', $category_id = '', $priority_id = '', $status_id = '', $text = '', $assigned_me = '', $due_date = '')
+    {
+        $user_id            = $this->session->userdata('login_user_id');
+        $account_type       =   get_table_user($this->session->userdata('role_id'));  
+
+        $this->db->reset_query();
+        $this->db->order_by('created_at', 'desc');
+        $this->db->limit($limit, $start);
+    
+        if($department_id != '')
+        {
+            $array = $this->task->get_categories_where($department_id);
+            $this->db->where_in('category_id', $array);
+        }
+    
+        if($category_id != '')
+        {
+            $this->db->where('category_id', $category_id);
+        }
+        if($priority_id != '')
+        {
+            $this->db->where('priority_id', $priority_id);
+        }
+        if($status_id != '')
+        {   
+            $this->db->where('status_id', $status_id);
+        }
+        if($text != '')
+        {
+            $this->db->like('title' , str_replace("%20", " ", $text));
+        }
+        if($assigned_me == 1)
+        {
+            $this->db->where('assigned_to_type', $account_type);
+            $this->db->where('assigned_to' , $user_id);
+            
+        } 
+        if($due_date != '')
+        {
+            $this->db->where('due_date' , $due_date);
+        } 
+        $query = $this->db->get("task")->result_array();
+        return $query;
+    }
 }

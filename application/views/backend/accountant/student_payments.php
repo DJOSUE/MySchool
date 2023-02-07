@@ -206,12 +206,12 @@
                                     </div>
                                     <div class="col-sm-1">
                                         <div class="description-toggle" style="justify-content: flex-end;">
-                                            <div class="description-toggle-content" style="display: none;">
-                                                <div class="h6"><?= getPhrase('previous_semester_payment');?></div>
+                                            <div class="description-toggle-content">
+                                                <div class="h6"><?= getPhrase('payment_without_agreement');?></div>
                                             </div>
-                                            <div class="">
+                                            <div class="togglebutton">
                                                 <label>
-                                                    <input name="previous_semester_payment" value="1" type="checkbox" checked hidden readonly>
+                                                    <input name="previous_semester_payment" value="1" type="checkbox" >
                                                 </label>
                                             </div>
                                         </div>

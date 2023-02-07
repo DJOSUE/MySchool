@@ -46,6 +46,10 @@ class Register extends EduAppGT
         echo $this->user->checkPublicEmail();
     }
 
+    function applicant()
+    {
+        $this->load->view('backend/register_applicant');
+    }
     
 
     //Create account function.

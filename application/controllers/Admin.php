@@ -4297,7 +4297,7 @@
             $this->load->view('backend/index', $page_data);
         }
 
-        function task_list($param1 = '')
+        function task_list_old($param1 = '')
         {
             $this->isAdmin('task_module');
 
@@ -4340,8 +4340,127 @@
             $page_data['due_date']      = $due_date;
             $page_data['assigned_me']   = $assigned_me;
             $page_data['page_name']     = 'task_list';
-            $page_data['page_title']    =  getPhrase('task_list');
+            $page_data['page_title']    = getPhrase('task_list');
             $this->load->view('backend/index', $page_data);
+        }
+
+        function task_list($page = '')
+        {
+            $this->isAdmin('task_module');
+
+            if($page == 'clear')
+            {
+                $page = 0;
+                $data['department_id'] = "";
+                $data['category_id']   = "";
+                $data['priority_id']   = "";
+                $data['status_id']     = DEFAULT_TASK_OPEN_STATUS;
+                $data['text']          = "";
+                $data['search']        = "";
+                $data['due_date']      = "";
+                $data['assigned_me']   = 1;
+                $this->session->set_userdata($data);
+            }
+
+            if($page == '')
+                $page = 0;
+
+            if($_SERVER['REQUEST_METHOD'] === 'POST')
+            {   
+                $department_id  = $this->input->post('department_id');
+                $category_id    = $this->input->post('category_id');
+                $priority_id    = $this->input->post('priority_id');
+                $status_id      = $this->input->post('status_id');
+                $text           = $this->input->post('title');
+                $due_date       = $this->input->post('due_date');
+                $assigned_me    = $this->input->post('assigned_me');
+
+                $data['department_id'] = $department_id;
+                $data['category_id']   = $category_id;
+                $data['priority_id']   = $priority_id;
+                $data['status_id']     = $status_id;
+                $data['text']          = $text;
+                $data['search']        = $search;
+                $data['due_date']      = $due_date;
+                $data['assigned_me']   = $assigned_me;
+
+                $this->session->set_userdata($data);
+            }
+            else
+            {
+                $department_id  = $this->session->userdata('department_id');
+                $category_id    = $this->session->userdata('category_id');
+                $priority_id    = $this->session->userdata('priority_id');
+                $status_id      = $this->session->userdata('status_id');
+                $text           = $this->session->userdata('text');
+                $due_date       = $this->session->userdata('due_date');
+                $assigned_me    = $this->session->userdata('assigned_me');
+
+                $data['department_id'] = $department_id;
+                $data['category_id']   = $category_id;
+                $data['priority_id']   = $priority_id;
+                $data['status_id']     = $status_id;
+                $data['text']          = $text;
+                $data['search']        = $search;
+                $data['due_date']      = $due_date;
+                $data['assigned_me']   = $assigned_me;
+            }
+
+            $config = array();
+                $config["base_url"] = base_url() . "admin/task_list/";
+                $config["total_rows"] = $this->task->get_count($department_id, $category_id, $priority_id, $status_id, $text, $assigned_me, $due_date);
+                $config["per_page"] = 10;
+                $config["uri_segment"] = 3;
+
+                $config['use_page_numbers'] = TRUE;
+                $config['page_query_string'] = FALSE;
+                
+                $config['query_string_segment'] = '';
+                
+                $config['full_tag_open'] = '<ul class="pagination justify-content-end">';
+                $config['full_tag_close'] = '</ul>';
+                $config['attributes'] = ['class' => 'page-link'];
+                
+                $config['first_link'] = '&laquo; First';
+                $config['first_tag_open'] = '<li class="page-item">';
+                $config['first_tag_close'] = '</li>';
+                
+                $config['last_link'] = 'Last &raquo;';
+                $config['last_tag_open'] = '<li class="page-item">';
+                $config['last_tag_close'] = '</li>';
+                
+                $config['next_link'] = 'Next &rarr;';
+                $config['next_tag_open'] = '<li class="page-item">';
+                $config['next_tag_close'] = '</li>';
+                
+                $config['prev_link'] = '&larr; Prev';
+                $config['prev_tag_open'] = '<li class="page-item">';
+                $config['prev_tag_close'] = '</li>';
+                
+                $config['cur_tag_open'] = '<li class="page-item active"><a href="#" class="page-link">';
+                $config['cur_tag_close'] = '<span class="sr-only">(current)</span></a></li>';
+                $config['num_tag_open'] = '<li class="page-item">';
+                $config['num_tag_close'] = '</li>';
+            
+                $config['anchor_class'] = 'follow_link';
+
+            $this->pagination->initialize($config);
+
+            // Row position
+            if($page != 0){
+                $page = ($page-1) * $config["per_page"];
+            }
+            
+            $data['per_page'] = $config["per_page"];
+            $data['page']     = $page;
+
+            $page_data['search']        =   $data;
+            $page_data['links']         =   $this->pagination->create_links();
+            $page_data['task_list']     =   $this->task->get_task_list($config["per_page"], $page, $department_id,$category_id,$priority_id,$status_id,$text,$assigned_me,$due_date);
+            $page_data['page_name']     =   'task_list_pagination';            
+            $page_data['page_title']    =   getPhrase('task_list');
+            $this->load->view('backend/index', $page_data);
+
         }
 
         function task_applicant()

@@ -8,7 +8,7 @@
                     </li>
                     <li class="navs-item">
                         <a class="navs-links <?= $page_name == 'task_list' ? 'active' : ''?>"
-                            href="<?php echo base_url();?>admin/task_list/">
+                            href="<?php echo base_url();?>admin/task_list/clear">
                             <i class="os-icon picons-thin-icon-thin-0093_list_bullets"></i>
                             <span><?php echo getPhrase('task_list');?></span>
                         </a>

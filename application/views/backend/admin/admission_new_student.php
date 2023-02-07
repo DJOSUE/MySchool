@@ -554,6 +554,16 @@
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                             <div class="form-group label-floating">
                                                                 <label class="control-label">
+                                                                    <?= getPhrase('enrol_fee');?>
+                                                                </label>
+                                                                <input class="form-control" name="fees"
+                                                                    id="cost_fees" value="0"
+                                                                    onfocusout="agreement_amount_total()" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                            <div class="form-group label-floating">
+                                                                <label class="control-label">
                                                                     <?= getPhrase('books_fee');?>
                                                                 </label>
                                                                 <input class="form-control" name="books_fee"
@@ -1276,14 +1286,13 @@ function get_tuition() {
 function add_fees() {
     let index       = 2
     var nro         = document.getElementById("number_payments").value;
-    var amount      = parseFloat(document.getElementById("tuition").value);
+    var tuition     = parseFloat(document.getElementById("tuition").value);
     var downPayment = parseFloat(document.getElementById("amount_1").value);
     var costs       = parseFloat(totalCost());
     var discounts   = parseFloat(totalDiscount());
 
-    var total = amount;
-
-    var quota = (amount / parseInt(nro));
+    var total = tuition + costs;
+    var quota = Math.round(tuition / parseInt(nro));    
 
     if (nro == 1) {
         document.getElementById('amount_1').value               = ((quota + costs) - discounts);
@@ -1306,15 +1315,63 @@ function add_fees() {
             html += '            id="amount_' + index + '" value="' + quota + '"type="text" required="" readonly >'
             html += '    </div>'
             html += '</div>'
-            document.getElementById("payment_schedule").innerHTML += html;
+            document.getElementById("payment_schedule").innerHTML += html;            
         }
-        var name = "amount_" + (parseInt(index) - 1);
-        document.getElementById(name).value = (quota - discounts);
+
+        var last_index = parseInt(index) - 1;
+        
+        var total_quota = (quota * (last_index - 1)) + costs;
+        var last_quota = ((total - total_quota) - discounts);
+         
+        var name = "amount_" + last_index;
+        document.getElementById(name).value = last_quota;
     }
 
     validate_amount_1();
 
 }
+
+
+function add_fees_with_dow() {
+    let index = 2
+    var nro = document.getElementById("number_payments").value;
+    var amount = parseFloat(document.getElementById("tuition").value);
+    var downPayment = parseFloat(document.getElementById("amount_1").value);
+    var costs = parseFloat(totalCost());
+    var discounts = parseFloat(totalDiscount());
+
+    var total = amount - (downPayment - costs);
+    var quota = Math.round((total / (parseInt(nro) - 1)));
+
+    // document.getElementById('amount_1').value = (quota + costs);
+    document.getElementById("payment_schedule").innerHTML = "";
+
+    if (nro > 1) {
+        for (index; index <= nro; index++) {
+            let html = '<div class="col col-lg-6 col-md-6 col-sm-12 col-12">'
+            html += '    <div class="form-group label-floating">'
+            html += '        <label class="control-label">'
+            html += '            Payment ' + index
+            html += '        </label>'
+            html += '        <input class="form-control" name="amount_' + index + '"'
+            html += '            id="amount_' + index + '" value="' + quota + '"type="text" required="" readonly >'
+            html += '    </div>'
+            html += '</div>'
+            document.getElementById("payment_schedule").innerHTML += html;
+
+        }
+
+        var last_index = parseInt(index) - 1;
+
+        var total_quota = Math.round(quota * (last_index - 2))
+        var last_quota = Math.round((total - total_quota) - discounts)
+
+        var name = "amount_" + last_index;
+        document.getElementById(name).value = last_quota;
+    }
+
+}
+
 
 function agreement_amount_total() {
 
@@ -1405,46 +1462,6 @@ function validate_amount_1() {
 
         reset_total_payment();
     }
-}
-
-function add_fees_with_dow() {
-    let index = 2
-    var nro = document.getElementById("number_payments").value;
-    var amount = parseFloat(document.getElementById("tuition").value);
-    var downPayment = parseFloat(document.getElementById("amount_1").value);
-    var costs = parseFloat(totalCost());
-    var discounts = parseFloat(totalDiscount());
-
-    var total = amount - (downPayment - costs);
-    var quota = parseFloat((total / (parseInt(nro) - 1))).toFixed(2);
-
-    // document.getElementById('amount_1').value = (quota + costs);
-    document.getElementById("payment_schedule").innerHTML = "";
-
-    if (nro > 1) {
-        for (index; index <= nro; index++) {
-            let html = '<div class="col col-lg-6 col-md-6 col-sm-12 col-12">'
-            html += '    <div class="form-group label-floating">'
-            html += '        <label class="control-label">'
-            html += '            Payment ' + index
-            html += '        </label>'
-            html += '        <input class="form-control" name="amount_' + index + '"'
-            html += '            id="amount_' + index + '" value="' + quota + '"type="text" required="" readonly >'
-            html += '    </div>'
-            html += '</div>'
-            document.getElementById("payment_schedule").innerHTML += html;
-
-        }
-
-        var last_index = parseInt(index) - 1;
-
-        var total_quota = parseFloat(quota * (last_index - 2)).toFixed(2);
-        var last_quota = parseFloat((total - total_quota) - discounts).toFixed(2);
-
-        var name = "amount_" + last_index;
-        document.getElementById(name).value = last_quota;
-    }
-
 }
 
 function payment_total() {

@@ -306,6 +306,21 @@
                                         </div>
                                     </div>
                                     <div class="ui-block paddingtel">
+                                        <div class="pipeline white lined-success">
+                                            <div class="element-wrapper">
+                                                <h6 class="element-header"><?= getPhrase('policies');?></h6>
+                                            </div>
+                                            <div class="content">
+                                                <center>
+                                                    <a href="https://americanone-esl.com/document_pdf/catalogue.pdf"
+                                                        class="panel-btn" target="_blank">
+                                                        <?= getPhrase('catalogue');?>
+                                                    </a>
+                                                </center>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui-block paddingtel">
                                         <div class="ui-block-title">
                                             <h6 class="title"><?= getPhrase('chat_groups');?></h6>
                                         </div>

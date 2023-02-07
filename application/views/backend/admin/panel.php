@@ -693,6 +693,21 @@
                                         </div>
                                     </div>
                                     <div class="ui-block paddingtel">
+                                        <div class="pipeline white lined-success">
+                                            <div class="element-wrapper">
+                                                <h6 class="element-header"><?= getPhrase('policies');?></h6>
+                                            </div>
+                                            <div class="content">
+                                                <center>
+                                                    <a href="https://americanone-esl.com/document_pdf/catalogue.pdf"
+                                                        class="panel-btn" target="_blank">
+                                                        <?= getPhrase('catalogue');?>
+                                                    </a>
+                                                </center>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui-block paddingtel">
                                         <div class="ui-block-title">
                                             <h6 class="title"><?= getPhrase('chat groups');?></h6>
                                         </div>
@@ -871,7 +886,7 @@
                                                 <?= getPhrase('users_have_a_birthday_this_month');?>.
                                             </p>
                                             <a href="<?= base_url();?>admin/birthdays/"
-                                                style="background-color: #615dfa;line-height: 28px; font-size: .875rem; font-weight: 700;display: inline-block; text-align: center;width: 60%; height: 48px;box-shadow: 4px 7px 12px 0 rgb(97 93 250 / 20%);color:#fff;padding:10px;border-radius:10px;transition: background-color .2s ease-in-out, color .2s ease-in-out, border-color .2s ease-in-out, box-shadow .2s ease-in-out;"><?= getPhrase('view_all_birthdays');?></a>
+                                                class="panel-btn"><?= getPhrase('view_all_birthdays');?></a>
                                         </center>
                                         <div class="header-spacer"></div>
                                     </div><br>

@@ -310,6 +310,21 @@
                                         </div>
                                     </div>
                                     <div class="ui-block paddingtel">
+                                        <div class="pipeline white lined-success">
+                                            <div class="element-wrapper">
+                                                <h6 class="element-header"><?= getPhrase('policies');?></h6>
+                                            </div>
+                                            <div class="content">
+                                                <center>
+                                                    <a href="https://americanone-esl.com/document_pdf/catalogue.pdf"
+                                                        class="panel-btn" target="_blank">
+                                                        <?= getPhrase('catalogue');?>
+                                                    </a>
+                                                </center>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui-block paddingtel">
                                         <div class="widget w-create-fav-page">
                                             <div class="icons-block" style="margin-bottom: 10px;">
                                                 <i class="picons-thin-icon-thin-0729_student_degree_science_university_school_graduate text-white"

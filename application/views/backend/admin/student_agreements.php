@@ -79,7 +79,7 @@
                                             <tbody>
                                                 <?php 
                                                 foreach ($agreements as $key => $value):
-                                                    $amount = ((floatval($value['tuition']) - floatval($value['materials']) - floatval($value['fees'])) - (floatval($value['discounts']) + floatval($value['scholarship'])));
+                                                    $amount = ((floatval($value['tuition']) + floatval($value['materials']) + floatval($value['fees'])) - (floatval($value['discounts']) + floatval($value['scholarship'])));                                                   
                                                 ?>
                                                 <tr class="text-center">
                                                     <td>
