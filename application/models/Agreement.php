@@ -407,9 +407,10 @@ class Agreement extends School
         $this->academic->delete_student_enrollment($student_id, $semester_id, $year);
 
         //Delete all payments
-        foreach ($amortizations as $item) {
-            $var =             
-        }
+        // foreach ($amortizations as $item) {
+        //     $payment_id = $item
+        // }
+
         $year           = $agreement['year'];
         $semester_id    = $agreement['semester_id'];
         $student_id     = $agreement['student_id'];

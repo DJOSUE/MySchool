@@ -692,7 +692,6 @@ class Payment extends School
 
     public function update_payment($payment_id)
     {
-
         $invoice_number = $this->input->post('invoice_number'); 
 
         $this->db->reset_query();        
@@ -1267,9 +1266,18 @@ class Payment extends School
 
     public function get_payment_id_by_amortization($amortization_id)
     {
-        $this->db->reset_query();
-        $this->db->where('amortization_id', $amortization_id);
-        $payment_id = $this->db->get('payment_details')->row()->payment_id;
+        // $this->db->reset_query();        
+        // $this->db->order_by('payment_id' , 'ASC');
+        // $this->db->where('amortization_id', $amortization_id);
+        // $payments = $this->db->get('payment_details')->result_array();
+
+        // // $i=0;
+        // // $payment_id = 
+
+        // // foreach ($payments as $key => $value) {
+        // //     # code...
+        // // }
+
 
         return $payment_id;
     }

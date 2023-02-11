@@ -3080,13 +3080,16 @@
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $start_date = html_escape($this->input->post('start_date'));
                 $end_date   = html_escape($this->input->post('end_date'));
+                $cashier_id = html_escape($this->input->post('cashier_id'));
             }
             else
             {
                 $start_date = date_format($objDate, "m/d/Y");
                 $end_date   = date_format(date_add($objDate, $interval), "m/d/Y");
+                $cashier_id = "";
             }
             
+            $page_data['cashier_id'] = $cashier_id;
             $page_data['start_date'] = $start_date;
             $page_data['end_date']   = $end_date;
             $page_data['page_name']  = 'accounting_payments';
