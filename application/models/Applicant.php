@@ -90,7 +90,7 @@ class Applicant extends School
             $data_task['category_id']   = DEFAULT_TASK_FOLLOW_UP_CATEGORY;
             $data_task['status_id']     = DEFAULT_TASK_FOLLOW_UP_STATUS;
             $data_task['priority_id']   = DEFAULT_TASK_FOLLOW_UP_PRIORITY;
-            $data_task['description']   = getPhrase('follow_up_message');
+            $data_task['description']   = html_escape($this->input->post('comments'));
             $data_task['title']         = getPhrase('follow_up_title');
             $data_task['due_date']      = html_escape($this->input->post('contact_date'));
             $data_task['user_type']     = 'applicant';

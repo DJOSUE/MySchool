@@ -2570,6 +2570,23 @@ class Academic extends School
         return $students;
     }
 
+    function get_total_student_class_semester_finished($class_id, $year = "", $semester_id = "")
+    {
+        $year           =   $year == ""         ? $this->runningYear        : $year;
+        $semester_id    =   $semester_id == ""  ? $this->runningSemester    : $semester_id;
+
+        $this->db->reset_query();
+        $this->db->select('year, semester_id, class_id, section_id, student_id');
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);    
+        $this->db->where('class_id', $class_id);
+        $this->db->group_by(array('year', 'semester_id', 'class_id', 'section_id', 'student_id'));
+        $query = $this->db->get('v_mark_daily_final_exam');
+
+        $students = $query->num_rows();
+        return $students;
+    }
+
     function get_classes_by_semester($year = "", $semester_id = "")
     {
         $year           =   $year == ""         ? $this->runningYear        : $year;
@@ -2583,6 +2600,20 @@ class Academic extends School
         $query = $this->db->get('v_subject');
         $result = $query->result_array(); 
         return $result;
+    }
+
+    public function delete_student_enrollment($student_id, $year, $semester_id)
+    {
+        $this->db->reset_query();
+        $this->db->where('student_id', $student_id);
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $this->db->delete('enroll');
+
+        $table      = 'enroll';
+        $action     = 'delete';
+        $table_id   = $student_id .'-'. $year .'-'. $semester_id;
+        $this->crud->save_log($table, $action, $table_id, []);  
     }
 
 }

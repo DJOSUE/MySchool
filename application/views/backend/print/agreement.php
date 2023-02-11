@@ -4,6 +4,8 @@
     $this->db->where('agreement_id', $agreement_id);
     $agreement = $this->db->get('agreement')->row_array();
 
+
+
     $this->db->reset_query();        
     $this->db->where('agreement_id', $agreement_id);
     $agreement_amortization = $this->db->get('agreement_amortization')->result_array();    
@@ -25,6 +27,13 @@
     $agreement_date = $agreement['agreement_date'];
 
     $student_info = $this->crud->get_student_info_by_id($agreement['student_id']);
+
+    $student_image = $this->crud->get_image_url('student', $agreement['student_id']);
+
+    if(strpos($student_image, 'svg'))
+    {
+        $student_image = "";
+    }
 
     $student_name    = $student_info['first_name'] . ' ' . $student_info['last_name'];
     $student_address = $student_info['address'];
@@ -66,7 +75,197 @@
 </header>
 
 <body>
+    <!-- student_registration -->
+    <div class="m_WordSection1">
+        <div id="logo">
+            <p class="MsoNormal" align="center" style='text-align:center;line-height:normal; border:none;padding:0in'>
+                <span style='font-family:Rubik'>
+                    <img height=40 src="/public/uploads/logo_print.png">
+                </span>
+            </p>
+        </div>
+        <br />
+        <div id="checklist_new_student_title">
+            <p class="MsoNormal" align="center" style='text-align:center;line-height:normal;border:none;padding:0in'>
+                <span style='font-size:36.0pt;font-family:"Montserrat ExtraBold";color:#223367'>
+                    STUDENT REGISTRATION
+                </span>
+            </p>
+        </div>
+        <br />
+        <table border="0" cellspacing="0" cellpadding="0" align="left" width="682">
+            <tr style="background:#e7e6e6;">
+                <td width="172">
+                    <b>Name of student:</b>
 
+                </td>
+                <td width="510" colspan="3">
+                    <?=$student_name;?>
+                </td>
+            </tr>
+            <tr></tr>
+            <tr>
+                <td width="172">
+                    <b>Type of student:</b>
+                </td>
+                <td width="149">
+                    <?= $this->crud->get_program_name($student_info['program_id'])?>
+                </td>
+                <td width="173">
+                    <b>Country:</b>
+                </td>
+                <td width="188">
+                    <?= $this->crud->get_country_name($student_info['country_id'])?>
+                </td>
+            </tr>
+            <tr style="background:#e7e6e6;">
+                <td width="172">
+                    <b>Program:</b>
+                </td>
+                <td width="149">
+                    <?= $this->academic->get_program_type_name($agreement['program_type_id'])?>
+                </td>
+                <td width="173">
+                    <b>Email:
+                        </p>
+                </td>
+                <td width="188">
+                    <?=$student_info['email']?>
+                </td>
+            </tr>
+            <tr>
+                <td width="172">
+                    <b>Birthday:</b></p>
+                </td>
+                <td width="149">
+                    <?=$student_info['birthday']?>
+                </td>
+                <td width="173">
+                    <b>Phone Number:</b>
+                </td>
+                <td width="188">
+                    <?=$student_info['phone']?>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <br />
+        <h2 style='margin:0in;text-align:center;line-height:100%'>
+            <b>
+                INTERNATIONAL SIDE
+            </b>
+        </h2>
+        <br />
+        <br />
+        <div class="row">
+            <div class="column">
+                <table class="checklist center">
+                    <tr>
+                        <td width="37">
+                        </td>
+                        <td>
+                            Application for admission
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="37">
+                        </td>
+                        <td>
+                            Passport and/or visa
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="37">
+                        </td>
+                        <td>
+                            I-94 on-line current form available
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="37">
+                        </td>
+                        <td>
+                            Transfer form
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="37">
+                        </td>
+                        <td>
+                            Affidavit of Financial Support
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="37">
+                        </td>
+                        <td>
+                            Bank Statements
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="37">
+                        </td>
+                        <td>
+                            Registration signed by student
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="37">
+                        </td>
+                        <td>
+                            Placement test
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="37">
+                        </td>
+                        <td>
+                            Contract signed
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="37">
+                        </td>
+                        <td>
+                            Copy of enrollment given to student
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="37">
+                        </td>
+                        <td>
+                            Enrolled in MySchool
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="column">
+                <table class="checklist center" width="235">
+                    <tr>
+                        <td style="height: 250px;">
+                            <img class="center" height="250px" src="<?=$student_image?>">
+                        </td>
+                    </tr>
+                    <tr class="center" style="background-color: #e7e6e6;">
+                        <td>
+                            <span>
+                                IDENTIFICATION NUMBER
+                            </span>
+                        </td>
+                    </tr>
+                    <tr class="center">
+                        <td>
+                            <span>
+                                <?=$student_info['student_code'];?>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- student_registration -->
     <div id="student_registration">
         <div id="student_checklist" class="WordSection3">
             <div id="logo">
@@ -90,7 +289,7 @@
                 <table class="13" border="1" cellspacing=0 cellpadding=0 width=704
                     style='border-collapse:collapse;border:none'>
                     <tr style='height:0.75pt'>
-                        <td width="66" valign="top"
+                        <td width="66"
                             style='width:49.5pt;border:dotted #EFEFEF 1.0pt; background:#F3F3F3;padding:5.0pt 5.0pt 5.0pt 5.0pt;height:0.75pt'>
                             <p class="MsoNormal" align="center"
                                 style='text-align:center;line-height:normal; border:none'>
@@ -380,7 +579,6 @@
                 </div>
             </div>
             <br />
-            <br />
             <p class="MsoNormal" style='line-height:normal'>
                 <b>
                     <span style='font-size:8.0pt;font-family:Rubik'>
@@ -388,7 +586,6 @@
                     </span>
                 </b>
             </p>
-            <br />
             <br />
             <div id="signature" align="center">
                 <hr />
@@ -431,7 +628,7 @@
                 <table class="13" border="1" cellspacing=0 cellpadding=0 width=704
                     style='border-collapse:collapse;border:none'>
                     <tr style='height:0.75pt'>
-                        <td width="66" valign="top"
+                        <td width="66"
                             style='width:49.5pt;border:dotted #EFEFEF 1.0pt; background:#F3F3F3;padding:5.0pt 5.0pt 5.0pt 5.0pt;height:0.75pt'>
                             <p class="MsoNormal" align="center"
                                 style='text-align:center;line-height:normal; border:none'>
@@ -666,6 +863,8 @@
             <br /><br /><br />
         </div>
     </div>
+
+    <!-- service_agreement -->
     <div id="service_agreement" class=WordSection3>
         <div id="logo">
             <p class="MsoNormal" align="center" style='text-align:center;line-height:normal; border:none;padding:0in'>
@@ -748,8 +947,9 @@
                     <b>Student agrees to make monthly payment rates described below for classes requested by the
                         Student.</b>
                 </p>
-                <div align="center">
-                    <table class="payment">
+                <div class="center">
+
+                    <table class="payment center">
                         <tbody>
                             <tr>
                                 <td>
@@ -821,7 +1021,9 @@
 
                                 </td>
                             </tr>
-                            <?php foreach ($agreement_amortization as $key):
+                            <?php 
+
+                            foreach ($agreement_amortization as $key):
                                 $total_quota = intval($key['amount']) + intval($key['materials']) + intval($key['fees']);
                             ?>
                             <tr>
@@ -841,6 +1043,9 @@
                             <?php endforeach;?>
                         </tbody>
                     </table>
+
+                </div>
+                <div>
                     <p>
                         Student agrees to pay for all English class services provided as described in clause 3 to this
                         Agreement. All invoices for fees charged by American One in connection with the Service will be
@@ -968,8 +1173,16 @@
                 </div>
             </div>
         </div>
+        <?php
+            $nro = 4 - intval($agreement['number_payments']);
+            for ($i=0; $i < $nro; $i++) { 
+                echo '<br/>';
+            }
+        ?>
     </div>
     <br /><br />
+
+    <!-- agreement_ClassSchedule -->
     <div id="agreement_ClassSchedule" class=WordSection3>
         <div id="logo">
             <p class="MsoNormal" align="center" style='text-align:center;line-height:normal; border:none;padding:0in'>
@@ -1152,10 +1365,11 @@
             I, <?= $student_name?> understand and agree with the policies and procedures as they were explained to me on
             the date of my registration <?= $agreement_date?>. I also acknowledge that I received the policies
             orientation and rules for students.
-        </p>
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        </p>        
     </div>
 
+    <!-- online_policies_agreements -->
+    <?php if($agreement['modality_id'] == 2):?>
     <div id="online_policies_agreements" class=WordSection3>
         <div id="logo">
             <p class="MsoNormal" align="center" style='text-align:center;line-height:normal; border:none;padding:0in'>
@@ -1178,7 +1392,7 @@
             <table class="13" border="1" cellspacing=0 cellpadding=0 width=704
                 style='border-collapse:collapse;border:none'>
                 <tr style='height:0.75pt'>
-                    <td width="66" valign="top"
+                    <td width="66"
                         style='width:49.5pt;border:dotted #EFEFEF 1.0pt; background:#F3F3F3;padding:5.0pt 5.0pt 5.0pt 5.0pt;height:0.75pt'>
                         <p class="MsoNormal" align="center" style='text-align:center;line-height:normal; border:none'>
                             <b>
@@ -1316,7 +1530,9 @@
                 </b>
             </span>
         </p>
-        <br /> <br />
+        <br /><br />
+        <br /><br />
+        <br /><br /><br /><br />
         <div class="row" align="center">
             <div class="column" align="center">
                 <b>
@@ -1331,9 +1547,10 @@
                 </b>
             </div>
         </div>
-        <br /><br /><br />
     </div>
+    <?php endif;?>
 
+    <!-- automatic_payment -->
     <?php if($agreement['automatic_payment']):?>
     <div id="card_information" class=WordSection1>
         <div id="logo">
@@ -1345,11 +1562,13 @@
         </div>
         <br>
         <br>
-        <p class="MsoNormal" align="center">
-            <span lang=EN style='font-size:14.0pt;font-family:"Montserrat ExtraBold"'>
-                CREDIT CARD INFORMATION
-            </span>
-        </p>
+        <div>
+            <p class="MsoNormal" align="center" style='text-align:center;line-height:normal;border:none;padding:0in'>
+                <span style='font-size:36.0pt;font-family:"Montserrat ExtraBold";color:#223367'>
+                    CREDIT CARD INFORMATION
+                </span>
+            </p>
+        </div>
         <br /> <br /> <br />
         <table>
             <tr style='height:22.5pt'>
@@ -1366,28 +1585,26 @@
             </tr>
         </table>
         <br /> <br /> <br />
-        <p class="MsoNormal">
-            <span lang=EN style='font-size:10.0pt;font-family:Rubik'>
-                I wish to pay a down payment of $ <?=$agreement['down_payment']?> on the contract AMERICAN ONE.</span>
+
+        <span lang=EN style='font-size:10.0pt;font-family:Rubik'>
+            I wish to pay a down payment of $ <?=$agreement['down_payment']?> on the contract AMERICAN ONE.
+        </span>
         </p>
 
-        <p class="MsoNormal">
-            <span lang=EN style='font-size:10.0pt;font-family:Rubik'>
-                ●&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>
-            <span lang=EN style='font-size:10.0pt;font-family:Rubik'>
-                I authorize AMERICAN ONE to <b>charge automatic payments on my credit card account</b> on the
-                <?=$agreement['payment_date']?> of each month for <?=$number_payments?> months in the
-                amount of <?= $amount_agreed ?> to be applied to my financial contract for English classes. I
-                further understand that at any time the payment amount is rejected by the credit card company; I will be
-                billed for a $25.00 late fee.
-            </span>
+
+        <span lang=EN style='font-size:10.0pt;font-family:Rubik'>
+            I authorize AMERICAN ONE to <b>charge automatic payments on my credit card account</b> on the
+            <?=$agreement['payment_date']?> of each month for <?=$number_payments?> months in the
+            amount of <?= $amount_agreed ?> to be applied to my financial contract for English classes. I
+            further understand that at any time the payment amount is rejected by the credit card company; I will be
+            billed for a $25.00 late fee.
+        </span>
         </p>
 
         <br /><br />
         <br /><br />
-        <div align=center>
-            <table class="credit-card">
+        <div class=center>
+            <table class="credit-card center">
                 <tr>
                     <td class="line">
                         <?= $agreement_card['card_holder']?>
@@ -1397,12 +1614,12 @@
                     </td>
                     <td class="line">
                         <?= $this->payment->get_credit_card_name($agreement_card['type_card_id'])?>
-                    </td>                    
+                    </td>
                 </tr>
                 <tr>
                     <td>
                         Name of Card Holder
-                    </td>                    
+                    </td>
                     <td>
                         Zip Code
                     </td>
@@ -1445,7 +1662,7 @@
                     <td colspan="2">
                         American One Representative
                     </td>
-                    
+
                 </tr>
             </table>
         </div>
@@ -1454,11 +1671,34 @@
 
         <p class="MsoNormal" style='margin-bottom:10.0pt;text-align:justify;line-height:normal'>
             <i style='font-size:10.0pt;font-family:Rubik'>
-                If doesn’t pay in cash every month for the next <?=$agreement['number_payments']?> payment(s). American
+                If <?=$student_name?> doesn’t pay in cash every month for the next <?=$agreement['number_payments']?>
+                payment(s). American
                 One will charge the credit or debit card to receive the payment after 2 days of being overdue. *American
                 Express, Discover or Mastercard payments will have an additional 5% charge.
             </i>
         </p>
+        <br>
+        <br><br>
+        <br>
+        <div class=center>
+            <table class="credit-card center">
+                <tr>
+                    <td class="line">
+                    </td>
+                    <td class="line">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Card Holder Signature
+                    </td>
+                    <td>
+                        American One Representative
+                    </td>
+
+                </tr>
+            </table>
+        </div>
 
     </div>
     <?php endif;?>

@@ -740,9 +740,6 @@ class Task extends School
         $account_type       =   get_table_user($this->session->userdata('role_id'));  
 
         $this->db->reset_query();
-        $this->db->order_by('created_at', 'desc');
-        $this->db->limit($limit, $start);
-    
         if($department_id != '')
         {
             $array = $this->task->get_categories_where($department_id);
@@ -775,7 +772,9 @@ class Task extends School
         {
             $this->db->where('due_date' , $due_date);
         } 
+        $this->db->order_by('created_at', 'desc');
+        $this->db->limit($limit, $start);
         $query = $this->db->get("task")->result_array();
-        return $query;
+        return $query ;
     }
 }

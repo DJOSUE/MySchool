@@ -545,20 +545,20 @@
                                                                     <?= getPhrase('cost_tuition');?>
                                                                 </label>
                                                                 <input class="form-control" name="cost_tuition"
-                                                                    id="tuition" type="text" required="" readonly
-                                                                    value="0">
+                                                                    id="tuition" type="text" required=""
+                                                                    onfocusout="agreement_amount_total()">
                                                             </div>
                                                         </div>
-                                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class=" col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         </div>
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                             <div class="form-group label-floating">
                                                                 <label class="control-label">
                                                                     <?= getPhrase('enrol_fee');?>
                                                                 </label>
-                                                                <input class="form-control" name="fees"
-                                                                    id="cost_fees" value="0"
-                                                                    onfocusout="agreement_amount_total()" type="text">
+                                                                <input class="form-control" name="fees" id="cost_fees"
+                                                                    value="0" onfocusout="agreement_amount_total()"
+                                                                    type="text">
                                                             </div>
                                                         </div>
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -618,7 +618,8 @@
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                             <div class="description-toggle">
                                                                 <div class="description-toggle-content">
-                                                                    <div class="h6"><?= getPhrase('has_down_payment');?>
+                                                                    <div class="h6">
+                                                                        <?= getPhrase('has_down_payment');?>
                                                                     </div>
                                                                 </div>
                                                                 <div class="togglebutton">
@@ -694,7 +695,7 @@
                                                     <hr />
                                                     <div class="row" id="create_payment_div" style="display:none;">
                                                         <div class="row">
-                                                        <h3>Payment Transaction</h3>
+                                                            <h3>Payment Transaction</h3>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col" id="transactions">
@@ -1227,7 +1228,8 @@ function get_class_section_subjects(section_id) {
     var modality_id = document.getElementById("modality_id").value;
 
     $.ajax({
-        url: '<?= base_url();?>admin/get_class_section_subjects_modality/' + class_id + '/' + section_id + '/' +
+        url: '<?= base_url();?>admin/get_class_section_subjects_modality/' + class_id + '/' + section_id +
+            '/' +
             year + '/' + semester + '/' + modality_id,
         success: function(response) {
             jQuery('#subject_selector_holder').html(response).selectpicker('refresh');
@@ -1284,24 +1286,24 @@ function get_tuition() {
 }
 
 function add_fees() {
-    let index       = 2
-    var nro         = document.getElementById("number_payments").value;
-    var tuition     = parseFloat(document.getElementById("tuition").value);
+    let index = 2
+    var nro = document.getElementById("number_payments").value;
+    var tuition = parseFloat(document.getElementById("tuition").value);
     var downPayment = parseFloat(document.getElementById("amount_1").value);
-    var costs       = parseFloat(totalCost());
-    var discounts   = parseFloat(totalDiscount());
+    var costs = parseFloat(totalCost());
+    var discounts = parseFloat(totalDiscount());
 
     var total = tuition + costs;
-    var quota = Math.round(tuition / parseInt(nro));    
+    var quota = Math.round(tuition / parseInt(nro));
 
     if (nro == 1) {
-        document.getElementById('amount_1').value               = ((quota + costs) - discounts);
-        document.getElementById('amount_1').min                 = ((quota + costs) - discounts);
-        document.getElementById("payment_schedule").innerHTML   = "";
+        document.getElementById('amount_1').value = ((quota + costs) - discounts);
+        document.getElementById('amount_1').min = 1;
+        document.getElementById("payment_schedule").innerHTML = "";
     } else {
-        document.getElementById('amount_1').value               = (quota + costs);
-        document.getElementById('amount_1').min                 = (quota + costs);
-        document.getElementById("payment_schedule").innerHTML   = "";
+        document.getElementById('amount_1').value = (quota + costs);
+        document.getElementById('amount_1').min = 1;
+        document.getElementById("payment_schedule").innerHTML = "";
     }
 
     if (nro > 1) {
@@ -1315,14 +1317,14 @@ function add_fees() {
             html += '            id="amount_' + index + '" value="' + quota + '"type="text" required="" readonly >'
             html += '    </div>'
             html += '</div>'
-            document.getElementById("payment_schedule").innerHTML += html;            
+            document.getElementById("payment_schedule").innerHTML += html;
         }
 
         var last_index = parseInt(index) - 1;
-        
+
         var total_quota = (quota * (last_index - 1)) + costs;
         var last_quota = ((total - total_quota) - discounts);
-         
+
         var name = "amount_" + last_index;
         document.getElementById(name).value = last_quota;
     }
@@ -1384,7 +1386,7 @@ function agreement_amount_total() {
 
     document.getElementById('total_agreement').value = total;
     document.getElementById('amount_1').value = amount_1;
-    document.getElementById("amount_1").min = amount_1;
+    document.getElementById("amount_1").min = 1;
 
     add_fees();
 }

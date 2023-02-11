@@ -154,7 +154,7 @@ class Agreement extends School
             if($has_down_payment == 1 &&  $i == 1)
             {
                 $date = date("Y-m-d");
-                $month = intval($date, "m");
+                $month = intval(date_format(date_create($date), "m"));
             }
             else
             {
@@ -232,6 +232,139 @@ class Agreement extends School
         return $agreement_id;
     }
 
+    public function create_agreement_accountant($student_id)
+    {        
+        $year        = $this->runningYear;
+        $semester_id = $this->runningSemester;
+
+        $has_down_payment = html_escape($this->input->post('has_down_payment'));
+        $has_automatic_payment = html_escape($this->input->post('automatic_payment'));
+
+        //DownPayment add the payment
+        if($has_down_payment == 1)
+        {
+            $down_payment = floatval($this->input->post('amount_1'));
+            $data['down_payment'] = $down_payment;
+        }
+
+        // Get the enrolment ID
+        $semester_enroll = $this->academic->get_semester_enroll($year, $semester_id);
+
+        $data['student_id']         = $student_id;
+        $data['agreement_date']     = date('Y-m-d');        
+        $data['tuition']            = html_escape($this->input->post('cost_tuition'));
+        $data['scholarship']        = html_escape($this->input->post('discount_scholarship'));
+        $data['discounts']          = html_escape($this->input->post('discount'));
+        $data['materials']          = html_escape($this->input->post('books_fee'));
+        $data['fees']               = html_escape($this->input->post('fees'));
+        $data['modality_id']        = 0;
+        $data['book_type']          = '';
+        $data['program_type_id']    = 0;
+        $data['number_payments']    = html_escape($this->input->post('number_payments'));
+        $data['payment_date']       = html_escape($this->input->post('payment_date'));
+        $data['automatic_payment']  = $has_automatic_payment;
+        $data['created_by']         = $this->session->userdata('login_user_id');        
+        $data['year']               = $year;
+        $data['semester_id']        = $semester_id;
+        $data['semester_enroll_id'] = $semester_enroll['semester_enroll_id'];        
+
+        $this->db->insert('agreement', $data);
+
+        $table      = 'agreement';
+        $action     = 'insert';
+        $agreement_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $agreement_id, $data);
+
+        $number_payments = $data['number_payments'];
+        $payment_date    = $data['payment_date'];
+        $start_semester  = $semester_enroll['start_date'];
+
+        $objDate = date_create($start_semester);
+
+        $current_date = date_create(date("Y-m-d"));
+
+        if( $current_date > $objDate)
+        {
+            $objDate = $current_date;
+        }
+
+        $month = intval(date_format($objDate, "m"));
+
+        // Create payment Schedule
+        for ($i=1; $i <= $number_payments; $i++) 
+        {
+            $name       = 'amount_'.$i;
+            $dateName   = 'paid_amount_'.$i;
+
+            $date = html_escape($this->input->post('due_date_'.$name));
+            $paid = html_escape($this->input->post($dateName));
+
+            $due_date   = date_create($date);
+
+            $dataAmortization['amortization_no'] = $i;
+            $dataAmortization['agreement_id']     = $agreement_id;
+            $dataAmortization['amount']          = html_escape($this->input->post($name));
+            $dataAmortization['due_date']        = date_format($due_date, "Y-m-d");
+            $dataAmortization['orig_due_date']   = date_format($due_date, "Y-m-d");
+
+            if($i == 1)
+            {                
+                $fees       = floatval($data['fees']);
+                $materials  = floatval($data['materials']);
+                $amount     = floatval($dataAmortization['amount']) - $fees - $materials;
+
+                $dataAmortization['amount']     = $amount;
+                $dataAmortization['materials']  = $materials;
+                $dataAmortization['fees']       = $fees;
+            }
+            else
+            {                
+                $dataAmortization['materials']  = null;
+                $dataAmortization['fees']       = null;
+            }
+
+            if($paid == 1)
+            {
+                $dataAmortization['status_id']       = DEFAULT_AMORTIZATION_PAID;
+            }
+            else
+            {
+                $dataAmortization['status_id']       = DEFAULT_AMORTIZATION_PENDING;
+            }
+
+            $this->db->insert('agreement_amortization', $dataAmortization);
+
+            $table      = 'agreement_amortization';
+            $action     = 'insert';
+            $insert_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $insert_id, $dataAmortization);
+            $month++;
+
+            
+        }
+
+        //Add Card info(Automatic payment)
+        if($has_automatic_payment == 1)
+        {
+            $dataCard['agreement_id']       = $agreement_id;
+            $dataCard['type_card_id']       = $this->input->post('type_card_id');
+            $dataCard['card_holder']        = $this->input->post('card_holder');
+            $dataCard['card_number']        = get_encrypt($this->input->post('card_number'));
+            $dataCard['security_code']      = get_encrypt($this->input->post('security_code'));
+            $dataCard['expiration_date']    = get_encrypt($this->input->post('expiration_date'));
+            $dataCard['zip_code']           = get_encrypt($this->input->post('zip_code'));
+
+            $this->db->insert('agreement_card', $dataCard);
+
+            $table      = 'agreement_card';
+            $action     = 'insert';
+            $table_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $table_id, $data);            
+        }
+        
+        return $agreement_id;
+    }
+
     public function get_agreement_info($agreement_id)
     {
         $this->db->reset_query();
@@ -248,5 +381,61 @@ class Agreement extends School
         $agreements = $this->db->get('agreement')->result_array();
 
         return $agreements;
+    }
+
+    public function get_agreement_agreement_amortization($agreement_id)
+    {
+        $this->db->reset_query();                                                
+        $this->db->order_by('due_date' , 'ASC');
+        $this->db->where('agreement_id', $agreement_id);
+        $amortizations = $this->db->get('agreement_amortization')->result_array();
+
+        return $amortizations;
+    }
+
+    public function delete_agreement($agreement_id)
+    {
+        $agreement_id = base64_decode($agreement_id);
+
+        $agreement = $this->get_agreement_info($agreement_id);
+        $amortizations = $this->get_agreement_agreement_amortization($agreement_id);
+
+        //Delete student enrollment 
+        $year           = $agreement['year'];
+        $semester_id    = $agreement['semester_id'];
+        $student_id     = $agreement['student_id'];
+        $this->academic->delete_student_enrollment($student_id, $semester_id, $year);
+
+        //Delete all payments
+        foreach ($amortizations as $item) {
+            $var =             
+        }
+        $year           = $agreement['year'];
+        $semester_id    = $agreement['semester_id'];
+        $student_id     = $agreement['student_id'];
+        $this->academic->delete_student_enrollment($student_id, $semester_id, $year);
+
+        $this->db->reset_query();
+        $this->db->where('agreement_id', $agreement_id);
+        $this->db->delete('agreement');
+
+        $table      = 'agreement';
+        $action     = 'delete';
+        $this->crud->save_log($table, $action, $agreement_id, []);  
+
+        $this->db->where('agreement_id', $agreement_id);
+        $this->db->delete('agreement_amortization');
+
+        $table      = 'agreement_amortization';
+        $action     = 'delete';
+        $this->crud->save_log($table, $action, $agreement_id, []);
+
+        $this->db->where('agreement_id', $agreement_id);
+        $this->db->delete('agreement_card');
+
+        $table      = 'agreement_card';
+        $action     = 'delete';
+        $this->crud->save_log($table, $action, $agreement_id, []);
+
     }
 }

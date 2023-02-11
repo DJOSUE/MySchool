@@ -18,6 +18,12 @@
         $this->db->where('year', $running_year);
         $this->db->where('semester_id', $running_semester);
         $agreement = $this->db->get('agreement')->row_array();
+
+        $has_agreement = false;
+        if($agreement['agreement_id'] != '')
+        {
+            $has_agreement = true;
+        }
 ?>
 
 <!-- <link rel="stylesheet" type="text/css" href="public/assets/plugins/DataTables/datatables.min.css" />
@@ -94,11 +100,12 @@
                                                 $this->db->reset_query();                                                
                                                 $this->db->order_by('due_date' , 'ASC');
                                                 $this->db->where('agreement_id', $agreement['agreement_id']);
-                                                $agreement = $this->db->get('agreement_amortization')->result_array();
+                                                $amortization = $this->db->get('agreement_amortization')->result_array();
 
+                                                $tuition_pending    = 0;
                                                 $next_agreement = $this->payment->get_next_amortization($student_id);
 
-                                                foreach($agreement as $row2):
+                                                foreach($amortization as $row2):
                                                     $allow_payment      = true;
                                                     $overdue            = false;
                                                     $color_due          = 'primary';
@@ -121,6 +128,12 @@
                                                         $paid = $this->db->get('payment_details')->row()->amount; 
 
                                                         $total = $total - $paid;
+                                                    }
+                                                    
+                                                    // calculate the pending 
+                                                    if($status_id == DEFAULT_AMORTIZATION_PARTIAL || $status_id == DEFAULT_AMORTIZATION_PENDING)
+                                                    {
+                                                        $tuition_pending += $amount;
                                                     }
                                                     
                                                     //Due date
@@ -168,12 +181,14 @@
                                                     </td>
                                                     <td>
                                                         <?php if($row2['status_id'] != 0  && $allow_payment):?>
-                                                        <a onclick="make_payment(<?=$amortization_id.','.$amount.','.$materials.','.$fees.','.$overdue;?>)"
-                                                            class="grey" data-toggle="tooltip" data-placement="top"
-                                                            data-original-title="<?= getPhrase('make_payment');?>">
+                                                        <a onclick="make_payment(<?=$amortization_id.','.$amount.','.$materials.','.$fees.','.$overdue.','.$tuition_pending;?>)"
+                                                            class="btn btn-rounded btn-success" data-toggle="tooltip"
+                                                            style="color: white;" data-placement="top"
+                                                            data-original-title="<?php echo getPhrase('make_payment');?>">
                                                             <i
                                                                 class="os-icon picons-thin-icon-thin-0408_wallet_money_payment">
                                                             </i>
+                                                            <?= getPhrase('pay_now')?>
                                                         </a>
                                                         <?php endif;?>
                                                     </td>
@@ -204,6 +219,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <?php                                    
+                                    if($has_agreement):                                    
+                                    ?>
                                     <div class="col-sm-1">
                                         <div class="description-toggle" style="justify-content: flex-end;">
                                             <div class="description-toggle-content">
@@ -211,11 +229,26 @@
                                             </div>
                                             <div class="togglebutton">
                                                 <label>
-                                                    <input name="previous_semester_payment" value="1" type="checkbox" >
+                                                    <input name="previous_semester_payment" value="1" type="checkbox">
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
+                                    <?php else:?>
+                                    <div class="col-sm-1">
+                                        <div class="description-toggle" style="justify-content: flex-end;">
+                                            <div class="description-toggle-content" style="display: none;">
+                                                <div class="h6"><?= getPhrase('previous_semester_payment');?></div>
+                                            </div>
+                                            <div class="">
+                                                <label>
+                                                    <input name="previous_semester_payment" value="1" type="checkbox"
+                                                        checked hidden>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <?php endif;?>
                                     <div class="col-sm-1">
                                         <div class="row" style="justify-content: flex-end;">
                                             <div class="form-buttons">
@@ -531,7 +564,7 @@
                                                 $this->db->order_by('created_at' , 'desc');
                                                 $invoices = $this->db->get_where('payment', array('user_type' => 'student','user_id' => $row['student_id']))->result_array();
                                                 foreach($invoices as $row2):
-                                                    $delete_url     = base_url().'payments/delete/'.$row2['payment_id'].'/'.base64_encode('accountant/student_payments/'.$row['student_id']);
+                                                    $delete_url     = base_url().'payments/delete/'.base64_encode($row2['payment_id']).'/'.base64_encode('accountant/student_payments/'.$row['student_id']);
                                                     $invoice_url    = base_url().'accountant/payment_invoice/'.base64_encode($row2['payment_id']);
                                                     $return_url     = base64_encode('accountant/student_payments/'.$student_id.'/');
                                                 ?>
@@ -599,13 +632,14 @@
 </div>
 <?php endforeach;?>
 <script type="text/javascript">
-function make_payment(amortization_id, amount, materials, fees, overdue) {
+function make_payment(amortization_id, amount, materials, fees, overdue, tuition_pending) {
 
     document.getElementById('income_amount_1').value = amount;
+    document.getElementById('income_amount_1').max = tuition_pending;
     document.getElementById('amortization_id').value = amortization_id;
 
     document.getElementById('income_amount_2').value = materials;
-    document.getElementById('income_amount_3').value = fees;  
+    document.getElementById('income_amount_3').value = fees;
 
     if (overdue == 1) {
         late_fee = 'income_amount_' + '<?=CONCEPT_LATE_FEE_ID;?>';
@@ -643,6 +677,19 @@ $('.currency').keyup(function() {
 });
 
 function amount_total() {
+
+    var error = "";
+    var tuition_pending = document.getElementById('income_amount_1').max;
+    var tuition = document.getElementById('income_amount_1').value;
+
+    if (tuition_pending < tuition) {
+        error = "<b style='color:#ff214f'>The tuition must be equal to or less than " + tuition_pending + " </b>";
+        document.getElementById("btnPayment").disabled = true;
+    } else {
+        document.getElementById("btnPayment").disabled = false;
+    }
+    $("#amount_error").html(error);
+
     var arr = document.querySelectorAll('input[id^="income_amount_"]');
     var total = 0.00;
     for (var i = 0; i < arr.length; i++) {
@@ -693,16 +740,16 @@ function apply_fee() {
     var text = sel.options[sel.selectedIndex].text;
 
     if (text != 'Visa') {
-    var total = ((parseFloat(amount) * 5) / 100);
-    var totalFee = parseFloat(total) + parseFloat(amount);
+        var total = ((parseFloat(amount) * 5) / 100);
+        var totalFee = parseFloat(total) + parseFloat(amount);
 
-    if (total > 0) {
-        document.getElementById('totalCardFee').innerText = parseFloat(total).toFixed(2);
-        var htmlFee = "<b style='color:#ff214f'> Card Fee : $" + parseFloat(total).toFixed(2) + "</b>";
-        document.getElementById('card_fee').innerHTML = htmlFee;
-        var htmlFee = "<b style='color:#ff214f'> Total Card : $" + parseFloat(totalFee).toFixed(2) + "</b>";
-        document.getElementById('total_fee').innerHTML = htmlFee;
-    }
+        if (total > 0) {
+            document.getElementById('totalCardFee').innerText = parseFloat(total).toFixed(2);
+            var htmlFee = "<b style='color:#ff214f'> Card Fee : $" + parseFloat(total).toFixed(2) + "</b>";
+            document.getElementById('card_fee').innerHTML = htmlFee;
+            var htmlFee = "<b style='color:#ff214f'> Total Card : $" + parseFloat(totalFee).toFixed(2) + "</b>";
+            document.getElementById('total_fee').innerHTML = htmlFee;
+        }
     } else {
         document.getElementById('card_fee').innerText = ""
         document.getElementById('total_fee').innerText = ""

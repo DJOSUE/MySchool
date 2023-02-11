@@ -397,6 +397,8 @@ class Payments extends EduAppGT
 
     public function manual_payment_process($user_id, $user_type)
     {
+        $this->isLogin();
+
         $this->payment->create_payment($user_id, $user_type);
         
         $message =  getPhrase('successfully_added');
@@ -418,24 +420,39 @@ class Payments extends EduAppGT
         $this->load->view('backend/index', $page_data);
     }
     
-    public function update_amortization_status($payment_id)
+    public function update_amortization_status($amortization_id)
     {
         echo '<pre>';
-        var_dump($this->payment->update_amortization_status_delete($payment_id));
+        var_dump($this->payment->update_amortization_status_delete($amortization_id));
         echo '</pre>';
     }
 
-    public function delete($payment_id, $return_url)
+    public function delete($param1, $return_url)
     {
+        $this->isLogin();
+        $payment_id = base64_decode($param1);
         $this->payment->delete_payment($payment_id);
 
         redirect(base_url() . base64_decode($return_url), 'refresh');
     }
 
-    public function update($payment_id, $return_url)
+    public function update($param1, $return_url = '')
     {
+        $this->isLogin();
+        $payment_id = base64_decode($param1);
         $this->payment->update_payment($payment_id);
         redirect(base_url() . base64_decode($return_url), 'refresh');
+    }
+
+    function isLogin()
+    {
+        $array      = ['admin', 'accountant'];
+        $login_type = $this->session->userdata('login_type');
+        
+        if (!in_array($login_type, $array))
+        {
+            redirect(base_url(), 'refresh');
+        }
     }
 
 }

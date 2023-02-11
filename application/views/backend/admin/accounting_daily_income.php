@@ -199,9 +199,9 @@ td {
             </div>
         </div><br>
         <?php 
-            echo '<pre>';
-            var_dump( $first_date);
-            echo '</pre>';
+            // echo '<pre>';
+            // var_dump( $first_date);
+            // echo '</pre>';
         ?>
         <div class="content-i">
             <div class="content-box">

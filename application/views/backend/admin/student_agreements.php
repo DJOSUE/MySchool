@@ -80,6 +80,7 @@
                                                 <?php 
                                                 foreach ($agreements as $key => $value):
                                                     $amount = ((floatval($value['tuition']) + floatval($value['materials']) + floatval($value['fees'])) - (floatval($value['discounts']) + floatval($value['scholarship'])));                                                   
+                                                    $delete_url = base_url().'admin/student/delete_agreement/'.base64_encode($value['agreement_id']).'/'.base64_encode($student_id);
                                                 ?>
                                                 <tr class="text-center">
                                                     <td>
@@ -90,10 +91,10 @@
                                                     </td>
                                                     <td>
                                                         <?= $value['number_payments'];?>
-                                                    </td> 
+                                                    </td>
                                                     <td>
                                                         <?= intval($value['automatic_payment']) == 0 ? 'No': 'Yes';?>
-                                                    </td>                                                    
+                                                    </td>
                                                     <td>
                                                         <?= $this->academic->get_program_type_name($value['program_type_id']);?>
                                                     </td>
@@ -122,6 +123,15 @@
                                                             data-original-title="<?= getPhrase('print_agreement');?>">
                                                             <i class="os-icon picons-thin-icon-thin-0333_printer"></i>
                                                         </a>
+                                                        <?php if(has_permission('management_agreements')):?>
+                                                        <a class="grey" data-toggle="tooltip" data-placement="top"
+                                                            data-original-title="<?= getPhrase('delete_agreement');?>"
+                                                            onClick="return confirm('<?= getPhrase('confirm_delete');?>')"
+                                                            href="<?= $delete_url;?>">
+                                                            <i
+                                                                class="os-icon picons-thin-icon-thin-0056_bin_trash_recycle_delete_garbage_empty"></i>
+                                                        </a>
+                                                        <?php endif;?>
                                                     </td>
                                                 </tr>
                                                 <?php endforeach;?>

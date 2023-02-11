@@ -18,6 +18,14 @@
         $this->db->where('year', $running_year);
         $this->db->where('semester_id', $running_semester);
         $agreement = $this->db->get('agreement')->row_array();
+
+        $has_agreement = false;
+        if($agreement['agreement_id'] != '')
+        {
+            $has_agreement = true;
+        }
+
+
 ?>
 
 <style>
@@ -90,11 +98,12 @@
                                                 $this->db->reset_query();                                                
                                                 $this->db->order_by('due_date' , 'ASC');
                                                 $this->db->where('agreement_id', $agreement['agreement_id']);
-                                                $agreement = $this->db->get('agreement_amortization')->result_array();
+                                                $amortization = $this->db->get('agreement_amortization')->result_array();
 
-                                                $next_agreement = $this->payment->get_next_amortization($student_id);
+                                                $next_agreement     = $this->payment->get_next_amortization($student_id);
+                                                $tuition_pending    = 0;
 
-                                                foreach($agreement as $row2):
+                                                foreach($amortization as $row2):
                                                     $allow_payment      = true;
                                                     $overdue            = 0;
                                                     $color_due          = 'primary';
@@ -108,7 +117,7 @@
                                                     $total = $amount + $materials + $fees;
 
                                                     // Partial Payment
-                                                    if($status_id == 2)
+                                                    if($status_id == DEFAULT_AMORTIZATION_PARTIAL)
                                                     {                                                      
                                                         $this->db->reset_query();
                                                         $this->db->select_sum('amount');
@@ -116,7 +125,14 @@
                                                         $this->db->where('concept_type =', '1');
                                                         $paid = $this->db->get('payment_details')->row()->amount; 
 
-                                                        $total = $total - $paid;
+                                                        $total  -= $paid;
+                                                        $amount -= $paid;
+                                                    }
+
+                                                    // calculate the pending 
+                                                    if($status_id == DEFAULT_AMORTIZATION_PARTIAL || $status_id == DEFAULT_AMORTIZATION_PENDING)
+                                                    {
+                                                        $tuition_pending += $amount;
                                                     }
                                                     
                                                     //Due date
@@ -164,7 +180,7 @@
                                                     </td>
                                                     <td>
                                                         <?php if($row2['status_id'] != 0  && $allow_payment):?>
-                                                        <a onclick="make_payment(<?=$amortization_id.','.$amount.','.$materials.','.$fees.','.$overdue;?>)"
+                                                        <a onclick="make_payment(<?=$amortization_id.','.$amount.','.$materials.','.$fees.','.$overdue.','.$tuition_pending;?>)"
                                                             class="btn btn-rounded btn-success" data-toggle="tooltip"
                                                             style="color: white;" data-placement="top"
                                                             data-original-title="<?php echo getPhrase('make_payment');?>">
@@ -202,6 +218,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <?php                                    
+                                    if($has_agreement):                                    
+                                    ?>
                                     <div class="col-sm-1">
                                         <div class="description-toggle" style="justify-content: flex-end;">
                                             <div class="description-toggle-content">
@@ -214,6 +233,21 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <?php else:?>
+                                    <div class="col-sm-1">
+                                        <div class="description-toggle" style="justify-content: flex-end;">
+                                            <div class="description-toggle-content" style="display: none;">
+                                                <div class="h6"><?= getPhrase('previous_semester_payment');?></div>
+                                            </div>
+                                            <div class="">
+                                                <label>
+                                                    <input name="previous_semester_payment" value="1" type="checkbox"
+                                                        checked hidden>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <?php endif;?>
                                     <div class="col-sm-1">
                                         <div class="row" style="justify-content: flex-end;">
                                             <div class="form-buttons">
@@ -233,6 +267,9 @@
                                             <div class="row" style="padding: 0 50px;">
                                                 <input type="hidden" id="amortization_id" name="amortization_id">
                                                 <div class="table-responsive">
+                                                    <small>
+                                                        <span id="amount_error"></span>
+                                                    </small>
                                                     <table id="items" class="table table-padded">
                                                         <thead>
                                                             <th><?=getPhrase('type')?></th>
@@ -514,23 +551,28 @@
                                             <thead>
                                                 <tr>
                                                     <th class="orderby"><?= getPhrase('invoice_number');?></th>
+                                                    <th class="orderby"><?= getPhrase('invoice_date');?></th>
                                                     <th class="orderby"><?= getPhrase('amount');?></th>
                                                     <th class="orderby"><?= getPhrase('comment');?></th>
                                                     <th class="orderby"><?= getPhrase('created_by');?></th>
-                                                    <th class="orderby"><?= getPhrase('created_at');?></th>
-                                                    <th></th>
+                                                    <th class="row-actions"></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php
                                                 $this->db->reset_query();                                                
                                                 $this->db->order_by('created_at' , 'desc');
-                                                $invoices = $this->db->get_where('payment', array('user_type' => 'student','user_id' => $row['student_id']))->result_array();
+                                                $invoices = $this->db->get_where('payment', array('user_type' => 'student','user_id' => $student_id))->result_array();
                                                 foreach($invoices as $row2): 
+                                                    $return_url = base64_encode('admin/student_payments/'.$student_id.'/');
+                                                    $delete_url = base_url().'payments/delete/'.base64_encode($row2['payment_id']).'/'.base64_encode('admin/student_payments/'.$student_id);
                                             ?>
                                                 <tr>
                                                     <td>
                                                         <?= $row2['invoice_number'];?>
+                                                    </td>
+                                                    <td>
+                                                        <?= $row2['invoice_date'];?>
                                                     </td>
                                                     <td>
                                                         <span class="badge badge-primary">
@@ -540,9 +582,9 @@
                                                     <td>
                                                         <?= $row2['comment'];?>
                                                     </td>
-                                                    <td>
+                                                    <!-- <td>
                                                         <?= $row2['created_at'];?>
-                                                    </td>
+                                                    </td> -->
                                                     <td>
                                                         <?= $this->crud->get_name($row2['created_by_type'], $row2['created_by']);?>
                                                     </td>
@@ -555,6 +597,23 @@
                                                                 class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible">
                                                             </i>
                                                         </a>
+                                                        <?php if(has_permission('management_payments')):?>
+                                                        <a class="grey" href="javascript:void(0);" data-toggle="tooltip"
+                                                            data-toggle="tooltip" data-placement="top"
+                                                            data-original-title="<?= getPhrase('edit_invoice');?>"
+                                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_payment_invoice_update/<?= $row2['payment_id'].'/'.$return_url;?>');">
+                                                            <i
+                                                                class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new">
+                                                            </i>
+                                                        </a>
+                                                        <a class="grey" data-toggle="tooltip" data-placement="top"
+                                                            data-original-title="<?= getPhrase('delete_invoice');?>"
+                                                            onClick="return confirm('<?= getPhrase('confirm_delete');?>')"
+                                                            href="<?= $delete_url;?>">
+                                                            <i
+                                                                class="os-icon picons-thin-icon-thin-0056_bin_trash_recycle_delete_garbage_empty"></i>
+                                                        </a>
+                                                        <?php endif;?>
                                                     </td>
                                                 </tr>
                                                 <?php endforeach;?>
@@ -573,9 +632,10 @@
 </div>
 <?php endforeach;?>
 <script type="text/javascript">
-function make_payment(amortization_id, amount, materials, fees, overdue) {
+function make_payment(amortization_id, amount, materials, fees, overdue, tuition_pending) {
 
     document.getElementById('income_amount_1').value = amount;
+    document.getElementById('income_amount_1').max = tuition_pending;
     document.getElementById('amortization_id').value = amortization_id;
 
     document.getElementById('income_amount_2').value = materials;
@@ -617,6 +677,19 @@ $('.currency').keyup(function() {
 });
 
 function amount_total() {
+
+    var error = "";
+    var tuition_pending = document.getElementById('income_amount_1').max;
+    var tuition = document.getElementById('income_amount_1').value;
+
+    if (tuition_pending < tuition) {
+        error = "<b style='color:#ff214f'>The tuition must be equal to or less than " + tuition_pending + " </b>";
+        document.getElementById("btnPayment").disabled = true;
+    } else {
+        document.getElementById("btnPayment").disabled = false;
+    }
+    $("#amount_error").html(error);
+
     var arr = document.querySelectorAll('input[id^="income_amount_"]');
     var total = 0.00;
     for (var i = 0; i < arr.length; i++) {

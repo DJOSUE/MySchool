@@ -479,11 +479,25 @@ class Accountant extends EduAppGT
     
     function student($param1 = '', $param2 = '', $param3 = '')
     {
-        if ($param1 == 'do_update') 
-        {
-            $this->user->updateStudent($param2);
-            $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-            redirect(base_url() . 'accountant/student_profile/'. $param2.'/', 'refresh');
+        switch ($param1) {
+            case 'do_update':
+                $this->user->updateStudent($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'accountant/student_profile/'. $param2.'/', 'refresh');
+                break;
+            case 'agreement':
+                $agreement_id = $this->agreement->create_agreement_accountant($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_created'));
+                redirect(base_url() . 'accountant/student_agreements/'. $param2.'/', 'refresh');
+                break;
+            case 'delete_agreement':
+                $agreement_id = $this->agreement->delete_agreement($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                redirect(base_url() . 'accountant/student_agreements/'. $param3.'/', 'refresh');
+                break;
+            default:
+                # code...
+                break;
         }
     }
 
@@ -518,6 +532,19 @@ class Accountant extends EduAppGT
         // $page_data['class_id']   =  $class_id;
         $this->load->view('backend/index', $page_data);
     }
+
+    //Student Enrollments function.
+    function student_new_agreement($student_id, $param1='') 
+    {
+        $this->isAccountant();           
+        $page_data['page_name']  = 'student_new_agreement';
+        $page_data['page_title'] =  getPhrase('student_new_agreement');
+        $page_data['student_id'] =  $student_id;
+        // $page_data['class_id']   =  $class_id;
+        $this->load->view('backend/index', $page_data);
+    }
+
+    
 
     function student_grades($student_id, $param1='')
     {

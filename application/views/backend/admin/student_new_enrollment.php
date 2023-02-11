@@ -370,7 +370,8 @@
                                                                 <?= getPhrase('cost_tuition');?>
                                                             </label>
                                                             <input class="form-control" name="cost_tuition" id="tuition"
-                                                                type="text" required="" readonly value="0">
+                                                                type="text" required=""
+                                                                onfocusout="agreement_amount_total()">
                                                         </div>
                                                     </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -800,7 +801,7 @@ function agreement_amount_total() {
 
     document.getElementById('total_agreement').value = total;
     document.getElementById('amount_1').value = amount_1;
-    document.getElementById("amount_1").min = amount_1;
+    document.getElementById("amount_1").min = 1;
 
     add_fees();
 }
@@ -820,24 +821,24 @@ function enable_down_payment() {
 }
 
 function add_fees() {
-    let index       = 2
-    var nro         = document.getElementById("number_payments").value;
-    var tuition     = parseFloat(document.getElementById("tuition").value);
+    let index = 2
+    var nro = document.getElementById("number_payments").value;
+    var tuition = parseFloat(document.getElementById("tuition").value);
     var downPayment = parseFloat(document.getElementById("amount_1").value);
-    var costs       = parseFloat(totalCost());
-    var discounts   = parseFloat(totalDiscount());
+    var costs = parseFloat(totalCost());
+    var discounts = parseFloat(totalDiscount());
 
     var total = tuition + costs;
     var quota = Math.round(tuition / parseInt(nro));
 
     if (nro == 1) {
-        document.getElementById('amount_1').value               = ((quota + costs) - discounts);
-        document.getElementById('amount_1').min                 = ((quota + costs) - discounts);
-        document.getElementById("payment_schedule").innerHTML   = "";
+        document.getElementById('amount_1').value = ((quota + costs) - discounts);
+        document.getElementById('amount_1').min = 1;
+        document.getElementById("payment_schedule").innerHTML = "";
     } else {
-        document.getElementById('amount_1').value               = (quota + costs);
-        document.getElementById('amount_1').min                 = (quota + costs);
-        document.getElementById("payment_schedule").innerHTML   = "";
+        document.getElementById('amount_1').value = (quota + costs);
+        document.getElementById('amount_1').min = 1;
+        document.getElementById("payment_schedule").innerHTML = "";
     }
 
     if (nro > 1) {
@@ -854,10 +855,10 @@ function add_fees() {
             document.getElementById("payment_schedule").innerHTML += html;
         }
         var last_index = parseInt(index) - 1;
-        
+
         var total_quota = (quota * (last_index - 1)) + costs;
         var last_quota = ((total - total_quota) - discounts);
-         
+
         var name = "amount_" + last_index;
         document.getElementById(name).value = last_quota;
     }
@@ -1168,7 +1169,7 @@ function totalDiscount() {
     var totalDiscount = 0.00;
 
     for (var i = 0; i < arrDiscount.length; i++) {
-        
+
         if (parseFloat(arrDiscount[i].value))
             totalDiscount += parseFloat(arrDiscount[i].value);
     }

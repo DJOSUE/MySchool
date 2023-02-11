@@ -696,12 +696,13 @@ class Payment extends School
         $invoice_number = $this->input->post('invoice_number'); 
 
         $this->db->reset_query();        
-        $this->db->where('invoice_number', $invoice_number);        
+        $this->db->where('invoice_number', $invoice_number);
+        $this->db->where('payment_id <>', $payment_id);
         $query = $this->db->get('payment');
 
         if($query->num_rows() == 0)
         {
-            $created =  explode(':', $this->input->post('cashier_id'));
+            $created =  explode('|', $this->input->post('cashier_id'));
 
             $user_id      = $this->session->userdata('login_user_id');
             $user_type    = get_table_user($this->session->userdata('role_id'));
@@ -1261,6 +1262,16 @@ class Payment extends School
         $this->db->where('code', $status_id);
         $query = $this->db->get('parameters')->row();
         return $query->name;
+    }
+
+
+    public function get_payment_id_by_amortization($amortization_id)
+    {
+        $this->db->reset_query();
+        $this->db->where('amortization_id', $amortization_id);
+        $payment_id = $this->db->get('payment_details')->row()->payment_id;
+
+        return $payment_id;
     }
 
 }

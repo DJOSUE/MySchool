@@ -170,6 +170,11 @@
                                     </thead>
                                     <tbody>
                                         <?php 
+                                        // echo '<pre>';
+                                        // var_dump($task_list);
+                                        // echo '</pre>';
+                                        ?>
+                                        <?php 
                                             foreach($task_list as $row) :
                                                 $allow_actions      = $this->task->is_task_closed($row['status_id']);
                                                 $assigned_to_type   = trim($row['assigned_to_type']);

@@ -42,13 +42,13 @@
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div class="row" style="justify-content: flex-end;">
-                                                        <!-- <div class="form-buttons">
+                                                        <div class="form-buttons">
                                                             <a id="create_agreement"
-                                                                href="/admin/student_new_enrollment/<?=$student_id?>"
+                                                                href="/accountant/student_new_agreement/<?=$student_id?>"
                                                                 class="btn btn-rounded btn-success <?= $disabled?>">
                                                                 <?= getPhrase('create_new_agreement');?>
                                                             </a>
-                                                        </div> -->
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -117,6 +117,14 @@
                                                                         <i
                                                                             class="os-icon picons-thin-icon-thin-0333_printer"></i>
                                                                     </a>
+                                                                    <!-- <a class="grey" data-toggle="tooltip"
+                                                                        data-placement="top" class="danger"
+                                                                        data-original-title="<?= getPhrase('delete');?>"
+                                                                        onClick="confirm_delete(<?= $value['agreement_id']; ?>)"
+                                                                        href="/accountant/student/delete_agreement/<?=$value['agreement_id'].'/'.$student_id;?>">
+                                                                        <i
+                                                                            class="picons-thin-icon-thin-0056_bin_trash_recycle_delete_garbage_empty"></i>
+                                                                    </a> -->
                                                                 </td>
                                                             </tr>
                                                             <?php endforeach;?>

@@ -36,16 +36,19 @@
                                         <div class="row">
                                             <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                 <div class="form-group  label-floating is-select">
-                                                    <label class="control-label"><?php echo getPhrase('student_referral');?></label>
+                                                    <label
+                                                        class="control-label"><?php echo getPhrase('student_referral');?></label>
                                                     <div class="">
-                                                        <select class="selectpicker form-control" data-live-search="true" name="referral_by">
+                                                        <select class="selectpicker form-control"
+                                                            data-live-search="true" name="referral_by">
                                                             <option value="">
                                                                 <?php echo getPhrase('select');?></option>
                                                             <?php $students = $this->db->get_where('student',array('status <>' => '0'))->result_array();
         	                  										foreach($students as $student):
                											        ?>
                                                             <option value="<?php echo $student['student_id'];?>">
-                                                                <?php echo $student['first_name'] . ' ' . $student['last_name'];?></option>
+                                                                <?php echo $student['first_name'] . ' ' . $student['last_name'];?>
+                                                            </option>
                                                             <?php endforeach;?>
                                                         </select>
                                                     </div>
@@ -53,7 +56,8 @@
                                             </div>
                                             <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                 <div class="form-group label-floating is-select">
-                                                    <label class="control-label"><?php echo getPhrase('agent');?></label>
+                                                    <label
+                                                        class="control-label"><?php echo getPhrase('agent');?></label>
                                                     <div class="select">
                                                         <select name="agent_code" id="agent_code">
                                                             <option value="">
@@ -177,10 +181,19 @@
                                                         class="control-label"><?php echo getPhrase('future_contact_date');?></label>
                                                     <input type='text' class="datepicker-here"
                                                         data-position="bottom left" data-language='en'
-                                                        name="contact_date" />
+                                                        name="contact_date" id="contact_date"
+                                                        onfocusout="enable_description()" />
                                                 </div>
                                             </div>
-                                            
+                                            <div id="div_comments" class="col col-lg-6 col-md-6 col-sm-12 col-12"
+                                                style="display: none;">
+                                                <div class="form-group label-floating">
+                                                    <label
+                                                        class="control-label"><?php echo getPhrase('comments');?></label>
+                                                    <textarea name="comments" cols="40" rows="5" required=""></textarea>
+                                                </div>
+                                            </div>
+
                                         </div>
                                         <div class="form-buttons-w text-right">
                                             <button class="btn btn-rounded btn-success btn-lg" type="submit"
@@ -278,6 +291,19 @@ function enterKeyPressed(event) {
         return false;
     } else {
         return true;
+    }
+}
+
+function enable_description() {
+    var date = document.getElementById("contact_date").value;
+
+    console.log('date', date);
+
+    if (date != '') {
+        document.getElementById("div_comments").style.display = 'block';
+    } else {
+        document.getElementById("div_comments").style.display = 'none';
+
     }
 }
 </script>

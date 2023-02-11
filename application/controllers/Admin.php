@@ -1879,6 +1879,12 @@
                 $data = base64_encode($param2.'-'.$agreement_id.'-'.'student_enrollments');
                 redirect(base_url() . 'admin/student_download_agreement/'.$data, 'refresh');
             }
+            if($param1 == 'delete_agreement')
+            {
+                $agreement_id = $this->agreement->delete_agreement($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                redirect(base_url() . 'admin/student_enrollments/'. $param3.'/', 'refresh');             
+            }
         }
 
         function student_download_agreement($param1)
@@ -4406,10 +4412,13 @@
                 $data['assigned_me']   = $assigned_me;
             }
 
+            $total_rows = $this->task->get_count($department_id, $category_id, $priority_id, $status_id, $text, $assigned_me, $due_date);
+            $per_page   = DEFAULT_ROWS_PAGE;
+
             $config = array();
                 $config["base_url"] = base_url() . "admin/task_list/";
-                $config["total_rows"] = $this->task->get_count($department_id, $category_id, $priority_id, $status_id, $text, $assigned_me, $due_date);
-                $config["per_page"] = 10;
+                $config["total_rows"] = $total_rows;
+                $config["per_page"] = $per_page;
                 $config["uri_segment"] = 3;
 
                 $config['use_page_numbers'] = TRUE;
@@ -4450,13 +4459,10 @@
             if($page != 0){
                 $page = ($page-1) * $config["per_page"];
             }
-            
-            $data['per_page'] = $config["per_page"];
-            $data['page']     = $page;
 
             $page_data['search']        =   $data;
             $page_data['links']         =   $this->pagination->create_links();
-            $page_data['task_list']     =   $this->task->get_task_list($config["per_page"], $page, $department_id,$category_id,$priority_id,$status_id,$text,$assigned_me,$due_date);
+            $page_data['task_list']     =   $this->task->get_task_list($per_page, $page, $department_id,$category_id,$priority_id,$status_id,$text,$assigned_me,$due_date);
             $page_data['page_name']     =   'task_list_pagination';            
             $page_data['page_title']    =   getPhrase('task_list');
             $this->load->view('backend/index', $page_data);
