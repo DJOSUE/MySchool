@@ -63,6 +63,8 @@
         }
     }
 
+    $program_name = $this->crud->get_program_name($student_info['program_id']);
+
     // echo '<pre>';
     // var_dump($agreement_card );
     // echo '</pre>';
@@ -109,7 +111,7 @@
                     <b>Type of student:</b>
                 </td>
                 <td width="149">
-                    <?= $this->crud->get_program_name($student_info['program_id'])?>
+                    <?= $program_name?>
                 </td>
                 <td width="173">
                     <b>Country:</b>
@@ -152,13 +154,14 @@
         <br />
         <h2 style='margin:0in;text-align:center;line-height:100%'>
             <b>
-                INTERNATIONAL SIDE
+                <?= strtoupper($program_name)?> SIDE
             </b>
         </h2>
         <br />
         <br />
         <div class="row">
             <div class="column">
+                <?php if($program_name == 'international'):?>
                 <table class="checklist center">
                     <tr>
                         <td width="37">
@@ -238,6 +241,66 @@
                         </td>
                     </tr>
                 </table>
+                <?php else:?>
+                <table class="checklist center">
+                    <tr>
+                        <td width="37">
+                        </td>
+                        <td>
+                            Personal information form
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="37">
+                        </td>
+                        <td>
+                            Schedule
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="37">
+                        </td>
+                        <td>
+                            Policies
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="37">
+                        </td>
+                        <td>
+                            Copy of ID
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="37">
+                        </td>
+                        <td>
+                            Contract signed
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="37">
+                        </td>
+                        <td>
+                            Credit card application
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="37">
+                        </td>
+                        <td>
+                            Books
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="37">
+                        </td>
+                        <td>
+                            Automatic payments
+                        </td>
+                    </tr>
+                </table>
+                <?php endif;?>
             </div>
             <div class="column">
                 <table class="checklist center" width="235">
@@ -1293,7 +1356,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <?= $this->crud->get_program_name($student_info['program_id'])?>
+                            <?= $program_name?>
                         </td>
                         <td>
                             <?= $this->academic->get_program_type_name($agreement['program_type_id'])?>
@@ -1365,7 +1428,7 @@
             I, <?= $student_name?> understand and agree with the policies and procedures as they were explained to me on
             the date of my registration <?= $agreement_date?>. I also acknowledge that I received the policies
             orientation and rules for students.
-        </p>        
+        </p>
     </div>
 
     <!-- online_policies_agreements -->

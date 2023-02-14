@@ -33,12 +33,71 @@ class Helpdesk extends EduAppGT
     
     //Index function.
     public function index()
-    {
-        
+    {        
         $this->isLogin();
+        redirect(base_url() .'helpdesk/dashboard', 'refresh');
     }
 
-    function helpdesk_ticket($action, $ticket_id = '', $return_url = '')
+    function dashboard()
+    {
+        $page_data['page_name']     = 'dashboard';
+        $page_data['page_title']    =  getPhrase('helpdesk_dashboard');
+        $this->load->view('backend/helpdesk/index', $page_data);
+    }
+
+    function ticket_list($param1 ='')
+    {
+        if($param1 != '')
+        {
+            $array      = explode('|',base64_decode($param1));
+
+            $status_id      = $array[0] != '-' ? $array[0] : '';
+            $priority_id    = $array[1] != '-' ? $array[1] : '';
+            $assigned_me    = $array[2] != '-' ? $array[2] : 0;
+            $department_id  = "";
+        }
+        else
+        {
+            $department_id  = "";
+            $priority_id    = "";
+            $status_id      = "";
+            $assigned_me    = 1;
+        }
+        
+        if($_SERVER['REQUEST_METHOD'] === 'POST')
+        {   
+            $category_id    = $this->input->post('category_id');                
+            $priority_id    = $this->input->post('priority_id');
+            $status_id      = $this->input->post('status_id');
+            $text           = $this->input->post('text');
+            $assigned_me    = $this->input->post('assigned_me');  
+            $search         = true;              
+        }
+
+        $page_data['department_id'] = $department_id;
+        $page_data['category_id']   = $category_id;
+        $page_data['priority_id']   = $priority_id;
+        $page_data['status_id']     = $status_id;
+        $page_data['text']          = $text;
+        $page_data['search']        = $search;
+        $page_data['assigned_me']   = $assigned_me;
+
+
+        $page_data['page_name']     = 'ticket_list';
+        $page_data['page_title']    =  getPhrase('helpdesk_ticket_list');
+        $this->load->view('backend/helpdesk/index', $page_data);
+    }
+
+    function ticket_info($ticket_code = '', $param2 = '')
+    {
+        $this->isLogin('helpdesk_module');
+        $page_data['ticket_code']   = $ticket_code;
+        $page_data['page_name']     = 'ticket_info';
+        $page_data['page_title']    = getPhrase('ticket_info');
+        $this->load->view('backend/helpdesk/index', $page_data);
+    }
+
+    function ticket($action, $ticket_id = '', $return_url = '')
     {
         $this->isLogin();
 
@@ -52,7 +111,7 @@ class Helpdesk extends EduAppGT
                 if($return_url == '')
                 {
                     $ticket_code = $this->ticket->get_ticket_code($ticket_id);
-                    $return_url = 'helpdesk_ticket_info/'.$ticket_code;
+                    $return_url = 'ticket_info/'.$ticket_code;
                 }
                 break;
 
@@ -63,7 +122,7 @@ class Helpdesk extends EduAppGT
                 if($return_url == '')
                 {
                     $ticket_code = $this->ticket->get_ticket_code($ticket_id);
-                    $return_url = 'helpdesk_ticket_info/'.$ticket_code;
+                    $return_url = 'ticket_info/'.$ticket_code;
                 }
                 break;
             
@@ -73,7 +132,7 @@ class Helpdesk extends EduAppGT
         }
 
         $this->session->set_flashdata('flash_message' , $message);
-        redirect(base_url() .$this->account_type.'/'.$return_url, 'refresh');
+        redirect(base_url() .'helpdesk/'.$return_url, 'refresh');
     }
 
     function ticket_message($action, $ticket_code = '', $ticket_message_id = '', $return_url = '')
@@ -82,13 +141,13 @@ class Helpdesk extends EduAppGT
 
         if($return_url == '')
         {
-            $return_url = $this->account_type.'/helpdesk_ticket_info/'.$ticket_code;
+            $return_url = 'helpdesk/ticket_info/'.$ticket_code;
         }
         else
         {
             if(base64_decode($return_url, true ))
             {
-                $return_url = $this->account_type.'/'.base64_decode($return_url);
+                $return_url = 'helpdesk/'.base64_decode($return_url);
             }
             else
             {
@@ -130,23 +189,9 @@ class Helpdesk extends EduAppGT
         redirect(base_url() . $return_url, 'refresh');
     }
 
-    function helpdesk_dashboard()
+    function tutorial()
     {
-        $page_data['page_name']     = 'helpdesk_dashboard';
-        $page_data['page_title']    =  getPhrase('helpdesk_dashboard');
-        $this->load->view('backend/helpdesk/index', $page_data);
-    }
-
-    function helpdesk_ticket_list()
-    {
-        $page_data['page_name']     = 'helpdesk_ticket_list';
-        $page_data['page_title']    =  getPhrase('helpdesk_ticket_list');
-        $this->load->view('backend/helpdesk/index', $page_data);
-    }
-
-    function helpdesk_tutorial()
-    {
-        $page_data['page_name']     = 'helpdesk_tutorial';
+        $page_data['page_name']     = 'tutorial';
         $page_data['page_title']    =  getPhrase('helpdesk_tutorial');
         $this->load->view('backend/helpdesk/index', $page_data);
     }

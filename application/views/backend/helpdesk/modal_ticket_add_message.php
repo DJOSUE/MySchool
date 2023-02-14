@@ -5,7 +5,7 @@
     $tickets = $ticket_query->result_array();
 
     // echo '<pre>';
-    // var_dump($param2);
+    // var_dump($param3);
     // echo '</pre>';
     
     foreach ($tickets as $row):

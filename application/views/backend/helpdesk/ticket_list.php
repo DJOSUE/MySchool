@@ -76,7 +76,7 @@ th {
                         <div class="row">
                             <div class="content-i">
                                 <div class="content-box">
-                                    <?php echo form_open(base_url() . 'admin/helpdesk_ticket_list/', array('class' => 'form m-b'));?>
+                                    <?php echo form_open(base_url() . 'helpdesk/ticket_list/', array('class' => 'form m-b'));?>
                                     <div class="row" style="margin-top: -30px; border-radius: 5px;">
                                         <div class="col-sm-2">
                                             <div class="form-group label-floating is-select">
@@ -268,7 +268,7 @@ th {
                                                 </center>
                                             </td>
                                             <td class="row-actions">
-                                                <a href="<?php echo base_url().$account_type;?>/helpdesk_ticket_info/<?= $row['ticket_code'];?>"
+                                                <a href="<?php echo base_url()?>helpdesk/ticket_info/<?= $row['ticket_code'];?>"
                                                     class="grey" data-toggle="tooltip" data-placement="top"
                                                     data-original-title="<?php echo getPhrase('view');?>">
                                                     <i

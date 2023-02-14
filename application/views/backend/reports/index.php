@@ -4,11 +4,11 @@
     $account_type       =   $this->session->userdata('login_type'); 
     $backend_path       =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/';
     $views_path         =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/';
-    
+
     $page_array     = array('subject_dashboard', 'online_exams', 'homework', 'forum', 'study_material', 'upload_marks', 'meet', 'gamification');
 
     $layout         = in_array($page_name, $message_pages) ? 'class="layout-w"' : '';
-
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,7 +46,7 @@
     <div class="with-side-panel">
     <div <?php $layout;?>>
             <?php include $backend_path.$account_type.'/navigation.php';?>            
-            <?php include $backend_path.'upload/'.$page_name.'.php';?>
+            <?php include $backend_path.'reports/'.$page_name.'.php';?>
         </div>
         <div class="display-type"></div>
     </div>

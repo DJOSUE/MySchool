@@ -190,7 +190,7 @@
                                                 <div class="form-group label-floating">
                                                     <label
                                                         class="control-label"><?php echo getPhrase('comments');?></label>
-                                                    <textarea name="comments" cols="40" rows="5" required=""></textarea>
+                                                    <textarea name="comments" cols="40" rows="5"></textarea>
                                                 </div>
                                             </div>
 

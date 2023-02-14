@@ -30,7 +30,7 @@
 
     $system_pages       = array('system_settings', 'system_security', 'system_sms', 'system_email', 'system_translate', 'system_database');
 
-    $helpdesk_pages     = array('helpdesk_dashboard', 'helpdesk_ticket_list', 'helpdesk_ticket_info');
+    $helpdesk_pages     = array('dashboard', 'ticket_list', 'ticket_info');
 
     $accounting_pages   = array('accounting_dashboard', 'accounting_daily_income', 'invoice_details', 'payments', 'students_payments', 'expense', 'new_payment');
 
@@ -286,7 +286,7 @@
                 <!-- HelpDesk Access -->
                 <?php if(has_permission('helpdesk_module')):?>
                 <li <?php if(in_array($page_name, $helpdesk_pages)):?>class="currentItem" <?php endif;?>>
-                    <a href="<?php echo base_url();?>admin/helpdesk_dashboard/" data-toggle="tooltip"
+                    <a href="<?php echo base_url();?>helpdesk/dashboard/" data-toggle="tooltip"
                         data-placement="right" data-original-title="<?php echo getPhrase('help_desk');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0309_support_help_talk_call"></i>
@@ -566,7 +566,7 @@
                 <!-- helpdesk_module Access -->
                 <?php if(has_permission('helpdesk_module')):?>
                 <li>
-                    <a href="<?php echo base_url();?>admin/helpdesk_dashboard/">
+                    <a href="<?php echo base_url();?>helpdesk/dashboard/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0309_support_help_talk_call"></i>
                         </div>
@@ -856,7 +856,7 @@
                 <!-- helpdesk_module Access -->
                 <?php if(has_permission('helpdesk_module')):?>
                 <li>
-                    <a href="<?php echo base_url();?>admin/helpdesk_dashboard/">
+                    <a href="<?php echo base_url();?>helpdesk/dashboard/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0309_support_help_talk_call"></i>
                         </div>

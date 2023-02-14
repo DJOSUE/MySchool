@@ -174,7 +174,7 @@ class Ticket extends School
 
     function update($ticket_id)
     {
-        $data['updated_by']     = $this->session->userdata('login_user_id');
+        $data['updated_by']         = $this->session->userdata('login_user_id');
         $data['updated_by_type']    = get_table_user($this->session->userdata('role_id'));
 
         $ticket_code = $this->db->get_where('ticket' , array('ticket_id' => $ticket_id) )->row()->ticket_code;
@@ -235,8 +235,9 @@ class Ticket extends School
 
     function update_status($ticket_code, $status_id)
     {
-        $data['updated_by']     = $this->session->userdata('login_user_id');
-        $data['status_id']   = $status_id;
+        $data['updated_by_type']    = get_table_user($this->session->userdata('role_id'));
+        $data['updated_by']         = $this->session->userdata('login_user_id');
+        $data['status_id']          = $status_id;
         $this->db->where('ticket_code', $ticket_code);
         $this->db->update('ticket', $data);
 
@@ -311,6 +312,16 @@ class Ticket extends School
         return $ticket_info;        
     }
 
+    public function get_ticket_interactions($ticket_id)
+    {
+        $this->db->reset_query();                                                
+        $this->db->order_by('created_at' , 'DESC');
+        $this->db->where('ticket_code', $ticket_id);
+        $interactions = $this->db->get('ticket_message')->result_array();
+
+        return $interactions;
+    }
+
     public function get_ticket_code($ticket_id)
     {
         $ticket_code = $this->db->get_where('ticket' , array('ticket_id' => $ticket_id) )->row()->ticket_code;
@@ -341,4 +352,5 @@ class Ticket extends School
         $applicant_query = $this->db->get('ticket');
         return $applicant_query->num_rows();
     }
+
 }

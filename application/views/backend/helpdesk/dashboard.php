@@ -1,12 +1,11 @@
 <?php 
-    $account_type       =   $this->session->userdata('login_type'); 
-    $fancy_path         =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/'.$account_type.'/';
+    $account_type_name  = get_table_user($this->session->userdata('role_id'));
+    $fancy_path         =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/'.$account_type_name.'/';
 
     // validate if has access as admin/helpdesk user
     $is_helpdesk_admin  = has_permission('helpdesk_admin_module');
     $is_helpdesk_team   = has_permission('helpdesk_team');
     $user_id            = $this->session->userdata('login_user_id');
-    $account_type       = $this->session->userdata('login_type'); 
     
 ?>
 <div class="content-w">
@@ -41,7 +40,7 @@
                             ?>
                             <div class="col col-xl-2 col-lg-4 col-md-4 col-sm-8 col-8">
                                 <div class="ui-block list" data-mh="friend-groups-item">
-                                    <a href="<?php echo base_url().$account_type.'/helpdesk_ticket_list/'.$code_search;?>">
+                                    <a href="<?php echo base_url().'helpdesk/ticket_list/'.$code_search;?>">
                                         <div class="friend-item friend-groups">
                                             <div class="friend-item-content">
                                                 <div class="friend-avatar">
@@ -62,7 +61,7 @@
                                                             }
                                                             else
                                                             {
-                                                                echo $this->ticket->ticket_total_created_by('status_id', $item['status_id'], $user_id, $account_type);
+                                                                echo $this->ticket->ticket_total_created_by('status_id', $item['status_id'], $user_id, $account_type_name);
                                                             }
                                                         ?>
                                                     </h1>
@@ -98,7 +97,7 @@
                             ?>
                             <div class="col col-xl-2 col-lg-4 col-md-4 col-sm-8 col-8">
                                 <div class="ui-block list" data-mh="friend-groups-item">
-                                    <a href="<?php echo base_url().$account_type.'/helpdesk_ticket_list/'.$code_search;?>">
+                                    <a href="<?php echo base_url().'helpdesk/ticket_list/'.$code_search;?>">
                                         <div class="friend-item friend-groups">
                                             <div class="friend-item-content">
                                                 <div class="friend-avatar">

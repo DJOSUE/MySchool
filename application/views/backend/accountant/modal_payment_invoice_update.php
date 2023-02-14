@@ -10,7 +10,7 @@
         $userList = $this->task->get_user_list_dropbox($data['created_by'], $data['created_by_type']);
 ?>
 <div class="modal-body">
-    <?php echo form_open(base_url() . 'payments/update/'.$data['payment_id'].'/'.$param3, array('enctype' => 'multipart/form-data')); ?>
+    <?php echo form_open(base_url() . 'payments/update/'.base64_encode($data['payment_id']).'/'.$param3, array('enctype' => 'multipart/form-data')); ?>
     <div class="modal-header" style="background-color:#00579c">
         <h6 class="title" style="color:white"><?= getPhrase('edit_payment');?></h6>
     </div>

@@ -6,7 +6,7 @@
         <h6 class="title" style="color:white"><?php echo getPhrase('add_ticket');?></h6>
     </div>
     <div class="ui-block-content">
-        <?php echo form_open(base_url() . 'helpdesk/helpdesk_ticket/register/', array('enctype' => 'multipart/form-data'));?>
+        <?php echo form_open(base_url() . 'helpdesk/ticket/register/', array('enctype' => 'multipart/form-data'));?>
         <input type="hidden" name="user_id" value="<?= $row[$user_id]?>">
         <input type="hidden" name="user_type" value="<?= $table?>">
         <div class="form-group row">

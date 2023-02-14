@@ -2,19 +2,20 @@
     $account_type       =   $this->session->userdata('login_type'); 
     $fancy_path         =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/'.$account_type.'/';
 
-
     $this->db->reset_query();
     $this->db->where('ticket_code' , $ticket_code);
     $ticket_query = $this->db->get('ticket');
     $tickets = $ticket_query->result_array();
+
+    
 ?>
 <div class="content-w">
-    <?php include $fancy_path.'fancy.php';?>
+<?php include $fancy_path.'fancy.php';?>
     <div class="header-spacer"></div>
     <div class="conty">
         <div class="os-tabs-w menu-shad">
             <div class="os-tabs-controls">
-                <?php include 'helpdesk__nav.php';?>
+                <?php include 'helpdesk__nav.php';?>                
             </div>
         </div><br>
         <div class="row">
@@ -27,7 +28,7 @@
                             $status_info    = $this->ticket->get_status_info($row['status_id']);
                             $priority_info  = $this->ticket->get_priority_info($row['priority_id']);
                             $description    = html_entity_decode(str_replace(array("\r", "\n"), '', $row['description']));
-                            $allow_actions  = $this->ticket->is_ticket_closed($row['status_id']);
+                            $allow_actions  = false;// $this->ticket->is_ticket_closed($row['status_id']);
 
                             // echo '<pre>';
                             // var_dump($row['created_by_type']);
@@ -97,7 +98,7 @@
                                         </div>
                                         <div class="ui-block">
                                             <div class="ui-block-title">
-                                                <h6 class="title"><?= getPhrase('personal_information');?>
+                                                <h6 class="title"><?= getPhrase('user_information');?>
                                                 </h6>
                                             </div>
                                             <div class="ui-block-content">
@@ -173,7 +174,7 @@
                                                             </thead>
                                                             <tbody>
                                                                 <?php 
-                                                                $interactions = $this->db->get_where('ticket_message', array('ticket_code' => $ticket_code))->result_array();
+                                                                $interactions = $this->ticket->get_ticket_interactions($ticket_code);
                                                                 
                                                                 // echo '<pre>';
                                                                 // var_dump($interactions);
@@ -262,7 +263,7 @@
                                                         <i class="picons-thin-icon-thin-0133_arrow_right_next menu_left_selected_icon"
                                                             style="font-size:20px;"></i> &nbsp;&nbsp;&nbsp;
                                                         <a class="menu_left_selected_text"
-                                                            href="<?= base_url();?>admin/helpdesk_ticket_info/<?= $ticket_code;?>/">
+                                                            href="<?= base_url();?>helpdesk/ticket_info/<?= $ticket_code;?>/">
                                                             <?= getPhrase('ticket_information');?>
                                                         </a>
                                                     </li>
@@ -271,7 +272,7 @@
                                                         <i class="picons-thin-icon-thin-0133_arrow_right_next"
                                                             style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;
                                                         <a
-                                                            href="<?= base_url();?>admin/ticket_update/<?= $ticket_code;?>/">
+                                                            href="<?= base_url();?>ticket/update/<?= $ticket_code;?>/">
                                                             <?= getPhrase('update_ticket');?>
                                                         </a>
                                                     </li>
