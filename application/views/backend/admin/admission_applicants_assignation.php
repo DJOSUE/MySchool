@@ -56,7 +56,7 @@ th {
                         <div class="row">
                             <div class="content-i">
                                 <div class="content-box">
-                                    <?= form_open(base_url() . 'admin/admission_applicants/', array('class' => 'form m-b'));?>
+                                    <?= form_open(base_url() . 'admin/admission_applicants_assignation/', array('class' => 'form m-b'));?>
                                     <div class="row" style="margin-top: -30px; border-radius: 5px;">
                                         <div class="col-sm-2">
                                             <div class="form-group label-floating"
@@ -162,23 +162,26 @@ th {
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" style="background-color: #fff;">
+                            <?= form_open(base_url() . 'admin/admission_applicants_assignation_save/', array('class' => 'form m-b', 'style' => 'width: 100%;'))?>
+                            <div class="row" style="padding: 25px;">
+                                <button class="btn btn-info btn-sm btn-rounded" type="submit">
+                                    <i class="picons-thin-icon-thin-0336_disc_floppy_save_software"
+                                        style="font-weight: 300; font-size: 25px;"></i>
+                                </button> &b
+                                <button class="btn btn-info btn-sm btn-rounded" id="selectAll">
+                                    <span id="btnLabel">Check all</span>
+                                </button>
+                                <input type="checkbox" id="chk_all" label="check all" hidden />
+                            </div>                            
                             <div class="table-responsive">
                                 <?php
                                     if($student_query->num_rows() > 0):
-                                    ?>
-                                <a href="#" id="btnExport" data-toggle="tooltip" data-placement="top"
-                                    data-original-title="<?= getPhrase('download');?>">
-                                    <button class="btn btn-info btn-sm btn-rounded">
-                                        <i class="picons-thin-icon-thin-0123_download_cloud_file_sync"
-                                            style="font-weight: 300; font-size: 25px;"></i>
-                                    </button>
-                                </a>
-                                <br />
-                                <br />
-                                <table class="table table-padded" id="dvData">
+                                ?>
+                                <table class="table table-striped table-lightfont " id="dvData">
                                     <thead>
                                         <tr>
+                                            <th class="text-center"></th>
                                             <th class="text-center"><?= getPhrase('first_name')?></th>
                                             <th class="text-center"><?= getPhrase('last_name')?></th>
                                             <th class="text-center"><?= getPhrase('country')?></th>
@@ -186,12 +189,7 @@ th {
                                             <th class="text-center"><?= getPhrase('phone')?></th>
                                             <th class="text-center"><?= getPhrase('type')?></th>
                                             <th class="text-center"><?= getPhrase('status')?></th>
-                                            <th class="text-center"><?= getPhrase('created_by')?></th>
-                                            <th class="text-center"><?= getPhrase('created_at')?></th>
-                                            <th class="text-center"><?= getPhrase('updated_by')?></th>
-                                            <th class="text-center"><?= getPhrase('updated_at')?></th>
                                             <th class="text-center"><?= getPhrase('assigned_to')?></th>
-                                            <th class="text-center"><?= getPhrase('options')?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -199,7 +197,11 @@ th {
                                             foreach($students as $row) :
                                                 $allow_actions = is_student($row['applicant_id']);
                                         ?>
-                                        <tr style="height:25px;">
+                                        <tr>
+                                            <td>
+                                                <input class="chk_boxes" name="check_applicant_ids[]"
+                                                    value="<?=$row['applicant_id']?>" type="checkbox" />
+                                            </td>
                                             <td>
                                                 <center>
                                                     <a href="<?= base_url();?>admin/admission_applicant/<?= $row['applicant_id'];?>"
@@ -250,50 +252,8 @@ th {
                                             </td>
                                             <td>
                                                 <center>
-                                                    <?= ($row['created_by_name']);?>
-                                                </center>
-                                            </td>
-                                            <td>
-                                                <center>
-                                                    <?= ($row['created_at']);?>
-                                                </center>
-                                            </td>
-                                            <td>
-                                                <center>
-                                                    <?= ($row['updated_by_name']);?>
-                                                </center>
-                                            </td>
-                                            <td>
-                                                <center>
-                                                    <?= ($row['updated_at']);?>
-                                                </center>
-                                            </td>
-                                            <td>
-                                                <center>
                                                     <?= ($row['assigned_to_name']);?>
                                                 </center>
-                                            </td>
-                                            <td class="row-actions">
-                                                <a href="<?= base_url();?>admin/admission_applicant/<?= $row['applicant_id'];?>"
-                                                    class="grey" data-toggle="tooltip" data-placement="top"
-                                                    data-original-title="<?= getPhrase('view');?>">
-                                                    <i
-                                                        class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible"></i>
-                                                </a>
-                                                <?php if(!$allow_actions):?>
-                                                <a href="javascript:void(0);" class="grey" data-toggle="tooltip"
-                                                    data-placement="top"
-                                                    data-original-title="<?= getPhrase('add_interaction');?>"
-                                                    onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_admission_add_interaction/<?= $row['applicant_id'];?>');">
-                                                    <i class="os-icon picons-thin-icon-thin-0151_plus_add_new"></i>
-                                                </a>
-                                                <a href="javascript:void(0);" class="grey" data-toggle="tooltip"
-                                                    data-placement="top" data-original-title="<?= getPhrase('edit');?>"
-                                                    onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_admission_edit_applicant/<?=$row['applicant_id'];?>');">
-                                                    <i
-                                                        class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new"></i>
-                                                </a>
-                                                <? endif;?>
                                             </td>
                                         </tr>
                                         <?php endforeach;?>
@@ -316,6 +276,28 @@ th {
         </div>
     </div>
 </div>
+<script type="text/javascript">
+var span = document.getElementById("btnLabel");
+
+$('.chk_boxes').click(function() {
+    var chk = $(this).attr('checked') ? true : false;
+    $('.chk_boxes1').attr('checked', chk);
+});
+$("#selectAll").click(function(e) {
+    e.preventDefault();
+
+    var chk = !$('#chk_all').attr('checked') ? true : false;
+    
+    $('#dvData .chk_boxes').prop('checked', chk);
+    $('#chk_all').attr('checked', chk);
+
+    if (chk) {
+        span.textContent = "Uncheck all";
+    } else {
+        span.textContent = "Check all";
+    }
+});
+</script>
 <script type="text/javascript">
 $('th').click(function() {
     var table = $(this).parents('table').eq(0)

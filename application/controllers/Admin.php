@@ -3047,6 +3047,11 @@
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $date = html_escape($this->input->post('date'));
                 $cashier_id = html_escape($this->input->post('cashier_id'));
+
+                if($cashier_id == '')
+                {
+                    $cashier_id = "admin|".$this->session->userdata('login_user_id');
+                }
             }
             else
             {
@@ -3058,7 +3063,7 @@
                 else
                 {
                     $date = date("Y-m-d");
-                    $cashier_id = "admin:".$this->session->userdata('login_user_id');
+                    $cashier_id = "admin|".$this->session->userdata('login_user_id');
                 }
             }
     
@@ -3382,6 +3387,68 @@
             $page_data['page_name']   = 'admission_applicants';
             $page_data['page_title']  =  getPhrase('admission_applicants');
             $this->load->view('backend/index', $page_data);
+        }
+
+        function admission_applicants_assignation($param1 = '')
+        {
+            $this->isAdmin('admission_module');
+
+            if($param1 != '')
+            {
+                $array      = explode('|',base64_decode($param1));
+                
+                $name        = "";
+                $country_id  = "";
+                $status_id   = $array[1];
+                $type_id     = $array[0];
+                $assigned_me = 0;
+                $tag_id      = "";
+            }
+            else
+            {
+                $name        = "";
+                $country_id  = "";
+                $status_id   = "";
+                $type_id     = "";
+                $assigned_me = 1;
+                $tag_id      = "";
+            }
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') 
+            {
+                $country_id  = $this->input->post('country_id');
+                $status_id   = $this->input->post('status_id');
+                $type_id     = $this->input->post('type_id');
+                $name        = $this->input->post('name');
+                $search      = true;
+                $assigned_me = $this->input->post('assigned_me'); 
+                $tag_id      = $this->input->post('tag_id'); 
+            }
+
+            $page_data['country_id']  = $country_id;
+            $page_data['status_id']   = $status_id;
+            $page_data['type_id']     = $type_id;
+            $page_data['search']      = $search;
+            $page_data['name']        = $name;
+            $page_data['assigned_me'] = $assigned_me;
+            $page_data['tag_id']      = $tag_id;
+            $page_data['page_name']   = 'admission_applicants_assignation';
+            $page_data['page_title']  =  getPhrase('admission_applicants_assignation');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function admission_applicants_assignation_save()
+        {
+            echo 'check_applicant_ids<br/>';
+            
+
+                if(!empty($_POST['check_applicant_ids'])) {    
+                    foreach($_POST['check_applicant_ids'] as $value){
+                        echo "value : ".$value.'<br/>';
+                    }
+                }
+            
+            
         }
 
         //Create Student function.

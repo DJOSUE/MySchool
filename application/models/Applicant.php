@@ -275,6 +275,7 @@ class Applicant extends School
 
         $data['applicant_id'] = $this->input->post('applicant_id');
         $data['comment']      = html_escape($this->input->post('comment'));
+        $data['modality_id']  = html_escape($this->input->post('modality_id'));
 
         if($_FILES['applicant_file']['name'] != '')
         {

@@ -671,7 +671,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row" id="automatic_payment_div" style="display: none;">
+                                                <div class="row" id="automatic_payment_div">
 
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <div class="form-group label-floating is-select">
@@ -1042,15 +1042,15 @@ function update_info_enable_fields() {
 
 
 function automatic_payment_enable_fields() {
-    var checked = document.getElementById("automatic_payment").checked;
+    // var checked = document.getElementById("automatic_payment").checked;
 
-    if (checked) {
-        // document.getElementById("btn_save").disabled = true;
-        document.getElementById("automatic_payment_div").style.display = 'flex';
-    } else {
-        // document.getElementById("btn_save").disabled = false;
-        document.getElementById("automatic_payment_div").style.display = 'none';
-    }
+    // if (checked) {
+    //     // document.getElementById("btn_save").disabled = true;
+    //     document.getElementById("automatic_payment_div").style.display = 'flex';
+    // } else {
+    //     // document.getElementById("btn_save").disabled = false;
+    //     document.getElementById("automatic_payment_div").style.display = 'none';
+    // }
 }
 
 function create_agreement() {

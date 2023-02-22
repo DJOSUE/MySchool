@@ -67,6 +67,7 @@
                                                     <th><?= getPhrase('date');?></th>
                                                     <th><?= getPhrase('amount');?></th>
                                                     <th># <?= getPhrase('payments');?></th>
+                                                    <th><?= getPhrase('automatic_payment');?></th>
                                                     <th><?= getPhrase('card_info');?></th>
                                                     <th><?= getPhrase('program_type');?></th>
                                                     <th><?= getPhrase('payment_date');?></th>
@@ -81,6 +82,9 @@
                                                 foreach ($agreements as $key => $value):
                                                     $amount = ((floatval($value['tuition']) + floatval($value['materials']) + floatval($value['fees'])) - (floatval($value['discounts']) + floatval($value['scholarship'])));                                                   
                                                     $delete_url = base_url().'admin/student/delete_agreement/'.base64_encode($value['agreement_id']).'/'.base64_encode($student_id);
+                                                    $this->db->reset_query();        
+                                                    $this->db->where('agreement_id', $value['agreement_id']);
+                                                    $card = $this->db->get('agreement_card')->row_array();
                                                 ?>
                                                 <tr class="text-center">
                                                     <td>
@@ -94,6 +98,9 @@
                                                     </td>
                                                     <td>
                                                         <?= intval($value['automatic_payment']) == 0 ? 'No': 'Yes';?>
+                                                    </td>
+                                                    <td>
+                                                        <?= $card['card_holder'] == '' ? 'No': 'Yes';?>
                                                     </td>
                                                     <td>
                                                         <?= $this->academic->get_program_type_name($value['program_type_id']);?>

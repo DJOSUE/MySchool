@@ -24,11 +24,13 @@
                             <i class="os-icon picons-thin-icon-thin-0706_user_profile_add_new"></i>
                             <span><?= getPhrase('new_student');?></span></a>
                     </li>
+                    <?php if($page_name == 'admission_applicant'):?>
                     <li class="navs-item">
                         <a class="navs-links <?= $page_name == 'admission_applicant' ? 'active' : ''?>"
                             href="<?= base_url();?>admin/admission_applicant/">
                             <i class="os-icon picons-thin-icon-thin-0704_users_profile_group_couple_man_woman"></i>
                             <span><?= getPhrase('applicant');?></span></a>
                     </li>
+                    <?php endif;?>
                 </ul>
             </div>

@@ -36,14 +36,19 @@
     $this->db->reset_query();    
     $this->db->where('invoice_date >=', $first_date);
 
+    $assigned_to = "";
+    $assigned_to_type = "";
     if($cashier_id != "")
     {
-        $ex = explode(':',$cashier_id);
+        $ex = explode('|', $cashier_id);
 
-        $this->db->where('created_by', $ex['1']);
-        $this->db->where('created_by_type', $ex['0']);
+        $assigned_to_type   = $ex['0'];
+        $assigned_to        = $ex['1'];
+
+        $this->db->where('created_by', $assigned_to);
+        $this->db->where('created_by_type', $assigned_to_type);
     }    
-    $payments = $this->db->get('payment')->result_array();
+    $payments = $this->db->get('payment')->result_array();    
 
     foreach ($payments as $key => $value) {
         
@@ -162,32 +167,28 @@
 
     $total_payment = ($cash + $card + $check + $venmo + $transfer);
 
-    if($cashier_id != "")
-    {
-        $ex = explode(':',$cashier_id);
-        $cashier_name = $this->crud->get_name($ex['0'], $ex['1']);
-    }
-
+    $cashier_name = $this->crud->get_name($assigned_to_type, $assigned_to);
+    $userList = $this->user->get_cashiers($assigned_to, $assigned_to_type);
 ?>
 <style>
-.invoice-w::before {
-    background-color: transparent !important;
-}
+    .invoice-w::before {
+        background-color: transparent !important;
+    }
 
-.currency {
-    padding-left: 12px;
-    padding-right: 5px;
-    text-align: end;
-    float: right;
-}
+    .currency {
+        padding-left: 12px;
+        padding-right: 5px;
+        text-align: end;
+        float: right;
+    }
 
-.bold {
-    font-weight: bold;
-}
+    .bold {
+        font-weight: bold;
+    }
 
-td {
-    padding: 6px 0px;
-}
+    td {
+        padding: 6px 0px;
+    }
 </style>
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -218,16 +219,7 @@ td {
                                         <div class="select">
                                             <select name="cashier_id" <?= $cashier_all == false ? 'disabled' : ''?>>
                                                 <option value=""><?= getPhrase('select');?></option>
-                                                <?php foreach($advisor as $row): ?>
-                                                <option value="admin:<?= $row['admin_id'];?>"
-                                                    <?php if($cashier_id == ('admin:'.$row['admin_id'])) echo "selected";?>>
-                                                    <?= $row['first_name'].' '.$row['last_name'];?></option>
-                                                <?php endforeach;?>
-                                                <?php foreach($accounters as $item): ?>
-                                                <option value="accountant:<?= $item['accountant_id'];?>"
-                                                    <?php if($cashier_id == ('accountant:'.$item['accountant_id'])) echo "selected";?>>
-                                                    <?= $item['first_name'].' '.$item['last_name'];?></option>
-                                                <?php endforeach;?>
+                                                <?= $userList; ?>
                                             </select>
                                         </div>
                                     </div>

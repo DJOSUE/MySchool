@@ -1424,6 +1424,34 @@
                 </tbody>
             </table>
         </div>
+
+        <h3>
+            MYSCHOOL INFO
+        </h3>
+        <div align="center">
+            <table class="info">
+                <thead>
+                    <tr>
+                        <th>
+                            LINK
+                        </th>
+                        <th>
+                            <a ref="https://myschool.americanone-esl.com/">https://myschool.americanone-esl.com/</a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            Username: <?= $student_info['username']?>
+                        </td>
+                        <td>
+                            Password:___________________
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <p>
             I, <?= $student_name?> understand and agree with the policies and procedures as they were explained to me on
             the date of my registration <?= $agreement_date?>. I also acknowledge that I received the policies
@@ -1614,7 +1642,6 @@
     <?php endif;?>
 
     <!-- automatic_payment -->
-    <?php if($agreement['automatic_payment']):?>
     <div id="card_information" class=WordSection1>
         <div id="logo">
             <p class="MsoNormal" align="center" style='text-align:center;line-height:normal; border:none;padding:0in'>
@@ -1649,12 +1676,11 @@
         </table>
         <br /> <br /> <br />
 
+        <?php if($agreement['automatic_payment']):?>
         <span lang=EN style='font-size:10.0pt;font-family:Rubik'>
             I wish to pay a down payment of $ <?=$agreement['down_payment']?> on the contract AMERICAN ONE.
         </span>
         </p>
-
-
         <span lang=EN style='font-size:10.0pt;font-family:Rubik'>
             I authorize AMERICAN ONE to <b>charge automatic payments on my credit card account</b> on the
             <?=$agreement['payment_date']?> of each month for <?=$number_payments?> months in the
@@ -1663,6 +1689,7 @@
             billed for a $25.00 late fee.
         </span>
         </p>
+        <?php endif;?>
 
         <br /><br />
         <br /><br />
@@ -1712,26 +1739,11 @@
                         Expiration Date
                     </td>
                 </tr>
-                <tr>
-                    <td class="line">
-                    </td>
-                    <td class="line" colspan="2">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Card Holder Signature
-                    </td>
-                    <td colspan="2">
-                        American One Representative
-                    </td>
-
-                </tr>
             </table>
         </div>
         <br>
         <br>
-
+        <?php if($agreement['automatic_payment']):?>
         <p class="MsoNormal" style='margin-bottom:10.0pt;text-align:justify;line-height:normal'>
             <i style='font-size:10.0pt;font-family:Rubik'>
                 If <?=$student_name?> doesn’t pay in cash every month for the next <?=$agreement['number_payments']?>
@@ -1740,6 +1752,7 @@
                 Express, Discover or Mastercard payments will have an additional 5% charge.
             </i>
         </p>
+        <?php endif;?>
         <br>
         <br><br>
         <br>
@@ -1764,7 +1777,6 @@
         </div>
 
     </div>
-    <?php endif;?>
 </body>
 
 </html>

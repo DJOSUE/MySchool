@@ -211,8 +211,8 @@ class Agreement extends School
         }
 
         //Add Card info(Automatic payment)
-        if($has_automatic_payment == 1)
-        {
+        // if($has_automatic_payment == 1)
+        // {
             $dataCard['agreement_id']       = $agreement_id;
             $dataCard['type_card_id']       = $this->input->post('type_card_id');
             $dataCard['card_holder']        = $this->input->post('card_holder');
@@ -227,7 +227,7 @@ class Agreement extends School
             $action     = 'insert';
             $table_id  = $this->db->insert_id();
             $this->crud->save_log($table, $action, $table_id, $data);            
-        }
+        //}
         
         return $agreement_id;
     }

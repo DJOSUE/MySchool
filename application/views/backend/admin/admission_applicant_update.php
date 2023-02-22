@@ -6,7 +6,14 @@
         $tags_applicant = json_decode($row['tags'], true)['tags_id'];
         $status_info = $this->applicant->get_applicant_status_info($row['status']);
         $type_info = $this->applicant->get_type_info($row['type_id']);
-        $birthday = date('m/d/Y', strtotime($row['birthday']));
+        $birthday = date('Y-m-d', strtotime($row['birthday']));
+
+        $css_assigned_to = "";
+        $allow_re_assigned = has_permission('re_assigned_applicant');
+        if(!$allow_re_assigned)
+        {
+            $css_assigned_to = 'style="display:none"';
+        }
         
 ?>
 <div class="content-w">
@@ -52,7 +59,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12" <?=$css_assigned_to;?>>
                                                         <div class="form-group label-floating is-select" style="border-color: #000 !important;">
                                                             <label class="control-label"><?= getPhrase('assigned_to');?></label>
                                                             <div class="select">
