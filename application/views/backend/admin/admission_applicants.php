@@ -152,8 +152,10 @@ th {
                                         </div>
                                         <div class="col-sm-2">
                                             <div class="form-group">
-                                                <button class="btn btn-success btn-upper" style="margin-top:20px"
+                                                <button class="btn btn-success btn-upper"
                                                     type="submit"><span><?= getPhrase('search');?></span></button>
+                                                <a href="/admin/admission_applicants_assignation/" class="btn btn-info btn-upper">Bulk assignment
+                                                </a>
                                             </div>
                                         </div>
                                     </div>

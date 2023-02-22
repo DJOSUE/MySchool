@@ -436,5 +436,30 @@ class Applicant extends School
         
         return $query;
     }
+
+    function applicants_bulk_assignation()
+    {        
+        $array = [];
+        if(!empty($_POST['check_applicant_ids'])) {
+            foreach($_POST['check_applicant_ids'] as $value){
+                array_push($array, $value);
+            }
+
+            $data['assigned_to']    = html_escape($this->input->post('assigned_to'));
+            $this->db->reset_query();
+            $this->db->where_in('applicant_id', $array);
+            $this->db->update('applicant', $data);
+    
+            $data['ids']    = implode(", ",$array);
+            $table          = 'applicant';
+            $action         = 'update';        
+            $this->crud->save_log($table, $action, 0, $data);
+
+            return true;
+        }
+
+        return false;
+        
+    }
     
 }

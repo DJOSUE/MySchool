@@ -168,12 +168,32 @@ th {
                                 <button class="btn btn-info btn-sm btn-rounded" type="submit">
                                     <i class="picons-thin-icon-thin-0336_disc_floppy_save_software"
                                         style="font-weight: 300; font-size: 25px;"></i>
-                                </button> &b
+                                </button>
+                                &nbsp;&nbsp; &nbsp;&nbsp;
                                 <button class="btn btn-info btn-sm btn-rounded" id="selectAll">
                                     <span id="btnLabel">Check all</span>
                                 </button>
                                 <input type="checkbox" id="chk_all" label="check all" hidden />
-                            </div>                            
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <div class="col-sm-2">
+                                    <div class="form-group label-floating is-select">
+                                        <label class="control-label"><?= getPhrase('status');?></label>
+                                        <div class="select">
+                                            <select name="assigned_to" style="width: 300px;">
+                                                <option value=""><?= getPhrase('select');?></option>
+                                                <?php $advisors = $this->user->get_advisor();
+                                                foreach($advisors as $advisor):
+                                                ?>
+                                                <option value="<?= $advisor['admin_id']?>"
+                                                    <?= $advisor['admin_id'] == $row['assigned_to'] ? 'selected': ''; ?>>
+                                                    <?= $advisor['first_name'] .' '. $advisor['last_name']?>
+                                                </option>
+                                                <?php endforeach;?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="table-responsive">
                                 <?php
                                     if($student_query->num_rows() > 0):
@@ -287,7 +307,7 @@ $("#selectAll").click(function(e) {
     e.preventDefault();
 
     var chk = !$('#chk_all').attr('checked') ? true : false;
-    
+
     $('#dvData .chk_boxes').prop('checked', chk);
     $('#chk_all').attr('checked', chk);
 

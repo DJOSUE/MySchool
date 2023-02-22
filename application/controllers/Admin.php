@@ -3439,14 +3439,20 @@
 
         function admission_applicants_assignation_save()
         {
-            echo 'check_applicant_ids<br/>';
-            
+            $this->isAdmin('admission_module_management');
 
-                if(!empty($_POST['check_applicant_ids'])) {    
-                    foreach($_POST['check_applicant_ids'] as $value){
-                        echo "value : ".$value.'<br/>';
-                    }
-                }
+            $result = $this->applicant->applicants_bulk_assignation();
+            
+            if($result)
+            {
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'admin/admission_applicants/', 'refresh');
+            }
+            else
+            {
+                $this->session->set_flashdata('flash_error_message' , 'Select one or more applicants');
+                redirect(base_url() . 'admin/admission_applicants_assignation/', 'refresh');
+            }
             
             
         }
