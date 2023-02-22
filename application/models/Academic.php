@@ -270,7 +270,7 @@ class Academic extends School
         $this->crud->send_homework_notify();
         $homework_code = $data['homework_code'];
         $notify['notify'] = "<strong>".$this->crud->get_name($this->session->userdata('login_type'),$this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('new_homework_notify') ." <b>".html_escape($this->input->post('title'))."</b>";
-        $students = $this->db->get_where('enroll', array('class_id' => $this->input->post('class_id'), 'section_id' => $this->input->post('section_id'), 'year' => $this->runningYear))->result_array();
+        $students = $this->db->get_where('enroll', array('class_id' => $this->input->post('class_id'), 'section_id' => $this->input->post('section_id'), 'subject_id' => $this->input->post('subject_id'), 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->result_array();
         foreach($students as $row)
         {
             $notify['user_id']       = $row['student_id'];
@@ -449,7 +449,7 @@ class Academic extends School
         move_uploaded_file($_FILES["file_name"]["tmp_name"], "public/uploads/document/" . str_replace(" ", "",$_FILES["file_name"]["name"]));
         
         $notify['notify'] = "<strong>".$this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong> ". " ".getPhrase('study_material_notify');
-        $students = $this->db->get_where('enroll', array('class_id' => $this->input->post('class_id'),'section_id' => $this->input->post('section_id'), 'year' => $this->runningYear))->result_array();
+        $students = $this->db->get_where('enroll', array('class_id' => $this->input->post('class_id'), 'section_id' => $this->input->post('section_id'), 'subject_id' => $this->input->post('subject_id'), 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->result_array();
         foreach($students as $row)
         {
             $notify['user_id']       = $row['student_id'];
