@@ -1,4 +1,7 @@
 <?php 
+
+    
+
     $running_year   = $this->crud->getInfo('running_year'); 
     $advisor        = $this->user->get_advisor();
     $accounters     = $this->user->get_accounters();
@@ -193,7 +196,7 @@
     }
 </style>
 <div class="content-w">
-    <?php include 'fancy.php';?>
+    <?php include $fancy_path.'fancy.php';?>
     <div class="header-spacer"></div>
     <div class="conty">
         <div class="os-tabs-w menu-shad">
@@ -211,7 +214,7 @@
                 <div class="element-wrapper">
                     <div class="tab-content">
                         <div class="tab-pane active" id="invoices">
-                            <?= form_open(base_url() . 'admin/accounting_daily_income/');?>
+                            <?= form_open(base_url() . 'reports/accounting_daily_income/');?>
                             <div class="row">
                                 <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <div class="form-group label-floating is-select">

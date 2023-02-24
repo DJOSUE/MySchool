@@ -46,7 +46,6 @@
                         </div>
                         <!-- add enrollments -->
                         <div>
-
                             <div class="ui-block">
                                 <div class="ui-block-title">
                                     <div class="col-sm-2">
@@ -111,7 +110,7 @@
                                                         <?= getPhrase('total_agreement');?>
                                                     </label>
                                                     <input class="form-control" name="total_agreement" value="0"
-                                                        id="total_agreement" type="text" required="" readonly>
+                                                        id="total_agreement" type="text" required="">
                                                 </div>
                                             </div>
                                         </div>
@@ -180,7 +179,7 @@
                                                     </label>
                                                     <input class="form-control" name="amount_1" id="amount_1"
                                                         onfocusout="validate_amount_1()" type="text" required=""
-                                                        value="0" readOnly="">
+                                                        value="0" >
                                                     <small>
                                                         <span id="amount_error"></span>
                                                     </small>
@@ -499,10 +498,10 @@ function enable_down_payment() {
     var checked = document.getElementById("has_down_payment").checked;
 
     if (!checked) {
-        document.getElementById("amount_1").readOnly = 'true';
+        // document.getElementById("amount_1").readOnly = 'true';
         document.getElementById("paid_amount_1").checked = false;
     } else {
-        document.getElementById("amount_1").removeAttribute('readOnly');
+        // document.getElementById("amount_1").removeAttribute('readOnly');
         document.getElementById("paid_amount_1").checked = true;
     }
 }
@@ -535,7 +534,7 @@ function add_fees() {
             html += '            Payment ' + index
             html += '        </label>'
             html += '        <input class="form-control" name="amount_' + index + '"'
-            html += '            id="amount_' + index + '" value="' + quota + '"type="text" required="" readonly >'
+            html += '            id="amount_' + index + '" value="' + quota + '"type="text" required="" >'
             html += '    </div>'
             html += '</div>'
 
@@ -624,7 +623,7 @@ function add_fees_with_dow() {
             html += '            Payment ' + index
             html += '        </label>'
             html += '        <input class="form-control" name="amount_' + index + '"'
-            html += '            id="amount_' + index + '" value="' + quota + '"type="text" required="" readonly >'
+            html += '            id="amount_' + index + '" value="' + quota + '"type="text" required="" >'
             html += '    </div>'
             html += '</div>'
 

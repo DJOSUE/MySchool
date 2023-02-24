@@ -106,17 +106,7 @@
                                     <select name="class_id" id="class_id" onchange="get_class_sections(this.value);">
                                         <option value=""><?= getPhrase('select');?></option>
                                         <?php 
-                                            // $cl = $this->db->get('class')->result_array();
-                                            $this->db->reset_query();
-                                            $this->db->select('class_id, class_name');
-                                            $this->db->from('v_subject');
-                                            $this->db->where('teacher_id', $teacher_id);
-                                            $this->db->where('year', $running_year);
-                                            $this->db->where('semester_id', $running_semester);
-
-                                            $this->db->group_by('class_id');
-                                            $cl =  $this->db->get()->result_array();
-                                            // $cl = $this->db->query("SELECT class_id, class_name FROM v_subject WHERE teacher_id = '$teacher_id' AND year = '$running_year' AND semester_id = '$running_semester' GROUP BY class_id")->result_array();
+                                            $cl = $this->crud->get_class_by_teacher($teacher_id);
                                             foreach($cl as $row):
                                         ?>
                                         <option value="<?= $row['class_id'];?>"><?= $row['class_name'];?>

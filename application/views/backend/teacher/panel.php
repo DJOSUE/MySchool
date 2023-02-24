@@ -325,6 +325,21 @@
                                         </div>
                                     </div>
                                     <div class="ui-block paddingtel">
+                                        <div class="pipeline white lined-success">
+                                            <div class="element-wrapper">
+                                                <h6 class="element-header">CEA</h6>
+                                            </div>
+                                            <div class="content">
+                                                <center>
+                                                    <a href="https://cea-accredit.org/images/2022_docs_and_handbooks/Section_15_Complaints.pdf"
+                                                        class="panel-btn" target="_blank">
+                                                        Complaints
+                                                    </a>
+                                                </center>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui-block paddingtel">
                                         <div class="widget w-create-fav-page">
                                             <div class="icons-block" style="margin-bottom: 10px;">
                                                 <i class="picons-thin-icon-thin-0729_student_degree_science_university_school_graduate text-white"

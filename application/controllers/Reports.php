@@ -14,6 +14,7 @@ class Reports extends EduAppGT
     private $runningYear     = '';
     private $runningSemester = '';
     private $account_type = '';
+    private $fancy_path = '';
     private $role_id = 0;
 
     
@@ -25,10 +26,11 @@ class Reports extends EduAppGT
 		$this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
 		$this->output->set_header('Pragma: no-cache');
 
-        $this->runningYear      = $this->crud->getInfo('running_year'); 
-        $this->runningSemester  = $this->crud->getInfo('running_semester'); 
-        $this->account_type       =   $this->session->userdata('login_type'); 
-        $this->role_id = $this->session->userdata('role_id');
+        $this->runningYear      =   $this->crud->getInfo('running_year'); 
+        $this->runningSemester  =   $this->crud->getInfo('running_semester'); 
+        $this->account_type     =   $this->session->userdata('login_type'); 
+        $this->role_id          =   $this->session->userdata('role_id');
+        $this->fancy_path       =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/'.$this->account_type.'/';
     }
     
     //Index function.
@@ -57,12 +59,128 @@ class Reports extends EduAppGT
     }
 
 /***** Accounting Reports *******************************************************************************************************************************/
-    function report_dashboard()
+    function accounting_dashboard()
     {
+        $this->isLogin();
+
+        if(has_permission('accounting_dashboard'))
+        {
+            $page_data['page_name']     = 'accounting_dashboard';
+            $page_data['page_title']    = getPhrase('accounting_dashboard');
+            $page_data['fancy_path']    = $this->fancy_path;
+            $this->load->view('backend/reports/index', $page_data); 
+        }
+        else
+        {
+            redirect(base_url() . 'reports/accounting_daily_income', 'refresh');
+        }
         
     }
     
+    function accounting_daily_income()
+    {     
+        $this->isLogin();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $date = html_escape($this->input->post('date'));
+            $cashier_id = html_escape($this->input->post('cashier_id'));
+
+            if($cashier_id == '')
+            {
+                $cashier_id = "admin|".$this->session->userdata('login_user_id');
+            }
+        }
+        else
+        {
+            if(has_permission('accounting_dashboard'))
+            {
+                $date = "";
+                $cashier_id = "";
+            }
+            else
+            {
+                $date = date("Y-m-d");
+                $cashier_id = "admin|".$this->session->userdata('login_user_id');
+            }
+        }
+
+        $page_data['date']          = $date;
+        $page_data['cashier_id']    = $cashier_id;
+        $page_data['cashier_all']   = has_permission('accounting_dashboard');            
+        $page_data['fancy_path']    = $this->fancy_path;
+        $page_data['page_name']     = 'accounting_daily_income';
+        $page_data['page_title']    = getPhrase('daily_income');
+        $page_data['fancy_path']    = $this->fancy_path;
+        $this->load->view('backend/reports/index', $page_data); 
+        
+
+    }
+
+    function accounting_payments()
+    {
+        $this->isLogin();
+
+        $interval   = date_interval_create_from_date_string('1 days');
+        $objDate    = date_create(date("m/d/Y"));
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $start_date = html_escape($this->input->post('start_date'));
+            $end_date   = html_escape($this->input->post('end_date'));
+            $cashier_id = html_escape($this->input->post('cashier_id'));
+        }
+        else
+        {
+            $start_date = date_format($objDate, "m/d/Y");
+            $end_date   = date_format(date_add($objDate, $interval), "m/d/Y");
+            $cashier_id = "";
+        }
+        
+        $page_data['cashier_id'] = $cashier_id;
+        $page_data['start_date'] = $start_date;
+        $page_data['end_date']   = $end_date;
+        $page_data['page_name']  = 'accounting_payments';
+        $page_data['page_title'] = getPhrase('payments');
+        $page_data['fancy_path']    = $this->fancy_path;
+        $this->load->view('backend/reports/index', $page_data); 
+    }
+
 /***** Academic Reports   *******************************************************************************************************************************/
+
+    function academic_dashboard()
+    {
+        $this->isLogin();
+        
+        $page_data['page_name']     = 'academic_dashboard';
+        $page_data['page_title']    = getPhrase('academic_dashboard');
+        $page_data['fancy_path']    = $this->fancy_path;
+        $this->load->view('backend/reports/index', $page_data); 
+    }
+
+    function academic_attendance()
+    {
+        $this->isLogin();
+        
+        $interval   = date_interval_create_from_date_string('1 days');
+        $objDate    = date_create(date("m/d/Y"));
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $start_date = html_escape($this->input->post('start_date'));
+            $end_date   = html_escape($this->input->post('end_date'));
+        }
+        else
+        {
+            $start_date = date_format($objDate, "m/d/Y");
+            $end_date   = date_format(date_add($objDate, $interval), "m/d/Y");            
+        }        
+        
+        $page_data['start_date'] = $start_date;
+        $page_data['end_date']   = $end_date;
+        $page_data['page_name']     = 'academic_attendance';
+        $page_data['page_title']    = getPhrase('academic_attendance');
+        $page_data['fancy_path']    = $this->fancy_path;
+        $this->load->view('backend/reports/index', $page_data); 
+    }
+
 /***** Advisors Reports   *******************************************************************************************************************************/
 /***** President Reports  *******************************************************************************************************************************/
 

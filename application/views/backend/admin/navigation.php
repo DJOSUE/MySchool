@@ -32,11 +32,13 @@
 
     $helpdesk_pages     = array('dashboard', 'ticket_list', 'ticket_info');
 
-    $accounting_pages   = array('accounting_dashboard', 'accounting_daily_income', 'invoice_details', 'payments', 'students_payments', 'expense', 'new_payment');
+    $accounting_pages   = array('accounting_dashboard', 'accounting_daily_income', 'invoice_details', 'payments', 'students_payments', 'expense', 'new_payment');    
 
     $upload_pages       = array('upload_agreements');
 
     $student_month_pages = array('student_month_dashboard');
+
+    $academic_report_pages  = array('academic_dashboard');
     
 
 ?>
@@ -238,13 +240,24 @@
                     </a>
                 </li>
                 <?php endif;?>
-                <!-- Payments Access -->
+                <!-- Accounting Reports Access -->
                 <?php if(has_permission('accounting_module')):?>
                 <li <?php if(in_array($page_name, $accounting_pages)):?>class="currentItem" <?php endif;?>>
-                    <a href="<?php echo base_url();?>admin/accounting_dashboard/" data-toggle="tooltip"
-                        data-placement="right" data-original-title="<?php echo getPhrase('accounting');?>">
+                    <a href="<?php echo base_url();?>reports/accounting_dashboard/" data-toggle="tooltip"
+                        data-placement="right" data-original-title="<?php echo getPhrase('accounting_reports');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0428_money_payment_dollar_bag_cash"></i>
+                        </div>
+                    </a>
+                </li>
+                <?php endif;?>
+                <!-- Academic Reports Access -->
+                <?php if(has_permission('academic_report_module')):?>
+                <li <?php if(in_array($page_name, $academic_report_pages)):?>class="currentItem" <?php endif;?>>
+                    <a href="<?php echo base_url();?>reports/academic_dashboard/" data-toggle="tooltip"
+                        data-placement="right" data-original-title="<?php echo getPhrase('academic_reports');?>">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0375_screen_analytics_line_graph"></i>
                         </div>
                     </a>
                 </li>
@@ -519,14 +532,25 @@
                     </a>
                 </li>
                 <?php endif;?>
-                <!-- Payments Access -->
-                <?php if(has_permission('accounting_module')):?>
+                 <!-- Accounting Reports Access -->
+                 <?php if(has_permission('accounting_module')):?>
                 <li>
-                    <a href="<?php echo base_url();?>admin/payments/">
+                    <a href="<?php echo base_url();?>reports/accounting_dashboard/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0428_money_payment_dollar_bag_cash"></i>
                         </div>
-                        <span class="left-menu-title"><?php echo getPhrase('accounting');?></span>
+                        <span class="left-menu-title"><?php echo getPhrase('accounting_reports');?></span>
+                    </a>
+                </li>
+                <?php endif;?>
+                <!-- Academic Reports Access -->
+                <?php if(has_permission('academic_report_module')):?>
+                <li>
+                    <a href="<?php echo base_url();?>reports/academic_dashboard/">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0375_screen_analytics_line_graph"></i>
+                        </div>
+                        <span class="left-menu-title"><?php echo getPhrase('academic_reports');?></span>
                     </a>
                 </li>
                 <?php endif;?>
@@ -809,14 +833,24 @@
                     </a>
                 </li>
                 <?php endif;?>
-                <!-- Payments Access -->
+                <!-- Accounting Reports Access -->
                 <?php if(has_permission('accounting_module')):?>
                 <li>
-                    <a href="<?php echo base_url();?>admin/payments/">
+                    <a href="<?php echo base_url();?>reports/accounting_dashboard/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0428_money_payment_dollar_bag_cash"></i>
                         </div>
-                        <span class="left-menu-title"><?php echo getPhrase('accounting');?></span>
+                        <span class="left-menu-title"><?php echo getPhrase('accounting_reports');?></span>
+                    </a>
+                </li>
+                <?php endif;?>
+                <?php if(has_permission('academic_report_module')):?>
+                <li>
+                    <a href="<?php echo base_url();?>reports/academic_dashboard/">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0375_screen_analytics_line_graph"></i>
+                        </div>
+                        <span class="left-menu-title"><?php echo getPhrase('academic_reports');?></span>
                     </a>
                 </li>
                 <?php endif;?>

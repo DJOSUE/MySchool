@@ -704,6 +704,35 @@
                                                         <?= getPhrase('catalogue');?>
                                                     </a>
                                                 </center>
+                                                <br/>
+                                                <center>
+                                                    <a href="https://americanone-esl.com/document_pdf/admin_handbook.pdf"
+                                                        class="panel-btn" target="_blank">
+                                                        <?= getPhrase('admin_handbook');?>
+                                                    </a>
+                                                </center>
+                                                <br/>
+                                                <center>
+                                                    <a href="https://americanone-esl.com/document_pdf/office_handbook.pdf"
+                                                        class="panel-btn" target="_blank">
+                                                        <?= getPhrase('office_handbook');?>
+                                                    </a>
+                                                </center>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui-block paddingtel">
+                                        <div class="pipeline white lined-success">
+                                            <div class="element-wrapper">
+                                                <h6 class="element-header">CEA</h6>
+                                            </div>
+                                            <div class="content">
+                                                <center>
+                                                    <a href="https://cea-accredit.org/images/2022_docs_and_handbooks/Section_15_Complaints.pdf"
+                                                        class="panel-btn" target="_blank">
+                                                        Complaints
+                                                    </a>
+                                                </center>
                                             </div>
                                         </div>
                                     </div>

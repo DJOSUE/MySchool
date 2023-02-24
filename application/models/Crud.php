@@ -3427,4 +3427,37 @@ class Crud extends School
         $query = $this->db->get('parameters')->result_array();
         return $query;
     }
+
+    function get_classes()
+    {
+        $this->db->reset_query();
+        $this->db->select('code as priority_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'INTERACTION_MODALITY');
+        $query = $this->db->get('parameters')->result_array();
+        return $query;
+    }
+
+    function get_class_by_teacher($teacher_id, $year = '', $semester_id ='')
+    {
+
+        if ( $year == '' ) {
+            $year = $this->runningYear;
+        }
+
+        if ( $semester_id == '' ) {
+            $semester_id = $this->runningSemester;
+        }
+        
+        $this->db->reset_query();
+        $this->db->select('class_id, class_name');
+        $this->db->from('v_subject');
+        $this->db->where('teacher_id', $teacher_id);
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+
+        $this->db->group_by('class_id');
+        $query =  $this->db->get()->result_array();
+        return $query;
+
+    }
 }

@@ -7,7 +7,7 @@
 
     $page_array     = array('subject_dashboard', 'online_exams', 'homework', 'forum', 'study_material', 'upload_marks', 'meet', 'gamification');
 
-    $layout         = in_array($page_name, $message_pages) ? 'class="layout-w"' : '';
+    $layout         = in_array($page_name, $page_array) ? 'class="layout-w"' : '';
     
 ?>
 <!DOCTYPE html>

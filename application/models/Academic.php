@@ -812,9 +812,9 @@ class Academic extends School
         $data['priority']    = $this->input->post('priority');
         $data['status']      = 0;
         $data['code']        = substr(md5(rand(0, 1000000)), 0, 7);
-        $this->db->insert('reports', $data);
+        $this->db->insert('student_behavior', $data);
 
-        $table      = 'reports';
+        $table      = 'student_behavior';
         $action     = 'insert';
         $insert_id  = $this->db->insert_id();
         $this->crud->save_log($table, $action, $insert_id, $data);
