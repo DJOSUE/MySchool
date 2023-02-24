@@ -186,6 +186,10 @@
         <?php echo form_close();?>
         <div class="control-block">
             <div class="control-icon more has-items">
+                <i class="picons-thin-icon-thin-0309_support_help_talk_call"
+                    onclick="showAjaxModal('<?= base_url();?>modal/popup_helpdesk/modal_ticket_add/');"></i>
+            </div>
+            <div class="control-icon more has-items">
                 <i class="picons-thin-icon-thin-0275_chat_message_comment_bubble_typing"></i>
                 <?php if($fancy_number > 0):?><div class="label-avatar bg-success"><?php echo $fancy_number;?></div>
                 <?php endif;?>
@@ -311,7 +315,7 @@
 
                             echo $this->system->get_role_name($account_type);
                         ?>
-                        
+
                     </span>
                 </a>
             </div>
@@ -321,6 +325,14 @@
 <header class="header header-responsive" id="site-header-responsive">
     <div class="header-content-wrapper">
         <ul class="nav nav-tabs mobile-app-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#helpdesk" role="tab">
+                    <div class="control-icon has-items">
+                        <i class="picons-thin-icon-thin-0309_support_help_talk_call"
+                        onclick="showAjaxModal('<?= base_url();?>modal/popup_helpdesk/modal_ticket_add/');"></i>
+                    </div>
+                </a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#chat" role="tab">
                     <div class="control-icon has-items">
@@ -353,6 +365,8 @@
         </ul>
     </div>
     <div class="tab-content tab-content-responsive">
+        <div class="tab-pane " id="helpdesk" role="tabpanel">            
+        </div>
         <div class="tab-pane " id="chat" role="tabpanel">
             <div class="mCustomScrollbar" data-mcs-theme="dark">
                 <ul class="notification-list chat-message">

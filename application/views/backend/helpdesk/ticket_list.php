@@ -72,20 +72,20 @@ th {
                         // var_dump($department_id);
                         // echo '</pre>';
                         ?>
-                        <h5 class="form-header"><?php echo getPhrase('ticket_list');?></h5>
+                        <h5 class="form-header"><?= getPhrase('ticket_list');?></h5>
                         <div class="row">
                             <div class="content-i">
                                 <div class="content-box">
-                                    <?php echo form_open(base_url() . 'helpdesk/ticket_list/', array('class' => 'form m-b'));?>
+                                    <?= form_open(base_url() . 'helpdesk/ticket_list/', array('class' => 'form m-b'));?>
                                     <div class="row" style="margin-top: -30px; border-radius: 5px;">
                                         <div class="col-sm-2">
                                             <div class="form-group label-floating is-select">
                                                 <label
-                                                    class="control-label"><?php echo getPhrase('department');?></label>
+                                                    class="control-label"><?= getPhrase('department');?></label>
                                                 <div class="select">
                                                     <select name="category_id"
                                                         onchange="get_class_sections(this.value)">
-                                                        <option value=""><?php echo getPhrase('select');?>
+                                                        <option value=""><?= getPhrase('select');?>
                                                         </option>
 
                                                         <?php
@@ -97,9 +97,9 @@ th {
                                                         $categories = $this->ticket->get_categories($row['department_id']);
                                                         foreach($categories as $item):  
                                                         ?>
-                                                            <option value="<?php echo $item['category_id'];?>"
+                                                            <option value="<?= $item['category_id'];?>"
                                                                 <?php if($category_id == $item['category_id']) echo "selected";?>>
-                                                                <?php echo $item['name'];?></option>
+                                                                <?= $item['name'];?></option>
 
                                                             <?php endforeach;?>
                                                             <?php endforeach;?>
@@ -109,19 +109,19 @@ th {
                                         </div>
                                         <div class="col-sm-2">
                                             <div class="form-group label-floating is-select">
-                                                <label class="control-label"><?php echo getPhrase('priority');?></label>
+                                                <label class="control-label"><?= getPhrase('priority');?></label>
                                                 <div class="select">
                                                     <select name="priority_id"
                                                         onchange="get_class_sections(this.value)">
-                                                        <option value=""><?php echo getPhrase('select');?>
+                                                        <option value=""><?= getPhrase('select');?>
                                                         </option>
                                                         <?php
                                                         $priorities = $this->ticket->get_priorities();
                                                         foreach($priorities as $priority):                        
                                                     ?>
-                                                        <option value="<?php echo $priority['priority_id'];?>"
+                                                        <option value="<?= $priority['priority_id'];?>"
                                                             <?php if($priority_id == $priority['priority_id']) echo "selected";?>>
-                                                            <?php echo $priority['name'];?></option>
+                                                            <?= $priority['name'];?></option>
                                                         <?php endforeach;?>
                                                     </select>
                                                 </div>
@@ -129,18 +129,18 @@ th {
                                         </div>
                                         <div class="col-sm-2">
                                             <div class="form-group label-floating is-select">
-                                                <label class="control-label"><?php echo getPhrase('status');?></label>
+                                                <label class="control-label"><?= getPhrase('status');?></label>
                                                 <div class="select">
                                                     <select name="status_id">
-                                                        <option value=""><?php echo getPhrase('select');?>
+                                                        <option value=""><?= getPhrase('select');?>
                                                         </option>
                                                         <?php
                                                         $statuses = $this->ticket->get_statuses();
                                                         foreach($statuses as $status):
                                                     ?>
-                                                        <option value="<?php echo $status['status_id'];?>"
+                                                        <option value="<?= $status['status_id'];?>"
                                                             <?php if($status_id == $status['status_id']) echo "selected";?>>
-                                                            <?php echo $status['name'];?></option>
+                                                            <?= $status['name'];?></option>
                                                         <?php endforeach;?>
                                                     </select>
                                                 </div>
@@ -149,7 +149,7 @@ th {
                                         <div class="col-sm-2">
                                             <div class="form-group label-floating"
                                                 style="border: 1px solid #EAEAF5; border-radius: 5px; background: white;">
-                                                <label class="control-label"><?php echo getPhrase('text');?></label>
+                                                <label class="control-label"><?= getPhrase('text');?></label>
                                                 <input class="form-control" name="text" type="text" value="<?= $text?>">
                                             </div>
                                         </div>
@@ -157,7 +157,7 @@ th {
                                         <div class="col-sm-2">
                                             <div class="description-toggle">
                                                 <div class="description-toggle-content">
-                                                    <div class="h6"><?php echo getPhrase('assigned_to_me');?></div>
+                                                    <div class="h6"><?= getPhrase('assigned_to_me');?></div>
                                                 </div>
                                                 <div class="togglebutton">
                                                     <label><input name="assigned_me" value="1" type="checkbox"
@@ -170,20 +170,20 @@ th {
                                             <div class="form-group">
                                                 <button class="btn btn-success btn-upper" style="margin-top:20px"
                                                     type="submit">
-                                                    <span><?php echo getPhrase('search');?></span>
+                                                    <span><?= getPhrase('search');?></span>
                                                 </button>
                                             </div>
                                         </div>
                                     </div>
-                                    <?php echo form_close();?>
+                                    <?= form_close();?>
                                     <div class="col-sm-2">
-                                            <div class="form-group">
-                                                <button class="btn btn-primary btn-upper" style="margin-top:20px"
-                                                    onclick="showAjaxModal('<?php echo base_url();?>modal/popup_helpdesk/modal_ticket_add/');">
-                                                    <span>+<?php echo getPhrase('new');?></span>
-                                                </button>
-                                            </div>
+                                        <div class="form-group">
+                                            <button class="btn btn-primary btn-upper" style="margin-top:20px"
+                                                onclick="showAjaxModal('<?= base_url();?>modal/popup_helpdesk/modal_ticket_add/');">
+                                                <span>+<?= getPhrase('new');?></span>
+                                            </button>
                                         </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -193,7 +193,7 @@ th {
                                     if($ticket_query->num_rows() > 0):
                                 ?>
                                 <a href="#" id="btnExport" data-toggle="tooltip" data-placement="top"
-                                    data-original-title="<?php echo getPhrase('download');?>">
+                                    data-original-title="<?= getPhrase('download');?>">
                                     <button class="btn btn-info btn-sm btn-rounded">
                                         <i class="picons-thin-icon-thin-0123_download_cloud_file_sync"
                                             style="font-weight: 300; font-size: 25px;"></i>
@@ -203,29 +203,32 @@ th {
                                 <table class="table table-padded" id="dvData">
                                     <thead>
                                         <tr>
-                                            <th class="text-center"><?php echo getPhrase('title')?></th>
-                                            <th class="text-center"><?php echo getPhrase('category')?></th>
-                                            
-                                            <th class="text-center"><?php echo getPhrase('status')?></th>
-                                            <th class="text-center"><?php echo getPhrase('priority')?></th>
-                                            <th class="text-center"><?php echo getPhrase('assigned_to')?></th>
-                                            <th class="text-center"><?php echo getPhrase('created_by')?></th>
-                                            <th class="text-center"><?php echo getPhrase('created_at')?></th>
-                                            <th class="text-center"><?php echo getPhrase('updated_by')?></th>
-                                            <th class="text-center"><?php echo getPhrase('updated_at')?></th>
-                                            <th class="text-center"><?php echo getPhrase('options')?></th>
+                                            <th class="text-center"><?= getPhrase('title')?></th>
+                                            <th class="text-center"><?= getPhrase('category')?></th>
+
+                                            <th class="text-center"><?= getPhrase('status')?></th>
+                                            <th class="text-center"><?= getPhrase('priority')?></th>
+                                            <th class="text-center"><?= getPhrase('assigned_to')?></th>
+                                            <th class="text-center"><?= getPhrase('created_by')?></th>
+                                            <th class="text-center"><?= getPhrase('created_at')?></th>
+                                            <th class="text-center"><?= getPhrase('updated_by')?></th>
+                                            <th class="text-center"><?= getPhrase('updated_at')?></th>
+                                            <th class="text-center"><?= getPhrase('options')?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php 
                                             foreach($tickets as $row) :
                                                 $allow_actions = $this->ticket->is_ticket_closed($row['status_id']);
+                                                $view_url = base_url().'helpdesk/ticket_info/'.$row['ticket_code'];
                                         ?>
                                         <tr style="height:25px;">
                                             <td>
-                                                <center>
-                                                    <?= ($row['title']);?>
-                                                </center>
+                                                <a href="<?= $view_url;?>" class="grey">
+                                                    <center>
+                                                        <?= ($row['title']);?>
+                                                    </center>
+                                                </a>
                                             </td>
                                             <td>
                                                 <center>
@@ -238,8 +241,12 @@ th {
                                                 </center>
                                             </td>
                                             <td>
-                                                <center>
-                                                    <?= $this->ticket->get_priority_name($row['priority_id']);?>
+                                            <center>
+                                                    <?php $priority_info = $this->ticket->get_priority_info($row['priority_id']);?>
+                                                    <div class="value badge badge-pill badge-primary"
+                                                        style="background-color: <?= $priority_info['color']?>;">
+                                                        <?= $priority_info['name'];?>
+                                                    </div>
                                                 </center>
                                             </td>
                                             <td>
@@ -254,7 +261,7 @@ th {
                                             </td>
                                             <td>
                                                 <center>
-                                                    <?php echo ($row['created_at']);?>
+                                                    <?= ($row['created_at']);?>
                                                 </center>
                                             </td>
                                             <td>
@@ -268,23 +275,23 @@ th {
                                                 </center>
                                             </td>
                                             <td class="row-actions">
-                                                <a href="<?php echo base_url()?>helpdesk/ticket_info/<?= $row['ticket_code'];?>"
+                                                <a href="<?=$view_url?>"
                                                     class="grey" data-toggle="tooltip" data-placement="top"
-                                                    data-original-title="<?php echo getPhrase('view');?>">
+                                                    data-original-title="<?= getPhrase('view');?>">
                                                     <i
                                                         class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible"></i>
                                                 </a>
                                                 <?php if(!$allow_actions):?>
                                                 <a href="javascript:void(0);" class="grey" data-toggle="tooltip"
                                                     data-placement="top"
-                                                    data-original-title="<?php echo getPhrase('add_interaction');?>"
-                                                    onclick="showAjaxModal('<?php echo base_url();?>modal/popup_helpdesk/modal_ticket_add_message/<?= $row['ticket_code'].'/ticket_applicant/';?>');">
+                                                    data-original-title="<?= getPhrase('add_interaction');?>"
+                                                    onclick="showAjaxModal('<?= base_url();?>modal/popup_helpdesk/modal_ticket_add_message/<?= $row['ticket_code'].'/ticket_applicant/';?>');">
                                                     <i class="os-icon picons-thin-icon-thin-0151_plus_add_new"></i>
                                                 </a>
                                                 <a href="javascript:void(0);" class="grey" data-toggle="tooltip"
                                                     data-placement="top"
-                                                    data-original-title="<?php echo getPhrase('edit');?>"
-                                                    onclick="showAjaxModal('<?php echo base_url();?>modal/popup_helpdesk/modal_ticket_edit/<?=$row['ticket_code'].'/ticket_applicant/';?>');">
+                                                    data-original-title="<?= getPhrase('edit');?>"
+                                                    onclick="showAjaxModal('<?= base_url();?>modal/popup_helpdesk/modal_ticket_edit/<?=$row['ticket_code'].'/ticket_applicant/';?>');">
                                                     <i
                                                         class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new"></i>
                                                 </a>
@@ -338,7 +345,7 @@ function getCellValue(row, index) {
 </script>
 <script>
 $("#btnExport").click(function(e) {
-    var reportName = '<?php echo getPhrase('ticket_applicant').'_'.date('d-m-Y');?>';
+    var reportName = '<?= getPhrase('ticket_applicant').'_'.date('d-m-Y');?>';
     var a = document.createElement('a');
     var data_type = 'data:application/vnd.ms-excel;charset=utf-8';
     var table_html = $('#dvData')[0].outerHTML;

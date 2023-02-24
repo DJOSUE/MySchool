@@ -1356,7 +1356,7 @@ class Academic extends School
         
     }
 
-    public function uploadMarks($datainfo,$examId)
+    public function uploadMarks($datainfo, $examId)
     {
         $info = base64_decode($datainfo);
         $ex = explode('-', $info);
@@ -1413,7 +1413,80 @@ class Academic extends School
             }
         }
     }
-    
+
+    public function get_daily_mark_id($student_id, $class_id, $section_id, $subject_id, $date, $unit_id)
+    {        
+        $this->db->reset_query();
+        $this->db->select('mark_daily_id');
+        $this->db->where('student_id', $student_id);
+        $this->db->where('class_id', $class_id);
+        $this->db->where('section_id', $section_id);
+        $this->db->where('subject_id', $subject_id);
+        $this->db->where('unit_id', $unit_id);
+        $this->db->where('mark_date', $date);
+        $this->db->where('year', $this->runningYear);
+        $this->db->where('semester_id', $this->runningSemester);        
+        $query = $this->db->get('mark_daily')->row_array();
+        return intval($query['mark_daily_id']);                
+    }
+
+
+    public function createMarks($datainfo, $examId, $date)
+    {
+        $info = base64_decode($datainfo);
+        $ex = explode('-', $info);
+
+        $data['unit_id']        = $examId;
+        $data['class_id']       = $ex[0];
+        $data['section_id']     = $ex[1];
+        $data['subject_id']     = $ex[2];
+        $data['year']           = $this->runningYear;
+        $data['semester_id']    = $this->runningSemester;
+
+        $students = $this->db->get_where('enroll' , array('class_id' => $data['class_id'] , 'section_id' => $data['section_id'] , 'subject_id' => $data['subject_id'] ,'year' => $data['year']))->result_array();
+        
+        foreach($students as $row) 
+        {
+            if($this->useDailyMarks)
+            {
+                $verify_data = array('unit_id' => $data['unit_id'], 'class_id' => $data['class_id'], 'section_id' => $data['section_id'],
+                                    'student_id' => $row['student_id'],'subject_id' => $data['subject_id'], 'year' => $data['year'], 'mark_date' => $date);
+                $query = $this->db->get_where('mark_daily' , $verify_data);
+
+                if($query->num_rows() < 1) 
+                {   
+                    $data['mark_date']  = $date;
+                    $data['student_id'] = $row['student_id'];
+                    
+                    $this->db->insert('mark_daily' , $data);
+
+                    $table      = 'mark_daily';
+                    $action     = 'insert';
+                    $insert_id  = $this->db->insert_id();
+                    $this->crud->save_log($table, $action, $insert_id, $data);
+                }
+            }
+            else
+            {
+                $verify_data = array('unit_id' => $data['unit_id'], 'class_id' => $data['class_id'], 'section_id' => $data['section_id'],
+                                    'student_id' => $row['student_id'],'subject_id' => $data['subject_id'], 'year' => $data['year']);
+                $query = $this->db->get_where('mark' , $verify_data);
+
+                if($query->num_rows() < 1) 
+                {   
+                    $data['student_id'] = $row['student_id'];
+                    
+                    $this->db->insert('mark' , $data);
+
+                    $table      = 'mark';
+                    $action     = 'insert';
+                    $insert_id  = $this->db->insert_id();
+                    $this->crud->save_log($table, $action, $insert_id, $data);
+                }
+            }
+        }
+    }
+
     public function submitExam($online_exam_id)
     {
         $answer_script = array();

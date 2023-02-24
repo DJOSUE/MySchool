@@ -132,6 +132,7 @@ class Ticket extends School
         $data['category_id']        = html_escape($this->input->post('category_id'));
         $data['status_id']          = html_escape($this->input->post('status_id'));
         $data['priority_id']        = html_escape($this->input->post('priority_id'));
+        $data['link']               = html_escape($this->input->post('link'));
         $data['description']        = html_escape($this->input->post('description'));
 
         if(!empty($this->input->post('assigned_to')))

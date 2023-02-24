@@ -66,7 +66,7 @@
                                                         ?>
                                                     </h1>
                                                     <div class="author-content">
-                                                        <div class="country"><b> <?= $item['name'];?></b></div>
+                                                        <div class="country text-font-12"><b> <?= $item['name'];?></b></div>
                                                     </div>
                                                 </div>
                                             </div>

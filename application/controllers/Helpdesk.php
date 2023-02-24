@@ -84,7 +84,7 @@ class Helpdesk extends EduAppGT
 
 
         $page_data['page_name']     = 'ticket_list';
-        $page_data['page_title']    =  getPhrase('helpdesk_ticket_list');
+        $page_data['page_title']    =  getPhrase('ticket_list');
         $this->load->view('backend/helpdesk/index', $page_data);
     }
 
