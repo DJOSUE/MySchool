@@ -160,7 +160,7 @@
                                                         $allow_payment      = false;
                                                     }
                                                 ?>
-                                                <tr>
+                                                <tr id="<?=$row2['amortization_id']?>">
                                                     <td>
                                                         <?= $row2['amortization_no'];?>
                                                     </td>
