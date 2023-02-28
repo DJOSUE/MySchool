@@ -1132,6 +1132,122 @@ class Academic extends School
         return $info;
     }
     
+
+    public function updateCreateDailyMarks($unit_id, $class_id, $section_id, $subject_id, $date)
+    {
+        $this->db->reset_query();
+        $this->db->where('class_id', $class_id);
+        $this->db->where('section_id', $section_id);
+        $this->db->where('subject_id', $subject_id);        
+        $this->db->where('year', $this->runningYear);
+        $this->db->where('semester_id', $this->runningSemester);
+        $query = $this->db->get('enroll')->result_array();
+
+        $marks = $_POST['daily_mark_student'];
+
+        foreach($query as $student)
+        {
+            $student_id     = $student['student_id'];
+            $student_mark   = $marks[$student_id];
+            $mark_daily_id  = $this->academic->get_daily_mark_id($student_id, $class_id, $section_id, $subject_id, $date, $unit_id);
+
+            // Calc
+                $count          = 0;
+                $obtained_marks = 0;
+                
+                $labouno        = $student_mark['lab_uno'];
+                $labodos        = $student_mark['lab_dos'];
+                $labotres       = $student_mark['lab_tres'];
+                $labocuatro     = $student_mark['lab_cuatro'];
+                $labocinco      = $student_mark['lab_cinco'];
+                $laboseis       = $student_mark['lab_seis'];
+                $labosiete      = $student_mark['lab_siete'];
+                $laboocho       = $student_mark['lab_ocho'];
+                $labonueve      = $student_mark['lab_nueve'];
+                $labodiez       = $student_mark['lab_diez'];
+                $comment        = $student_mark['comment'];
+
+                // Validate values
+                if($labouno     == '' ) { $labouno      = '-'; } 
+                if($labodos     == '' ) { $labodos      = '-'; }  
+                if($labotres    == '' ) { $labotres     = '-'; }  
+                if($labocuatro  == '' ) { $labocuatro   = '-'; }  
+                if($labocinco   == '' ) { $labocinco    = '-'; }
+                if($laboseis    == '' ) { $laboseis     = '-'; } 
+                if($labosiete   == '' ) { $labosiete    = '-'; }  
+                if($laboocho    == '' ) { $laboocho     = '-'; }  
+                if($labonueve   == '' ) { $labonueve    = '-'; }  
+                if($labodiez    == '' ) { $labodiez     = '-'; }
+
+                // Calculate the average 
+                if(is_numeric($labouno)     && $labouno != '-' ) { $count++; } 
+                if(is_numeric($labodos)     && $labodos != '-' ) { $count++; }  
+                if(is_numeric($labotres)    && $labotres != '-' ) { $count++; }  
+                if(is_numeric($labocuatro)  && $labocuatro != '-' ) { $count++; }  
+                if(is_numeric($labocinco)   && $labocinco != '-') { $count++; }
+                if(is_numeric($laboseis)    && $laboseis != '-' ) { $count++; } 
+                if(is_numeric($labosiete)   && $labosiete != '-' ) { $count++; }  
+                if(is_numeric($laboocho)    && $laboocho != '-' ) { $count++; }  
+                if(is_numeric($labonueve)   && $labonueve != '-' ) { $count++; }  
+                if(is_numeric($labodiez)    && $labodiez != '-') { $count++; }
+
+                $labototal      = (int)$labouno + (int)$labodos + (int)$labotres + (int)$labocuatro + (int)$labocinco + (int)$laboseis + (int)$labosiete + (int)$laboocho + (int)$labonueve + (int)$labodiez;
+                
+                if($count > 0)
+                    $obtained_marks = round(($labototal / $count), $this->roundPrecision);
+                else 
+                    $obtained_marks = '-';
+            
+
+            // Data
+            $data['unit_id']        = $unit_id;
+            $data['class_id']       = $class_id;
+            $data['section_id']     = $section_id;
+            $data['subject_id']     = $subject_id;
+            $data['year']           = $this->runningYear;
+            $data['semester_id']    = $this->runningSemester;
+            $data['mark_date']      = $date;
+            $data['student_id']     = $student_id;
+
+            $data['mark_obtained']  = $obtained_marks;
+            $data['labuno']         = $labouno;
+            $data['labdos']         = $labodos;
+            $data['labtres']        = $labotres;
+            $data['labcuatro']      = $labocuatro;
+            $data['labcinco']       = $labocinco;
+            $data['labseis']        = $laboseis;
+            $data['labsiete']       = $labosiete;
+            $data['labocho']        = $laboocho;
+            $data['labnueve']       = $labonueve;
+            $data['labdiez']        = $labodiez;
+            $data['labtotal']       = $labototal;
+            $data['comment']        = $comment;
+        
+            if($mark_daily_id > 0)
+            {
+                $this->db->where('mark_daily_id' , $mark_daily_id);
+                $this->db->update('mark_daily' , $data);
+
+                $table      = 'mark_daily';
+                $action     = 'update';
+                $update_id  = $mark_daily_id;
+                $this->crud->save_log($table, $action, $update_id, $data);
+            }
+            else
+            {
+                $this->db->insert('mark_daily' , $data);
+                
+                $table      = 'mark_daily';
+                $action     = 'insert';
+                $insert_id  = $this->db->insert_id();
+                $this->crud->save_log($table, $action, $insert_id, $data);
+            }
+        }
+        
+        $info = base64_encode($class_id.'-'.$section_id.'-'.$subject_id);
+        return $info;
+    }
+
     public function updateDailyMarksBatch($datainfo, $student_id, $unit_id, $mark_date)
     {
         $info = base64_decode( $datainfo );

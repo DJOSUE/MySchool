@@ -16,16 +16,16 @@
 
     $date = date('Y-m-d');
 
-    $grades[] = [1, 'lab_uno_', 'labuno'];
-    $grades[] = [2, 'lab_dos_', 'labdos'];
-    $grades[] = [3, 'lab_tres_', 'labtres'];
-    $grades[] = [4, 'lab_cuatro_', 'labcuatro'];
-    $grades[] = [5, 'lab_cinco_', 'labcinco'];
-    $grades[] = [6, 'lab_seis_', 'labseis'];
-    $grades[] = [7, 'lab_siete_', 'labsiete'];
-    $grades[] = [8, 'lab_ocho_', 'labocho'];
-    $grades[] = [9, 'lab_nueve_', 'labnueve'];
-    $grades[] = [10, 'lab_diez_', 'labdiez'];
+    $grades[] = [1, 'lab_uno', 'labuno'];
+    $grades[] = [2, 'lab_dos', 'labdos'];
+    $grades[] = [3, 'lab_tres', 'labtres'];
+    $grades[] = [4, 'lab_cuatro', 'labcuatro'];
+    $grades[] = [5, 'lab_cinco', 'labcinco'];
+    $grades[] = [6, 'lab_seis', 'labseis'];
+    $grades[] = [7, 'lab_siete', 'labsiete'];
+    $grades[] = [8, 'lab_ocho', 'labocho'];
+    $grades[] = [9, 'lab_nueve', 'labnueve'];
+    $grades[] = [10, 'lab_diez', 'labdiez'];
 
     
     $sub = $this->db->get_where('subject', array('subject_id' => $ex[2]))->result_array();
@@ -92,7 +92,7 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <?= form_open(base_url() . 'teacher/marks_update/'.$unit_id.'/'.$ex[0].'/'.$ex[1].'/'.$ex[2].'/'.$date);?>
+                                    <?= form_open(base_url() . 'teacher/marks_update/'.$unit_id.'/'.$class_id.'/'.$section_id.'/'.$subject_id.'/'.$date);?>
                                     <div class="table-responsive">
                                         <table class="table table-bordered">
                                             <thead>
@@ -101,13 +101,13 @@
                                                         <?= getPhrase('student');?>
                                                     </th>
                                                     <?php 
-                                                        $subjectLabel = $this->db->get_where('subject' , array('subject_id' => $ex[2]))->row();
+                                                        $subjectLabel = $this->db->get_where('subject' , array('subject_id' => $subject_id))->row();
                                                         for ($i=1; $i <= $quantityGrades; $i++):
                                                             $name = 'la'.$i;
                                                     ?>
-                                                        <th style="text-align: center;">
-                                                            <?= $subjectLabel->$name; ?>
-                                                        </th>
+                                                    <th style="text-align: center;">
+                                                        <?= $subjectLabel->$name; ?>
+                                                    </th>
                                                     <?php endfor; ?>
                                                     <th style="text-align: center;">
                                                         <?= getPhrase('comment');?>
@@ -119,50 +119,39 @@
                                                         $count = 1;
                                                         $students = $this->db->get_where('enroll' , array('class_id' => $class_id, 'section_id' => $section_id, 'subject_id' => $subject_id, 'year' => $running_year, 'semester_id' => $running_semester,))->result_array();
                                                         $students_list = "";
-                                                        foreach ($students as $key => $value) {
-                                                            $students_list .= $value['student_id'].', ';
-                                                        }
-    
-                                                        $students_list = rtrim($students_list, ", ");
-
-                                                        $marks_of_students = $this->db->query("SELECT * FROM v_mark_daily 
-                                                                                            WHERE class_id = '$class_id'
-                                                                                            AND section_id = '$section_id'
-                                                                                            AND subject_id = '$subject_id'
-                                                                                            AND unit_id = '$unit_id'
-                                                                                            AND year = '$running_year'
-                                                                                            AND semester_id = '$running_semester'
-                                                                                            AND date = '$date'
-                                                                                            AND student_id in ($students_list)
-                                                                                            ORDER BY first_name asc
-                                                                                        ")->result_array();
-                                                        
-                                                        foreach($marks_of_students as $row):
+                                                        foreach ($students as $key => $row) :
+                                                            $student_id     = $row['student_id'];
+                                                            $mark_daily_id  = $this->academic->get_daily_mark_id($student_id, $class_id, $section_id, $subject_id, $date, $unit_id);
+                                                            $student_mark   = $this->db->get_where('mark_daily' , array('mark_daily_id' => $mark_daily_id))->row_array();
                                                     ?>
                                                 <tr style="height:25px;">
                                                     <td style="min-width:190px">
-                                                        <img alt=""
-                                                            src="<?= $this->crud->get_image_url('student', $row['student_id']);?>"
+                                                        <img name="<?=$student_id?>" alt=""
+                                                            src="<?= $this->crud->get_image_url('student', $student_id);?>"
                                                             width="25px" style="border-radius: 10px;margin-right:5px;">
-                                                        <?= $this->crud->get_name('student', $row['student_id']);?>
+                                                        <?= $this->crud->get_name('student', $student_id);?>
                                                     </td>
                                                     <?php 
                                                         for ($i=0; $i < $quantityGrades; $i++):
-                                                            $name = $grades[$i];
+                                                            $name           = $grades[$i];
+                                                            $mark_name      = 'daily_mark_student['.$student_id.']['.$name[1].']';
+                                                            $comment_name   = 'daily_mark_student['.$student_id.'][comment]';
                                                     ?>
                                                     <td>
-                                                        <center><input type="text"
-                                                                name="<?= $name[1].$row['mark_daily_id'];?>"
-                                                                placeholder="0"
-                                                                maxlength="3"
+                                                        <center>
+                                                            <input type="text" name="<?= $mark_name;?>"
+                                                                placeholder="0" maxlength="3"
                                                                 style="width:65px; border: 1; text-align: center;"
-                                                                value="<?= $row[$name[2]];?>"> </center>
+                                                                value="<?= $student_mark[$name[2]];?>">
+                                                        </center>
                                                     </td>
                                                     <?php endfor; ?>
                                                     <td>
-                                                        <center><input type="text" class="form-control"
-                                                                name="comment_<?= $row['mark_daily_id'];?>"
-                                                                value="<?= $row['comment'];?>"></center>
+                                                        <center>
+                                                            <input type="text" class="form-control"
+                                                                name="<?= $comment_name;?>"
+                                                                value="<?= $student_mark['comment'];?>">
+                                                        </center>
                                                     </td>
                                                 </tr>
                                                 <?php endforeach;?>
@@ -193,46 +182,45 @@
                 </div>
             </div>
             <a class="back-to-top" href="javascript:void(0);">
-                <img src="<?= base_url();?>public/style/olapp/svg-icons/back-to-top.svg" alt="arrow"
-                    class="back-icon">
+                <img src="<?= base_url();?>public/style/olapp/svg-icons/back-to-top.svg" alt="arrow" class="back-icon">
             </a>
         </div>
     </div>
 </div>
 <script>
-    $(document).ready(function(){
-		$("#update_daily_marks :input").attr("readonly", true);
-    });
+$(document).ready(function() {
+    $("#update_daily_marks :input").attr("readonly", true);
+});
 
-    function close_class_unit(unit_id) {
-        Swal.fire({
-            title: '<?= getPhrase('confirm_close_unit');?>',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                class_id = <?=$class_id;?>;
-                $.ajax({
-                    url: '<?php echo base_url();?>tools/close_class_unit/' + class_id + '/' + unit_id,
-                    success: function(response) {
-                        Swal.fire({
-                            icon: 'success',
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timerProgressBar: true,
-                            title: '<?= getPhrase('successfully_updated');?>',
-                            timer: 3000
-                        })
-                        location.reload(true); 
-                    }
-                });
-            }
-        })
-    }
+function close_class_unit(unit_id) {
+    Swal.fire({
+        title: '<?= getPhrase('confirm_close_unit');?>',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            class_id = <?=$class_id;?>;
+            $.ajax({
+                url: '<?php echo base_url();?>tools/close_class_unit/' + class_id + '/' + unit_id,
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timerProgressBar: true,
+                        title: '<?= getPhrase('successfully_updated');?>',
+                        timer: 3000
+                    })
+                    location.reload(true);
+                }
+            });
+        }
+    })
+}
 </script>
 <?php endforeach;?>

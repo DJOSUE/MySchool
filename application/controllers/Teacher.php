@@ -434,7 +434,7 @@ class Teacher extends EduAppGT
             $page = $this->academic->getClassCurrentUnit($ex[0]);
         }
         
-        $this->academic->uploadMarks($datainfo, $page);
+        // $this->academic->uploadMarks($datainfo, $page);
 
         if($this->useDailyMarks){
             $page_data['unit_id'] = $page;
@@ -540,9 +540,14 @@ class Teacher extends EduAppGT
     //Marks update function.
     function marks_update($unit_id = '' , $class_id = '' , $section_id = '' , $subject_id = '', $date = '')
     {
+
+        // echo '<pre>';
+        // var_dump($_POST['daily_mark_student']);
+        // echo '</pre>';
+
         $this->isTeacher();
         if($this->useDailyMarks)
-            $info = $this->academic->updateDailyMarks($unit_id, $class_id, $section_id, $subject_id, $date);
+            $info = $this->academic->updateCreateDailyMarks($unit_id, $class_id, $section_id, $subject_id, $date);
         else
             $info = $this->academic->updateMarks($unit_id, $class_id, $section_id, $subject_id);
 
