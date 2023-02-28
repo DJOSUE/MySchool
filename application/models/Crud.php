@@ -3422,7 +3422,7 @@ class Crud extends School
     function get_interaction_modality()
     {
         $this->db->reset_query();
-        $this->db->select('code as priority_id, name, value_1 as color, value_2 as icon');
+        $this->db->select('code as modality_id, name, value_1 as color, value_2 as icon');
         $this->db->where('parameter_id', 'INTERACTION_MODALITY');
         $query = $this->db->get('parameters')->result_array();
         return $query;
