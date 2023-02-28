@@ -455,6 +455,8 @@ class Accountant extends EduAppGT
 
         $this->payment->create_payment($user_id, $user_type);
 
+        $this->session->set_flashdata('flash_message', getPhrase('successfully_added'));
+        
         $page_data['student_id'] =  $user_id;
         $page_data['page_name']  = 'student_payments';
         $page_data['page_title'] =  getPhrase('student_payments');

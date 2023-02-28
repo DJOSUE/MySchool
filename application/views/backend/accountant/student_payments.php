@@ -9,6 +9,8 @@
     $class_id = $student_enroll[0]['class_id'];
     $section_id = $student_enroll[0]['section_id'];
 
+    $return_url     = base64_encode('accountant/student_payments/'.$student_id.'/');
+
     foreach($student_info as $row): 
         $status_info = $this->studentModel->get_status_info($row['student_session']);
         $program_info = $this->studentModel->get_program_info($row['program_id']);
@@ -107,7 +109,7 @@
 
                                                 foreach($amortization as $row2):
                                                     $allow_payment      = true;
-                                                    $overdue            = false;
+                                                    $overdue            = 0;
                                                     $color_due          = 'primary';
                                                     $status_id          = $row2['status_id'];
                                                     $amount             = floatval($row2['amount']);
@@ -148,7 +150,7 @@
 
                                                         if($diff >= LATE_FEE_DAYS )
                                                         {
-                                                            $overdue = true;
+                                                            $overdue = 1;
                                                         }
                                                     }
 
@@ -202,7 +204,7 @@
                         </div>
                         <div id="create_payment_div" style="display:none;">
                             <div class="ui-block">
-                                <?= form_open(base_url() . 'admin/payment_process/'.$student_id.'/student/');?>
+                                <?= form_open(base_url() . 'accountant/payment_process/'.$student_id.'/student/');?>
                                 <div class="ui-block-title">
                                     <div class="col-sm-4">
                                         <h6 class="title"><?= getPhrase('new_payment');?></h6>
@@ -252,8 +254,8 @@
                                     <div class="col-sm-1">
                                         <div class="row" style="justify-content: flex-end;">
                                             <div class="form-buttons">
-                                                <button class="btn btn-rounded btn-warring" onclick="create_payment()">
-                                                    <?= getPhrase('cancel');?></button>
+                                                <a class="btn btn-rounded btn-warring" onclick="create_payment()">
+                                                    <?= getPhrase('cancel');?></a>
                                             </div>
                                         </div>
                                     </div>
