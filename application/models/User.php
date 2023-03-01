@@ -1167,6 +1167,25 @@ class User extends School
         return $query;        
     }
 
+    function get_advisor_array()
+    {
+        $this->db->reset_query();
+        $this->db->select('admin_id, first_name, last_name');
+        $this->db->where('status', '1');
+        $this->db->where('owner_status', '3');
+        $this->db->order_by('first_name');
+        $query = $this->db->get('admin')->result_array();        
+
+        
+        $array = [];
+        foreach($query as $item)
+        {
+            array_push($array, $item['admin_id']);
+        }
+
+        return $array;
+    }
+
     function get_teachers()
     {
         $this->db->reset_query();

@@ -461,5 +461,19 @@ class Applicant extends School
         return false;
         
     }
+
+    function applicant_total_by_date($start_date ,$end_date)
+    {
+        $array = $this->user->get_advisor_array();
+
+        $this->db->reset_query();
+        $this->db->select('created_by, created_by_name, count(applicant_id) as total');
+        $this->db->where('created_at >=', $start_date);
+        $this->db->where('created_at <=', $end_date);
+        $this->db->where_in('created_by', $array);
+        $this->db->group_by('created_by');
+        $query = $this->db->get('v_applicants')->result_array();;
+        return $query;
+    }
     
 }

@@ -182,6 +182,26 @@ class Reports extends EduAppGT
     }
 
 /***** Advisors Reports   *******************************************************************************************************************************/
+    function advisor_dashboard()
+    {
+        $this->isLogin();
+
+        $start_date = date('Y-m-d',strtotime('last Monday'));
+        $end_date = date('Y-m-d',strtotime('next Saturday'));
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $start_date = html_escape($this->input->post('start_date'));
+            $end_date   = html_escape($this->input->post('end_date'));
+        }
+        
+        $page_data['start_date']    = $start_date;
+        $page_data['end_date']      = $end_date;
+        $page_data['page_name']     = 'advisor_dashboard';
+        $page_data['page_title']    = getPhrase('advisor_dashboard');
+        $page_data['fancy_path']    = $this->fancy_path;
+        $this->load->view('backend/reports/index', $page_data); 
+    }
+
 /***** President Reports  *******************************************************************************************************************************/
 
 

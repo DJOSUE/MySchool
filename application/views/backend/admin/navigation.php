@@ -39,6 +39,8 @@
     $student_month_pages = array('student_month_dashboard');
 
     $academic_report_pages  = array('academic_dashboard');
+
+    $advisor_report_pages  = array('advisor_dashboard');
     
 
 ?>
@@ -262,6 +264,17 @@
                     </a>
                 </li>
                 <?php endif;?>
+                <!-- Advisor Reports Access -->
+                <?php if(has_permission('advisor_report_module')):?>
+                <li <?php if(in_array($page_name, $advisor_report_pages)):?>class="currentItem" <?php endif;?>>
+                    <a href="<?php echo base_url();?>reports/advisor_dashboard/" data-toggle="tooltip"
+                        data-placement="right" data-original-title="<?php echo getPhrase('advisor_reports');?>">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0484_gauge_dashboard_full_fuel"></i>
+                        </div>
+                    </a>
+                </li>
+                <?php endif;?>
                 <!-- System Reports Access -->
                 <?php if(has_permission('system_reports_module')):?>
                 <li <?php if(in_array($page_name, $reports_pages)):?>class="currentItem" <?php endif;?>>
@@ -299,8 +312,8 @@
                 <!-- HelpDesk Access -->
                 <?php if(has_permission('helpdesk_module')):?>
                 <li <?php if(in_array($page_name, $helpdesk_pages)):?>class="currentItem" <?php endif;?>>
-                    <a href="<?php echo base_url();?>helpdesk/dashboard/" data-toggle="tooltip"
-                        data-placement="right" data-original-title="<?php echo getPhrase('help_desk');?>">
+                    <a href="<?php echo base_url();?>helpdesk/dashboard/" data-toggle="tooltip" data-placement="right"
+                        data-original-title="<?php echo getPhrase('help_desk');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0309_support_help_talk_call"></i>
                         </div>
@@ -532,8 +545,8 @@
                     </a>
                 </li>
                 <?php endif;?>
-                 <!-- Accounting Reports Access -->
-                 <?php if(has_permission('accounting_module')):?>
+                <!-- Accounting Reports Access -->
+                <?php if(has_permission('accounting_module')):?>
                 <li>
                     <a href="<?php echo base_url();?>reports/accounting_dashboard/">
                         <div class="left-menu-icon">
@@ -551,6 +564,17 @@
                             <i class="picons-thin-icon-thin-0375_screen_analytics_line_graph"></i>
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('academic_reports');?></span>
+                    </a>
+                </li>
+                <?php endif;?>
+                <!-- Advisor Reports Access -->
+                <?php if(has_permission('advisor_report_module')):?>
+                <li>
+                    <a href="<?php echo base_url();?>reports/advisor_dashboard/">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0484_gauge_dashboard_full_fuel"></i>
+                        </div>
+                        <span class="left-menu-title"><?php echo getPhrase('advisor_reports');?></span>
                     </a>
                 </li>
                 <?php endif;?>
@@ -841,6 +865,17 @@
                             <i class="picons-thin-icon-thin-0428_money_payment_dollar_bag_cash"></i>
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('accounting_reports');?></span>
+                    </a>
+                </li>
+                <?php endif;?>
+                <!-- Advisor Reports Access -->
+                <?php if(has_permission('advisor_report_module')):?>
+                <li>
+                    <a href="<?php echo base_url();?>reports/advisor_dashboard/">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0484_gauge_dashboard_full_fuel"></i>
+                        </div>
+                        <span class="left-menu-title"><?php echo getPhrase('advisor_reports');?></span>
                     </a>
                 </li>
                 <?php endif;?>

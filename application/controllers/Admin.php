@@ -3355,6 +3355,9 @@
                 $type_id     = $array[0];
                 $assigned_me = 0;
                 $tag_id      = "";
+                $advisor_id  = "";
+                $start_date  = "";
+                $end_date    = "";
             }
             else
             {
@@ -3364,6 +3367,9 @@
                 $type_id     = "";
                 $assigned_me = 1;
                 $tag_id      = "";
+                $advisor_id  = "";
+                $start_date  = "";
+                $end_date    = "";
             }
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') 
@@ -3374,7 +3380,11 @@
                 $name        = $this->input->post('name');
                 $search      = true;
                 $assigned_me = $this->input->post('assigned_me'); 
-                $tag_id      = $this->input->post('tag_id'); 
+                $tag_id      = $this->input->post('tag_id');
+                $advisor_id  = $this->input->post('advisor_id'); 
+                $start_date  = $this->input->post('start_date'); 
+                $end_date    = $this->input->post('end_date'); 
+                
             }
 
             $page_data['country_id']  = $country_id;
@@ -3384,6 +3394,9 @@
             $page_data['name']        = $name;
             $page_data['assigned_me'] = $assigned_me;
             $page_data['tag_id']      = $tag_id;
+            $page_data['advisor_id']  = $advisor_id;
+            $page_data['start_date']  = $start_date;
+            $page_data['end_date']    = $end_date;
             $page_data['page_name']   = 'admission_applicants';
             $page_data['page_title']  =  getPhrase('admission_applicants');
             $this->load->view('backend/index', $page_data);

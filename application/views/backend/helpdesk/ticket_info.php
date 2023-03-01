@@ -199,10 +199,13 @@
                                                                 <th style="width: 5%">
                                                                     <?= getPhrase('options');?>
                                                                 </th>
+                                                                <th style="width: 5%">
+                                                                    <?= getPhrase('files');?>
+                                                                </th>
                                                                 <th style="width: 85%">
                                                                     <?= getPhrase('comment');?>
                                                                 </th>
-                                                                <th style="width: 10%">
+                                                                <th style="width: 5%">
                                                                     <?= getPhrase('info');?>
                                                                 </th>
                                                             </tr>
@@ -223,6 +226,17 @@
                                                                             class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new"></i>
                                                                     </a>
                                                                     <?php endif;?>
+                                                                </td>
+                                                                <td class="row-actions">
+                                                                    <?php if($item['file_name']):?>
+                                                                    <a href="<?= base_url().PATH_TICKET_FILES;?><?= $item['file_name'];?>"
+                                                                        class="grey" data-toggle="tooltip"
+                                                                        data-placement="top" target="_blank"
+                                                                        data-original-title="<?= getPhrase('view');?>">
+                                                                        <i
+                                                                            class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible"></i>
+                                                                    </a>
+                                                                    <? endif;?>
                                                                 </td>
                                                                 <td>
                                                                     <?php 

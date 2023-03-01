@@ -52,8 +52,8 @@
                     <div class="input-group-addon">
                         <i class="picons-thin-icon-thin-0003_write_pencil_new_edit"></i>
                     </div>
-                    <input class="form-control" name="message_file" type="file"
-                        accept="image/jpeg,image/png,application/pdf">
+                    <input class="form-control" name="file_name" type="file"
+                        accept="image/jpeg,image/png,application/pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                 </div>
             </div>
         </div>

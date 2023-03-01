@@ -3,6 +3,18 @@
     $running_year = $this->crud->getInfo('running_year');
     $user_id = $this->session->userdata('login_user_id');
 
+    if($start_date != '' && $end_date != '')
+    {
+        $this->db->where('created_at >=', $start_date);       
+    }
+    if($end_date != '')
+    {        
+        $this->db->where('created_at <=', $end_date);
+    }
+    if($advisor_id != '')
+    {
+        $this->db->where('created_by', $advisor_id);
+    }   
     if($country_id != '')
     {
         $this->db->where('country_id', $country_id);
@@ -30,10 +42,9 @@
     if($assigned_me == 1)
     {
         $this->db->where('assigned_to' , $user_id);
-    }  
+    }    
     $student_query = $this->db->get('v_applicants');
     $students = $student_query->result_array();
-
     
 ?>
 <style>
@@ -140,6 +151,49 @@ th {
                                             </div>
                                         </div>
                                         <div class="col-sm-2">
+                                            <div class="form-group label-floating is-select">
+                                                <label class="control-label"><?= getPhrase('advisor');?></label>
+                                                <div class="select">
+                                                    <select name="advisor_id">
+                                                        <option value=""><?= getPhrase('select');?></option>
+                                                        <?php
+                                                        $tags = $this->user->get_advisor();
+                                                        foreach($tags as $tag):
+                                                            
+                                                    ?>
+                                                        <option value="<?= $tag['admin_id'];?>"
+                                                            <?php if($advisor_id == $tag['admin_id']) echo "selected";?>>
+                                                            <?= $tag['first_name'].' '.$tag['last_name'];?></option>
+                                                        <?php  endforeach;?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="form-group label-floating is-select"
+                                                style="background-color: #fff;">
+                                                <label class="control-label"><?= getPhrase('start_date');?></label>
+                                                <div class="form-group date-time-picker">
+                                                    <input type="text" autocomplete="off" class="datepicker-here"
+                                                        data-position="bottom left" data-language='en' name="start_date"
+                                                        id="start_date" value="<?=$start_date?>">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="form-group label-floating is-select"
+                                                style="background-color: #fff;">
+                                                <label class="control-label"><?= getPhrase('end_date');?></label>
+                                                <div class="form-group date-time-picker">
+                                                    <input type="text" autocomplete="off" class="datepicker-here"
+                                                        data-position="bottom left" data-language='en' name="end_date"
+                                                        id="end_date" value="<?=$end_date?>">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
                                             <div class="description-toggle">
                                                 <div class="description-toggle-content">
                                                     <div class="h6"><?= getPhrase('assigned_to_me');?></div>
@@ -150,11 +204,14 @@ th {
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div>                                        
                                         <div class="col-sm-2">
                                             <div class="form-group">
                                                 <button class="btn btn-success btn-upper"
                                                     type="submit"><span><?= getPhrase('search');?></span></button>
-                                                <a href="/admin/admission_applicants_assignation/" class="btn btn-info btn-upper">Bulk assignment
+                                                <a href="/admin/admission_applicants_assignation/"
+                                                    class="btn btn-info btn-upper">Bulk assignment
                                                 </a>
                                             </div>
                                         </div>
