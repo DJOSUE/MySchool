@@ -5,6 +5,7 @@
     $running_year   = $this->crud->getInfo('running_year'); 
     $advisor        = $this->user->get_advisor();
     $accounters     = $this->user->get_accounters();
+    $legal          = $this->user->get_legal_office();
     $currency       = $this->crud->getInfo('currency');
 
     $interval       = date_interval_create_from_date_string('1 days');

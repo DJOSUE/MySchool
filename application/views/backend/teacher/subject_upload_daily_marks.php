@@ -117,7 +117,7 @@
                                             <tbody>
                                                 <?php
                                                         $count = 1;
-                                                        $students = $this->db->get_where('enroll' , array('class_id' => $class_id, 'section_id' => $section_id, 'subject_id' => $subject_id, 'year' => $running_year, 'semester_id' => $running_semester,))->result_array();
+                                                        $students = $this->academic->get_student_list_by_subject($class_id, $section_id, $subject_id);
                                                         $students_list = "";
                                                         foreach ($students as $key => $row) :
                                                             $student_id     = $row['student_id'];

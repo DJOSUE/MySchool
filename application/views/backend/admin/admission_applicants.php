@@ -3,7 +3,7 @@
     $running_year = $this->crud->getInfo('running_year');
     $user_id = $this->session->userdata('login_user_id');
 
-    if($start_date != '' && $end_date != '')
+    if($start_date != '')
     {
         $this->db->where('created_at >=', $start_date);       
     }
@@ -26,10 +26,6 @@
     if($status_id != '')
     {
         $this->db->where('status', $status_id);
-    }
-    else
-    {
-        $this->db->where('status <>', '3');
     }
     if($name != '')
     {

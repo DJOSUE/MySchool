@@ -101,6 +101,7 @@
                 </li>
                 <?php endif;?>
                 <!-- Users Access -->
+                <?php if(has_permission('user_module')):?>
                 <li <?= in_array($page_name, $users_pages) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/users/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('users');?>">
@@ -109,6 +110,7 @@
                         </div>
                     </a>
                 </li>
+                <?php endif;?>
                 <!-- Admissions Access -->
                 <?php if(has_permission('admission_module')):?>
                 <li <?= in_array($page_name, $admissions_pages) ? 'class="currentItem"': '';?>>

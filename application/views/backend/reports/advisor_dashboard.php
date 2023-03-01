@@ -85,7 +85,7 @@ const labels = [<?= $labelName;?>];
 const data = {
     labels: labels,
     datasets: [{
-        label: 'Register',
+        label: 'Created',
         data: [<?= implode(',', $totals);?>],
         borderWidth: 2,
         borderRadius: Number.MAX_VALUE,
@@ -105,7 +105,7 @@ var myChart = new Chart(ctx, {
             },
             title: {
                 display: true,
-                text: 'Total Applicants Create by Advisor'
+                text: 'Prospect Created by Advisors'
             }
         }
     },
@@ -119,7 +119,7 @@ document.getElementById("myChart").onclick = function(evt) {
     console.log(ids[index]);
 
     var f = $("<form target='_blank' method='POST' style='display:none;'></form>").attr({
-        action: 'https://myschool.dhcoder.com/admin/admission_applicants/'
+        action: '/admin/admission_applicants/'
     }).appendTo(document.body);
 
     $('<input type="hidden" />').attr({

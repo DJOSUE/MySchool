@@ -2805,4 +2805,21 @@ class Academic extends School
         $this->crud->save_log($table, $action, $table_id, []);  
     }
 
+    public function get_student_list_by_subject($class_id, $section_id, $subject_id, $year = '', $semester_id = '')
+    {        
+        $year           =   $year == ''        ? $this->runningYear        : $year;
+        $semester_id    =   $semester_id == '' ? $this->runningSemester    : $semester_id;
+
+        $this->db->reset_query();        
+        $this->db->from('v_enrollment');
+        $this->db->where('class_id', $class_id);
+        $this->db->where('section_id', $section_id);
+        $this->db->where('subject_id', $subject_id);
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);           
+        $this->db->order_by('full_name');
+        $students =  $this->db->get()->result_array(); 
+
+        return $students;  
+    }
 }

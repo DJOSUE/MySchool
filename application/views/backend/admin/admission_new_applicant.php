@@ -35,25 +35,22 @@
                                         <?php echo form_open(base_url() . 'admin/applicant/register/' , array('enctype' => 'multipart/form-data', 'autocomplete' => 'off'));?>
                                         <div class="row">
                                             <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                <div class="form-group  label-floating is-select">
-                                                    <label
-                                                        class="control-label"><?php echo getPhrase('student_referral');?></label>
-                                                    <div class="">
-                                                        <select class="selectpicker form-control"
-                                                            data-live-search="true" name="referral_by">
+                                                <div class="form-group label-floating is-select">
+                                                    <label class="control-label"><?php echo getPhrase('type');?></label>
+                                                    <div class="select">
+                                                        <select name="type_id" id="type_id" required="">
                                                             <option value="">
                                                                 <?php echo getPhrase('select');?></option>
-                                                            <?php $students = $this->db->get_where('student',array('status <>' => '0'))->result_array();
-        	                  										foreach($students as $student):
+                                                            <?php $applicant_types = $this->db->get('v_applicant_type')->result_array();
+        	                  										foreach($applicant_types as $type):
                											        ?>
-                                                            <option value="<?php echo $student['student_id'];?>">
-                                                                <?php echo $student['first_name'] . ' ' . $student['last_name'];?>
-                                                            </option>
+                                                            <option value="<?php echo $type['type_id'];?>">
+                                                                <?php echo $type['name'];?></option>
                                                             <?php endforeach;?>
                                                         </select>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div>                                            
                                             <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                 <div class="form-group label-floating is-select">
                                                     <label
@@ -102,7 +99,7 @@
                                                     <label
                                                         class="control-label"><?php echo getPhrase('email');?></label>
                                                     <input class="form-control" name="email" id="applicant_email"
-                                                        type="email" required="">
+                                                        type="email">
                                                     <small><span id="applicant_email_result"></span></small>
                                                 </div>
                                             </div>
@@ -110,7 +107,7 @@
                                                 <div class="form-group label-floating">
                                                     <label
                                                         class="control-label"><?php echo getPhrase('phone');?></label>
-                                                    <input class="form-control" name="phone" type="text">
+                                                    <input class="form-control" name="phone" type="text" required="">
                                                 </div>
                                             </div>
                                             <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -118,7 +115,7 @@
                                                     <label
                                                         class="control-label"><?php echo getPhrase('gender');?></label>
                                                     <div class="select">
-                                                        <select name="gender" required="">
+                                                        <select name="gender">
                                                             <option value="">
                                                                 <?php echo getPhrase('select');?></option>
                                                             <?php
@@ -145,7 +142,7 @@
                                                     <label
                                                         class="control-label"><?php echo getPhrase('country_of_birth');?></label>
                                                     <div class="select">
-                                                        <select name="country_id" id="country_id" required="true">
+                                                        <select name="country_id" id="country_id">
                                                             <option value="">
                                                                 <?php echo getPhrase('select');?></option>
                                                             <?php $countries = $this->db->get('countries')->result_array();
@@ -159,21 +156,26 @@
                                                 </div>
                                             </div>
                                             <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                <div class="form-group label-floating is-select">
-                                                    <label class="control-label"><?php echo getPhrase('type');?></label>
-                                                    <div class="select">
-                                                        <select name="type_id" id="type_id" required="">
+                                                <div class="form-group  label-floating is-select">
+                                                    <label
+                                                        class="control-label"><?php echo getPhrase('student_referral');?></label>
+                                                    <div class="">
+                                                        <select class="selectpicker form-control"
+                                                            data-live-search="true" name="referral_by">
                                                             <option value="">
                                                                 <?php echo getPhrase('select');?></option>
-                                                            <?php $classes = $this->db->get('v_applicant_type')->result_array();
-        	                  										foreach($classes as $class):
+                                                            <?php $students = $this->db->get_where('student',array('status <>' => '0'))->result_array();
+        	                  										foreach($students as $student):
                											        ?>
-                                                            <option value="<?php echo $class['type_id'];?>">
-                                                                <?php echo $class['name'];?></option>
+                                                            <option value="<?php echo $student['student_id'];?>">
+                                                                <?php echo $student['first_name'] . ' ' . $student['last_name'];?>
+                                                            </option>
                                                             <?php endforeach;?>
                                                         </select>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="col col-lg-6 col-md-6 col-sm-12 col-12">                                                
                                             </div>
                                             <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                 <div class="form-group date-time-picker label-floating">

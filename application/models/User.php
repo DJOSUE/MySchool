@@ -1186,6 +1186,71 @@ class User extends School
         return $array;
     }
 
+    function get_accounters()
+    {
+        $this->db->reset_query();
+        $this->db->select('accountant_id, first_name, last_name');
+        $this->db->where('status', '1');
+        $this->db->order_by('first_name');
+        $query = $this->db->get('accountant')->result_array();        
+        return $query;        
+    }
+
+    function get_legal_office()
+    {
+        $this->db->reset_query();
+        $this->db->select('admin_id, first_name, last_name');
+        $this->db->where('status', '1');
+        $this->db->where('owner_status', '8');
+        $this->db->order_by('first_name');
+        $query = $this->db->get('admin')->result_array();        
+        return $query;
+    }
+
+    function get_cashiers($user_id = "", $user_type = "")
+    {
+        // $user['user_id'] == $row['assigned_to'] ? 'selected': '';
+
+        $assigned_to = $user_type.'|'.$user_id;
+        
+        $this->db->reset_query();
+        $this->db->select("admin_id as user_id, 'admin' as user_type, first_name, last_name");
+        $this->db->where('status', '1');
+        $this->db->where_in('owner_status', array('3', '8'));        
+        $this->db->order_by('first_name', 'ASC');
+        $advisors = $this->db->get('admin')->result_array();
+
+        $dropbox = '<optgroup label="'.getPhrase('advisors').'">';
+        foreach($advisors as $item)
+        {
+            $value = $item['user_type'].'|'.$item['user_id'];
+            $name  = $item['first_name'].' '.$item['last_name'];
+            $selected = $assigned_to == $value ? 'selected' : '';
+
+            $dropbox .= '<option value="'.$value.'" '.$selected.'>'.$name.'</option>';            
+        }
+        
+        $this->db->reset_query();
+        $this->db->select("accountant_id as user_id, 'accountant' as user_type, first_name, last_name");
+        $this->db->where('status', '1');
+        $this->db->where_in('role_id', array('4', '14', '15'));
+        $this->db->order_by('first_name', 'ASC');
+        $finances  = $this->db->get('accountant')->result_array();
+
+        $dropbox .= '<optgroup label="'.getPhrase('finances').'">';
+        foreach($finances as $item)
+        {
+            $value = $item['user_type'].'|'.$item['user_id'];
+            $name  = $item['first_name'].' '.$item['last_name'];
+            $selected = $assigned_to == $value ? 'selected' : '';
+            
+            $dropbox .= '<option value="'.$value.'" '.$selected.'>'.$name.'</option>'; 
+        }
+        
+        return $dropbox;
+        
+    }
+
     function get_teachers()
     {
         $this->db->reset_query();
@@ -1209,94 +1274,6 @@ class User extends School
         $students =  $this->db->get()->result_array(); 
 
         return $students;  
-    }
-
-    function get_accounters()
-    {
-        $this->db->reset_query();
-        $this->db->select('accountant_id, first_name, last_name');
-        $this->db->where('status', '1');
-        $this->db->order_by('first_name');
-        $query = $this->db->get('accountant')->result_array();        
-        return $query;        
-    }
-
-    function get_cashiers($user_id = "", $user_type = "")
-    {
-        // $user['user_id'] == $row['assigned_to'] ? 'selected': '';
-
-        $assigned_to = $user_type.'|'.$user_id;
-        
-        $this->db->reset_query();
-        $this->db->select("admin_id as user_id, 'admin' as user_type, first_name, last_name");
-        $this->db->where('status', '1');
-        $this->db->where_in('owner_status', array('3'));        
-        $this->db->order_by('first_name', 'ASC');
-        $advisors = $this->db->get('admin')->result_array();
-
-        $dropbox = '<optgroup label="'.getPhrase('advisors').'">';
-        foreach($advisors as $item)
-        {
-            $value = $item['user_type'].'|'.$item['user_id'];
-            $name  = $item['first_name'].' '.$item['last_name'];
-            $selected = $assigned_to == $value ? 'selected' : '';
-
-            $dropbox .= '<option value="'.$value.'" '.$selected.'>'.$name.'</option>';            
-        }
-
-        // $this->db->reset_query();
-        // $this->db->select("admin_id as user_id, 'admin' as user_type, first_name, last_name");
-        // $this->db->where('status', '1');
-        // $this->db->where_in('owner_status', array('9'));
-        // $this->db->order_by('first_name', 'ASC');
-        // $managers = $this->db->get('admin')->result_array();
-
-        // $dropbox .= '<optgroup label="'.getPhrase('office_manager').'">';
-        // foreach($managers as $item)
-        // {
-        //     $value = $item['user_type'].'|'.$item['user_id'];
-        //     $name  = $item['first_name'].' '.$item['last_name'];
-        //     $selected = $assigned_to == $value ? 'selected' : '';
-            
-        //     $dropbox .= '<option value="'.$value.'" '.$selected.'>'.$name.'</option>';             
-        // }
-
-        // $this->db->reset_query();
-        // $this->db->select("admin_id as user_id, 'admin' as user_type, first_name, last_name");
-        // $this->db->where('status', '1');
-        // $this->db->where_in('owner_status', array('10'));
-        // $this->db->order_by('first_name', 'ASC');
-        // $dso = $this->db->get('admin')->result_array();
-
-        // $dropbox .= '<optgroup label="'.getPhrase('dso').'">';
-        // foreach($dso as $item)
-        // {
-        //     $value = $item['user_type'].'|'.$item['user_id'];
-        //     $name  = $item['first_name'].' '.$item['last_name'];
-        //     $selected = $assigned_to == $value ? 'selected' : '';
-            
-        //     $dropbox .= '<option value="'.$value.'" '.$selected.'>'.$name.'</option>'; 
-        // }
-        
-        $this->db->reset_query();
-        $this->db->select("accountant_id as user_id, 'accountant' as user_type, first_name, last_name");
-        $this->db->where('status', '1');
-        $this->db->where_in('role_id', array('4', '14', '15'));
-        $this->db->order_by('first_name', 'ASC');
-        $finances  = $this->db->get('accountant')->result_array();
-
-        $dropbox .= '<optgroup label="'.getPhrase('finances').'">';
-        foreach($finances as $item)
-        {
-            $value = $item['user_type'].'|'.$item['user_id'];
-            $name  = $item['first_name'].' '.$item['last_name'];
-            $selected = $assigned_to == $value ? 'selected' : '';
-            
-            $dropbox .= '<option value="'.$value.'" '.$selected.'>'.$name.'</option>'; 
-        }
-        
-        return $dropbox;
-        
     }
 
     public function download_Excel_birthdays($month = 0)

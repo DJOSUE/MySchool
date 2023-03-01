@@ -470,8 +470,9 @@ class Applicant extends School
         $this->db->select('created_by, created_by_name, count(applicant_id) as total');
         $this->db->where('created_at >=', $start_date);
         $this->db->where('created_at <=', $end_date);
-        $this->db->where_in('created_by', $array);
+        $this->db->where_in('created_by', $array);        
         $this->db->group_by('created_by');
+        $this->db->order_by('total');
         $query = $this->db->get('v_applicants')->result_array();;
         return $query;
     }

@@ -81,7 +81,7 @@
                 <?php endif;?>
                 <!-- Accounting Reports Access -->
                 <li <?= in_array($page_name, $reports_pages) ? 'class="currentItem"' : '';?>>
-                    <a href="<?php echo base_url();?>accountant/report_dashboard/" data-toggle="tooltip" data-placement="right"
+                    <a href="<?php echo base_url();?>reports/accounting_dashboard/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('accounting_report');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0428_money_payment_dollar_bag_cash"></i>

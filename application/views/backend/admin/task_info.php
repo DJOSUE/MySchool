@@ -65,20 +65,7 @@
                                         <div class="up-controls">
                                             <div class="row">
                                                 <div class="col-lg-6">
-                                                    <div class="value-pair">
-                                                        <div><?= getPhrase('priority');?>:</div>
-                                                        <div class="value badge-status badge-pill badge-primary"
-                                                            style="background-color: <?= $priority_info['color']?>;">
-                                                            <?= $priority_info['name'];?>
-                                                        </div>
-                                                    </div>
-                                                    <div class="value-pair">
-                                                        <div><?= getPhrase('status_task');?>:</div>
-                                                        <div class="value badge-status badge-pill badge-primary"
-                                                            style="background-color: <?= $status_info['color']?>;">
-                                                            <?= $status_info['name'];?>
-                                                        </div>
-                                                    </div>
+                                                    
                                                     <div class="value-pair">
                                                         <div><?= getPhrase('type_user');?>:</div>
                                                         <div class="value badge-status badge-pill badge-primary">
@@ -113,6 +100,7 @@
                                             <div class="ui-block-title">
                                                 <h6 class="title"><?= getPhrase('personal_information');?>
                                                 </h6>
+
                                             </div>
                                             <div class="ui-block-content">
                                                 <div class="row">
@@ -157,6 +145,20 @@
                                             <div class="ui-block-title">
                                                 <h6 class="title"><?= getPhrase('task_information');?>
                                                 </h6>
+                                                <div class="value-pair">
+                                                        <div><?= getPhrase('priority');?>:</div>
+                                                        <div class="value badge-status badge-pill badge-primary"
+                                                            style="background-color: <?= $priority_info['color']?>;">
+                                                            <?= $priority_info['name'];?>
+                                                        </div>
+                                                    </div>
+                                                    <div class="value-pair">
+                                                        <div><?= getPhrase('status_task');?>:</div>
+                                                        <div class="value badge-status badge-pill badge-primary"
+                                                            style="background-color: <?= $status_info['color']?>;">
+                                                            <?= $status_info['name'];?>
+                                                        </div>
+                                                    </div>
                                             </div>
                                             <div class="ui-block-content">
                                                 <div class="row">
