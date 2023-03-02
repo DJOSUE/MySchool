@@ -116,13 +116,12 @@ th {
                                                         <option value=""><?= getPhrase('select');?></option>
                                                         <?php
                                                         $status = $this->db->get('v_applicant_status')->result_array();
-                                                        foreach($status as $row):
-                                                            if($row['status_id'] != 3):
+                                                        foreach($status as $row):                                                            
                                                     ?>
                                                         <option value="<?= $row['status_id'];?>"
                                                             <?php if($status_id == $row['status_id']) echo "selected";?>>
                                                             <?= $row['name'];?></option>
-                                                        <?php endif; endforeach;?>
+                                                        <?php endforeach;?>
                                                     </select>
                                                 </div>
                                             </div>

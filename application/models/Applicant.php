@@ -476,5 +476,21 @@ class Applicant extends School
         $query = $this->db->get('v_applicants')->result_array();;
         return $query;
     }
+
+    function student_total_by_date($start_date ,$end_date)
+    {
+        $array = $this->user->get_advisor_array();
+
+        $this->db->reset_query();
+        $this->db->select('assigned_to, assigned_to_name, count(applicant_id) as total');
+        $this->db->where('created_at >=', $start_date);
+        $this->db->where('created_at <=', $end_date);
+        $this->db->where('status', '3');
+        $this->db->where_in('assigned_to', $array);        
+        $this->db->group_by('assigned_to');
+        $this->db->order_by('total');
+        $query = $this->db->get('v_applicants')->result_array();;
+        return $query;
+    }
     
 }

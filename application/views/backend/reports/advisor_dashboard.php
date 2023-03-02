@@ -14,6 +14,19 @@
         $labelName .= "'".$name."',"; 
     }
 
+
+    $record_students = $this->applicant->student_total_by_date($start_date, $end_date);
+    $id_students     = array_column($record_students, 'assigned_to');
+    $name_students   = array_column($record_students, 'assigned_to_name');
+    $total_students  = array_column($record_students, 'total');
+
+    $label_student = "";
+
+    foreach($name_students as $item)
+    {
+        $label_student .= "'".$item."',"; 
+    }
+
 ?>
 <div class="content-w">
     <?php include $fancy_path.'fancy.php';?>
@@ -62,9 +75,16 @@
                         <?= form_close()?>
                     </div>
                     <div class="tab-pane active">
-                        <div class="col-sm-6">
-                            <div class="element-box">
-                                <canvas id="myChart" width="100" height="100"></canvas>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="element-box">
+                                    <canvas id="myChartCreated"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="element-box">
+                                    <canvas id="myChartRegister"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -79,67 +99,134 @@
 
 
 <script>
-const labels = [<?= $labelName;?>];
-
-
-const data = {
-    labels: labels,
-    datasets: [{
-        label: 'Created',
-        data: [<?= implode(',', $totals);?>],
-        borderWidth: 2,
-        borderRadius: Number.MAX_VALUE,
-        borderSkipped: false,
-    }]
-};
-var ctx = document.getElementById("myChart");
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: data,
-    options: {
-        responsive: true,
-        indexAxis: 'y',
-        plugins: {
-            legend: {
-                display: false,
-            },
-            title: {
-                display: true,
-                text: 'Prospect Created by Advisors'
+// Created
+    const labels = [<?= $labelName;?>];
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Created',
+            data: [<?= implode(',', $totals);?>],
+            borderWidth: 2,
+            borderRadius: Number.MAX_VALUE,
+            borderSkipped: false,
+        }]
+    };
+    var ctx = document.getElementById("myChartCreated");
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: data,
+        options: {
+            responsive: true,
+            indexAxis: 'y',
+            plugins: {
+                legend: {
+                    display: false,
+                },
+                title: {
+                    display: true,
+                    text: 'Prospect Created by Advisors'
+                }
             }
-        }
-    },
-});
+        },
+    });
 
-document.getElementById("myChart").onclick = function(evt) {
-    var ids = [<?=implode(',', $ids);?>]
-    var activePoints = myChart.getElementsAtEventForMode(evt, 'point', myChart.options);
-    var firstPoint = activePoints[0];
-    var index = firstPoint['index']
-    console.log(ids[index]);
+    document.getElementById("myChartCreated").onclick = function(evt) {
+        var ids = [<?=implode(',', $ids);?>]
+        var activePoints = myChart.getElementsAtEventForMode(evt, 'point', myChart.options);
+        var firstPoint = activePoints[0];
+        var index = firstPoint['index']
+        console.log(ids[index]);
 
-    var f = $("<form target='_blank' method='POST' style='display:none;'></form>").attr({
-        action: '/admin/admission_applicants/'
-    }).appendTo(document.body);
+        var f = $("<form target='_blank' method='POST' style='display:none;'></form>").attr({
+            action: '/admin/admission_applicants/'
+        }).appendTo(document.body);
 
-    $('<input type="hidden" />').attr({
-        name: 'advisor_id',
-        value: ids[index]
-    }).appendTo(f);
-    
-    $('<input type="hidden" />').attr({
-        name: 'start_date',
-        value: '<?=$start_date;?>'
-    }).appendTo(f);
+        $('<input type="hidden" />').attr({
+            name: 'advisor_id',
+            value: ids[index]
+        }).appendTo(f);
 
-    $('<input type="hidden" />').attr({
-        name: 'end_date',
-        value: '<?=$end_date;?>'
-    }).appendTo(f);
+        $('<input type="hidden" />').attr({
+            name: 'start_date',
+            value: '<?=$start_date;?>'
+        }).appendTo(f);
 
-    f.submit();
+        $('<input type="hidden" />').attr({
+            name: 'end_date',
+            value: '<?=$end_date;?>'
+        }).appendTo(f);
 
-    f.remove();
+        f.submit();
 
-};
+        f.remove();
+
+    };
+</script>
+<script>
+    // Register
+    const labelRegister = [<?= $label_student;?>];
+    const dataRegister = {
+        labels: labelRegister,
+        datasets: [{
+            label: 'Register',
+            data: [<?= implode(',', $total_students);?>],
+            borderWidth: 2,
+            borderRadius: Number.MAX_VALUE,
+            borderSkipped: false,
+        }]
+    };
+    var ctx = document.getElementById("myChartRegister");
+    var myChartRegister = new Chart(ctx, {
+        type: 'bar',
+        data: dataRegister,
+        options: {
+            responsive: true,
+            indexAxis: 'y',
+            plugins: {
+                legend: {
+                    display: false,
+                },
+                title: {
+                    display: true,
+                    text: 'Register by Advisors'
+                }
+            }
+        },
+    });
+    document.getElementById("myChartRegister").onclick = function(evt) {
+        var ids = [<?=implode(',', $id_students);?>]
+        var activePoints = myChartRegister.getElementsAtEventForMode(evt, 'point', myChart.options);
+        var firstPoint = activePoints[0];
+        var index = firstPoint['index']
+        console.log(ids[index]);
+
+        var f = $("<form target='_blank' method='POST' style='display:none;'></form>").attr({
+            action: '/admin/admission_applicants/'
+        }).appendTo(document.body);
+
+        $('<input type="hidden" />').attr({
+            name: 'advisor_id',
+            value: ids[index]
+        }).appendTo(f);
+
+        $('<input type="hidden" />').attr({
+            name: 'start_date',
+            value: '<?=$start_date;?>'
+        }).appendTo(f);
+
+        $('<input type="hidden" />').attr({
+            name: 'end_date',
+            value: '<?=$end_date;?>'
+        }).appendTo(f);
+
+        $('<input type="hidden" />').attr({
+            name: 'status_id',
+            value: '3'
+        }).appendTo(f);
+
+        f.submit();
+
+        f.remove();
+
+    };
 </script>

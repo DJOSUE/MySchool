@@ -147,6 +147,12 @@ class Agreement extends School
         }
 
         $month = intval(date_format($objDate, "m"));
+        $day = intval(date_format($objDate, "d"));
+
+        if($day > $payment_date)
+        {
+            $month++;
+        }
 
         // Create payment Schedule
         for ($i=1; $i <= $number_payments; $i++) 

@@ -111,6 +111,9 @@
                             <thead>
                                 <tr class="text-center">
                                     <th>
+                                        <?= getPhrase('id');?>
+                                    </th>
+                                    <th>
                                         <?= getPhrase('class');?>
                                     </th>
                                     <th>
@@ -133,6 +136,9 @@
                             <tbody>
                                 <?php foreach($classes as $item):?>
                                 <tr class="text-center">
+                                    <td>
+                                        <?=$item['subject_id']?>
+                                    </td>
                                     <td>
                                         <?=$item['class_name']?>
                                     </td>
