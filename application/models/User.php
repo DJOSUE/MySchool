@@ -1323,28 +1323,28 @@ class User extends School
                 
         foreach($query_admin as $item)
         {
-            $name           = $item['first_name'] .' '. $item['first_name'];
+            $name           = $item['first_name'] .' '. $item['last_name'];
             $array_admin    = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => '', 'modality' => '', 'schedule' => '');
             array_push($array_users, $array_admin);
         }
 
         foreach($query_teacher as $item)
         {
-            $name       = $item['first_name'] .' '. $item['first_name'];
+            $name       = $item['first_name'] .' '. $item['last_name'];
             $array_item = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => '', 'modality' => '', 'schedule' => '');
             array_push($array_users, $array_item);
         }
 
         foreach($query_accountant as $item)
         {
-            $name       = $item['first_name'] .' '. $item['first_name'];
+            $name       = $item['first_name'] .' '. $item['last_name'];
             $array_item = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => '', 'modality' => '', 'schedule' => '');
             array_push($array_users, $array_item);
         }
 
         foreach($query_student as $item)
         {
-            $name       = $item['first_name'] .' '. $item['first_name'];
+            $name       = $item['first_name'] .' '. $item['last_name'];
             $enrolment  = $this->academic->get_student_enrollment($item['user_id']);
             $class      = $enrolment[0]['class_name'];
             $modality   = $enrolment[0]['modality_name'];

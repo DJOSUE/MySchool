@@ -2019,7 +2019,7 @@
             {
                 $this->academic->deleteCourse($param2);
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
-                redirect(base_url() . 'admin/academic_settings_subjects/', 'refresh');
+                redirect(base_url() . 'admin/academic_settings_semester_enroll/', 'refresh');
             }
         }
         
@@ -3261,13 +3261,16 @@
             if($_SERVER['REQUEST_METHOD'] === 'POST')
             {   
                 $month_id  = $this->input->post('month_id');
+                $section_id  = $this->input->post('section_id');
             }
             else
             {    
                 $month_id  = "";
+                $section_id  = "";
             }
 
             $page_data['month_id']      = $month_id;
+            $page_data['section_id']    = $section_id;
             $page_data['page_name']     = 'student_month_dashboard';
             $page_data['page_title']    =  getPhrase('student_month_dashboard');
             $this->load->view('backend/index', $page_data);

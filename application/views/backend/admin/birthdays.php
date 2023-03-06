@@ -70,6 +70,13 @@
                                                                                 <?= $m; ?>
                                                                             </h6>
                                                                             <div style="float: right;">
+                                                                                <a href="#" <button
+                                                                                    onclick="show_month('month_<?=intval($ma)?>')"
+                                                                                    class="btn btn-info btn-sm btn-rounded">
+                                                                                    <i class="picons-thin-icon-thin-0043_eye_visibility_show_visible"
+                                                                                        style="font-weight: 300; font-size: 25px;"></i>
+                                                                                    </button>
+                                                                                </a>
                                                                                 <a href="<?= base_url()."admin/birthdays_export/".intval($ma)?>"
                                                                                     <button id="btnExport"
                                                                                     class="btn btn-info btn-sm btn-rounded">
@@ -81,29 +88,31 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <?php 
+                                                                <div class="row" id="month_<?=intval($ma)?>" style="display: none;">
+                                                                    <?php 
                                                                     $data = $this->crud->get_birthdays_by_month($i);
                                                                     foreach($data as $day):
-                                                                ?>
-                                                                <div
-                                                                    class="col col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-                                                                    <div class="ui-block">
-                                                                        <div class="birthday-item inline-items">
-                                                                            <div class="author-thumb">
-                                                                                <img width="35px"
-                                                                                    src="<?= $this->crud->get_image_url($day['type'], $day['user_id']);?>">
-                                                                            </div>
-                                                                            <div class="birthday-author-name">
-                                                                                <a href="javascript:void(0);"
-                                                                                    class="h6 author-name"><?= $this->crud->get_name($day['type'], $day['user_id']);?></a>
-                                                                                <div class="birthday-date">
-                                                                                    <?= getPhrase('birthday');?>:
-                                                                                    <?= $day['birthday'];?></div>
+                                                                    ?>
+                                                                    <div
+                                                                        class="col col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+                                                                        <div class="ui-block">
+                                                                            <div class="birthday-item inline-items">
+                                                                                <div class="author-thumb">
+                                                                                    <img width="35px"
+                                                                                        src="<?= $this->crud->get_image_url($day['type'], $day['user_id']);?>">
+                                                                                </div>
+                                                                                <div class="birthday-author-name">
+                                                                                    <a href="javascript:void(0);"
+                                                                                        class="h6 author-name"><?= $this->crud->get_name($day['type'], $day['user_id']);?></a>
+                                                                                    <div class="birthday-date">
+                                                                                        <?= getPhrase('birthday');?>:
+                                                                                        <?= $day['birthday'];?></div>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                    <?php endforeach;?>
                                                                 </div>
-                                                                <?php endforeach;?>
                                                                 <?php endfor; ?>
                                                             </div>
                                                         </div>
@@ -121,3 +130,13 @@
             </div>
         </div>
     </div>
+    <script>
+function show_month(id) {
+    var x = document.getElementById(id);
+    if (x.style.display === "none") {
+        x.style.display = "flex";
+    } else {
+        x.style.display = "none";
+    }
+}
+    </script>

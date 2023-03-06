@@ -646,9 +646,11 @@ class Academic extends School
         if($_FILES['userfile']['size'] > 0){
             $data['icon']   = $md5.str_replace(' ', '', $_FILES['userfile']['name']);
         }
-        $data['name']       = html_escape($this->input->post('name'));
-        $data['about']      = html_escape($this->input->post('about'));
-        $data['teacher_id'] = $this->input->post('teacher_id');
+        $data['name']               = html_escape($this->input->post('name'));
+        $data['about']              = html_escape($this->input->post('about'));
+        $data['modality_id']        = html_escape($this->input->post('modality_id'));
+        $data['subject_capacity']   = html_escape($this->input->post('subject_capacity'));
+        $data['teacher_id']         = $this->input->post('teacher_id');
         $this->db->where('subject_id', $courseId);
         $this->db->update('subject', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/subject_icon/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
@@ -1988,6 +1990,21 @@ class Academic extends School
         return $subject;
     }
 
+    function get_subjects_by_modality_section($year = '', $semester_id = '', $modality, $section_name)
+    {   
+        $year       =   $year == '' ? $this->runningYear : $year;
+        $semester_id =   $semester_id == '' ? $this->runningSemester : $semester_id;
+
+        $this->db->reset_query();
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $this->db->where('modality_id', $modality);
+        $this->db->where('section_name', $section_name);
+        $subject = $this->db->get('v_subject')->result_array();
+        
+        return $subject;
+    }
+
     function get_subject_by_modality($class_id, $section_id, $modality, $year = '', $semester_id = '')
     {   
         $year       =   $year == '' ? $this->runningYear : $year;
@@ -2123,6 +2140,18 @@ class Academic extends School
         $name  = $this->db->get('semesters')->row()->name;
 
         return $name;
+    }
+
+    function get_sections($year, $semester_id)
+    {   
+        $this->db->reset_query();
+        $this->db->select('name');
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $this->db->group_by('name');
+        $query  = $this->db->get('section')->result_array();
+
+        return $query;
     }
 
     function get_section_name($section_id)
@@ -2301,7 +2330,7 @@ class Academic extends School
         
         return $query;
     }
-
+    
     public function get_classes()
     {
         $this->db->reset_query();
@@ -2453,6 +2482,7 @@ class Academic extends School
                             $dataSubject['year']        = $year;
                             $dataSubject['section_id']  = $section_id;
                             $dataSubject['modality_id'] = $modality_id;
+                            $dataSubject['subject_capacity']  = DEFAULT_CAPACITY;
 
                             $this->db->insert('subject', $dataSubject);
         
@@ -2543,12 +2573,13 @@ class Academic extends School
         $this->crud->save_log($table, $action, $student_month_id, $data);
     }
 
-    function student_month_has_best($month)
+    function student_month_has_best($month, $section_name)
     {
         $this->db->reset_query();
         $this->db->where('year', $this->runningYear);
         $this->db->where('semester_id', $this->runningSemester);    
         $this->db->where('month', $month);
+        $this->db->where('section_name', $section_name);
         $this->db->where('is_best', '1');
         $query = $this->db->get('v_student_month');
 
@@ -2558,9 +2589,7 @@ class Academic extends School
         }
         else{
             return false;
-        }
-
-        
+        }        
     }
 
     function get_student_month_by_student($student_id)
@@ -2742,6 +2771,49 @@ class Academic extends School
         
     }
 
+    function get_student_approved($year = "", $semester_id = "", $p_start, $p_end)
+    {        
+        $year           =   $year == ""         ? $this->runningYear        : $year;
+        $semester_id    =   $semester_id == ""  ? $this->runningSemester    : $semester_id;        
+
+        $this->db->reset_query();
+        $this->db->select('year, semester_id, class_id, section_id, student_id');
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $this->db->where('program_id is NOT NULL', NULL, FALSE);
+        $this->db->group_by(array('year', 'semester_id', 'class_id', 'section_id', 'student_id'));     
+        $query = $this->db->get('v_enrollment')->result_array();
+
+        $pass = 0;
+
+        foreach ($query as $item) 
+        {
+            $grade = $this->get_student_grades($item['student_id'], $year, $semester_id);
+
+            if($grade['mark'] >= $p_start && $grade['mark'] <= $p_end)
+                $pass++;
+        }
+
+        return $pass;        
+    }
+
+    function get_total_student_semester($year = "", $semester_id = "")
+    {        
+        $year           =   $year == ""         ? $this->runningYear        : $year;
+        $semester_id    =   $semester_id == ""  ? $this->runningSemester    : $semester_id;
+
+        $this->db->reset_query();
+        $this->db->select('year, semester_id, class_id, section_id, student_id');
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $this->db->where('program_id is NOT NULL', NULL, FALSE);
+        $this->db->group_by(array('year', 'semester_id', 'class_id', 'section_id', 'student_id'));     
+        $query = $this->db->get('v_enrollment');
+
+        $students = $query->num_rows();
+        return $students;
+    }
+
     function get_total_student_type($program_id, $year = "", $semester_id = "")
     {
         $year           =   $year == ""         ? $this->runningYear        : $year;
@@ -2801,8 +2873,8 @@ class Academic extends School
 
         $table      = 'enroll';
         $action     = 'delete';
-        $table_id   = $student_id .'-'. $year .'-'. $semester_id;
-        $this->crud->save_log($table, $action, $table_id, []);  
+        $table_id   = $student_id;
+        $this->crud->save_log($table, $action, $table_id, array($student_id, $year, $semester_id));  
     }
 
     public function get_student_list_by_subject($class_id, $section_id, $subject_id, $year = '', $semester_id = '')

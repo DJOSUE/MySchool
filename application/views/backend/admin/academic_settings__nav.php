@@ -35,7 +35,7 @@
                             class="os-icon picons-thin-icon-thin-0007_book_reading_read_bookmark"></i><span><?php echo getPhrase('semester'); ?></span></a>
                 </li>
                 <?php endif;?>
-                <?php if(has_permission('academic_settings_units')):?>
+                <!-- <?php if(has_permission('academic_settings_units')):?>
                 <li class="navs-item">
                     <a class="navs-links <?= $page_name == 'academic_settings_units' ? 'active': '' ;?>"
                         href="<?php echo base_url();?>admin/academic_settings_units/"><i
@@ -54,7 +54,7 @@
                     <a class="navs-links" href="<?php echo base_url();?>admin/academic_settings_subjects/"><i
                             class="os-icon picons-thin-icon-thin-0002_write_pencil_new_edit"></i><span><?php echo getPhrase('subject'); ?></span></a>
                 </li>
-                <?php endif;?>
+                <?php endif;?> -->
                 <!-- <li class="navs-item">
                                     <a class="navs-links" href="<?php echo base_url();?>admin/student_promotion/"><i
                                             class="os-icon picons-thin-icon-thin-0729_student_degree_science_university_school_graduate"></i><span><?php echo getPhrase('student_promotion'); ?></span></a>

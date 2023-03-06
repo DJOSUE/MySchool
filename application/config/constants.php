@@ -139,7 +139,7 @@ defined('DEFAULT_AMORTIZATION_PENDING')    OR define('DEFAULT_AMORTIZATION_PENDI
 defined('DEFAULT_AMORTIZATION_PAID')       OR define('DEFAULT_AMORTIZATION_PAID', 0); // no errors
 defined('DEFAULT_AMORTIZATION_PARTIAL')    OR define('DEFAULT_AMORTIZATION_PARTIAL', 2); // no errors
 
-defined('DEFAULT_CAPACITY')                 OR define('DEFAULT_CAPACITY', 25); // no errors
+defined('DEFAULT_CAPACITY')                 OR define('DEFAULT_CAPACITY', 28); // no errors
 defined('DEFAULT_SUBJECTS')                 OR define('DEFAULT_SUBJECTS', array(['name' => 'Content', 'color' => '0084FF', 'icon' => 'fce9f911fad6da4a5c66e877815eea1bteachers.svg'], ['name' => 'Application ', 'color' => 'FF1C23', 'icon' => '8e06e806952d1faef05e626629d312e5talk.png'])); // no errors
 // category_id status_id priority_id 
 

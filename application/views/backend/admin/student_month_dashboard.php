@@ -10,13 +10,16 @@
         $month_id = intval(date('m')) - 1;
     }
 
+    $section_name = $this->academic->get_schedule_type_name($section_id);
+
     $this->db->reset_query();
     $this->db->where('year', $running_year);
-    $this->db->where('semester_id', $running_semester);    
+    $this->db->where('semester_id', $running_semester);
+    $this->db->where('section_name', $section_name);
     $this->db->where('month', $month_id);    
     $query = $this->db->get('v_student_month')->result_array();
 
-    $has_best = $this->academic->student_month_has_best($month_id);
+    $has_best = $this->academic->student_month_has_best($month_id, $section_name);
     
 ?>
 <div class="content-w">
@@ -52,11 +55,27 @@
                                     <label class="control-label"><?= getPhrase('month');?></label>
                                     <div class="select">
                                         <select name="month_id" id="month_id">
-                                            <option month=""><?= getPhrase('select');?></option>
                                             <?php foreach(MONTH_LIST as $row): ?>
                                             <option value="<?= $row[0];?>"
                                                 <?php if($month_id == $row[0]) echo "selected";?>>
                                                 <?= $row[1];?>
+                                            </option>
+                                            <?php endforeach;?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <div class="form-group label-floating is-select">
+                                    <label class="control-label"><?= getPhrase('schedule');?></label>
+                                    <div class="select">
+                                        <select name="section_id" id="section_id">                                            
+                                            <?php 
+                                            $schedules = $this->academic->get_schedule_type();
+                                            foreach($schedules as $row): ?>
+                                            <option value="<?= $row['schedule_type_id'];?>"
+                                                <?php if($section_id == $row['schedule_type_id']) echo "selected";?>>
+                                                <?= $row['name'];?>
                                             </option>
                                             <?php endforeach;?>
                                         </select>
