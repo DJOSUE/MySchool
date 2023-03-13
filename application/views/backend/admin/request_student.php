@@ -40,6 +40,11 @@
     $this->db->where('request_type', '2');
     $requests = $this->db->get('student_request')->result_array();
 ?>
+<style>
+th {
+    cursor: pointer;
+}
+</style>
 <div class="content-w">
     <?php include 'fancy.php';?>
     <div class="header-spacer"></div>
@@ -282,4 +287,30 @@ $("#btnExport").click(function(e) {
     a.click();
     e.preventDefault();
 });
+</script>
+
+<script type="text/javascript">
+$('th').click(function() {
+    var table = $(this).parents('table').eq(0)
+    var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+    this.asc = !this.asc
+    if (!this.asc) {
+        rows = rows.reverse()
+    }
+    for (var i = 0; i < rows.length; i++) {
+        table.append(rows[i])
+    }
+})
+
+function comparer(index) {
+    return function(a, b) {
+        var valA = getCellValue(a, index),
+            valB = getCellValue(b, index)
+        return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+    }
+}
+
+function getCellValue(row, index) {
+    return $(row).children('td').eq(index).text()
+}
 </script>

@@ -423,7 +423,7 @@
                                                                 <?php 
                                                                 $this->db->reset_query();
                                                                 $this->db->where('applicant_id', $applicant_id);
-                                                                $this->db->order_by('created_at', 'ASC');
+                                                                $this->db->order_by('created_at', 'DESC');
                                                                 $interactions = $this->db->get('v_applicant_interaction')->result_array();
 
                                                                 foreach ($interactions as $item):

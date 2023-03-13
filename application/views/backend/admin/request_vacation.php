@@ -29,16 +29,17 @@
         $this->db->where('semester_id', $semester_id);
     }
 
-    if($assigned_me == 1)
-    {
-        $checked = 'checked';
-        $this->db->where('assigned_to', $user_id);
-        $this->db->where('assigned_to_type', $account_type);
-    }
+    // if($assigned_me == 1)
+    // {
+    //     $checked = 'checked';
+    //     $this->db->where('assigned_to', $user_id);
+    //     $this->db->where('assigned_to_type', $account_type);
+    // }
     
     $this->db->where('request_type', '1');
     $requests = $this->db->get('student_request')->result_array();
 ?>
+
 <div class="content-w">
     <?php include 'fancy.php';?>
     <div class="header-spacer"></div>
