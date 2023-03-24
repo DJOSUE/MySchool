@@ -49,6 +49,13 @@ $(document).ready(function() {
                     </div>
                 </div>
                 <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="form-group label-floating">
+                        <label class="control-label"><?php echo getPhrase('classroom');?></label>
+                        <input class="form-control" placeholder="" value="<?php echo $row['classroom'];?>"
+                            name="classroom" type="number">
+                    </div>
+                </div>
+                <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
                     <div class="form-group">
                         <label class="control-label"><?php echo getPhrase('about_the_subject');?></label>
                         <textarea class="form-control" name="about"><?php echo $row['about'];?></textarea>

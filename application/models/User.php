@@ -537,6 +537,16 @@ class User extends School
         $data['password']          = sha1($this->input->post('password'));
         $data['password_token']    = $password_token;
         $data['address']           = $this->input->post('address');
+        
+        if(!empty($this->input->post('city')))
+            $data['city']          = html_escape($this->input->post('city'));
+
+        if(!empty($this->input->post('state')))
+            $data['state']         = html_escape($this->input->post('state'));
+
+        if(!empty($this->input->post('postal_code')))
+            $data['postal_code']   = html_escape($this->input->post('postal_code'));
+        
         $data['country_id']        = $this->input->post('country_id');
         $data['transport_id']      = $this->input->post('transport_id');
         $data['program_id']        = $this->input->post('program_id');
@@ -789,6 +799,16 @@ class User extends School
         $data['parent_id']         = $this->input->post('parent_id');
         $data['student_session']   = $this->input->post('student_session');
         $data['updated_by']        = $this->session->userdata('login_user_id');
+
+        if(!empty($this->input->post('city')))
+            $data['city']          = html_escape($this->input->post('city'));
+
+        if(!empty($this->input->post('state')))
+            $data['state']         = html_escape($this->input->post('state'));
+
+        if(!empty($this->input->post('postal_code')))
+            $data['postal_code']   = html_escape($this->input->post('postal_code'));
+            
 
         $this->db->where('student_id', $studentId);
         $this->db->update('student', $data);

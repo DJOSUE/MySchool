@@ -56,6 +56,18 @@
                                                                 <span class="text"><?= $row['address'];?></span>
                                                             </li>
                                                             <li>
+                                                                <span class="title"><?= getPhrase('city');?>:</span>
+                                                                <span class="text"><?= $row['city'];?></span>
+                                                            </li>
+                                                            <li>
+                                                                <span class="title"><?= getPhrase('state');?>:</span>
+                                                                <span class="text"><?= $row['state'];?></span>
+                                                            </li>
+                                                            <li>
+                                                                <span class="title"><?= getPhrase('postal_code');?>:</span>
+                                                                <span class="text"><?= $row['postal_code'];?></span>
+                                                            </li>
+                                                            <li>
                                                                 <span class="title"><?= getPhrase('assigned_to');?>:</span>
                                                                 <span class="text"><?= $assigned_to;?></span>
                                                             </li>

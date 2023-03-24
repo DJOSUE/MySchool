@@ -23,9 +23,20 @@ class Applicant extends School
         $data['email']          = html_escape($this->input->post('email'));
         $data['phone']          = html_escape($this->input->post('phone'));
         $data['gender']         = html_escape($this->input->post('gender'));
-        $data['address']        = html_escape($this->input->post('address'));
         $data['country_id']     = html_escape($this->input->post('country_id'));
         $data['type_id']        = html_escape($this->input->post('type_id'));
+
+        if(!empty($this->input->post('address')))
+            $data['address']        = html_escape($this->input->post('address'));
+        
+        if(!empty($this->input->post('city')))
+            $data['city']           = html_escape($this->input->post('city'));
+
+        if(!empty($this->input->post('state')))
+            $data['state']          = html_escape($this->input->post('state'));
+
+        if(!empty($this->input->post('postal_code')))
+            $data['postal_code']    = html_escape($this->input->post('postal_code'));
 
         $type_info = $this->applicant->get_type_info($data['type_id']);
         $data['program_id']        = $type_info['program_id'];
@@ -69,7 +80,8 @@ class Applicant extends School
 
         // create an interaction
         $account_type   =   get_table_user($this->session->userdata('role_id'));
-        $user_name  = $this->crud->get_name($account_type, $this->session->userdata('login_user_id'));  
+        $user_name  = $this->crud->get_name($account_type, $this->session->userdata('login_user_id')); 
+         
         $_POST['applicant_id']  = $insert_id;
 
         if($data['is_imported'])
@@ -134,6 +146,15 @@ class Applicant extends School
         if(!empty($this->input->post('address')))
             $data['address']        = html_escape($this->input->post('address'));
         
+        if(!empty($this->input->post('city')))
+            $data['city']           = html_escape($this->input->post('city'));
+
+        if(!empty($this->input->post('state')))
+            $data['state']          = html_escape($this->input->post('state'));
+
+        if(!empty($this->input->post('postal_code')))
+            $data['postal_code']    = html_escape($this->input->post('postal_code'));
+
         if(!empty($this->input->post('country_id')))
             $data['country_id']     = html_escape($this->input->post('country_id'));
         

@@ -50,7 +50,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                            </div>                                            
+                                            </div>
                                             <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                 <div class="form-group label-floating is-select">
                                                     <label
@@ -138,6 +138,27 @@
                                                 </div>
                                             </div>
                                             <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                <div class="form-group label-floating">
+                                                    <label class="control-label"><?php echo getPhrase('city');?></label>
+                                                    <input class="form-control" name="city" id="city" type="text">
+                                                </div>
+                                            </div>
+                                            <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                <div class="form-group label-floating">
+                                                    <label
+                                                        class="control-label"><?php echo getPhrase('state');?></label>
+                                                    <input class="form-control" name="state" id="state" type="text">
+                                                </div>
+                                            </div>
+                                            <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                <div class="form-group label-floating">
+                                                    <label
+                                                        class="control-label"><?php echo getPhrase('postal_code');?></label>
+                                                    <input class="form-control" name="postal_code" id="postal_code"
+                                                        type="text">
+                                                </div>
+                                            </div>
+                                            <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                 <div class="form-group label-floating is-select">
                                                     <label
                                                         class="control-label"><?php echo getPhrase('country_of_birth');?></label>
@@ -174,8 +195,6 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col col-lg-6 col-md-6 col-sm-12 col-12">                                                
                                             </div>
                                             <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                 <div class="form-group date-time-picker label-floating">

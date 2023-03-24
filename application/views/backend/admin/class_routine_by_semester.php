@@ -129,6 +129,9 @@
                                         <?= getPhrase('teacher');?>
                                     </th>
                                     <th>
+                                        # <?= getPhrase('classroom');?>
+                                    </th>
+                                    <th>
                                         # <?= getPhrase('students');?>
                                     </th>
                                 </tr>
@@ -153,6 +156,9 @@
                                     </td>
                                     <td>
                                         <?=$item['teacher_name']?>
+                                    </td>
+                                    <td>
+                                        <?=$item['classroom']?>
                                     </td>
                                     <td>
                                         <?=$this->academic->countStudentsSubject($item['class_id'], $item['section_id'], $item['subject_id']);?>

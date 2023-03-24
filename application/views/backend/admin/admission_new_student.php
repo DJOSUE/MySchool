@@ -269,6 +269,30 @@
                                                             </div>
                                                         </div>
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                            <div class="form-group label-floating">
+                                                                <label
+                                                                    class="control-label"><?php echo getPhrase('city');?></label>
+                                                                <input class="form-control" name="city" id="city"
+                                                                    type="text" value="<?=$city;?>">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                            <div class="form-group label-floating">
+                                                                <label
+                                                                    class="control-label"><?php echo getPhrase('state');?></label>
+                                                                <input class="form-control" name="state" id="state"
+                                                                    type="text" value="<?=$state;?>">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                            <div class="form-group label-floating">
+                                                                <label
+                                                                    class="control-label"><?php echo getPhrase('postal_code');?></label>
+                                                                <input class="form-control" name="postal_code" id="postal_code"
+                                                                    type="text" value="<?=$postal_code;?>">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                             <div class="form-group label-floating is-select">
                                                                 <label
                                                                     class="control-label"><?php echo getPhrase('country_of_birth');?></label>

@@ -650,6 +650,7 @@ class Academic extends School
         $data['about']              = html_escape($this->input->post('about'));
         $data['modality_id']        = html_escape($this->input->post('modality_id'));
         $data['subject_capacity']   = html_escape($this->input->post('subject_capacity'));
+        $data['classroom']          = html_escape($this->input->post('classroom'));
         $data['teacher_id']         = $this->input->post('teacher_id');
         $this->db->where('subject_id', $courseId);
         $this->db->update('subject', $data);
@@ -2854,7 +2855,7 @@ class Academic extends School
         $semester_id    =   $semester_id == ""  ? $this->runningSemester    : $semester_id;
 
         $this->db->reset_query();
-        $this->db->select('class_id, class_name, section_id, section_name, subject_id, name, modality_id, teacher_name');
+        $this->db->select('class_id, class_name, section_id, section_name, subject_id, name, modality_id, teacher_name, classroom');
         $this->db->where('year', $year);
         $this->db->where('semester_id', $semester_id);
         $this->db->group_by(array('class_id', 'section_id', 'subject_id', 'modality_id'));

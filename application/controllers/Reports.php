@@ -28,7 +28,7 @@ class Reports extends EduAppGT
 
         $this->runningYear      =   $this->crud->getInfo('running_year'); 
         $this->runningSemester  =   $this->crud->getInfo('running_semester'); 
-        $this->account_type     =   $this->session->userdata('login_type'); 
+        $this->account_type     =   get_table_user($this->session->userdata('role_id')); 
         $this->role_id          =   $this->session->userdata('role_id');
         $this->fancy_path       =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/'.$this->account_type.'/';
     }

@@ -144,6 +144,27 @@
                                         </div>
                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                             <div class="form-group label-floating">
+                                                <label class="control-label"><?= getPhrase('city');?></label>
+                                                <input class="form-control" name="city"
+                                                    value="<?= $row['city'];?>" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="form-group label-floating">
+                                                <label class="control-label"><?= getPhrase('state/province');?></label>
+                                                <input class="form-control" name="state"
+                                                    value="<?= $row['state'];?>" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="form-group label-floating">
+                                                <label class="control-label"><?= getPhrase('postal_code');?></label>
+                                                <input class="form-control" name="postal_code"
+                                                    value="<?= $row['postal_code'];?>" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="form-group label-floating">
                                                 <label class="control-label"><?= getPhrase('roll');?></label>
                                                 <input class="form-control" name="student_code"
                                                     value="<?= $row['student_code'];?>" type="text">
