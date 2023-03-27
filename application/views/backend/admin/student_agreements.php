@@ -179,6 +179,9 @@
                                                         <th>
                                                             <?= getPhrase('teacher');?>
                                                         </th>
+                                                        <th>
+                                                            <?= getPhrase('classroom');?>
+                                                        </th>
                                                         <!-- <th>
                                                             <?= getPhrase('options');?>
                                                         </th> -->
@@ -246,6 +249,15 @@
                                                                     placeholder="0"
                                                                     style="border: 1; text-align: center;">
                                                                     <?= $item['teacher_name'];?>
+                                                                </label>
+                                                            </center>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <center>
+                                                                <label name="teacher_<?= $item['enroll_id'];?>"
+                                                                    placeholder="0"
+                                                                    style="border: 1; text-align: center;">
+                                                                    <?= $item['classroom'];?>
                                                                 </label>
                                                             </center>
                                                         </td>

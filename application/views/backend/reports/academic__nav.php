@@ -8,7 +8,16 @@
                             </a>
                         </li>
                         <?php endif;?>
-                        <?php if(has_permission('academic_attendance_report')):?>
+                        <?php if(has_permission('academic_absence_report')):?>
+                        <li class="navs-item">
+                            <a class="navs-links <?= $page_name == 'academic_absence' ? 'active' : ''?>"
+                                href="<?php echo base_url();?>reports/academic_absence/">
+                                <i class="os-icon picons-thin-icon-thin-0023_calendar_month_day_planner_events"></i>
+                                <span><?php echo getPhrase('absence');?></span>
+                            </a>
+                        </li>
+                        <?php endif;?> 
+                        <!-- <?php if(has_permission('academic_attendance_report')):?>
                         <li class="navs-item">
                             <a class="navs-links <?= $page_name == 'academic_attendance' ? 'active' : ''?>"
                                 href="<?php echo base_url();?>reports/academic_attendance/">
@@ -16,5 +25,5 @@
                                 <span><?php echo getPhrase('attendance');?></span>
                             </a>
                         </li>
-                        <?php endif;?> 
+                        <?php endif;?>  -->
                     </ul>

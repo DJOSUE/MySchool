@@ -91,7 +91,7 @@ class Agreement extends School
 
     public function create_agreement($student_id)
     {
-        $md5 = md5(date('d-m-y H:i:s'));
+        $md5         = md5(date('d-m-y H:i:s'));
         $year        = intval(html_escape($this->input->post('year_id')));
         $semester_id = intval(html_escape($this->input->post('semester_id')));
 
@@ -198,8 +198,16 @@ class Agreement extends School
             $action     = 'insert';
             $insert_id  = $this->db->insert_id();
             $this->crud->save_log($table, $action, $insert_id, $dataAmortization);
-            $month++;
 
+
+            if($semester_id != $this->runningSemester &  $i == 1)
+            {
+                $objDate = date_create($start_semester);
+                $month = intval(date_format($objDate, "m"));
+            }
+            
+            $month++;
+            
             if($has_down_payment == 1 &&  $i == 1)
             {
                 $down_payment_id = $insert_id;

@@ -67,10 +67,9 @@
                     <?php if($this->academic->getInfo('show_study_material') == 1) :?>
                     <li class="navs-item">
                         <a class="navs-links" href="<?= base_url();?>student/study_material/<?= $data;?>/">
-                        <i
-                                class="os-icon picons-thin-icon-thin-0003_write_pencil_new_edit"></i>
-                                <span><?= getPhrase('study_material');?></span>
-                            </a>
+                            <i class="os-icon picons-thin-icon-thin-0003_write_pencil_new_edit"></i>
+                            <span><?= getPhrase('study_material');?></span>
+                        </a>
                     </li>
                     <?php endif;?>
                     <li class="navs-item">
@@ -490,7 +489,14 @@
                                     <div class="ui-block-content">
                                         <ul class="widget item-block">
                                             <li>
-                                                <span class="text"><?= $row['about'];?></span>
+                                                <span class="text">
+                                                    <b><?= getPhrase('classroom')?>:</b><br /><?= $row['classroom'];?>
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span class="text">
+                                                    <b><?= getPhrase('about')?>:</b><br /><?= $row['about'];?>
+                                                </span>
                                             </li>
                                         </ul>
                                     </div>

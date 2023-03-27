@@ -646,12 +646,20 @@ class Academic extends School
         if($_FILES['userfile']['size'] > 0){
             $data['icon']   = $md5.str_replace(' ', '', $_FILES['userfile']['name']);
         }
-        $data['name']               = html_escape($this->input->post('name'));
-        $data['about']              = html_escape($this->input->post('about'));
-        $data['modality_id']        = html_escape($this->input->post('modality_id'));
-        $data['subject_capacity']   = html_escape($this->input->post('subject_capacity'));
-        $data['classroom']          = html_escape($this->input->post('classroom'));
-        $data['teacher_id']         = $this->input->post('teacher_id');
+
+        if(!empty($this->input->post('name')))
+            $data['name']               = html_escape($this->input->post('name'));
+        if(!empty($this->input->post('about')))
+            $data['about']              = html_escape($this->input->post('about'));
+        if(!empty($this->input->post('modality_id')))
+            $data['modality_id']        = html_escape($this->input->post('modality_id'));
+        if(!empty($this->input->post('subject_capacity')))
+            $data['subject_capacity']   = html_escape($this->input->post('subject_capacity'));
+        if(!empty($this->input->post('classroom')))
+            $data['classroom']          = html_escape($this->input->post('classroom'));
+        if(!empty($this->input->post('teacher_id')))
+            $data['teacher_id']         = $this->input->post('teacher_id');
+        
         $this->db->where('subject_id', $courseId);
         $this->db->update('subject', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/subject_icon/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));

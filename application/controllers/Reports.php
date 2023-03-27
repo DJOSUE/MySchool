@@ -181,6 +181,31 @@ class Reports extends EduAppGT
         $this->load->view('backend/reports/index', $page_data); 
     }
 
+    function academic_absence()
+    {
+        $this->isLogin();
+        
+        $interval   = date_interval_create_from_date_string('1 days');
+        $objDate    = date_create(date("m/d/Y"));
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $start_date = html_escape($this->input->post('start_date'));
+            $end_date   = html_escape($this->input->post('end_date'));
+        }
+        else
+        {
+            $start_date = date_format($objDate, "m/d/Y");
+            $end_date   = date_format(date_add($objDate, $interval), "m/d/Y");            
+        }        
+        
+        $page_data['start_date'] = $start_date;
+        $page_data['end_date']   = $end_date;
+        $page_data['page_name']     = 'academic_absence';
+        $page_data['page_title']    = getPhrase('academic_absence');
+        $page_data['fancy_path']    = $this->fancy_path;
+        $this->load->view('backend/reports/index', $page_data); 
+    }
+
 /***** Advisors Reports   *******************************************************************************************************************************/
     function advisor_dashboard()
     {

@@ -209,6 +209,16 @@
             }
         }
 
+
+        function update_subject($subject_id, $return_url = '')
+        {
+            $this->isLogin();
+            $this->academic->updateCourse($subject_id);
+            $class_id = $this->db->get_where('subject', array('subject_id' => $subject_id))->row()->class_id;
+            $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+            redirect(base_url() . 'teacher/cursos/'.base64_encode($class_id)."/", 'refresh');
+        }
+
 /******* Test **************/        
         //Get Students by sectionId function of the current semester.
         function get_pass_student_class($class_id, $year = "", $semester_id = "")

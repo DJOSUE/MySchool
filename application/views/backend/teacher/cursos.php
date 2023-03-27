@@ -81,6 +81,8 @@
                                                                     $this->db->order_by('subject_id', 'desc');
                                                                     $subjects = $this->db->get_where('subject', array('class_id' => $cl_id, 'teacher_id' => $this->session->userdata('login_user_id'),'section_id' => $row['section_id'], 'year' => $running_year, 'semester_id' => $running_semester))->result_array();
                                                                     foreach($subjects as $row2):
+                                                                        $url_dashboard = base_url() .'teacher/subject_dashboard/'. base64_encode($row2['class_id']."-".$row['section_id']."-".$row2['subject_id']);
+                                                                        $url_edit = base_url().'modal/popup/modal_subject/'.$row2['subject_id'];
                                                                 ?>
                                                                     <div
                                                                         class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
@@ -90,10 +92,18 @@
                                                                                 <div class="friend-item-content">
                                                                                     <div class="more">
                                                                                         <i
-                                                                                            class="icon-feather-more-horizontal"></i>
+                                                                                            class="icon-feather-more-horizontal">
+                                                                                        </i>
                                                                                         <ul class="more-dropdown">
-                                                                                            <li><a
-                                                                                                    href="<?php echo base_url();?>teacher/subject_dashboard/<?php echo base64_encode($row2['class_id']."-".$row['section_id']."-".$row2['subject_id']);?>/">Tablero</a>
+                                                                                            <li>
+                                                                                                <a href="<?= $url_dashboard;?>/">
+                                                                                                    <?=getPhrase('dashboard')?>
+                                                                                                </a>
+                                                                                            </li>
+                                                                                            <li>
+                                                                                                <a href='javascript:void(0);' onclick="showAjaxModal('<?= $url_edit;?>')">
+                                                                                                    <?=getPhrase('edit')?>
+                                                                                                </a>
                                                                                             </li>
                                                                                         </ul>
                                                                                     </div>
@@ -104,7 +114,7 @@
                                                                                                 style="background-color:#<?php echo $row2['color'];?>;padding:30px;border-radius:0px;">
                                                                                         </div>
                                                                                         <div class="author-content">
-                                                                                            <a href="<?php echo base_url();?>teacher/subject_dashboard/<?php echo base64_encode($row2['class_id']."-".$row['section_id']."-".$row2['subject_id']);?>/"
+                                                                                            <a href="<?= $url_dashboard;?>/"
                                                                                                 class="h5 author-name"><?php echo $row2['name'];?>
                                                                                                 -
                                                                                                 <?php echo $row['name'];?></a><br><br>

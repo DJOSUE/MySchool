@@ -610,7 +610,14 @@
                                     <div class="ui-block-content">
                                         <ul class="widget item-block">
                                             <li>
-                                                <span class="text"><?= $row['about'];?></span>
+                                                <span class="text">
+                                                    <b><?= getPhrase('classroom')?>:</b><br /><?= $row['classroom'];?>
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span class="text">
+                                                    <b><?= getPhrase('about')?>:</b><br /><?= $row['about'];?>
+                                                </span>
                                             </li>
                                         </ul>
                                     </div>

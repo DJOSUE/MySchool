@@ -6,27 +6,13 @@
     $endDate    = date_format(date_create($end_date), "Y-m-d");
 
     $this->db->reset_query();
-    $this->db->select('student_id, first_name, last_name, class_id, class_name, section_id, section_name, subject_id, subject_name, count(date) as absence');
+    $this->db->select('student_id, first_name, last_name, phone, email,class_id, class_name, section_id, section_name, subject_id, subject_name, count(date) as absence');
     $this->db->where('date >=', $startDate);
     $this->db->where('date <=', $endDate);
     $this->db->where('labuno', '0');
     $this->db->group_by('student_id, class_id, section_id, subject_id');
     $this->db->order_by('first_name');
     $payments = $this->db->get('v_mark_daily')->result_array();
-
-    /**
-     * 
-     * 
-     * $this->db->reset_query();
-            $this->db->select('section_id, section_name');
-            $this->db->from('v_subject');            
-            $this->db->where('year', $year);
-            $this->db->where('semester_id', $SemesterId);
-            $this->db->where('class_id', $class_id);            
-            $this->db->where('teacher_id', $teacher_id);
-            $this->db->group_by('subject_id');
-            $sections =  $this->db->get()->result_array();  
-     */
 
 ?>
 <div class="content-w">
@@ -42,7 +28,7 @@
             <div class="content-box">
                 <div class="element-wrapper">
                     <div class="tab-content">
-                        <?= form_open(base_url() . 'reports/academic_attendance/');?>
+                        <?= form_open(base_url() . 'reports/academic_absence/');?>
                         <div class="row">
                             <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                 <div class="form-group label-floating is-select" style="background-color: #fff;">
@@ -75,12 +61,6 @@
                         </div>
                         <?= form_close()?>
                         <br />
-                        <?php 
-                            // echo '<pre>';
-                            // var_dump($start_date);
-                            // var_dump($end_date);
-                            // echo '</pre>';
-                        ?>
                         <div class="tab-pane active" id="invoices">
                             <div class="element-wrapper">
                                 <div>
@@ -94,22 +74,23 @@
                                         <table class="table table-padded" id="dvData">
                                             <thead>
                                                 <tr>
-                                                    <th><?= getPhrase('student');?></th>
-                                                    <th><?= getPhrase('phone');?></th>
-                                                    <th><?= getPhrase('email');?></th>
-                                                    <th><?= getPhrase('class');?></th>
-                                                    <th><?= getPhrase('section');?></th>
-                                                    <th><?= getPhrase('subject');?></th>
-                                                    <th><?= getPhrase('modality');?></th>
-                                                    <th><?= getPhrase('teacher');?></th>
-                                                    <th># <?= getPhrase('absence');?></th>
-                                                    <th># <?= getPhrase('students');?></th>
+                                                    <th class="orderby"><?= getPhrase('student');?></th>
+                                                    <th class="orderby"><?= getPhrase('phone');?></th>
+                                                    <th class="orderby"><?= getPhrase('email');?></th>
+                                                    <th class="orderby"><?= getPhrase('class');?></th>
+                                                    <th class="orderby"><?= getPhrase('section');?></th>
+                                                    <th class="orderby"><?= getPhrase('subject');?></th>
+                                                    <th class="orderby"><?= getPhrase('modality');?></th>
+                                                    <th class="orderby"><?= getPhrase('teacher');?></th>
+                                                    <th class="orderby"># <?= getPhrase('absence');?></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php
                                                     foreach($payments as $row):
-
+                                                        $this->db->reset_query();
+                                                        $this->db->where('subject_id', $row['subject_id']);
+                                                        $subject_info = $this->db->get('v_subject')->row_array();
                                                         
                                                 ?>
                                                 <tr>
@@ -117,10 +98,10 @@
                                                         <?=  $row['first_name'] .''. $row['last_name']; ?>
                                                     </td>
                                                     <td>
-                                                        
+                                                        <?=  $row['phone'] ?>
                                                     </td>
                                                     <td>
-                                                        
+                                                        <?=  $row['email'] ?>
                                                     </td>
                                                     <td>
                                                         <?=  $row['class_name'] ?>
@@ -132,10 +113,10 @@
                                                         <?=  $row['subject_name'] ?>
                                                     </td>
                                                     <td>
-                                                        
+                                                    <?=  $subject_info['modality_name'] ?>
                                                     </td>
                                                     <td>
-                                                        
+                                                    <?=  $subject_info['teacher_name'] ?>
                                                     </td>
                                                     <td>
                                                         <?=  $row['absence'] ?>
@@ -170,4 +151,30 @@ $("#btnExport").click(function(e) {
     a.click();
     e.preventDefault();
 });
+</script>
+
+<script type="text/javascript">
+$('.orderby').click(function() {
+    var table = $(this).parents('table').eq(0)
+    var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+    this.asc = !this.asc
+    if (!this.asc) {
+        rows = rows.reverse()
+    }
+    for (var i = 0; i < rows.length; i++) {
+        table.append(rows[i])
+    }
+})
+
+function comparer(index) {
+    return function(a, b) {
+        var valA = getCellValue(a, index),
+            valB = getCellValue(b, index)
+        return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+    }
+}
+
+function getCellValue(row, index) {
+    return $(row).children('td').eq(index).text()
+}
 </script>
