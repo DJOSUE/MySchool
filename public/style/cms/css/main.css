@@ -27619,3 +27619,7 @@ table {
 .panel-btn:hover {
     background-color: yellow;
 }
+
+.orderby {
+    cursor: pointer;
+}

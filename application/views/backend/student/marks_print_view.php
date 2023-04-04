@@ -1,7 +1,7 @@
  <?php 
     $ex = explode('-', base64_decode($data));
 	$class_name		 	= 	$this->db->get_where('class' , array('class_id' => $class_id))->row()->name;
-    $section_id         =   $this->db->get_where('enroll' , array('student_id' => $this->session->userdata('login_user_id')))->row()->section_id;
+    $section_id         =   $this->db->get_where('enroll' , array('student_id' => get_login_user_id()))->row()->section_id;
 	$exam_name  		= 	$this->db->get_where('exam' , array('unit_id' => $ex[1]))->row()->name;
 	$system_name        =	$this->crud->getInfo('system_name');
     $system_email       =   $this->crud->getInfo('system_email');
@@ -33,11 +33,11 @@
                                 </div>
                                 <div class="info-2">
                                     <div class="rcard-profile">
-                                        <img alt="" src="<?php echo $this->crud->get_image_url('student', $this->session->userdata('login_user_id'));?>">
+                                        <img alt="" src="<?php echo $this->crud->get_image_url('student', get_login_user_id());?>">
                                     </div>
-                                    <div class="company-name"><?php echo $this->crud->get_name('student' , $this->session->userdata('login_user_id'));?></div>
+                                    <div class="company-name"><?php echo $this->crud->get_name('student' , get_login_user_id());?></div>
                                     <div class="company-address">
-                                        <?php echo getPhrase('roll');?>: <?php echo $this->db->get_where('enroll', array('student_id' => $this->session->userdata('login_user_id')))->row()->roll;?><br/><?php echo $this->db->get_where('class', array('class_id' => $class_id))->row()->name;?><br/><?php echo $this->db->get_where('section' , array('section_id' => $section_id))->row()->name;?>
+                                        <?php echo getPhrase('roll');?>: <?php echo $this->db->get_where('enroll', array('student_id' => get_login_user_id()))->row()->roll;?><br/><?php echo $this->db->get_where('class', array('class_id' => $class_id))->row()->name;?><br/><?php echo $this->db->get_where('section' , array('section_id' => $section_id))->row()->name;?>
                                     </div>
                                 </div>
                             </div>
@@ -61,7 +61,7 @@
                                             $exams = $this->crud->get_exams();
                                             $subjects = $this->db->get_where('subject' , array('class_id' => $class_id, 'section_id' => $section_id))->result_array();
                                             foreach ($subjects as $row3):
-                                            $mark = $this->db->get_where('mark' , array('student_id' => $this->session->userdata('login_user_id'),'subject_id' => $row3['subject_id'], 'class_id' => $class_id, 'unit_id' => $ex[1], 'year' => $running_year));    
+                                            $mark = $this->db->get_where('mark' , array('student_id' => get_login_user_id(),'subject_id' => $row3['subject_id'], 'class_id' => $class_id, 'unit_id' => $ex[1], 'year' => $running_year));    
                                             if($mark->num_rows() > 0) 
                                             {
                                                 $marks = $mark->result_array();

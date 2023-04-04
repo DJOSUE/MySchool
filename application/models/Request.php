@@ -19,7 +19,7 @@ class Request extends School
     {
         $md5 = md5(date('d-m-Y H:i:s'));
 
-        $student_id = $this->session->userdata('login_user_id');
+        $student_id = get_login_user_id();
         $program = $this->studentModel->get_student_program_info($student_id);
 
         $data['request_type'] = $this->input->post('request_type');
@@ -61,7 +61,7 @@ class Request extends School
     {
         $md5 = md5(date('d-m-Y H:i:s'));
 
-        $student_id = $this->session->userdata('login_user_id');
+        $student_id = get_login_user_id();
 
         $program = $this->studentModel->get_student_program_info($student_id);
 
@@ -157,8 +157,8 @@ class Request extends School
 
         $data['status'] = DEFAULT_REQUEST_REJECTED; // Accept
         $data['comment'] = base64_decode($message);
-        $data['assigned_to'] = $this->session->userdata('login_user_id'); // Accept
-        $data['assigned_to_type'] = $this->session->userdata('login_type');        
+        $data['assigned_to'] = get_login_user_id(); // Accept
+        $data['assigned_to_type'] = get_account_type();        
         $this->db->where('request_id', $request_id);
         $this->db->update($table, $data);
         
@@ -219,8 +219,8 @@ class Request extends School
 
         $data['status'] = DEFAULT_REQUEST_REJECTED; // Accept
         $data['comment'] = base64_decode($message);
-        $data['assigned_to'] = $this->session->userdata('login_user_id'); // Accept
-        $data['assigned_to_type'] = $this->session->userdata('login_type');        
+        $data['assigned_to'] = get_login_user_id(); // Accept
+        $data['assigned_to_type'] = get_account_type();        
         $this->db->where('request_id', $request_id);
         $this->db->update($table, $data);
         

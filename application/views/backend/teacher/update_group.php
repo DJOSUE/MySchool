@@ -42,7 +42,7 @@
                                 </tr>
                             </thead>
                             <?php foreach ($user_list as $user):?>
-                            <?php if($user[$user_array[$i].'_id'] != $this->session->userdata('login_user_id') && $this->session->userdata('login_type') == 'teacher'):?>
+                            <?php if($user[$user_array[$i].'_id'] != get_login_user_id() && get_account_type() == 'teacher'):?>
                                 <tr>
                                     <td width = "20%"><input type="checkbox" name="user[]" class="<?php echo $user_array[$i]; ?>" value="<?php echo $user_array[$i].'_'.$user[$user_array[$i].'_id']; ?>"
                                         <?php

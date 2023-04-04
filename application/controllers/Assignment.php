@@ -27,8 +27,8 @@ class Assignment extends EduAppGT
 
         $this->runningYear      = $this->crud->getInfo('running_year'); 
         $this->runningSemester  = $this->crud->getInfo('running_semester'); 
-        $this->account_type       =   $this->session->userdata('login_type'); 
-        $this->role_id = $this->session->userdata('role_id');
+        $this->account_type       =   get_account_type(); 
+        $this->role_id = get_role_id();
     }
     
     //Index function.
@@ -286,7 +286,7 @@ class Assignment extends EduAppGT
     //Check session function.
     function isLogin()
     {
-        if ($this->session->userdata('login_user_id') == '')
+        if (get_login_user_id() == '')
         {
             redirect(site_url('login'), 'refresh');
         }

@@ -1,5 +1,5 @@
 <?php 
-    $student_id = $this->session->userdata('login_user_id');
+    $student_id = get_login_user_id();
 ?>
 <div class="full-chat-middle">
     <?= form_open(base_url() . 'student/message/send_new/', array('class' => 'form', 'enctype' => 'multipart/form-data')); ?>

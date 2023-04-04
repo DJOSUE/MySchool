@@ -18,11 +18,11 @@
                             <div class="element-box table-responsive lined-primary shadow" id="print_area">
 			                    <div class="row m-b">
 				                    <div style="display:inline-block">
-				                        <img style="max-height:60px;margin:0px 10px 20px 20px" src="<?php echo $this->crud->get_image_url('teacher', $this->session->userdata('login_user_id'));?>" alt=""/>		
+				                        <img style="max-height:60px;margin:0px 10px 20px 20px" src="<?php echo $this->crud->get_image_url('teacher', get_login_user_id());?>" alt=""/>		
 				                    </div>
 				                    <div style="padding-left:20px;display:inline-block;">
 				                        <h5><?php echo getPhrase('my_routine');?></h5>
-				                        <p><?php echo $this->crud->get_name('teacher', $this->session->userdata('login_user_id'));?></p>
+				                        <p><?php echo $this->crud->get_name('teacher', get_login_user_id());?></p>
     				                </div>
 			                    </div>
 			                    <table class="table table-schedule table-hover" cellpadding="0" cellspacing="0">
@@ -45,13 +45,13 @@
                                                 $this->db->order_by("time_start", "asc");
                                                 $this->db->where('day' , $day);
                                                 $this->db->where('year' , $running_year);
-                                                $this->db->where('teacher_id' , $this->session->userdata('login_user_id'));
+                                                $this->db->where('teacher_id' , get_login_user_id());
                                                 $routines   =   $this->db->get('class_routine')->result_array();
                             	                foreach($routines as $row2):
                 	                        ?>
 						                    <td style="text-align:center"> 
                                                 <?php echo '<b>'.getPhrase('classroom').'</b>: '.$this->db->get_where('class_room', array('classroom_id' => $row2['classroom_id']))->row()->name.'.<br>'.$row2['time_start'].":".$row2['time_start_min']." " ."<b>".$row2['amstart']."</b>". ' - ' . $row2['time_end'].":".$row2['time_end_min']." "."<b>".$row2['amend']."</b>";?>
-                                                <br><b><?php echo $this->crud->get_subject_name_by_id($row2['subject_id']);?></b><br><small><?php echo $this->crud->get_name('teacher', $this->session->userdata('login_user_id'));?></small>
+                                                <br><b><?php echo $this->crud->get_subject_name_by_id($row2['subject_id']);?></b><br><small><?php echo $this->crud->get_name('teacher', get_login_user_id());?></small>
                                             </td>
     					                    <?php endforeach;?>
 				                        </table>

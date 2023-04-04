@@ -14,7 +14,7 @@
                                             <div class="tab-pane active show">
                                                 <?= form_open(base_url() . 'admin/news/create/', array('enctype' => 'multipart/form-data')); ?>
                                                 <div class="author-thumb" style="padding-right:15px;">
-                                                    <img src="<?= $this->crud->get_image_url('admin', $this->session->userdata('login_user_id'));?>"
+                                                    <img src="<?= $this->crud->get_image_url('admin', get_login_user_id());?>"
                                                         class="imgwidth">
                                                 </div>
                                                 <div class="form-group with-icon label-floating is-empty"
@@ -22,7 +22,7 @@
                                                     <label for="ckeditor1"
                                                         style="margin-top: 35px;margin-left: 70px;margin-bottom: 20px;">
                                                         <?= getPhrase('hi');?>
-                                                        <?= $this->db->get_where('admin', array('admin_id' => $this->session->userdata('login_user_id')))->row()->first_name;?>
+                                                        <?= $this->db->get_where('admin', array('admin_id' => get_login_user_id()))->row()->first_name;?>
                                                         <?= getPhrase('what_publish');?>
                                                     </label>
                                                     <textarea id="ckeditor1" name="description" required=""></textarea>
@@ -71,14 +71,14 @@
                                                 <?= form_open(base_url() . 'admin/news/create_video/', array('enctype' => 'multipart/form-data')); ?>
                                                 <input type="hidden" name="embed" id="embed">
                                                 <div class="author-thumb" style="padding-right:15px;">
-                                                    <img src="<?= $this->crud->get_image_url('admin', $this->session->userdata('login_user_id'));?>"
+                                                    <img src="<?= $this->crud->get_image_url('admin', get_login_user_id());?>"
                                                         class="imgwidth">
                                                 </div>
                                                 <div class="form-group with-icon label-floating is-empty"
                                                     style="padding-left:10px;">
                                                     <textarea onkeyup="textAreaAdjust(this)" style="overflow:hidden"
                                                         class="form-control"
-                                                        placeholder="<?= getPhrase('hi');?> <?= $this->db->get_where('admin', array('admin_id' => $this->session->userdata('login_user_id')))->row()->first_name;?> <?= getPhrase('what_publish');?>"
+                                                        placeholder="<?= getPhrase('hi');?> <?= $this->db->get_where('admin', array('admin_id' => get_login_user_id()))->row()->first_name;?> <?= getPhrase('what_publish');?>"
                                                         name="description" required=""></textarea>
                                                     <span class="material-input"></span>
                                                 </div>
@@ -394,7 +394,7 @@
                                 <?php if($usrdb == 'admin' || $usrdb == 'all'):?>
                                 <?php 
                                         $type = 'admin';
-                                        $id = $this->session->userdata('login_user_id');
+                                        $id = get_login_user_id();
                                         $user = $type. "-".$id;
                                         $query = $this->db->get_where('poll_response', array('poll_code' => $poll_code, 'user' => $user));
                                     ?>

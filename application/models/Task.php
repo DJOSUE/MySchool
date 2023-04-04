@@ -17,8 +17,8 @@ class Task extends School
         $this->load->library('excel');
         $this->load->library('session');
 
-        $this->user_id      = $this->session->userdata('login_user_id');
-        $this->user_type    = get_table_user($this->session->userdata('role_id'));
+        $this->user_id      = get_login_user_id();
+        $this->user_type    = get_table_user(get_role_id());
         if($this->user_type != "")
             $this->user_name    = $this->crud->get_name($this->user_type, $this->user_id);
     }
@@ -188,9 +188,9 @@ class Task extends School
     function create()
     {
         $code           = md5(date('d-m-Y H:i:s'));
-        $account_type   =   get_table_user($this->session->userdata('role_id'));
+        $account_type   =   get_table_user(get_role_id());
 
-        $data['created_by']      = $this->session->userdata('login_user_id');
+        $data['created_by']      = get_login_user_id();
         $data['created_by_type'] = $account_type;
         $data['title']           = html_escape($this->input->post('title'));
         $data['task_code']       = $code;
@@ -228,7 +228,7 @@ class Task extends School
         {
             // Get table  
             $data['assigned_to_type'] = 'admin';
-            $data['assigned_to'] =  $this->session->userdata('login_user_id');
+            $data['assigned_to'] =  get_login_user_id();
         }
         
         if($_FILES['task_file']['name'] != '')
@@ -253,9 +253,9 @@ class Task extends School
     function create_follow_up($data)
     {
         $code           = md5(date('d-m-Y H:i:s'));
-        $account_type   = get_table_user($this->session->userdata('role_id'));
+        $account_type   = get_table_user(get_role_id());
 
-        $data['created_by']      = $this->session->userdata('login_user_id');
+        $data['created_by']      = get_login_user_id();
         $data['created_by_type'] = $account_type;        
         $data['task_code']       = $code;
 
@@ -272,12 +272,12 @@ class Task extends School
 
     function update($task_id)
     {
-        $user_id    = $this->session->userdata('login_user_id');
-        $user_type  = get_table_user($this->session->userdata('role_id'));
+        $user_id    = get_login_user_id();
+        $user_type  = get_table_user(get_role_id());
         $user_name  = $this->crud->get_name($user_type, $user_id);
 
         $data['updated_by']         = $user_id;
-        $data['updated_by_type']    = get_table_user($this->session->userdata('role_id'));
+        $data['updated_by_type']    = get_table_user(get_role_id());
 
         $task_code = $this->db->get_where('task' , array('task_id' => $task_id) )->row()->task_code;
         $assigned_to_old = $this->get_current_assigned($task_code);
@@ -453,13 +453,13 @@ class Task extends School
     function add_message($task_code, $type = "")
     {
         $md5 = md5(date('d-m-Y H:i:s'));
-        $table_user = get_table_user($this->session->userdata('role_id'));
+        $table_user = get_table_user(get_role_id());
 
         $current_status = $this->db->get_where('task' , array('task_code' => $task_code))->row()->status_id;
         
         if($type != 'automatic')
         {
-            $data['sender_id']      = $this->session->userdata('login_user_id');        
+            $data['sender_id']      = get_login_user_id();        
             $data['sender_type']    = $table_user;
         }
         else
@@ -693,8 +693,8 @@ class Task extends School
 
     function get_count($department_id = '', $category_id = '', $priority_id = '', $status_id = '', $text = '', $assigned_me = '', $due_date = '')
     {
-        $user_id            = $this->session->userdata('login_user_id');
-        $account_type       =   get_table_user($this->session->userdata('role_id'));  
+        $user_id            = get_login_user_id();
+        $account_type       =   get_table_user(get_role_id());  
 
         $this->db->reset_query();
         $this->db->order_by('created_at', 'desc');
@@ -736,8 +736,8 @@ class Task extends School
 
     function get_task_list($limit, $start, $department_id = '', $category_id = '', $priority_id = '', $status_id = '', $text = '', $assigned_me = '', $due_date = '')
     {
-        $user_id            = $this->session->userdata('login_user_id');
-        $account_type       =   get_table_user($this->session->userdata('role_id'));  
+        $user_id            = get_login_user_id();
+        $account_type       =   get_table_user(get_role_id());  
 
         $this->db->reset_query();
         if($department_id != '')

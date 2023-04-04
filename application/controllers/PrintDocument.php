@@ -48,7 +48,7 @@
             $mpdf->WriteHTML($html,2);
             $mpdf->Output($pdfFilePath, "D");
 
-            echo $html ;
+            // echo $html ;
         }
 
         function student_month_certificate($ids)
@@ -58,7 +58,7 @@
             $data = array(
                 'student_month_id' => $id
             );
-            $today = date('d-m-Y_h:i:s');
+            $today = date('d-m-Y_h_i');
             $html = $this->load->view('backend/print/student_month_certificate.php',$data, TRUE); 
             $stylesheet = file_get_contents(base_url().'/public/style/print/smc.css');
             $pdfFilePath = "agreement_".$id.".pdf";
@@ -70,7 +70,37 @@
             $mpdf->WriteHTML($html,2);
             $mpdf->Output($pdfFilePath, "D");
 
-            echo $html ;
+            // echo $html ;
+        }
+
+        function student_month_certificate_all($month)
+        {
+            $id = intval(base64_decode($month));
+            
+            $html = "";
+            $today = date('d-m-Y_h_i');
+            $stylesheet = file_get_contents(base_url().'/public/style/print/smc.css');
+            $pdfFilePath = "agreement_".$today.".pdf";
+            $this->load->library('M_pdf');
+            $mpdf = new mPDF('utf-8', 'Letter-L', 0, '', 0, 0, 0, 0, 0, 'L'); 
+            $mpdf->packTableData = true;
+            
+            $info = $this->db->get_where('v_student_month' , array('month' => $id))->result_array(); 
+
+            foreach($info as $item)
+            {
+                $data = array(
+                    'student_month_id' => $item['student_month_id']
+                );                
+                //$html .= $this->load->view('backend/print/vacation_request.php',$data, TRUE); 
+                $html .= $this->load->view('backend/print/student_month_certificate.php',$data, TRUE); 
+            }
+
+            $mpdf->WriteHTML($stylesheet,1);
+            $mpdf->WriteHTML($html,2);
+            $mpdf->Output($pdfFilePath, "D");
+
+            // echo $html ;
         }
         
         function student_certificate($info)
@@ -156,7 +186,7 @@
         function isLogin()
         {
             $array      = ['admin', 'teacher', 'student', 'parent', 'accountant', 'librarian'];
-            $login_type = $this->session->userdata('login_type');
+            $login_type = get_account_type();
             
             if (!in_array($login_type, $array))
             {

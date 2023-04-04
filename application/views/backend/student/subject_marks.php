@@ -130,7 +130,7 @@
                                                     <td><?php echo $this->db->get_where('subject' , array('subject_id' => $explode_data[2]))->row()->la1;?>
                                                     </td>
                                                     <td><a class="btn nc btn-rounded btn-sm btn-secondary"
-                                                            style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->mark_obtained == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->mark_obtained; ?></a>
+                                                            style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->mark_obtained == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->mark_obtained; ?></a>
                                                     </td>
                                                 </tr>
                                                 <tr class="text-center">
@@ -138,7 +138,7 @@
                                                     <td><?php echo $this->db->get_where('subject' , array('subject_id' => $explode_data[2]))->row()->la2;?>
                                                     </td>
                                                     <td><a class="btn nc btn-rounded btn-sm btn-secondary"
-                                                            style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labuno == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labuno; ?></a>
+                                                            style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labuno == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labuno; ?></a>
                                                     </td>
                                                 </tr>
                                                 <tr class="text-center">
@@ -146,7 +146,7 @@
                                                     <td><?php echo $this->db->get_where('subject' , array('subject_id' => $explode_data[2]))->row()->la3;?>
                                                     </td>
                                                     <td><a class="btn nc btn-rounded btn-sm btn-secondary"
-                                                            style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labdos == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labdos; ?></a>
+                                                            style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labdos == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labdos; ?></a>
                                                     </td>
                                                 </tr>
                                                 <tr class="text-center">
@@ -154,7 +154,7 @@
                                                     <td><?php echo $this->db->get_where('subject' , array('subject_id' => $explode_data[2]))->row()->la4;?>
                                                     </td>
                                                     <td><a class="btn nc btn-rounded btn-sm btn-secondary"
-                                                            style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labtres == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labtres; ?></a>
+                                                            style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labtres == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labtres; ?></a>
                                                     </td>
                                                 </tr>
                                                 <tr class="text-center">
@@ -162,7 +162,7 @@
                                                     <td><?php echo $this->db->get_where('subject' , array('subject_id' => $explode_data[2]))->row()->la5;?>
                                                     </td>
                                                     <td><a class="btn nc btn-rounded btn-sm btn-secondary"
-                                                            style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labcuatro == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labcuatro; ?></a>
+                                                            style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labcuatro == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labcuatro; ?></a>
                                                     </td>
                                                 </tr>
                                                 <tr class="text-center">
@@ -170,7 +170,7 @@
                                                     <td><?php echo $this->db->get_where('subject' , array('subject_id' => $explode_data[2]))->row()->la6;?>
                                                     </td>
                                                     <td><a class="btn nc btn-rounded btn-sm btn-secondary"
-                                                            style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labcinco == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labcinco; ?></a>
+                                                            style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labcinco == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labcinco; ?></a>
                                                     </td>
                                                 </tr>
                                                 <tr class="text-center">
@@ -178,7 +178,7 @@
                                                     <td><?php echo $this->db->get_where('subject' , array('subject_id' => $explode_data[2]))->row()->la7;?>
                                                     </td>
                                                     <td><a class="btn nc btn-rounded btn-sm btn-secondary"
-                                                            style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labseis == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labseis; ?></a>
+                                                            style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labseis == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labseis; ?></a>
                                                     </td>
                                                 </tr>
                                                 <tr class="text-center">
@@ -186,7 +186,7 @@
                                                     <td><?php echo $this->db->get_where('subject' , array('subject_id' => $explode_data[2]))->row()->la8;?>
                                                     </td>
                                                     <td><a class="btn nc btn-rounded btn-sm btn-secondary"
-                                                            style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labsiete == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labsiete; ?></a>
+                                                            style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labsiete == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labsiete; ?></a>
                                                     </td>
                                                 </tr>
                                                 <tr class="text-center">
@@ -194,7 +194,7 @@
                                                     <td><?php echo $this->db->get_where('subject' , array('subject_id' => $explode_data[2]))->row()->la9;?>
                                                     </td>
                                                     <td><a class="btn nc btn-rounded btn-sm btn-secondary"
-                                                            style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' =>$this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labocho == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labocho; ?></a>
+                                                            style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' =>get_login_user_id(), 'year' => $running_year))->row()->labocho == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labocho; ?></a>
                                                     </td>
                                                 </tr>
                                                 <tr class="text-center">
@@ -202,14 +202,14 @@
                                                     <td><?php echo $this->db->get_where('subject' , array('subject_id' => $explode_data[2]))->row()->la10;?>
                                                     </td>
                                                     <td><a class="btn nc btn-rounded btn-sm btn-secondary"
-                                                            style="color:white"><?php  if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labnueve == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labnueve;?></a>
+                                                            style="color:white"><?php  if($this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labnueve == "") echo '0'; else echo $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labnueve;?></a>
                                                     </td>
                                                 </tr>
                                                 <tr style="border-top: solid #a5a5a5;" class="text-center">
                                                     <td>-</td>
                                                     <td><?php echo getPhrase('total');?></td>
                                                     <td>
-                                                        <?php $mark = $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labtotal;?>
+                                                        <?php $mark = $this->db->get_where('mark' , array('subject_id' => $explode_data[2], 'unit_id' => $exam_id, 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labtotal;?>
                                                         <?php if($mark < $min || $mark == ""):?>
                                                         <a class="btn btn-rounded btn-sm btn-danger"
                                                             style="color:white"><?php if($mark == "") echo '0'; else echo $mark;?></a>

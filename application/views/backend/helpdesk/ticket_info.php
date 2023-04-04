@@ -1,5 +1,5 @@
 <?php 
-    $account_type       =   $this->session->userdata('login_type'); 
+    $account_type       =   get_account_type(); 
     $fancy_path         =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/'.$account_type.'/';
 
     $this->db->reset_query();

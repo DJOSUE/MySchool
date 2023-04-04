@@ -16,7 +16,7 @@ class User extends School
     
     public function getAccountantInfo()
     {
-        $info = $this->db->get_where('accountant', array('accountant_id' => $this->session->userdata('login_user_id')))->result_array();
+        $info = $this->db->get_where('accountant', array('accountant_id' => get_login_user_id()))->result_array();
         return $info;
     }
     
@@ -446,7 +446,7 @@ class User extends School
         if($this->input->post('password') != ""){
             $data['password'] = sha1($this->input->post('password'));   
         }
-        $this->db->where('admin_id', $this->session->userdata('login_user_id'));
+        $this->db->where('admin_id', get_login_user_id());
         $this->db->update('admin', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/admin_image/' . md5(date('d-m-y H:i:s')).str_replace(' ', '', $_FILES['userfile']['name']));
     }
@@ -459,8 +459,8 @@ class User extends School
         $data['g_picture'] = "";
         $data['link'] = "";
         $data['g_email'] = "";  
-        $this->db->where($this->session->userdata('login_type').'_id', $this->session->userdata('login_user_id'));
-        $this->db->update($this->session->userdata('login_type'), $data);
+        $this->db->where(get_account_type().'_id', get_login_user_id());
+        $this->db->update(get_account_type(), $data);
         unset($_SESSION['token']);
         unset($_SESSION['userData']);
         $this->crud->googleRevokeToken();
@@ -475,8 +475,8 @@ class User extends School
         $data['femail']     = "";
         unset($_SESSION['access_token']);
         unset($_SESSION['userData']);
-        $this->db->where($this->session->userdata('login_type').'_id', $this->session->userdata('login_user_id'));
-        $this->db->update($this->session->userdata('login_type'), $data);
+        $this->db->where(get_account_type().'_id', get_login_user_id());
+        $this->db->update(get_account_type(), $data);
     }
     
     public function rejectStudent($studentId)
@@ -504,7 +504,7 @@ class User extends School
         $bytes = random_bytes(20);
         $password_token = bin2hex($bytes);
 
-        $user_name  = $this->crud->get_name('admin', $this->session->userdata('login_user_id'));
+        $user_name  = $this->crud->get_name('admin', get_login_user_id());
 
         //Generate the student_code if is blank
 
@@ -550,7 +550,7 @@ class User extends School
         $data['country_id']        = $this->input->post('country_id');
         $data['transport_id']      = $this->input->post('transport_id');
         $data['program_id']        = $this->input->post('program_id');
-        $data['created_by']        = $this->session->userdata('login_user_id');
+        $data['created_by']        = get_login_user_id();
 
         if($_FILES['userfile']['name'] != ''){
             $data['image']             = $md5.str_replace(' ', '', $_FILES['userfile']['name']);   
@@ -798,7 +798,7 @@ class User extends School
         }
         $data['parent_id']         = $this->input->post('parent_id');
         $data['student_session']   = $this->input->post('student_session');
-        $data['updated_by']        = $this->session->userdata('login_user_id');
+        $data['updated_by']        = get_login_user_id();
 
         if(!empty($this->input->post('city')))
             $data['city']          = html_escape($this->input->post('city'));
@@ -831,14 +831,14 @@ class User extends School
         if($_FILES['userfile']['size'] > 0){
             $data['image']     = $md5.str_replace(' ', '', $_FILES['userfile']['name']);
         }
-        $this->db->where('student_id', $this->session->userdata('login_user_id'));
+        $this->db->where('student_id', get_login_user_id());
         $this->db->update('student', $data);
 
         move_uploaded_file($_FILES['userfile']['tmp_name'], PATH_STUDENT_IMAGE . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
     }
 
     public function updateAvatar($table){
-        $user_id = $this->session->userdata('login_user_id');
+        $user_id = get_login_user_id();
         if(isset($_POST["image"]))
         {
             $md5        = md5(date('d-m-Y H:i:s'));
@@ -942,7 +942,7 @@ class User extends School
         if($_FILES['userfile']['name'] != ""){
             $data['image']    = $md5.str_replace(' ', '', $_FILES['userfile']['name']);
         }
-        $this->db->where('accountant_id', $this->session->userdata('login_user_id'));
+        $this->db->where('accountant_id', get_login_user_id());
         $this->db->update('accountant', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/accountant_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
     }
@@ -960,7 +960,7 @@ class User extends School
         if($_FILES['userfile']['name'] != ""){
             $data['image']    = $md5.str_replace(' ', '', $_FILES['userfile']['name']);
         }
-        $this->db->where('librarian_id', $this->session->userdata('login_user_id'));
+        $this->db->where('librarian_id', get_login_user_id());
         $this->db->update('librarian', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/librarian_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
     }
@@ -1116,7 +1116,7 @@ class User extends School
         if($this->input->post('password') != ""){
          $data['password']      = sha1($this->input->post('password'));   
         }
-        $this->db->where('teacher_id', $this->session->userdata('login_user_id'));
+        $this->db->where('teacher_id', get_login_user_id());
         $this->db->update('teacher', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/teacher_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
     }
@@ -1138,7 +1138,7 @@ class User extends School
     {
         $md5 = md5(date('d-m-Y H:i:s'));
 
-        $data['created_by'] = $this->session->userdata('login_user_id');
+        $data['created_by'] = get_login_user_id();
         $data['comment']    = html_escape($this->input->post('comment'));
 
         if($_FILES['applicant_file']['name'] != '')

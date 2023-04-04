@@ -4,10 +4,16 @@
     text-indent: 0;
 }
 
+.image-best {
+    background-image: url('/public/style/print/images/bsmc.png');
+    background-repeat: round;
+    height: 100%;
+  }
+
 .image {
-    background-image: url('/public/style/print/images/smc.png');
-    background-repeat: no-repeat;
-    width: 100%;
+    background-image: url('/public/style/print/images/smc_2.jpg');
+    background-repeat: round;
+    width: 1047px;
     height: 100%;
   }
 

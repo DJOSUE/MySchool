@@ -86,8 +86,8 @@
         var domain = "meet.jit.si";
         var options = {
             userInfo : { 
-                email : '<?php echo $this->db->get_where('teacher', array('teacher_id' => $this->session->userdata('login_user_id')))->row()->email;?>' , 
-                displayName : '<?php echo $this->crud->get_name('teacher', $this->session->userdata('login_user_id'));?>',
+                email : '<?php echo $this->db->get_where('teacher', array('teacher_id' => get_login_user_id()))->row()->email;?>' , 
+                displayName : '<?php echo $this->crud->get_name('teacher', get_login_user_id());?>',
                 moderator: true,
             },
             roomName: "<?php echo $row['room'];?>",

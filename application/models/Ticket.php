@@ -127,8 +127,8 @@ class Ticket extends School
     {
         $code = md5(date('d-m-Y H:i:s'));
         $data['ticket_code']        = $code;
-        $data['created_by']         = $this->session->userdata('login_user_id');
-        $data['created_by_type']    = get_table_user($this->session->userdata('role_id'));
+        $data['created_by']         = get_login_user_id();
+        $data['created_by_type']    = get_table_user(get_role_id());
         $data['category_id']        = html_escape($this->input->post('category_id'));
         $data['status_id']          = html_escape($this->input->post('status_id'));
         $data['priority_id']        = html_escape($this->input->post('priority_id'));
@@ -151,7 +151,7 @@ class Ticket extends School
 
         if($this->ticket->is_ticket_closed($this->input->post('status_id')))
         {
-            $data['assigned_to'] =  $this->session->userdata('login_user_id');
+            $data['assigned_to'] =  get_login_user_id();
         }
         
         if($_FILES['ticket_file']['name'] != '')
@@ -175,8 +175,8 @@ class Ticket extends School
 
     function update($ticket_id)
     {
-        $data['updated_by']         = $this->session->userdata('login_user_id');
-        $data['updated_by_type']    = get_table_user($this->session->userdata('role_id'));
+        $data['updated_by']         = get_login_user_id();
+        $data['updated_by_type']    = get_table_user(get_role_id());
 
         $ticket_code = $this->db->get_where('ticket' , array('ticket_id' => $ticket_id) )->row()->ticket_code;
         $assigned_to_old = $this->db->get_where('ticket' , array('ticket_id' => $ticket_id) )->row()->assigned_to;
@@ -223,7 +223,7 @@ class Ticket extends School
 
         if($assigned_to_new != '' && ($assigned_to_new != $assigned_to_old))
         {
-            $user_name  = $this->crud->get_name('admin', $this->session->userdata('login_user_id'));
+            $user_name  = $this->crud->get_name('admin', get_login_user_id());
             $assigned_name  = $this->crud->get_name('admin', $assigned_to_new);
 
             // Create a new interaction
@@ -236,8 +236,8 @@ class Ticket extends School
 
     function update_status($ticket_code, $status_id)
     {
-        $data['updated_by_type']    = get_table_user($this->session->userdata('role_id'));
-        $data['updated_by']         = $this->session->userdata('login_user_id');
+        $data['updated_by_type']    = get_table_user(get_role_id());
+        $data['updated_by']         = get_login_user_id();
         $data['status_id']          = $status_id;
         $this->db->where('ticket_code', $ticket_code);
         $this->db->update('ticket', $data);
@@ -252,13 +252,13 @@ class Ticket extends School
     function add_message($ticket_code, $type = "")
     {
         $md5 = md5(date('d-m-Y H:i:s'));
-        $table_user = get_table_user($this->session->userdata('role_id'));
+        $table_user = get_table_user(get_role_id());
 
         $current_status = $this->db->get_where('ticket' , array('ticket_code' => $ticket_code))->row()->status_id;
         
         if($type != 'automatic')
         {
-            $data['sender_id']      = $this->session->userdata('login_user_id');        
+            $data['sender_id']      = get_login_user_id();        
             $data['sender_type']    = $table_user;
         }
         else

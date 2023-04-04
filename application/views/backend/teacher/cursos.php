@@ -79,7 +79,7 @@
                                                                 <div class="row">
                                                                     <?php 
                                                                     $this->db->order_by('subject_id', 'desc');
-                                                                    $subjects = $this->db->get_where('subject', array('class_id' => $cl_id, 'teacher_id' => $this->session->userdata('login_user_id'),'section_id' => $row['section_id'], 'year' => $running_year, 'semester_id' => $running_semester))->result_array();
+                                                                    $subjects = $this->db->get_where('subject', array('class_id' => $cl_id, 'teacher_id' => get_login_user_id(),'section_id' => $row['section_id'], 'year' => $running_year, 'semester_id' => $running_semester))->result_array();
                                                                     foreach($subjects as $row2):
                                                                         $url_dashboard = base_url() .'teacher/subject_dashboard/'. base64_encode($row2['class_id']."-".$row['section_id']."-".$row2['subject_id']);
                                                                         $url_edit = base_url().'modal/popup/modal_subject/'.$row2['subject_id'];

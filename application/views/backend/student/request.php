@@ -1,5 +1,5 @@
     <?php 
-    $student_id = $this->session->userdata('login_user_id');
+    $student_id = get_login_user_id();
     $program_name = $this->studentModel->get_student_program_name($student_id );
 
     ?>
@@ -55,7 +55,7 @@
                                                 <?php
         		                                $count = 1;
         		                                $this->db->order_by('request_id', 'desc');
-        		                                $requests = $this->db->get_where('student_request', array('student_id' => $this->session->userdata('login_user_id')))->result_array();
+        		                                $requests = $this->db->get_where('student_request', array('student_id' => get_login_user_id()))->result_array();
             		                            foreach ($requests as $row) {
                                                     $semester_name = $this->academic->get_semester_name($row['semester_id']);
         	                                ?>

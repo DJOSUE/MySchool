@@ -1,5 +1,5 @@
 <?php
-    $user_id = $this->session->userdata('login_user_id');    
+    $user_id = get_login_user_id();    
     $payment_period = $this->db->get_where('payment_period', array('period_id' => $period_id))->row();    
     $worker = $this->db->get_where('worker', array('type_user' => 'teacher', 'user_id' => $user_id))->row();
     $worker_id = $worker->worker_id;    

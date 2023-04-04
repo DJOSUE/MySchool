@@ -237,7 +237,7 @@ class Payment extends School
     public function makePayPal()
     {
         $type = '';
-        if($this->session->userdata('login_type') == 'parent')
+        if(get_account_type() == 'parent')
         {
             $type = 'parents';
         }else{
@@ -264,7 +264,7 @@ class Payment extends School
     {
         $paypal_data = json_decode($this->db->get_where('payment_gateways', array('name' => 'paypal'))->row()->settings);
         $type = '';
-        if($this->session->userdata('login_type') == 'parent')
+        if(get_account_type() == 'parent')
         {
             $type = 'parents';
         }else{
@@ -347,8 +347,8 @@ class Payment extends School
         $data_payment['semester_id']     = $this->runningSemester;
         $data_payment['comment']         = html_escape($this->input->post('comment'));
         $data_payment['amount']          = $this->input->post('txtTotal');
-        $data_payment['created_by']      = $this->session->userdata('login_user_id');
-        $data_payment['created_by_type'] = get_table_user($this->session->userdata('role_id'));
+        $data_payment['created_by']      = get_login_user_id();
+        $data_payment['created_by_type'] = get_table_user(get_role_id());
 
         if(floatval($data_payment['amount']) > 0)
         {
@@ -553,7 +553,7 @@ class Payment extends School
                 $this->crud->student_new_invoice($user_info['first_name'], "".$user_info['email']."", $payment_id);
             }
 
-            $created_by       = $this->session->userdata('login_user_id');
+            $created_by       = get_login_user_id();
             $created_by_type  = $data_payment['created_by_type'];
             $created_name     = $this->crud->get_name($created_by_type, $created_by);            
             $comment          = $created_name.' posted a payment of $ '. $data_payment['amount'];
@@ -583,8 +583,8 @@ class Payment extends School
         $data_payment['user_type']       = $user_type;
         $data_payment['comment']         = html_escape($this->input->post('comment'));
         $data_payment['amount']          = $this->input->post('txtTotal');
-        $data_payment['created_by']      = $this->session->userdata('login_user_id');
-        $data_payment['created_by_type'] = get_table_user($this->session->userdata('role_id'));
+        $data_payment['created_by']      = get_login_user_id();
+        $data_payment['created_by_type'] = get_table_user(get_role_id());
 
         $this->db->insert('payment', $data_payment);
 
@@ -703,8 +703,8 @@ class Payment extends School
         {
             $created =  explode('|', $this->input->post('cashier_id'));
 
-            $user_id      = $this->session->userdata('login_user_id');
-            $user_type    = get_table_user($this->session->userdata('role_id'));
+            $user_id      = get_login_user_id();
+            $user_type    = get_table_user(get_role_id());
 
             $data['created_by']         = $created[1];
             $data['created_by_type']    = $created[0];
@@ -794,8 +794,8 @@ class Payment extends School
         $data_payment['semester_id']     = $agreement['semester_id'];
         $data_payment['comment']         = "Down payment";
         $data_payment['amount']          = $amount;
-        $data_payment['created_by']      = $this->session->userdata('login_user_id');
-        $data_payment['created_by_type'] = get_table_user($this->session->userdata('role_id'));
+        $data_payment['created_by']      = get_login_user_id();
+        $data_payment['created_by_type'] = get_table_user(get_role_id());
 
         $this->db->insert('payment', $data_payment);
 
@@ -868,7 +868,7 @@ class Payment extends School
         $this->crud->student_new_invoice($user_info['first_name'], "".$user_info['email']."", $payment_id);
 
         //Add automatic interaction
-        $created_by       = $this->session->userdata('login_user_id');
+        $created_by       = get_login_user_id();
         $created_by_type  = $data_payment['created_by_type'];
         $created_name     = $this->crud->get_name($created_by_type, $created_by);            
         $comment          = $created_name.' posted a payment of $ '. $data_payment['amount'];

@@ -12,8 +12,7 @@
 </head>
 
 <body class="" style="width: 11in; height: 8.5in;">
-
-    <div class="image">
+    <div class="<?= $info['is_best'] == 1 ? 'image-best' : 'image'?>" style="width: 1047; height: 804;">
         <p class="s1" style="padding-left: 100pt;text-indent: 0pt;line-height: 56pt;text-align: center;">&nbsp;</p>
         <p class="s1" style="padding-left: 100pt;text-indent: 0pt;line-height: 56pt;text-align: center;">&nbsp;</p>
         <p class="s1" style="padding-left: 100pt;text-indent: 0pt;line-height: 56pt;text-align: center;">&nbsp;</p>
@@ -39,5 +38,3 @@
         <p style="text-indent: 0pt;text-align: left;"></p>
     </div>
 </body>
-
-</html>

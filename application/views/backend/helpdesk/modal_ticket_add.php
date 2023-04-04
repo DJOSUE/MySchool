@@ -1,5 +1,5 @@
 <?php 
-    $account_type   =	$this->session->userdata('login_type');
+    $account_type   =	get_account_type();
 ?>
 <div class="modal-body">
     <div class="modal-header" style="background-color:#00579c">

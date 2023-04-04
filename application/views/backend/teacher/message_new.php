@@ -1,5 +1,5 @@
 <?php 
-    $teacher_id = $this->session->userdata('login_user_id');
+    $teacher_id = get_login_user_id();
 
     $running_year       = $this->crud->getInfo('running_year');
     $running_semester   = $this->crud->getInfo('running_semester');

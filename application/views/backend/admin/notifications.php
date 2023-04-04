@@ -42,8 +42,8 @@
                             </div>
                             <?php 
                                 $this->db->order_by('id', 'desc');
-								$this->db->where('user_id', $this->session->userdata('login_user_id'));
-								$this->db->where('user_type', $this->session->userdata('login_type'));
+								$this->db->where('user_id', get_login_user_id());
+								$this->db->where('user_type', get_account_type());
 								$this->db->where('status <> ', '2');
 								$notifications = $this->db->get('notification');
                                 if($notifications->num_rows() > 0):?>

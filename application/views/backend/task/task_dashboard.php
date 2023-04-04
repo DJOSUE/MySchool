@@ -1,11 +1,11 @@
 <?php 
     
     $fancy_path         =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/'.$account_type.'/';
-    $account_type       =   get_table_user($this->session->userdata('role_id'));    
+    $account_type       =   get_table_user(get_role_id());    
 
     $this->db->reset_query();
 
-    $user_id = $this->session->userdata('login_user_id');
+    $user_id = get_login_user_id();
 
     if($priority_id != '_blank')
     {

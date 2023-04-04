@@ -52,9 +52,9 @@ class Crud extends School
     
     function studentRequestPermission()
     {
-        $data['student_id']   = $this->session->userdata('login_user_id');
+        $data['student_id']   = get_login_user_id();
         $data['description']  = $this->input->post('description');
-        $data['parent_id']    = $this->db->get_where('student', array('student_id' => $this->session->userdata('login_user_id')))->row()->parent_id;
+        $data['parent_id']    = $this->db->get_where('student', array('student_id' => get_login_user_id()))->row()->parent_id;
         $data['title']        = $this->input->post('title');
         $data['start_date']   = $this->input->post('start_date');
         $data['end_date']     = $this->input->post('end_date');
@@ -68,7 +68,7 @@ class Crud extends School
         $insert_id  = $this->db->insert_id();
         $this->crud->save_log($table, $action, $insert_id, $data);
 
-        $notify['notify'] = "<strong>". $this->crud->get_name('student', $this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('absence_request');
+        $notify['notify'] = "<strong>". $this->crud->get_name('student', get_login_user_id())."</strong>". " ". getPhrase('absence_request');
         $admins = $this->db->get('admin')->result_array();
         foreach($admins as $row)
         {
@@ -78,8 +78,8 @@ class Crud extends School
             $notify['date'] = $this->crud->getDateFormat();
             $notify['time'] = date('h:i A');
             $notify['status'] = 0;
-            $notify['original_id'] = $this->session->userdata('login_user_id');
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_id'] = get_login_user_id();
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
 
             $table      = 'notification';
@@ -93,7 +93,7 @@ class Crud extends School
     {
         $data['student_id']   = $this->input->post('student_id');
         $data['description']  = $this->input->post('description');
-        $data['parent_id']    = $this->session->userdata('login_user_id');
+        $data['parent_id']    = get_login_user_id();
         $data['title']        = $this->input->post('title');
         $data['start_date']   = $this->input->post('start_date');
         $data['end_date']     = $this->input->post('end_date');
@@ -107,7 +107,7 @@ class Crud extends School
         $insert_id  = $this->db->insert_id();
         $this->crud->save_log($table, $action, $insert_id, $data);
 
-        $notify['notify'] = "<strong>". $this->session->userdata('name')."</strong>". " ". getPhrase('absence_request')." <b>".$this->db->get_where('student', array('student_id' => $this->input->post('student_id')))->row()->name."</b>";
+        $notify['notify'] = "<strong>". get_name_user_login()."</strong>". " ". getPhrase('absence_request')." <b>".$this->db->get_where('student', array('student_id' => $this->input->post('student_id')))->row()->name."</b>";
         $admins = $this->db->get('admin')->result_array();
         foreach($admins as $row)
         {
@@ -117,8 +117,8 @@ class Crud extends School
             $notify['date'] = $this->crud->getDateFormat();
             $notify['time'] = date('h:i A');
             $notify['status'] = 0;
-            $notify['original_id'] = $this->session->userdata('login_user_id');
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_id'] = get_login_user_id();
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
 
             $table      = 'notification';
@@ -133,10 +133,10 @@ class Crud extends School
         $parents = $this->db->get_where('student' , array('student_id' => $studentId))->result_array();
         foreach ($parents as $row)
         {
-            if($row['parent_id'] == $this->session->userdata('login_user_id'))
+            if($row['parent_id'] == get_login_user_id())
             {
                 $page_data['student_id'] = $studentId;
-            } else if($row['parent_id'] != $this->session->userdata('login_user_id'))
+            } else if($row['parent_id'] != get_login_user_id())
             {
                 redirect(base_url(), 'refresh');
             }
@@ -171,15 +171,15 @@ class Crud extends School
     public function acceptRequest($requestId)
     {
         $teacher              = $this->db->get_where('teacher_request', array('request_id' => $requestId))->row()->teacher_id;
-        $notify['notify']     = "<strong>". $this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('absence_approved');
+        $notify['notify']     = "<strong>". $this->crud->get_name(get_account_type(), get_login_user_id())."</strong>". " ". getPhrase('absence_approved');
         $notify['user_id']    = $teacher;
         $notify['user_type']  = "teacher";
         $notify['url']        = "teacher/request/";
         $notify['date'] = $this->crud->getDateFormat();
         $notify['time'] = date('h:i A');
         $notify['status'] = 0;
-        $notify['original_id'] = $this->session->userdata('login_user_id');
-        $notify['original_type'] = $this->session->userdata('login_type');
+        $notify['original_id'] = get_login_user_id();
+        $notify['original_type'] = get_account_type();
         $this->db->insert('notification', $notify);
         
         $table      = 'notification';
@@ -194,15 +194,15 @@ class Crud extends School
     public function rejectRequest($requestId)
     {
         $teacher                 = $this->db->get_where('teacher_request', array('request_id' => $requestId))->row()->teacher_id;
-        $notify['notify']        = "<strong>".  $this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('absence_rejected');
+        $notify['notify']        = "<strong>".  $this->crud->get_name(get_account_type(), get_login_user_id())."</strong>". " ". getPhrase('absence_rejected');
         $notify['user_id']       = $teacher;
         $notify['user_type']     = "teacher";
         $notify['url']           = "teacher/request";
         $notify['date']          = $this->crud->getDateFormat();
         $notify['time']          = date('h:i A');
         $notify['status']        = 0;
-        $notify['original_id']   = $this->session->userdata('login_user_id');
-        $notify['original_type'] = $this->session->userdata('login_type');
+        $notify['original_id']   = get_login_user_id();
+        $notify['original_type'] = get_account_type();
         $this->db->insert('notification', $notify);
 
         $table      = 'notification';
@@ -220,15 +220,15 @@ class Crud extends School
         $this->db->update('student_request', $data, array('request_id' => $requestId));
         $student                 = $this->db->get_where('student_request', array('request_id' => $requestId))->row()->student_id;
         $parent                  = $this->db->get_where('student_request', array('request_id' => $requestId))->row()->parent_id;
-        $notify['notify']        = "<strong>".  $this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('absence_approved_for') ." <b>".$this->db->get_where('student', array('student_id' => $student))->row()->name."</b>";
+        $notify['notify']        = "<strong>".  $this->crud->get_name(get_account_type(), get_login_user_id())."</strong>". " ". getPhrase('absence_approved_for') ." <b>".$this->db->get_where('student', array('student_id' => $student))->row()->name."</b>";
         $notify['user_id']       = $parent;
         $notify['user_type']     = "parent";
         $notify['url']           = "parents/request";
         $notify['date']          = $this->crud->getDateFormat();
         $notify['time']          = date('h:i A');
         $notify['status']        = 0;
-        $notify['original_id']   = $this->session->userdata('login_user_id');
-        $notify['original_type'] = $this->session->userdata('login_type');
+        $notify['original_id']   = get_login_user_id();
+        $notify['original_type'] = get_account_type();
         $this->db->insert('notification', $notify);
 
         $table      = 'notification';
@@ -244,15 +244,15 @@ class Crud extends School
         $this->db->update('student_request', $data, array('request_id' => $requestId));
         $parent                     = $this->db->get_where('student_request', array('request_id' => $requestId))->row()->parent_id;
         $student                    = $this->db->get_where('student_request', array('request_id' => $requestId))->row()->student_id;
-        $notify['notify']           = "<strong>". $this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('absence_rejected_for') ." <b>".$this->db->get_where('student', array('student_id' => $student))->row()->name."</b>";
+        $notify['notify']           = "<strong>". $this->crud->get_name(get_account_type(), get_login_user_id())."</strong>". " ". getPhrase('absence_rejected_for') ." <b>".$this->db->get_where('student', array('student_id' => $student))->row()->name."</b>";
         $notify['user_id']          = $parent;
         $notify['user_type']        = "parent";
         $notify['url']              = "parents/request";
         $notify['date']             = $this->crud->getDateFormat();
         $notify['time']             = date('h:i A');
         $notify['status']           = 0;
-        $notify['original_id']      = $this->session->userdata('login_user_id');
-        $notify['original_type']    = $this->session->userdata('login_type');
+        $notify['original_id']      = get_login_user_id();
+        $notify['original_type']    = get_account_type();
         $this->db->insert('notification', $notify);
 
         $table      = 'notification';
@@ -274,8 +274,8 @@ class Crud extends School
         $data['message']      = html_escape($this->input->post('message'));
         $data['report_code']  = $this->input->post('report_code');
         $data['timestamp']    = $this->crud->getDateFormat();
-        $data['sender_type']  = $this->session->userdata('login_type');
-        $data['sender_id']    = $this->session->userdata('login_user_id');
+        $data['sender_type']  = get_account_type();
+        $data['sender_id']    = get_login_user_id();
         $this->db->insert('report_message', $data);
 
         $table      = 'report_message';
@@ -303,8 +303,8 @@ class Crud extends School
     //SetRead
     public function setRead($code)
     {
-        $userId    = $this->session->userdata('login_user_id');
-        $loginType = $this->session->userdata('login_type');
+        $userId    = get_login_user_id();
+        $loginType = get_account_type();
         $check = $this->db->get_where('readed', array('user_id' => $userId, 'user_type' => $loginType, 'activity_code' => $code));
         if($check->num_rows() == 0){
             $data['user_id']       = $userId;
@@ -354,7 +354,7 @@ class Crud extends School
         $data['embed']               = $this->input->post('embed');
         $data['date']                = $this->getDateFormat();
         $data['publish_date']        = date('Y-m-d H:i:s');
-        $data['admin_id']            = $this->session->userdata('login_user_id');
+        $data['admin_id']            = get_login_user_id();
         $data['date2']               = $this->getDateFormat();
         $data['type']                = "video";
         $this->db->insert('news', $data);
@@ -428,7 +428,7 @@ class Crud extends School
                 $insert_id  = $this->db->insert_id();
                 $this->crud->save_log($table, $action, $insert_id, $data);
 
-                $notify['notify'] = "<strong>". $this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('book_added')." <b>".$this->db->get_where('class', array('class_id' => $this->input->post('class_id')))->row()->name."</b>";
+                $notify['notify'] = "<strong>". $this->crud->get_name(get_account_type(), get_login_user_id())."</strong>". " ". getPhrase('book_added')." <b>".$this->db->get_where('class', array('class_id' => $this->input->post('class_id')))->row()->name."</b>";
         
                 $students = $this->db->get_where('enroll', array('class_id' => $this->input->post('class_id')))->result_array();
                 foreach($students as $row1)
@@ -440,8 +440,8 @@ class Crud extends School
                     $notify2['date'] = $this->crud->getDateFormat();
                     $notify2['time'] = date('h:i A');
                     $notify2['status'] = 0;
-                    $notify2['original_id'] = $this->session->userdata('login_user_id');
-                    $notify2['original_type'] = $this->session->userdata('login_type');
+                    $notify2['original_id'] = get_login_user_id();
+                    $notify2['original_type'] = get_account_type();
                     $this->db->insert('notification', $notify2);
 
                     $table      = 'notification';
@@ -472,7 +472,7 @@ class Crud extends School
             $insert_id  = $this->db->insert_id();
             $this->crud->save_log($table, $action, $insert_id, $data);
 
-            $notify['notify'] = "<strong>". $this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('book_added')." <b>".$this->db->get_where('class', array('class_id' => $this->input->post('class_id')))->row()->name."</b>";
+            $notify['notify'] = "<strong>". $this->crud->get_name(get_account_type(), get_login_user_id())."</strong>". " ". getPhrase('book_added')." <b>".$this->db->get_where('class', array('class_id' => $this->input->post('class_id')))->row()->name."</b>";
         
             $students = $this->db->get_where('enroll', array('class_id' => $this->input->post('class_id')))->result_array();
             foreach($students as $row1)
@@ -484,8 +484,8 @@ class Crud extends School
                 $notify2['date'] = $this->crud->getDateFormat();
                 $notify2['time'] = date('h:i A');
                 $notify2['status'] = 0;
-                $notify2['original_id'] = $this->session->userdata('login_user_id');
-                $notify2['original_type'] = $this->session->userdata('login_type');
+                $notify2['original_id'] = get_login_user_id();
+                $notify2['original_type'] = get_account_type();
                 $this->db->insert('notification', $notify2);
 
                 $table      = 'notification';
@@ -965,7 +965,7 @@ class Crud extends School
             $notify['type'] = 'news';
             $notify['year'] = $year;
             $notify['original_id'] = 0;
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
 
             $table      = 'notification';
@@ -985,7 +985,7 @@ class Crud extends School
             $notify['type'] = 'news';
             $notify['original_id'] = 0;
             $notify['year'] = $year;
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
 
             $table      = 'notification';
@@ -1004,7 +1004,7 @@ class Crud extends School
             $notify['type'] = 'news';
             $notify['original_id'] = 0;
             $notify['year'] = $year;
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
 
             $table      = 'notification';
@@ -1023,7 +1023,7 @@ class Crud extends School
             $notify['type'] = 'news';
             $notify['year'] = $year;
             $notify['original_id'] = 0;
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
 
             $table      = 'notification';
@@ -1042,7 +1042,7 @@ class Crud extends School
             $notify['year'] = $year;
             $notify['type'] = 'news';
             $notify['original_id'] = 0;
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
 
             	$table      = 'notification';
@@ -1072,7 +1072,7 @@ class Crud extends School
             $notify['type'] = 'news';
             $notify['year'] = $year;
             $notify['original_id'] = 0;
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
         }
         foreach($parents as $row2)
@@ -1086,7 +1086,7 @@ class Crud extends School
             $notify['type'] = 'news';
             $notify['original_id'] = 0;
             $notify['year'] = $year;
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
         }
         foreach($teachers as $row3)
@@ -1100,7 +1100,7 @@ class Crud extends School
             $notify['type'] = 'news';
             $notify['original_id'] = 0;
             $notify['year'] = $year;
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
         }
         foreach($accountant as $row4)
@@ -1114,7 +1114,7 @@ class Crud extends School
             $notify['type'] = 'news';
             $notify['year'] = $year;
             $notify['original_id'] = 0;
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
         }
         foreach($librarian as $row5)
@@ -1128,7 +1128,7 @@ class Crud extends School
             $notify['year'] = $year;
             $notify['type'] = 'news';
             $notify['original_id'] = 0;
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
         }    
     }
@@ -1153,7 +1153,7 @@ class Crud extends School
             $notify['type'] = 'news';
             $notify['year'] = $year;
             $notify['original_id'] = 0;
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
         }
         foreach($parents as $row2)
@@ -1167,7 +1167,7 @@ class Crud extends School
             $notify['type'] = 'news';
             $notify['original_id'] = 0;
             $notify['year'] = $year;
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
         }
         foreach($teachers as $row3)
@@ -1181,7 +1181,7 @@ class Crud extends School
             $notify['type'] = 'news';
             $notify['original_id'] = 0;
             $notify['year'] = $year;
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
         }
         foreach($accountant as $row4)
@@ -1195,7 +1195,7 @@ class Crud extends School
             $notify['type'] = 'news';
             $notify['year'] = $year;
             $notify['original_id'] = 0;
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
         }
         foreach($librarian as $row5)
@@ -1209,7 +1209,7 @@ class Crud extends School
             $notify['year'] = $year;
             $notify['type'] = 'news';
             $notify['original_id'] = 0;
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
         }    
     }
@@ -1224,7 +1224,7 @@ class Crud extends School
 
         $checker = array(
             'online_exam_id' => $online_exam_id,
-            'student_id' => $this->session->userdata('login_user_id')
+            'student_id' => get_login_user_id()
         );
         $obtained_marks = 0;
         $online_exam_result = $this->db->get_where('online_exam_result', $checker);
@@ -1263,7 +1263,7 @@ class Crud extends School
     function submit_online_exam($online_exam_id = "", $answer_script = ""){
         $checker = array(
             'online_exam_id' => $online_exam_id,
-            'student_id' => $this->session->userdata('login_user_id')
+            'student_id' => get_login_user_id()
         );
         $updated_array = array(
             'status' => 'submitted',
@@ -1278,14 +1278,14 @@ class Crud extends School
     {
         $checker = array(
             'online_exam_id' => $online_exam_id,
-            'student_id' => $this->session->userdata('login_user_id')
+            'student_id' => get_login_user_id()
         );
         if($this->db->get_where('online_exam_result', $checker)->num_rows() == 0)
         {
             $inserted_array = array(
                 'status' => 'attended',
                 'online_exam_id' => $online_exam_id,
-                'student_id' => $this->session->userdata('login_user_id'),
+                'student_id' => get_login_user_id(),
                 'exam_started_timestamp' => strtotime("now")
             );
             $this->db->insert('online_exam_result', $inserted_array);
@@ -1309,7 +1309,7 @@ class Crud extends School
     
     function check_availability_for_student($online_exam_id)
     {
-        $result = $this->db->get_where('online_exam_result', array('online_exam_id' => $online_exam_id, 'student_id' => $this->session->userdata('login_user_id')))->row_array();
+        $result = $this->db->get_where('online_exam_result', array('online_exam_id' => $online_exam_id, 'student_id' => get_login_user_id()))->row_array();
         return $result['status'];
     }
     
@@ -1814,14 +1814,14 @@ class Crud extends School
      function create_post() 
      {
         $data['title'] = $this->input->post('title');
-        $data['type'] = $this->session->userdata('login_type');
+        $data['type'] = get_account_type();
         $data['description'] = $this->input->post('description');
         $data['class_id'] = $this->input->post('class_id');
         $data['file_name']         = $_FILES["file_name"]["name"];
         $data['section_id'] = $this->input->post('section_id');
         $data['timestamp'] = strtotime(date("d M,Y"));
         $data['subject_id'] = $this->input->post('subject_id');
-        $data['teacher_id']  =   $this->session->userdata('login_user_id');
+        $data['teacher_id']  =   get_login_user_id();
         $data['post_code'] = substr(md5(rand(100000000, 200000000)), 0, 10);
         $this->db->insert('forum', $data);
         $post_code = $this->db->get_where('forum', array('post_id' => $this->db->insert_id()))->row()->post_code;
@@ -1853,13 +1853,13 @@ class Crud extends School
         $data['group_name'] = $this->input->post('group_name');
         if(!empty($_POST['user'])) 
         {
-            array_push($_POST['user'], $this->session->userdata('login_type').'_'.$this->session->userdata('login_user_id'));
+            array_push($_POST['user'], get_account_type().'_'.get_login_user_id());
             $data['members'] = json_encode($_POST['user']);
         }
         else
         {
             $_POST['user'] = array();
-            array_push($_POST['user'], $this->session->userdata('login_type').'_'.$this->session->userdata('login_user_id'));
+            array_push($_POST['user'], get_account_type().'_'.get_login_user_id());
             $data['members'] = json_encode($_POST['user']);
         }
         $this->db->insert('group_message_thread', $data);
@@ -1871,12 +1871,12 @@ class Crud extends School
       $data['group_name'] = $this->input->post('group_name');
       if(!empty($_POST['user'])) 
       {
-          array_push($_POST['user'], $this->session->userdata('login_type').'_'.$this->session->userdata('login_user_id'));
+          array_push($_POST['user'], get_account_type().'_'.get_login_user_id());
           $data['members'] = json_encode($_POST['user']);
       }
       else{
         $_POST['user'] = array();
-        array_push($_POST['user'], $this->session->userdata('login_type').'_'.$this->session->userdata('login_user_id'));
+        array_push($_POST['user'], get_account_type().'_'.get_login_user_id());
         $data['members'] = json_encode($_POST['user']);
       }
       $this->db->where('group_message_thread_code', $thread_code);
@@ -1894,8 +1894,8 @@ class Crud extends School
         $data['priority']       = $this->input->post('priority');
         $data['teacher_id']     = $this->input->post('teacher_id');
         $data['status']     = 0;
-        $login_type             = $this->session->userdata('login_type');
-        if($login_type == 'student') $data['student_id']  = $this->session->userdata('login_user_id');
+        $login_type             = get_account_type();
+        if($login_type == 'student') $data['student_id']  = get_login_user_id();
         else $data['student_id']  = $this->input->post('student_id');
         $data['timestamp']      = $this->crud->getDateFormat();
         $data['description']       = $this->input->post('description');
@@ -1904,7 +1904,7 @@ class Crud extends School
         move_uploaded_file($_FILES['file']['tmp_name'], 'public/uploads/reportes_alumnos/' . $_FILES['file']['name']);
 
 
-        $notify['notify'] = "<strong>". $this->session->userdata('name')."</strong>". " ". getPhrase('teacher_report_notify').":"." ". "<b>".$this->db->get_where('teacher', array('teacher_id' => $this->input->post('teacher_id')))->row()->name."</b>";
+        $notify['notify'] = "<strong>". get_name_user_login()."</strong>". " ". getPhrase('teacher_report_notify').":"." ". "<b>".$this->db->get_where('teacher', array('teacher_id' => $this->input->post('teacher_id')))->row()->name."</b>";
         $admins = $this->db->get('admin')->result_array();
         foreach($admins as $row)
         {
@@ -1914,8 +1914,8 @@ class Crud extends School
             $notify['date'] = $this->crud->getDateFormat();
             $notify['time'] = date('h:i A');
             $notify['status'] = 0;
-            $notify['original_id'] = $this->session->userdata('login_user_id');
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_id'] = get_login_user_id();
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
         }
     }
@@ -1972,10 +1972,10 @@ class Crud extends School
     
     function saveLiveStatus($_id)
     {
-        $query  = $this->db->get_where('live_status', array('live_id' => $_id, 'student_id' => $this->session->userdata('login_user_id')))->num_rows();
+        $query  = $this->db->get_where('live_status', array('live_id' => $_id, 'student_id' => get_login_user_id()))->num_rows();
         if($query == 0){
             $insert['live_id'] = $_id;
-            $insert['student_id'] = $this->session->userdata('login_user_id');
+            $insert['student_id'] = get_login_user_id();
             $insert['date'] = date('d/m/Y H:i A');
             $this->db->insert('live_status',$insert);
         }
@@ -1984,10 +1984,10 @@ class Crud extends School
     function saveLiveAttendance($liveId)
     {
         $url = $this->db->get_where('live', array('live_id' => $liveId))->row()->siteUrl;
-        $query = $this->db->get_where('attendance_live', array('live_id' => $liveId, 'student_id' => $this->session->userdata('login_user_id')));
+        $query = $this->db->get_where('attendance_live', array('live_id' => $liveId, 'student_id' => get_login_user_id()));
         if($query->num_rows() == 0)
         {
-            $data['student_id']  = $this->session->userdata('login_user_id');
+            $data['student_id']  = get_login_user_id();
             $data['date']        = $this->crud->getDateFormat().' '.date('H:i A');
             $data['live_id']     = $liveId;
             $data['year']        = $this->runninYear;
@@ -2002,8 +2002,8 @@ class Crud extends School
         $data['fb_photo']   = $_SESSION['userData']['picture']['url'];
         $data['fb_name']    = $_SESSION['userData']['first_name']. " ". $_SESSION['userData']['last_name'];
         $data['femail']     = $_SESSION['userData']['email'];
-        $this->db->where($this->session->userdata('login_type')."_id", $this->session->userdata('login_user_id'));
-        $this->db->update($this->session->userdata('login_type'), $data);
+        $this->db->where(get_account_type()."_id", get_login_user_id());
+        $this->db->update(get_account_type(), $data);
     }
     
     function send_reply_group_message($message_thread_code) 
@@ -2028,7 +2028,7 @@ class Crud extends School
         }
         $message    = html_escape($this->input->post('message'));
         $timestamp  = $this->getDateFormat().' '.date("H:iA");
-        $sender     = $this->session->userdata('login_type') . '-' . $this->session->userdata('login_user_id');
+        $sender     = get_account_type() . '-' . get_login_user_id();
         if ($_FILES['attached_file_on_messaging']['name'] != "") 
         {
           $data_message['attached_file_name'] = $_FILES['attached_file_on_messaging']['name'];
@@ -2044,7 +2044,7 @@ class Crud extends School
     function count_unread_messages() 
     {
         $unread_message_counter = 0;
-        $current_user = $this->session->userdata('login_type') . '-' . $this->session->userdata('login_user_id');
+        $current_user = get_account_type() . '-' . get_login_user_id();
         $this->db->group_by('message_thread_code');
         $this->db->where('read_status', 0);
         $this->db->where('reciever', $current_user);
@@ -2057,11 +2057,11 @@ class Crud extends School
         $data['message'] = $this->input->post('message');
         $data['post_id'] = $this->db->get_where('forum', array('post_code' => $post_code))->row()->post_id;
         $data['date'] = $this->getDateFormat().' '.date("H:iA");
-        $data['user_type'] = $this->session->userdata('login_type');
-        $data['user_id'] = $this->session->userdata('login_user_id');
+        $data['user_type'] = get_account_type();
+        $data['user_id'] = get_login_user_id();
         $this->db->insert('forum_message', $data);
         
-        $notify['notify'] = "<strong>".  $this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('comment_forum') ." <b>".$this->db->get_where('forum', array('post_code' => $this->input->post('post_code')))->row()->title."</b>";
+        $notify['notify'] = "<strong>".  $this->crud->get_name(get_account_type(), get_login_user_id())."</strong>". " ". getPhrase('comment_forum') ." <b>".$this->db->get_where('forum', array('post_code' => $this->input->post('post_code')))->row()->title."</b>";
         $for_type = $this->db->get_where('forum', array('post_code' => $this->input->post('post_code')))->row()->type;
         $for_id   = $this->db->get_where('forum', array('post_code' => $this->input->post('post_code')))->row()->teacher_id;
         $notify['user_id'] = $for_id;
@@ -2070,8 +2070,8 @@ class Crud extends School
         $notify['date'] = $this->crud->getDateFormat();
         $notify['time'] = date('h:i A');
         $notify['status'] = 0;
-        $notify['original_id'] = $this->session->userdata('login_user_id');
-        $notify['original_type'] = $this->session->userdata('login_type');
+        $notify['original_id'] = get_login_user_id();
+        $notify['original_type'] = get_account_type();
         $this->db->insert('notification', $notify);
     }
 
@@ -2207,9 +2207,9 @@ class Crud extends School
         if($count == 0)
         { 
             $data['time'] = $time;
-            $data['type'] = $this->session->userdata('login_type');
-            $data['id_usuario'] = $this->session->userdata('login_user_id');
-            $data['gp'] = $this->session->userdata('login_user_id')."-".$this->session->userdata('login_type');
+            $data['type'] = get_account_type();
+            $data['id_usuario'] = get_login_user_id();
+            $data['gp'] = get_login_user_id()."-".get_account_type();
             $data['session'] = $session;
             $this->db->insert('online_users',$data);
         }
@@ -2217,9 +2217,9 @@ class Crud extends School
         {
             $data['session'] = $session;
             $data['time'] = $time;
-            $data['gp'] = $this->session->userdata('login_user_id')."-".$this->session->userdata('login_type');
-            $data['id_usuario'] = $this->session->userdata('login_user_id');
-            $data['type'] = $this->session->userdata('login_type');
+            $data['gp'] = get_login_user_id()."-".get_account_type();
+            $data['id_usuario'] = get_login_user_id();
+            $data['type'] = get_account_type();
             $this->db->where('session', $session);
             $this->db->update('online_users', $data);
         }  
@@ -2231,8 +2231,8 @@ class Crud extends School
     {
         $this->db->limit(5);
         $this->db->order_by('id', 'desc');
-        $this->db->where('user_id', $this->session->userdata('login_user_id'));
-        $this->db->where('user_type', $this->session->userdata('login_type'));
+        $this->db->where('user_id', get_login_user_id());
+        $this->db->where('user_type', get_account_type());
         $this->db->where('status <> ', '2');
         $n = $this->db->get('notification')->result_array();
         return $n;
@@ -2240,7 +2240,7 @@ class Crud extends School
     
     function getFancyChat()
     {
-        $fancy_current_user = $this->session->userdata('login_type') . '-' . $this->session->userdata('login_user_id');
+        $fancy_current_user = get_account_type() . '-' . get_login_user_id();
         $this->db->limit(5);
         $this->db->order_by('message_thread_id', 'desc');
         $this->db->where('sender', $fancy_current_user);
@@ -2251,7 +2251,7 @@ class Crud extends School
     
     function getChat()
     {
-        $current_user = $this->session->userdata('login_type') . '-' . $this->session->userdata('login_user_id');
+        $current_user = get_account_type() . '-' . get_login_user_id();
   	    $this->db->where('sender', $current_user);
   	    $this->db->or_where('reciever', $current_user);
   	    $fancy_message_threads = $this->db->get('message_thread')->result_array();
@@ -2287,7 +2287,7 @@ class Crud extends School
     }
     
     function getUserSocial($table,$column) {
-        $query = $this->db->get_where($table, array($table.'_id' => $this->session->userdata('login_user_id')));
+        $query = $this->db->get_where($table, array($table.'_id' => get_login_user_id()));
         return $query->row()->$column;
     }
     
@@ -2412,7 +2412,7 @@ class Crud extends School
         $data['description']         = $this->input->post('description');
         $data['date']                = $this->getDateFormat();
         $data['publish_date']        = date('Y-m-d H:i:s');
-        $data['admin_id']            = $this->session->userdata('login_user_id');
+        $data['admin_id']            = get_login_user_id();
         $data['date2']               = date('H:i A');
         $data['type']                = "news";
         $this->db->insert('news', $data);
@@ -2646,7 +2646,7 @@ class Crud extends School
     function create_news_message($news_code = '') 
     {
       $admins = $this->db->get('admin')->result_array();
-      $notify['notify'] = "<strong>".$this->session->userdata('name')."</strong>". " ". getPhrase('new_comment') ." <b>".$this->db->get_where('news' , array('news_code' => $news_code))->row()->title."</b>";
+      $notify['notify'] = "<strong>".get_name_user_login()."</strong>". " ". getPhrase('new_comment') ." <b>".$this->db->get_where('news' , array('news_code' => $news_code))->row()->title."</b>";
       foreach($admins as $row)
       {
           $notify['user_id'] = $row['admin_id'];
@@ -2655,16 +2655,16 @@ class Crud extends School
           $notify['date'] = $this->getDateFormat();
           $notify['time'] = date('h:i A');
           $notify['status'] = 0;
-          $notify['original_id'] = $this->session->userdata('login_user_id');
-          $notify['original_type'] = $this->session->userdata('login_type');
+          $notify['original_id'] = get_login_user_id();
+          $notify['original_type'] = get_account_type();
           $this->db->insert('notification', $notify);
         }
 
         $data['message']      = html_escape($this->input->post('message'));
         $data['news_id']      = $this->db->get_where('news' , array('news_code' => $news_code))->row()->news_id;
         $data['date']         = $this->getDateFormat();
-        $data['user_type']    = $this->session->userdata('login_type');
-        $data['user_id']      = $this->session->userdata('login_user_id');
+        $data['user_type']    = get_account_type();
+        $data['user_id']      = get_login_user_id();
         return $this->db->insert('mensaje_reporte', $data);
     }    
 
@@ -2673,8 +2673,8 @@ class Crud extends School
         $data['message']      = html_escape($this->input->post('message'));
         $data['notice_id']   = $this->db->get_where('news_teacher' , array('notice_code' => $notice_code))->row()->notice_id;
         $data['date']         = $this->getDateFormat();
-        $data['user_type']    = $this->session->userdata('login_type');
-        $data['user_id']      = $this->session->userdata('login_user_id');
+        $data['user_type']    = get_account_type();
+        $data['user_id']      = get_login_user_id();
         if ( $_FILES['userfile']['name'] != '')
             $data['message_file_name'] = $_FILES['userfile']['name'];
         $this->db->insert('notice_message', $data);
@@ -2697,7 +2697,7 @@ class Crud extends School
         $message    = html_escape($this->input->post('message'));
         $timestamp  = $this->getDateFormat().' '.date("H:iA");
         $reciever   = $this->input->post('reciever');
-        $sender     = $this->session->userdata('login_type') . '-' . $this->session->userdata('login_user_id');
+        $sender     = get_account_type() . '-' . get_login_user_id();
         $num1 = $this->db->get_where('message_thread', array('sender' => $sender, 'reciever' => $reciever))->num_rows();
         $num2 = $this->db->get_where('message_thread', array('sender' => $reciever, 'reciever' => $sender))->num_rows();
         if ($num1 == 0 && $num2 == 0) 
@@ -2726,7 +2726,7 @@ class Crud extends School
         $data_message['file_name']              = $_FILES["file_name"]["name"];
         $this->db->insert('message', $data_message);
 
-        $name = $this->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'));
+        $name = $this->get_name(get_account_type(), get_login_user_id());
         $notify['notify'] = "<strong>". $name."</strong>". " ". getPhrase('new_message_notify');
         $rec = explode("-", $this->input->post('reciever'));
         $notify['user_id'] = $rec[1];
@@ -2737,8 +2737,8 @@ class Crud extends School
         $notify['status'] = 0;
         $notify['year'] = $year;
         $notify['type'] = 'message';
-        $notify['original_id'] = $this->session->userdata('login_user_id');
-        $notify['original_type'] = $this->session->userdata('login_type');
+        $notify['original_id'] = get_login_user_id();
+        $notify['original_type'] = get_account_type();
         $this->db->insert('notification', $notify);
         move_uploaded_file($_FILES["file_name"]["tmp_name"], "public/uploads/messages/" . $_FILES["file_name"]["name"]);
         return $message_thread_code;
@@ -2747,7 +2747,7 @@ class Crud extends School
     function send_exam_notify()
     {
         $year = $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;
-        $name = $this->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'));
+        $name = $this->get_name(get_account_type(), get_login_user_id());
         $notify['notify'] = "<strong>".$name."</strong>". " ". getPhrase('online_exam_notify') ." <b>".$this->input->post('exam_title')."</b>";
         $students = $this->db->get_where('enroll', array('class_id' => $this->input->post('class_id'), 'section_id' => $this->input->post('section_id'), 'year' => $year))->result_array();
         foreach($students as $row)
@@ -2763,8 +2763,8 @@ class Crud extends School
             $notify['class_id'] = $this->input->post('class_id');
             $notify['section_id'] = $this->input->post('section_id');
             $notify['subject_id'] = $this->input->post('subject_id');
-            $notify['original_id'] = $this->session->userdata('login_user_id');
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_id'] = get_login_user_id();
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
         }
     }
@@ -2772,7 +2772,7 @@ class Crud extends School
     function send_forum_notify()
     {
         $year = $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;
-        $name = $this->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'));
+        $name = $this->get_name(get_account_type(), get_login_user_id());
         $notify['notify'] = "<strong>".$name."</strong>". getPhrase('added_new_forum_discussion');
         $students = $this->db->get_where('enroll', array('class_id' => $this->input->post('class_id'), 'section_id' => $this->input->post('section_id'), 'year' => $year))->result_array();
         foreach($students as $row)
@@ -2788,8 +2788,8 @@ class Crud extends School
             $notify['class_id'] = $this->input->post('class_id');
             $notify['section_id'] = $this->input->post('section_id');
             $notify['subject_id'] = $this->input->post('subject_id');
-            $notify['original_id'] = $this->session->userdata('login_user_id');
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_id'] = get_login_user_id();
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
         }
     }
@@ -2807,8 +2807,8 @@ class Crud extends School
         $year = $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;
         $message    = html_escape($this->input->post('message'));
         $timestamp  = $this->getDateFormat().' '.date("H:iA");
-        $sender     = $this->session->userdata('login_type') . '-' . $this->session->userdata('login_user_id');
-        $name = $this->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'));
+        $sender     = get_account_type() . '-' . get_login_user_id();
+        $name = $this->get_name(get_account_type(), get_login_user_id());
         $data_message['file_name']              = $_FILES["file_name"]["name"];
         $data_message['message_thread_code']    = $message_thread_code;
         $data_message['message']                = $message;
@@ -2833,14 +2833,14 @@ class Crud extends School
         $notify['status'] = 0;
         $notify['type'] = 'message';
         $notify['year'] = $year;
-        $notify['original_id']   = $this->session->userdata('login_user_id');
-        $notify['original_type'] = $this->session->userdata('login_type');
+        $notify['original_id']   = get_login_user_id();
+        $notify['original_type'] = get_account_type();
         $this->db->insert('notification', $notify);
         move_uploaded_file($_FILES["file_name"]["tmp_name"], "public/uploads/messages/" . $_FILES["file_name"]["name"]);
     }
 
     function mark_thread_messages_read($message_thread_code) {
-        $current_user = $this->session->userdata('login_type') . '-' . $this->session->userdata('login_user_id');
+        $current_user = get_account_type() . '-' . get_login_user_id();
         $this->db->where('sender !=', $current_user);
         $this->db->where('message_thread_code', $message_thread_code);
         $this->db->update('message', array('read_status' => 1));
@@ -2858,8 +2858,8 @@ class Crud extends School
         $data['priority']       = $this->input->post('priority');
         $data['teacher_id']     = $this->input->post('teacher_id');
         $data['status']     = 0;
-        $login_type             = $this->session->userdata('login_type');
-        if($login_type == 'student') $data['student_id']  = $this->session->userdata('login_user_id');
+        $login_type             = get_account_type();
+        if($login_type == 'student') $data['student_id']  = get_login_user_id();
         else $data['student_id']  = $this->input->post('student_id');
         $data['timestamp']      = $this->getDateFormat();
         $data['description']       = $this->input->post('description');
@@ -2875,7 +2875,7 @@ class Crud extends School
 
     function count_unread_message_of_thread($message_thread_code) {
         $unread_message_counter = 0;
-        $current_user = $this->session->userdata('login_type') . '-' . $this->session->userdata('login_user_id');
+        $current_user = get_account_type() . '-' . get_login_user_id();
         $messages = $this->db->get_where('message', array('message_thread_code' => $message_thread_code))->result_array();
         foreach ($messages as $row) {
             if ($row['sender'] != $current_user && $row['read_status'] == '0')
@@ -2886,7 +2886,7 @@ class Crud extends School
 
     function permission_request()
     {
-        $data['teacher_id']   = $this->session->userdata('login_user_id');
+        $data['teacher_id']   = get_login_user_id();
         $data['description']  = $this->input->post('description');
         $data['title']        = $this->input->post('title');
         $data['start_date']   = $this->input->post('start_date');
@@ -2898,7 +2898,7 @@ class Crud extends School
         
         move_uploaded_file($_FILES["file_name"]["tmp_name"], "public/uploads/request/" . $_FILES["file_name"]["name"]);            
 
-        $notify['notify'] = "<strong>".  $this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('absense_teacher');
+        $notify['notify'] = "<strong>".  $this->crud->get_name(get_account_type(), get_login_user_id())."</strong>". " ". getPhrase('absense_teacher');
         $admins = $this->db->get('admin')->result_array();
         foreach($admins as $row)
         {
@@ -2908,8 +2908,8 @@ class Crud extends School
             $notify['date'] = $this->crud->getDateFormat();
             $notify['time'] = date('h:i A');
             $notify['status'] = 0;
-            $notify['original_id'] = $this->session->userdata('login_user_id');
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_id'] = get_login_user_id();
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
         }
     }
@@ -3300,7 +3300,7 @@ class Crud extends School
         $data['status']        = 1;
         $data['date']          = $this->crud->getDateFormat();
         $data['date2']         = date('h:i A');
-        $data['admin_id']      = $this->session->userdata('login_user_id');
+        $data['admin_id']      = get_login_user_id();
         $data['type']          = "polls";
         $data['publish_date']  = date('Y-m-d H:i:s');
         $data['poll_code']     = substr(md5(rand(0, 1000000)), 0, 7);
@@ -3313,8 +3313,8 @@ class Crud extends School
         $data['poll_code'] = $this->input->post('poll_code');
         $data['answer']    = $this->input->post('answer');
         $data['date2']     = date('h:i A');
-        $user              = $this->session->userdata('login_user_id');
-        $user_type         = $this->session->userdata('login_type');
+        $user              = get_login_user_id();
+        $user_type         = get_account_type();
         $data['user']      = $user_type ."-".$user;
         $data['date']      = $this->crud->getDateFormat();
         $this->db->insert('poll_response', $data);
@@ -3333,7 +3333,7 @@ class Crud extends School
     }
 
     function is_super_admin(){
-        $admin_id = $this->session->userdata('admin_id');
+        $admin_id = get_admin_id();
         $admin_type = $this->db->get_where('admin', array('admin_id' => $admin_id))->row()->owner_status;
         // echo 'admin_type'.$admin_type;
 
@@ -3348,7 +3348,7 @@ class Crud extends School
     }
 
     function has_permission($permission_for){
-        $role_id = $this->session->userdata('role_id');
+        $role_id = get_role_id();
         $has_permission = $this->db->get_where('asccount_role', array('type' => $permission_for, 'role_id' => $role_id))->row()->permissions;        
 
         if($this->is_super_admin()){
@@ -3369,8 +3369,8 @@ class Crud extends School
 
     function save_log($table, $action, $table_id, $info)
     {
-        $user_id    = $this->session->userdata('login_user_id');
-        $user_type  = $this->session->userdata('role_id');
+        $user_id    = get_login_user_id();
+        $user_type  = get_role_id();
         
         $data['user_id']    = $user_id;
         $data['user_type']  = $user_type;
@@ -3385,7 +3385,7 @@ class Crud extends School
 
     function save_login_as_log($user_type, $user_id)
     {
-        $admin_id    = $this->session->userdata('login_user_id');
+        $admin_id    = get_login_user_id();
 
         $data['admin_id']    = $admin_id;
         $data['user_type']   = $user_type;

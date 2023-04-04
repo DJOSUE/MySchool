@@ -1,18 +1,18 @@
 <?php 
 
-    $account_type       =   $this->session->userdata('login_type'); 
+    $account_type       =   get_account_type(); 
     $fancy_path         =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/'.$account_type.'/';
 
     // validate if has access as admin/helpdesk user
     $is_helpdesk_admin  = has_permission('helpdesk_admin_module');
     $is_helpdesk_team   = has_permission('helpdesk_team');
-    $user_id            = $this->session->userdata('login_user_id');
+    $user_id            = get_login_user_id();
     $is_helpdesk_admin = has_permission('helpdesk_admin_module');
     $is_helpdesk_team  = has_permission('helpdesk_team');
 
     $this->db->reset_query();
 
-    $user_id = $this->session->userdata('login_user_id');
+    $user_id = get_login_user_id();
 
     if($category_id != '')
     {

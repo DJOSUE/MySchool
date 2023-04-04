@@ -50,8 +50,8 @@ class Books extends EduAppGT
             switch ($userLogged) {
                 case 'student':
                     // Get the class and the section
-                    $student_id = $this->session->userdata('login_user_id');
-                    $program_id = $this->session->userdata('program_id');
+                    $student_id = get_login_user_id();
+                    $program_id = get_program_id();
                     $class = $this->db->get_where('enroll' , array('student_id' => $student_id, 'year' => $this->runningYear, 'semester_id'=> $this->runningSemester))->row();
                     $section = $this->db->get_where('section', array('section_id' => $class->section_id, 'year' => $this->runningYear, 'semester_id'=> $this->runningSemester))->row();
 
@@ -109,15 +109,15 @@ class Books extends EduAppGT
     //Check student session.
     private function UserLogged ()
     {
-        if ($this->session->userdata('admin_login') == 1)
+        if (get_admin_login() == 1)
         {
             return 'admin';
         }
-        else if ($this->session->userdata('teacher_login') == 1)
+        else if (get_teacher_login() == 1)
         {
             return 'teacher';
         }
-        else if ($this->session->userdata('student_login') == 1)
+        else if (get_student_login() == 1)
         {
             return 'student';
         }

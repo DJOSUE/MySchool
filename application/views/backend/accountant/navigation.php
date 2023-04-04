@@ -1,6 +1,6 @@
 <?php 
-    $account_id = $this->session->userdata('login_user_id');
-    $role_id    = $this->session->userdata('role_id');
+    $account_id = get_login_user_id();
+    $role_id    = get_role_id();
 
     $admin_type = $role_id;// $this->db->get_where('admin', array('admin_id' => $admin_id))->row()->owner_status;
 

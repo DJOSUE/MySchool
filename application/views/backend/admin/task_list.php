@@ -1,7 +1,7 @@
 <?php 
     
-    $user_id            = $this->session->userdata('login_user_id');
-    $account_type       =   get_table_user($this->session->userdata('role_id'));    
+    $user_id            = get_login_user_id();
+    $account_type       =   get_table_user(get_role_id());    
 
     $this->db->reset_query();
     $this->db->order_by('created_at', 'desc');

@@ -26,7 +26,7 @@
                                     $group_messages = $this->db->get('group_message_thread')->result_array();
                                     foreach ($group_messages as $row):
                                     $members = json_decode($row['members']);
-                                    if (in_array($this->session->userdata('login_type').'_'.$this->session->userdata('login_user_id'), $members)):
+                                    if (in_array(get_account_type().'_'.get_login_user_id(), $members)):
                                     $flag++;
                                 ?>
                         			<a href="<?php echo base_url('parents/group/group_message_read/'.$row['group_message_thread_code']); ?>">

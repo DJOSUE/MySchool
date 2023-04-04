@@ -28,8 +28,8 @@ class Reports extends EduAppGT
 
         $this->runningYear      =   $this->crud->getInfo('running_year'); 
         $this->runningSemester  =   $this->crud->getInfo('running_semester'); 
-        $this->account_type     =   get_table_user($this->session->userdata('role_id')); 
-        $this->role_id          =   $this->session->userdata('role_id');
+        $this->account_type     =   get_table_user(get_role_id()); 
+        $this->role_id          =   get_role_id();
         $this->fancy_path       =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/'.$this->account_type.'/';
     }
     
@@ -44,7 +44,7 @@ class Reports extends EduAppGT
     function isLogin($permission_for = '')
     {
         $array      = ['admin', 'accountant'];
-        $login_type = $this->session->userdata('login_type');
+        $login_type = get_account_type();
         
         if (!in_array($login_type, $array))
         {
@@ -87,7 +87,7 @@ class Reports extends EduAppGT
 
             if($cashier_id == '')
             {
-                $cashier_id = "admin|".$this->session->userdata('login_user_id');
+                $cashier_id = "admin|".get_login_user_id();
             }
         }
         else
@@ -100,7 +100,7 @@ class Reports extends EduAppGT
             else
             {
                 $date = date("Y-m-d");
-                $cashier_id = "admin|".$this->session->userdata('login_user_id');
+                $cashier_id = "admin|".get_login_user_id();
             }
         }
 
@@ -140,6 +140,31 @@ class Reports extends EduAppGT
         $page_data['end_date']   = $end_date;
         $page_data['page_name']  = 'accounting_payments';
         $page_data['page_title'] = getPhrase('payments');
+        $page_data['fancy_path']    = $this->fancy_path;
+        $this->load->view('backend/reports/index', $page_data); 
+    }
+
+    function accounting_agreements()
+    {
+        $this->isLogin();
+
+        $day = date('w');
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST')
+        {
+            $year_id     = html_escape($this->input->post('year_id'));
+            $semester_id = html_escape($this->input->post('semester_id'));
+        }
+        else
+        {
+            $year_id        = $this->runningYear;
+            $semester_id = $this->runningSemester;
+        }
+        
+        $page_data['year_id']       = $year_id;
+        $page_data['semester_id']   = $semester_id;
+        $page_data['page_name']     = 'accounting_agreements';
+        $page_data['page_title']    = getPhrase('agreements');
         $page_data['fancy_path']    = $this->fancy_path;
         $this->load->view('backend/reports/index', $page_data); 
     }
@@ -185,8 +210,7 @@ class Reports extends EduAppGT
     {
         $this->isLogin();
         
-        $interval   = date_interval_create_from_date_string('1 days');
-        $objDate    = date_create(date("m/d/Y"));
+        $day = date('w');
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $start_date = html_escape($this->input->post('start_date'));
@@ -194,8 +218,8 @@ class Reports extends EduAppGT
         }
         else
         {
-            $start_date = date_format($objDate, "m/d/Y");
-            $end_date   = date_format(date_add($objDate, $interval), "m/d/Y");            
+            $start_date = date('Y-m-d', strtotime('-'.$day.' days'));
+            $end_date   = date('Y-m-d', strtotime('+'.(6-$day).' days'));         
         }        
         
         $page_data['start_date'] = $start_date;

@@ -17,8 +17,8 @@ class Notification extends School
 
     function create($message_code, $user_id, $user_type, $url_encode)
     {
-        $original_id = $this->session->userdata('login_user_id');
-        $original_type = $this->session->userdata('login_type');
+        $original_id = get_login_user_id();
+        $original_type = get_account_type();
         $user_name = $this->crud->get_name($original_type, $original_id);
         $url = base64_decode($url_encode);
 
@@ -41,8 +41,8 @@ class Notification extends School
 
     function teacher_student_request($message_code, $student_name, $user_id, $user_type, $start_date, $end_date)
     {
-        $original_id = $this->session->userdata('login_user_id');
-        $original_type = $this->session->userdata('login_type');
+        $original_id = get_login_user_id();
+        $original_type = get_account_type();
 
         $user_name = $this->crud->get_name($original_type, $original_id);
         // $url = base64_decode($url_encode);
@@ -88,8 +88,8 @@ class Notification extends School
         }
         else
         {
-            $user_id    = $this->session->userdata('login_user_id');
-            $user_type  = get_table_user($this->session->userdata('role_id'));
+            $user_id    = get_login_user_id();
+            $user_type  = get_table_user(get_role_id());
 
             $this->db->where('user_id', $user_id);
             $this->db->where('user_type', $user_type);
@@ -102,8 +102,8 @@ class Notification extends School
 
     function create_email($message_code, $user_id, $user_type, $url_encode)
     {
-        $user_id = $this->session->userdata('login_user_id');
-        $user_type = $this->session->userdata('login_type');
+        $user_id = get_login_user_id();
+        $user_type = get_account_type();
         $user_name = $this->crud->get_name($user_type, $user_id);
         $url = base64_decode($url_encode);
 

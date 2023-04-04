@@ -2,8 +2,8 @@
     $running_year = $this->crud->getInfo('running_year');
     $running_semester = $this->crud->getInfo('running_semester');
     
-    $user = $this->session->userdata('login_type')."-".$this->session->userdata('login_user_id');
-    $teacher_id = $this->session->userdata('login_user_id');
+    $user = get_account_type()."-".get_login_user_id();
+    $teacher_id = get_login_user_id();
 
     if($month_id === '')
     {

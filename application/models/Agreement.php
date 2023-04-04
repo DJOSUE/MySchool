@@ -121,7 +121,7 @@ class Agreement extends School
         $data['number_payments']    = html_escape($this->input->post('number_payments'));
         $data['payment_date']       = html_escape($this->input->post('payment_date'));
         $data['automatic_payment']  = $has_automatic_payment;
-        $data['created_by']         = $this->session->userdata('login_user_id');        
+        $data['created_by']         = get_login_user_id();        
         $data['year']               = $year;
         $data['semester_id']        = $semester_id;
         $data['semester_enroll_id'] = $semester_enroll['semester_enroll_id'];        
@@ -277,7 +277,7 @@ class Agreement extends School
         $data['number_payments']    = html_escape($this->input->post('number_payments'));
         $data['payment_date']       = html_escape($this->input->post('payment_date'));
         $data['automatic_payment']  = $has_automatic_payment;
-        $data['created_by']         = $this->session->userdata('login_user_id');        
+        $data['created_by']         = get_login_user_id();        
         $data['year']               = $year;
         $data['semester_id']        = $semester_id;
         $data['semester_enroll_id'] = $semester_enroll['semester_enroll_id'];        

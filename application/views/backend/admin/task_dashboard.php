@@ -1,7 +1,7 @@
 <?php 
     $this->db->reset_query();
 
-    $user_id = $this->session->userdata('login_user_id');
+    $user_id = get_login_user_id();
 
     if($priority_id != '_blank')
     {

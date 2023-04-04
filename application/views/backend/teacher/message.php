@@ -1,5 +1,5 @@
 <?php 
-    $teacher_id = $this->session->userdata('login_user_id');
+    $teacher_id = get_login_user_id();
 
     $running_year       = $this->crud->getInfo('running_year');
     $running_semester   = $this->crud->getInfo('running_semester'); 
@@ -39,7 +39,7 @@
                         <div class="tab-pane active" id="chats">
                             <div class="user-list">
                                 <?php 
-                         			$current_user = $this->session->userdata('login_type') . '-' . $this->session->userdata('login_user_id');
+                         			$current_user = get_account_type() . '-' . get_login_user_id();
                           		    // $this->db->where('status', '1');
                           		    $this->db->or_where('reciever', $current_user);
                           		    $message_threads = $this->db->get('message_thread')->result_array();

@@ -1,11 +1,11 @@
 <?php 
-    $account_type_name  = get_table_user($this->session->userdata('role_id'));
+    $account_type_name  = get_table_user(get_role_id());
     $fancy_path         =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/'.$account_type_name.'/';
 
     // validate if has access as admin/helpdesk user
     $is_helpdesk_admin  = has_permission('helpdesk_admin_module');
     $is_helpdesk_team   = has_permission('helpdesk_team');
-    $user_id            = $this->session->userdata('login_user_id');
+    $user_id            = get_login_user_id();
     
 ?>
 <div class="content-w">

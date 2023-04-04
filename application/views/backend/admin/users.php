@@ -1,7 +1,7 @@
 <?php 
-    // $admin_type = $this->db->get_where('admin', array('admin_id' => $this->session->userdata('login_user_id')))->row()->owner_status;
-    $admin_id = $this->session->userdata('login_user_id');
-    $role_id = $this->session->userdata('role_id');
+    // $admin_type = $this->db->get_where('admin', array('admin_id' => get_login_user_id()))->row()->owner_status;
+    $admin_id = get_login_user_id();
+    $role_id = get_role_id();
 
     $admin_type = $role_id;
 ?>

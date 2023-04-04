@@ -53,7 +53,7 @@ class Academic extends School
     public function setRead($code,$type,$subject_id)
     {
         $year = $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;
-        $userId    = $this->session->userdata('login_user_id');
+        $userId    = get_login_user_id();
         $check = $this->db->get_where('activity_read', array('student_id' => $userId, 'subject_activity_id' => $code,'activity_type' => $type, 'subject_id' => $subject_id, 'year' => $year));
         if($check->num_rows() == 0){
             $data['student_id']          = $userId;
@@ -84,7 +84,7 @@ class Academic extends School
     //Create Live Class.
     public function createLiveClass()
     {
-        $data['user_type']      = $this->session->userdata('login_type');
+        $data['user_type']      = get_account_type();
         $data['title']          = html_escape($this->input->post('title'));
         $data['liveType']       = $this->input->post('livetype');   
         if($this->input->post('livetype') == '2'){
@@ -102,7 +102,7 @@ class Academic extends School
         $data['class_id']       = $this->input->post('class_id');
         $data['subject_id']     = $this->input->post('subject_id');
         $data['section_id']     = $this->input->post('section_id');
-        $data['user_id']        = $this->session->userdata('login_user_id');
+        $data['user_id']        = get_login_user_id();
         $this->db->insert('live',$data);
 
         $table      = 'live';
@@ -254,10 +254,10 @@ class Academic extends School
         $data['class_id']       = $this->input->post('class_id');
         $data['file_name']      = $_FILES["file_name"]["name"];
         $data['section_id']     = $this->input->post('section_id');
-        $data['user']           = $this->session->userdata('login_type');
+        $data['user']           = get_account_type();
         $data['subject_id']     = $this->input->post('subject_id');
-        $data['uploader_type']  = $this->session->userdata('login_type');
-        $data['uploader_id']    = $this->session->userdata('login_user_id');
+        $data['uploader_type']  = get_account_type();
+        $data['uploader_id']    = get_login_user_id();
         $data['homework_code']  = substr(md5(rand(100000000, 200000000)), 0, 10);
         $this->db->insert('homework', $data);
 
@@ -269,7 +269,7 @@ class Academic extends School
         move_uploaded_file($_FILES["file_name"]["tmp_name"], "public/uploads/homework/" . $_FILES["file_name"]["name"]);
         $this->crud->send_homework_notify();
         $homework_code = $data['homework_code'];
-        $notify['notify'] = "<strong>".$this->crud->get_name($this->session->userdata('login_type'),$this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('new_homework_notify') ." <b>".html_escape($this->input->post('title'))."</b>";
+        $notify['notify'] = "<strong>".$this->crud->get_name(get_account_type(),get_login_user_id())."</strong>". " ". getPhrase('new_homework_notify') ." <b>".html_escape($this->input->post('title'))."</b>";
         $students = $this->db->get_where('enroll', array('class_id' => $this->input->post('class_id'), 'section_id' => $this->input->post('section_id'), 'subject_id' => $this->input->post('subject_id'), 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->result_array();
         foreach($students as $row)
         {
@@ -285,8 +285,8 @@ class Academic extends School
             $notify['year']          = $this->runningYear;
             $notify['semester_id']   = $this->runningSemester;
             $notify['subject_id']    = $this->input->post('subject_id');
-            $notify['original_id']   = $this->session->userdata('login_user_id');
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_id']   = get_login_user_id();
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
 
             $table      = 'notification';
@@ -303,7 +303,7 @@ class Academic extends School
         $data['description'] = html_escape($this->input->post('description'));
         $data['time_end']    = html_escape($this->input->post('time_end'));
         $data['date_end']    = html_escape($this->input->post('date_end'));
-        $data['user']        = $this->session->userdata('login_type');
+        $data['user']        = get_account_type();
         $data['status']      = $this->input->post('status');
         $data['type']        = $this->input->post('type');
         $this->db->where('homework_code', $homework_code);
@@ -352,15 +352,15 @@ class Academic extends School
         $update_id  = $this->input->post('id');
         $this->crud->save_log($table, $action, $update_id, $data);
 
-        $notify['notify']        = "<strong>". $this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('homework_rated') ." <b>".$title.".</b>";
+        $notify['notify']        = "<strong>". $this->crud->get_name(get_account_type(), get_login_user_id())."</strong>". " ". getPhrase('homework_rated') ." <b>".$title.".</b>";
         $notify['user_id']       = $student_id;
         $notify['user_type']     = 'student';
         $notify['date']          = $this->crud->getDateFormat();
         $notify['time']          = date('h:i A');
         $notify['url']           = "student/homeworkroom/".$code;
         $notify['status']        = 0;
-        $notify['original_id']   = $this->session->userdata('login_user_id');
-        $notify['original_type'] = $this->session->userdata('login_type');
+        $notify['original_id']   = get_login_user_id();
+        $notify['original_type'] = get_account_type();
         $this->db->insert('notification', $notify);
 
         $table      = 'notification';
@@ -374,7 +374,7 @@ class Academic extends School
         $data['title']           = html_escape($this->input->post('title'));
         $data['description']     = html_escape($this->input->post('description'));
         $data['class_id']        = $this->input->post('class_id');
-        $data['type']            = $this->session->userdata('login_type');
+        $data['type']            = get_account_type();
         $data['section_id']      = $this->input->post('section_id');
         if($this->input->post('post_status') != "1"){
             $data['post_status'] = 0;
@@ -387,7 +387,7 @@ class Academic extends School
         $data['timestamp']       = $this->crud->getDateFormat().' '.date("H:iA");
         $data['subject_id']      = $this->input->post('subject_id');
         $data['file_name']       = $_FILES["userfile"]["name"];
-        $data['teacher_id']      = $this->session->userdata('login_user_id');
+        $data['teacher_id']      = get_login_user_id();
         $data['post_code']       = substr(md5(rand(100000000, 200000000)), 0, 10);
         $this->db->insert('forum', $data);
 
@@ -409,9 +409,9 @@ class Academic extends School
         }
         $data['title']           = html_escape($this->input->post('title'));
         $data['description']     = html_escape($this->input->post('description'));
-        $data['type']            = $this->session->userdata('login_type');
+        $data['type']            = get_account_type();
         $data['timestamp']       = $this->crud->getDateFormat().' '.date("H:iA");
-        $data['teacher_id']      = $this->session->userdata('login_user_id');
+        $data['teacher_id']      = get_login_user_id();
         $this->db->where('post_code', $code);
         $this->db->update('forum', $data);
 
@@ -423,7 +423,7 @@ class Academic extends School
     
     public function createMaterial()
     {
-        $data['type']              = $this->session->userdata('login_type');
+        $data['type']              = get_account_type();
         $data['timestamp']         = strtotime(date("Y-m-d H:i:s"));
         $data['title']             = html_escape($this->input->post('title'));
         $data['description']       = html_escape($this->input->post('description'));
@@ -436,7 +436,7 @@ class Academic extends School
         $data['class_id']          = $this->input->post('class_id');
         $data['subject_id']        = $this->input->post('subject_id');
         $data['section_id']        = $this->input->post('section_id');
-        $data['teacher_id']        = $this->session->userdata('login_user_id');
+        $data['teacher_id']        = get_login_user_id();
         $data['year']              = $this->runningYear;
         $data['semester_id']       = $this->runningSemester;
         $this->db->insert('document',$data);
@@ -448,7 +448,7 @@ class Academic extends School
 
         move_uploaded_file($_FILES["file_name"]["tmp_name"], "public/uploads/document/" . str_replace(" ", "",$_FILES["file_name"]["name"]));
         
-        $notify['notify'] = "<strong>".$this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong> ". " ".getPhrase('study_material_notify');
+        $notify['notify'] = "<strong>".$this->crud->get_name(get_account_type(), get_login_user_id())."</strong> ". " ".getPhrase('study_material_notify');
         $students = $this->db->get_where('enroll', array('class_id' => $this->input->post('class_id'), 'section_id' => $this->input->post('section_id'), 'subject_id' => $this->input->post('subject_id'), 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->result_array();
         foreach($students as $row)
         {
@@ -463,8 +463,8 @@ class Academic extends School
             $notify['class_id']      = $this->input->post('class_id');
             $notify['section_id']    = $this->input->post('section_id');
             $notify['subject_id']    = $this->input->post('subject_id');
-            $notify['original_id']   = $this->session->userdata('login_user_id');
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_id']   = get_login_user_id();
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
 
             $table      = 'notification';
@@ -515,9 +515,9 @@ class Academic extends School
     public function createOnlineExam()
     {
         $data['publish_date']       = date('Y-m-d H:i:s');
-        $data['uploader_type']      = $this->session->userdata('login_type');
+        $data['uploader_type']      = get_account_type();
         $data['wall_type']          = "exam";
-        $data['uploader_id']        = $this->session->userdata('login_user_id');
+        $data['uploader_id']        = get_login_user_id();
         $data['upload_date']        = $this->crud->getDateFormat().' '.date('H:iA');
         $data['password']           = html_escape($this->input->post('password'));
         $data['show_random']        = $this->input->post('show_random');
@@ -815,7 +815,7 @@ class Academic extends School
         $data['student_id']  = $this->input->post('student_id');
         $data['class_id']    = $this->input->post('class_id');
         $data['section_id']  = $this->input->post('section_id');
-        $data['user_id']     = $this->session->userdata('login_type')."-".$this->session->userdata('login_user_id');
+        $data['user_id']     = get_account_type()."-".get_login_user_id();
         $data['title']       = html_escape($this->input->post('title'));
         $data['description'] = html_escape($this->input->post('description'));
         $data['file']        = $_FILES["file_name"]["name"];
@@ -858,8 +858,8 @@ class Academic extends School
         $data['report_code'] = $this->input->post('report_code');
         $data['message']     = html_escape($this->input->post('message'));
         $data['date']        = $this->crud->getDateFormat();
-        $data['sender_type'] = $this->session->userdata('login_type');
-        $data['sender_id']   = $this->session->userdata('login_user_id');
+        $data['sender_type'] = get_account_type();
+        $data['sender_id']   = get_login_user_id();
         $this->db->insert('report_response', $data);
 
         $table      = 'report_response';
@@ -885,8 +885,8 @@ class Academic extends School
         $notify['date']          = $this->crud->getDateFormat();
         $notify['time']          = date('h:i A');
         $notify['status']        = 0;
-        $notify['original_id']   = $this->session->userdata('login_user_id');
-        $notify['original_type'] = $this->session->userdata('login_type');
+        $notify['original_id']   = get_login_user_id();
+        $notify['original_type'] = get_account_type();
         $this->db->insert('notification', $notify);
 
         $table      = 'notification';
@@ -901,8 +901,8 @@ class Academic extends School
         $notify2['date']          = $this->crud->getDateFormat();
         $notify2['time']          = date('h:i A');
         $notify2['status']        = 0;
-        $notify2['original_id']   = $this->session->userdata('login_user_id');
-        $notify2['original_type'] = $this->session->userdata('login_type');
+        $notify2['original_id']   = get_login_user_id();
+        $notify2['original_type'] = get_account_type();
         $this->db->insert('notification', $notify2);
 
         $table      = 'notification';
@@ -1664,7 +1664,7 @@ class Academic extends School
     function requestStudentBook()
     {
         $data['book_id']            = $this->input->post('book_id');
-        $data['student_id']         = $this->session->userdata('login_user_id');
+        $data['student_id']         = get_login_user_id();
         $data['issue_start_date']   = html_escape(strtotime($this->input->post('start')));
         $data['issue_end_date']     = html_escape(strtotime($this->input->post('end')));
         $this->db->insert('book_request', $data);
@@ -1685,7 +1685,7 @@ class Academic extends School
         
         $data['homework_code']   = $homeworkCode;
         $name = substr(md5(rand(0, 1000000)), 0, 7).$_FILES["file_name"]["name"];
-        $data['student_id']      = $this->session->userdata('login_user_id');
+        $data['student_id']      = get_login_user_id();
         $data['date']            = $this->crud->getDateFormat().' '.date('H:i');
         $data['class_id']        = $this->input->post('class_id');
         $data['section_id']      = $this->input->post('section_id');
@@ -1711,7 +1711,7 @@ class Academic extends School
         {
             $insert_data['file']          = $datax['files'][$i]['name'];
             $insert_data['homework_code'] = $homeworkCode;
-            $insert_data['student_id']    = $this->session->userdata('login_user_id');
+            $insert_data['student_id']    = get_login_user_id();
             $insert_data['delivery_id']   = $delivery;
             $this->db->insert('homework_files', $insert_data); 
 
@@ -1726,7 +1726,7 @@ class Academic extends School
     public function sendTextHomework($homeworkCode)
     {
         $data['homework_code']    = $homeworkCode;
-        $data['student_id']       = $this->session->userdata('login_user_id');
+        $data['student_id']       = get_login_user_id();
         $data['date']             = $this->crud->getDateFormat().' '.date('H:i');
         $data['class_id']         = $this->input->post('class_id');
         $data['section_id']       = $this->input->post('section_id');
@@ -1797,7 +1797,7 @@ class Academic extends School
         {
             $insert_data['file']          = $datax['files'][$i]['name'];
             $insert_data['homework_code'] = $homeworkCode;
-            $insert_data['student_id']    = $this->session->userdata('login_user_id');
+            $insert_data['student_id']    = get_login_user_id();
             $insert_data['delivery_id']   = $id;
             $this->db->insert('homework_files', $insert_data);
 
@@ -2095,8 +2095,8 @@ class Academic extends School
         $this->db->update('student', $data_student);  
 
         // Create Interaction         
-        $user_id        = $this->session->userdata('login_user_id');
-        $user_table     = get_table_user($this->session->userdata('role_id'));
+        $user_id        = get_login_user_id();
+        $user_table     = get_table_user(get_role_id());
         $user_name      = $this->crud->get_name($user_table, $user_id);
         $level          = $this->academic->get_class_name($this->input->post('class_id'));
         $section_name   = $this->academic->get_section_name($this->input->post('section_id'));
@@ -2437,7 +2437,7 @@ class Academic extends School
             $data['semester_id']    = $this->input->post('semester_id');
             $data['start_date']     = $this->input->post('date_start');
             $data['end_date']       = $this->input->post('date_end');
-            $data['created_by']     = $this->session->userdata('login_user_id');
+            $data['created_by']     = get_login_user_id();
 
             $this->db->insert('semester_enroll', $data);
 
@@ -2550,7 +2550,7 @@ class Academic extends School
         $data['subject_id']     = $this->input->post('subject_id');
         $data['month']          = $this->input->post('month');
         $data['reason']         = $this->input->post('reason');
-        $data['created_by']     = $this->session->userdata('login_user_id');
+        $data['created_by']     = get_login_user_id();
 
         $this->db->insert('student_month', $data);
 

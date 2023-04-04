@@ -1,5 +1,5 @@
 <?php
-    $admin_type = $this->db->get_where('admin', array('admin_id' => $this->session->userdata('login_user_id')))->row()->owner_status;
+    $admin_type = $this->db->get_where('admin', array('admin_id' => get_login_user_id()))->row()->owner_status;
 ?>
 <div class="content-w">
     <?php include 'fancy.php';?>

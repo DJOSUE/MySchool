@@ -1,7 +1,7 @@
 <?php 
     $running_year = $this->crud->getInfo('running_year'); 
     $running_semester = $this->crud->getInfo('running_semester'); 
-    $student_id = $this->session->userdata('login_user_id');
+    $student_id = get_login_user_id();
     $class_id = $this->db->get_where('enroll', array('student_id' => $student_id, 'year' => $running_year, 'semester_id' => $running_semester))->row()->class_id;
 ?>
 <div class="content-w">
@@ -96,7 +96,7 @@
                                         <?php
                                             $count = 1;
                                             $this->db->order_by('book_request_id', 'desc');
-                                            $book_requests = $this->db->get_where('book_request', array('student_id' => $this->session->userdata('login_user_id')))->result_array();
+                                            $book_requests = $this->db->get_where('book_request', array('student_id' => get_login_user_id()))->result_array();
                                             foreach ($book_requests as $row) { ?>
                                         <tr>
                                             <td><?php echo $count++; ?></td>

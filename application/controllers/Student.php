@@ -108,7 +108,7 @@
         {
             $this->isStudent();
             
-            $student_id = $this->session->userdata('login_user_id');
+            $student_id = get_login_user_id();
             $class_id = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id'=> $this->runningSemester))->row()->class_id;
 
             if($this->useDailyMarks){
@@ -129,7 +129,7 @@
         {
             $this->isStudent();
             
-            $student_id = $this->session->userdata('login_user_id');
+            $student_id = get_login_user_id();
             $class_id = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id'=> $this->runningSemester))->row()->class_id;
 
             if($this->useDailyMarks){
@@ -150,7 +150,7 @@
         {
             $this->isStudent();
             
-            $student_id = $this->session->userdata('login_user_id');
+            $student_id = get_login_user_id();
 
             if($this->useDailyMarks){
                 $page_data['data']       =   $data;
@@ -224,7 +224,7 @@
                 if($password == $user_password)
                 {
                     $online_exam_id = $this->db->get_where('online_exam', array('code' => $this->input->post('rand')))->row()->online_exam_id;
-                    $student_id = $this->session->userdata('login_user_id');
+                    $student_id = get_login_user_id();
                     $check = array('student_id' => $student_id, 'online_exam_id' => $online_exam_id);
                     $taken = $this->db->where($check)->get('online_exam_result')->num_rows();
                     $this->crud->change_online_exam_status_to_attended_for_student($online_exam_id);
@@ -250,7 +250,7 @@
         //Index function.
         public function index()
         {
-            if ($this->session->userdata('student_login') != 1)
+            if (get_student_login() != 1)
             {
                 redirect(base_url(), 'refresh');
             }else{
@@ -335,7 +335,7 @@
         {
             $this->isStudent();
             $page_data['questions'] = $this->db->get_where('questions' , array('exam_code' => $exam_code))->result_array();
-            if($this->db->get_where('student_question',array('exam_code'=>$exam_code,'student_id'=>$this->session->userdata('login_user_id')))->row()->answered == 'answered')
+            if($this->db->get_where('student_question',array('exam_code'=>$exam_code,'student_id'=>get_login_user_id()))->row()->answered == 'answered')
             {
                 redirect(base_url() . 'student/online_exams/', 'refresh');
             } 
@@ -365,7 +365,7 @@
             $class_id = $this->db->get_where('online_exam', array('code' => $online_exam_code))->row()->class_id;
             $section_id = $this->db->get_where('online_exam', array('code' => $online_exam_code))->row()->section_id;
             $subject_id = $this->db->get_where('online_exam', array('code' => $online_exam_code))->row()->subject_id;
-            $student_id = $this->session->userdata('login_user_id');
+            $student_id = get_login_user_id();
             $check = array('student_id' => $student_id, 'online_exam_id' => $online_exam_id);
             $taken = $this->db->where($check)->get('online_exam_result')->num_rows();
             $this->crud->change_online_exam_status_to_attended_for_student($online_exam_id);
@@ -387,7 +387,7 @@
         { 
             $this->isStudent();
             $page_data['questions'] = $this->db->get_where('questions' , array('exam_code' => $code))->result_array();
-            if($this->db->get_where('student_question',array('exam_code'=>$code,'student_id'=>$this->session->userdata('login_user_id')))->row()->answered == 'answered')
+            if($this->db->get_where('student_question',array('exam_code'=>$code,'student_id'=>get_login_user_id()))->row()->answered == 'answered')
             {
                 redirect(base_url() . 'student/online_exams/', 'refresh');
             } 
@@ -601,7 +601,7 @@
         function subject($param1 = '', $param2 = '')
         {
             $this->isStudent();
-            $student_profile         = $this->db->get_where('student', array('student_id' => $this->session->userdata('student_id')))->row();
+            $student_profile         = $this->db->get_where('student', array('student_id' => get_student_login()))->row();
             $student_class_id        = $this->db->get_where('enroll' , array('student_id' => $student_profile->student_id,'year' => $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description
             ))->row()->class_id;
             $page_data['subjects']   = $this->db->get_where('subject', array('class_id' => $student_class_id,'year' => $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description))->result_array();
@@ -614,7 +614,7 @@
         function my_marks() 
         {
             $this->isStudent();
-            $student_id = $this->session->userdata('login_user_id');
+            $student_id = get_login_user_id();
             $class_id = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id'=> $this->runningSemester))->row()->class_id;
 
             if($this->useDailyMarks){
@@ -636,7 +636,7 @@
         function my_past_marks() 
         {
             $this->isStudent();
-            $student_id = $this->session->userdata('login_user_id');
+            $student_id = get_login_user_id();
 
             if($this->useDailyMarks){
                 $page_data['student_id'] =   $student_id;
@@ -655,7 +655,7 @@
         function class_routine($param1 = '', $param2 = '', $param3 = '')
         {
             $this->isStudent();
-            $student_profile         = $this->db->get_where('student', array('student_id' => $this->session->userdata('student_id')))->row();
+            $student_profile         = $this->db->get_where('student', array('student_id' => get_student_login()))->row();
             $page_data['class_id']   = $this->db->get_where('enroll' , array('student_id' => $student_profile->student_id,'year' => $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description))->row()->class_id;
             $page_data['student_id'] = $student_profile->student_id;
             $page_data['page_name']  = 'class_routine';
@@ -691,7 +691,7 @@
             }
             $info = base64_decode($student_id);
             $ex = explode('-', $info);
-            $page_data['exams']      = $this->crud->available_exams($this->session->userdata('login_user_id'),$ex[2]);
+            $page_data['exams']      = $this->crud->available_exams(get_login_user_id(),$ex[2]);
             $page_data['data']       = $student_id;
             $page_data['page_name']  = 'online_exams';
             $page_data['page_title'] = getPhrase('online_exams');
@@ -728,7 +728,7 @@
                 $this->session->set_flashdata('error_message' , getPhrase('thanks_for_your_payment'));
                 redirect(base_url() . 'student/invoice/', 'refresh');
             }
-            $student_profile         = $this->db->get_where('student', array('student_id'   => $this->session->userdata('student_id')))->row();
+            $student_profile         = $this->db->get_where('student', array('student_id'   => get_student_login()))->row();
             $student_id              = $student_profile->student_id;
             $page_data['invoices']   = $this->db->get_where('invoice', array('student_id' => $student_id))->result_array();
             $page_data['student_id'] = $student_id;
@@ -1020,7 +1020,7 @@
         function request($param1 = "", $param2 = "")
         {
             $this->isStudent();
-            $student_id = $this->session->userdata('login_user_id');
+            $student_id = get_login_user_id();
             parse_str(substr(strrchr($_SERVER['REQUEST_URI'], "?"), 1), $_GET);            
 
             if(html_escape($_GET['id']) != "")
@@ -1067,7 +1067,7 @@
         //Check student session.
         function isStudent()
         {
-            if ($this->session->userdata('student_login') != 1)
+            if (get_student_login() != 1)
             {
                 redirect(base_url(), 'refresh');
             }
@@ -1078,7 +1078,7 @@
         {
             $this->isStudent();
 
-            $student_id = $this->session->userdata('login_user_id');
+            $student_id = get_login_user_id();
             $page_data['student_id'] =   $student_id;
             $page_data['page_name']  =   'placement_achievement';
             $page_data['page_title'] =   getPhrase('placement_and_achievement');
@@ -1091,7 +1091,7 @@
         {
             $this->isStudent();
             
-            $student_id = $this->session->userdata('login_user_id');
+            $student_id = get_login_user_id();
 
             $page_data['test_id']       = $test_id;
             $page_data['student_id']    = $student_id;
@@ -1102,7 +1102,7 @@
         function class_books()
         {
             $this->isStudent();            
-            $student_id = $this->session->userdata('login_user_id');
+            $student_id = get_login_user_id();
 
             // Get the book 
             $class = $this->db->get_where('enroll' , array('student_id' => $student_id , 'year' => $this->runningYear, 'semester_id'=> $this->runningSemester))->row();
@@ -1130,7 +1130,7 @@
         function my_agreements()
         {
             $this->isStudent();   
-            $page_data['student_id'] = $this->session->userdata('student_id');
+            $page_data['student_id'] = get_student_login();
             $page_data['page_name']  = 'my_agreements';
             $page_data['page_title'] = getPhrase('my_agreements');
             $this->load->view('backend/index', $page_data);

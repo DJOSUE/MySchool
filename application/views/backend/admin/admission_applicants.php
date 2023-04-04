@@ -1,7 +1,7 @@
 <?php
 
     $running_year = $this->crud->getInfo('running_year');
-    $user_id = $this->session->userdata('login_user_id');
+    $user_id = get_login_user_id();
 
     if($start_date != '')
     {

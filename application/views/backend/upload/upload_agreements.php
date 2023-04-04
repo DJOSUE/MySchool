@@ -1,10 +1,10 @@
 <?php 
-    $account_type       =   $this->session->userdata('login_type'); 
+    $account_type       =   get_account_type(); 
     $fancy_path         =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/'.$account_type.'/';
 
     // validate if has access as admin/helpdesk user
-    $user_id            = $this->session->userdata('login_user_id');
-    $account_type       =   $this->session->userdata('login_type'); 
+    $user_id            = get_login_user_id();
+    $account_type       =   get_account_type(); 
 
 ?>
 <div class="content-w">

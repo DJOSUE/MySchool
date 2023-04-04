@@ -1,7 +1,7 @@
 <?php
     $payment_period = $this->db->get_where('payment_period', array('active' => '1'))->row();
     $period_id = $payment_period->period_id;
-    $user_id = $this->session->userdata('login_user_id');
+    $user_id = get_login_user_id();
 
     $date_current = date("Y-m-d");
 
@@ -29,7 +29,7 @@
 
     $ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']);
 
-    $admin_type = $this->db->get_where('admin', array('admin_id' => $this->session->userdata('login_user_id')))->row()->owner_status;
+    $admin_type = $this->db->get_where('admin', array('admin_id' => get_login_user_id()))->row()->owner_status;
 
 ?>
 <div class="content-w">

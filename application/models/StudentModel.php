@@ -42,11 +42,11 @@ class StudentModel extends School
     function add_interaction($student_id, $type = '')
     {
         $md5 = md5(date('d-m-Y H:i:s'));
-        $account_type   =   get_table_user($this->session->userdata('role_id'));
+        $account_type   =   get_table_user(get_role_id());
 
         if($type != 'automatic')
         {
-            $data['created_by']         = $this->session->userdata('login_user_id');
+            $data['created_by']         = get_login_user_id();
             $data['created_by_type']    = $account_type;
         }
         else
@@ -383,5 +383,10 @@ class StudentModel extends School
         $student_id = $this->db->get('student')->row()->student_id;
         
         return $student_id;
+    }
+
+    public function get_student_collection_profile($student_id, $year = "", $semester_id = "")
+    {
+
     }
 }

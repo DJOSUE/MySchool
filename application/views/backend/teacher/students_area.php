@@ -3,7 +3,7 @@
     $running_semester = $this->crud->getInfo('running_semester');
 
     //Get Classes for a teacher 
-    $teacher_id = $this->session->userdata('login_user_id');
+    $teacher_id = get_login_user_id();
     $classes = $this->db->query("SELECT class_id FROM `v_subject` 
                                                 where teacher_id = '$teacher_id '
                                                   AND year = '$running_year' 

@@ -1,5 +1,5 @@
 <?php 
-    $student_id = $this->session->userdata('login_user_id');
+    $student_id = get_login_user_id();
     $student_info = $this->db->get_where('student' , array('student_id' => $student_id))->result_array(); 
     foreach($student_info as $row): ?>
     <div class="content-w"> 

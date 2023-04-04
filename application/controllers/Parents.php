@@ -196,7 +196,7 @@ class Parents extends EduAppGT
         }       
         if($param1 == 'update')
         {
-            $this->user->updateParent($this->session->userdata('login_user_id'));
+            $this->user->updateParent(get_login_user_id());
             $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
             redirect(base_url() . 'parents/parent_update/', 'refresh');
         }

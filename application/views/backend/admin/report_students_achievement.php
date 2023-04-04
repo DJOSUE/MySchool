@@ -360,6 +360,7 @@
                                     style="background-color: #a01a7a; color: #fff;text-align: center;">
                                     <th>Semester</th>
                                     <th>Total Students</th>
+                                    <th>90% - 94%</th>
                                     <th>95% - 96%</th>
                                     <th>97% - 98%</th>
                                     <th>99% - 100%</th>
@@ -376,6 +377,9 @@
                                     </td>
                                     <td>
                                         <?=$total?>
+                                    </td>
+                                    <td>
+                                        <?=$this->academic->get_student_approved($year_id, $semester['semester_id'],90,94);?>
                                     </td>
                                     <td>
                                         <?=$this->academic->get_student_approved($year_id, $semester['semester_id'],95,96);?>

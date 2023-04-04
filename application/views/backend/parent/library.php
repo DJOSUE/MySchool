@@ -1,7 +1,7 @@
 <?php 
     $running_year = $this->crud->getInfo('running_year'); 
-    $class_id = $this->db->get_where('enroll', array('student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->class_id;
-    $section_id = $this->db->get_where('enroll' , array('student_id' => $this->session->userdata('login_user_id'),'class_id' => $class_id,'year' => $running_year))->row()->section_id;
+    $class_id = $this->db->get_where('enroll', array('student_id' => get_login_user_id(), 'year' => $running_year))->row()->class_id;
+    $section_id = $this->db->get_where('enroll' , array('student_id' => get_login_user_id(),'class_id' => $class_id,'year' => $running_year))->row()->section_id;
 ?>
     <div class="content-w">
         <?php include 'fancy.php';?>

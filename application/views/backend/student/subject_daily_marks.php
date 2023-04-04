@@ -15,7 +15,7 @@
     $section_id = $explode_data[1];
     $subject_id = $explode_data[2];
     
-    $student_id = $this->session->userdata('login_user_id');
+    $student_id = get_login_user_id();
     $sub = $this->db->get_where('subject', array('subject_id' => $subject_id))->result_array();
 
     $grades[] = [1, 'labuno', 'la1'];

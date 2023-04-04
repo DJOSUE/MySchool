@@ -13,7 +13,7 @@
                                         $admins = $this->db->get('admin')->result_array();
                                         foreach ($admins as $row):
                                     ?>
-                                    <?php if($this->session->userdata('login_user_id') != $row['admin_id']):?>
+                                    <?php if(get_login_user_id() != $row['admin_id']):?>
                                     <option value="admin-<?= $row['admin_id']; ?>">
                                         <?= $this->crud->get_name('admin',$row['admin_id']);?></option>
                                     <?php endif;?>

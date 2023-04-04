@@ -29,7 +29,7 @@ class Payments extends EduAppGT
     }
     
     public function paypal($invoiceId = ''){
-        if ($this->session->userdata('login_type') != 'student' && $this->session->userdata('login_type') != 'parent')
+        if (get_account_type() != 'student' && get_account_type() != 'parent')
         {
             redirect(base_url(), 'refresh');
         }
@@ -38,7 +38,7 @@ class Payments extends EduAppGT
     
     function paypal_success()
     {
-        $type = $this->session->userdata('login_type');
+        $type = get_account_type();
         $this->payment->paypalSuccess();
         $this->session->set_flashdata('flash_message' , getPhrase('thanks_for_your_payment'));
         if($type == 'parent'){
@@ -49,7 +49,7 @@ class Payments extends EduAppGT
     }
     
     public function stripe($invoiceId){
-        if ($this->session->userdata('login_type') != 'student' && $this->session->userdata('login_type') != 'parent')
+        if (get_account_type() != 'student' && get_account_type() != 'parent')
         {
             redirect(base_url(), 'refresh');
         }
@@ -62,7 +62,7 @@ class Payments extends EduAppGT
     
     public function stripe_success($invoiceId)
     {
-        $type = $this->session->userdata('login_type');
+        $type = get_account_type();
         if($this->input->post('stripeToken') != ''){
             $data['payment_details']   = $this->input->post('stripeToken');
             $data['payment_timestamp'] = strtotime(date("m/d/Y"));
@@ -101,7 +101,7 @@ class Payments extends EduAppGT
     }
     
     public function razorpay($invoiceId){
-        if ($this->session->userdata('login_type') != 'student' && $this->session->userdata('login_type') != 'parent')
+        if (get_account_type() != 'student' && get_account_type() != 'parent')
         {
             redirect(base_url(), 'refresh');
         }
@@ -115,7 +115,7 @@ class Payments extends EduAppGT
     function razorpay_callback()
     {
         $razorpay_data = json_decode($this->db->get_where('payment_gateways', array('name' => 'razorpay'))->row()->settings);
-        $type = $this->session->userdata('login_type');
+        $type = get_account_type();
         if (!empty($this->input->post('razorpay_payment_id')) && !empty($this->input->post('merchant_order_id'))) 
         {
             $inv = explode('-',$this->input->post('merchant_order_id'));
@@ -227,7 +227,7 @@ class Payments extends EduAppGT
     
     public function paystack($invoiceId = '')
     {
-        if ($this->session->userdata('login_type') != 'student' && $this->session->userdata('login_type') != 'parent')
+        if (get_account_type() != 'student' && get_account_type() != 'parent')
         {
             redirect(base_url(), 'refresh');
         }
@@ -246,7 +246,7 @@ class Payments extends EduAppGT
     
     public function paystack_verify()
     {
-        $type = $this->session->userdata('login_type');
+        $type = get_account_type();
         if ($_GET['trxref'] OR $_GET['reference'])
         {
             $inv = explode('-',$_GET['reference']);
@@ -307,8 +307,8 @@ class Payments extends EduAppGT
     
     public function flutterwave($invoiceId = '')
     {
-        $type = $this->session->userdata('login_type');
-        if ($this->session->userdata('login_type') != 'student' && $this->session->userdata('login_type') != 'parent')
+        $type = get_account_type();
+        if (get_account_type() != 'student' && get_account_type() != 'parent')
         {
             redirect(base_url(), 'refresh');
         }
@@ -339,7 +339,7 @@ class Payments extends EduAppGT
     
     public function flutterwave_status()
 	{
-	    $type = $this->session->userdata('login_type');
+	    $type = get_account_type();
 		if(isset($_GET['txref']) && !empty($_GET['txref'])){
 			$response = $this->flutterwave_lib->verify_transaction($_GET['txref']);
 			if(!empty($response)){
@@ -447,7 +447,7 @@ class Payments extends EduAppGT
     function isLogin()
     {
         $array      = ['admin', 'accountant'];
-        $login_type = $this->session->userdata('login_type');
+        $login_type = get_account_type();
         
         if (!in_array($login_type, $array))
         {

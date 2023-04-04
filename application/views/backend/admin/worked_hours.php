@@ -1,5 +1,5 @@
 <?php
-    $user_id = $this->session->userdata('login_user_id');    
+    $user_id = get_login_user_id();    
     $payment_period = $this->db->get_where('payment_period', array('period_id' => $period_id))->row();    
     // $worker = $this->db->get_where('worker', array('type_user' => 'admin', 'user_id' => $user_id))->row();
     // $worker_id = $worker->worker_id;    
@@ -7,7 +7,7 @@
     // $total_hours = $this->db->query("SELECT TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(`hours_worked`))),'%H:%i') AS Total 
     //                                    FROM v_time_sheet
     //                                   WHERE date BETWEEN '$payment_period->start_date' AND '$payment_period->end_date'")->row();
-    $admin_type = $this->db->get_where('admin', array('admin_id' => $this->session->userdata('login_user_id')))->row()->owner_status;
+    $admin_type = $this->db->get_where('admin', array('admin_id' => get_login_user_id()))->row()->owner_status;
 ?>
 <div class="content-w">
     <?php include 'fancy.php';?>

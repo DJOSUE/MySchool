@@ -1,5 +1,5 @@
 <?php 
-    $fancy_count = $this->db->get_where('notification', array('user_id' => $this->session->userdata('login_user_id'), 'user_type' => $this->session->userdata('login_type'), 'status' => '0'));
+    $fancy_count = $this->db->get_where('notification', array('user_id' => get_login_user_id(), 'user_type' => get_account_type(), 'status' => '0'));
     $fancy_number = $this->crud->count_unread_messages();
     $fc_info = base64_decode($class_id);
     $fc_info_data = base64_decode($data); $fc_ex = explode("-", $fc_info_data);
@@ -197,7 +197,7 @@
                     <div class="mCustomScrollbar" data-mcs-theme="dark">
                         <ul class="notification-list chat-message">
                             <?php 
-                                $fancy_current_user = $this->session->userdata('login_type') . '-' . $this->session->userdata('login_user_id');
+                                $fancy_current_user = get_account_type() . '-' . get_login_user_id();
                                 $fancy_message_threads = $this->crud->getFancyChat();
                                 foreach ($fancy_message_threads as $fancy_rows):
                                 if ($fancy_rows['sender'] == $fancy_current_user)
@@ -273,7 +273,7 @@
             <div class="author-page author vcard inline-items more">
                 <div class="author-thumb">
                     <img alt="author"
-                        src="<?php echo $this->crud->get_image_url('admin', $this->session->userdata('login_user_id'));?>"
+                        src="<?php echo $this->crud->get_image_url('admin', get_login_user_id());?>"
                         class="avatar bg-white" width="32px">
                     <div class="more-dropdown more-with-triangle">
                         <div class="mCustomScrollbar" data-mcs-theme="dark">
@@ -302,7 +302,7 @@
                 </div>
                 <a href="javascript:void(0);" class="author-name fn">
                     <div class="author-title">
-                        <?php echo $this->crud->get_name('admin', $this->session->userdata('login_user_id'));?> <svg
+                        <?php echo $this->crud->get_name('admin', get_login_user_id());?> <svg
                             class="olymp-dropdown-arrow-icon">
                             <use
                                 xlink:href="<?php echo base_url();?>public/style/olapp/svg-icons/sprites/icons.svg#olymp-dropdown-arrow-icon">
@@ -311,7 +311,7 @@
                     </div>
                     <span class="author-subtitle">
                         <?php 
-                            $account_type = $this->session->userdata('role_id');
+                            $account_type = get_role_id();
 
                             echo $this->system->get_role_name($account_type);
                         ?>
@@ -356,7 +356,7 @@
                     <div class="author-page author vcard inline-items more top16">
                         <div class="author-thumb imgs">
                             <img alt="author"
-                                src="<?php echo $this->crud->get_image_url($this->session->userdata('login_type'), $this->session->userdata('login_user_id'));?>"
+                                src="<?php echo $this->crud->get_image_url(get_account_type(), get_login_user_id());?>"
                                 class="avatar bg-white" width="35px">
                         </div>
                     </div>
@@ -371,7 +371,7 @@
             <div class="mCustomScrollbar" data-mcs-theme="dark">
                 <ul class="notification-list chat-message">
                     <?php 
-                        $fancy_current_user = $this->session->userdata('login_type') . '-' . $this->session->userdata('login_user_id');
+                        $fancy_current_user = get_account_type() . '-' . get_login_user_id();
                         $fancy_message_threads = $this->crud->getFancyChat();
                         foreach ($fancy_message_threads as $row1):
                         if ($row1['sender'] == $fancy_current_user)

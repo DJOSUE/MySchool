@@ -373,7 +373,7 @@ class Accountant extends EduAppGT
     //Check session function.
     function isAccountant()
     {
-        if ($this->session->userdata('accountant_login') != 1)
+        if (get_accountant_login() != 1)
         {
             redirect(site_url('login'), 'refresh');
         }
@@ -682,7 +682,7 @@ class Accountant extends EduAppGT
             if($cashier_all)
                 $cashier_id = html_escape($this->input->post('cashier_id'));
             else
-                $cashier_id = "accountant:".$this->session->userdata('login_user_id');
+                $cashier_id = "accountant:".get_login_user_id();
         }
         else
         {
@@ -694,7 +694,7 @@ class Accountant extends EduAppGT
             else
             {
                 $date = "";
-                $cashier_id = "accountant:".$this->session->userdata('login_user_id');
+                $cashier_id = "accountant:".get_login_user_id();
             }
         }
 

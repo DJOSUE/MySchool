@@ -2909,7 +2909,7 @@
 
             $hasPermissions = 0;
 
-            $role_id = $this->session->userdata( 'role_id' );
+            $role_id = get_role_id();
             $type = '';
             
             //validate if the user has the right to do
@@ -2948,36 +2948,42 @@
 
                 if ( $param1 == 'admin' ) {
 
-                    $this->unset_admin();
-                    $this->session->set_userdata('admin_login', '1');
-                    $this->session->set_userdata('role_id', $row->owner_status);
-                    $this->session->set_userdata('admin_id', $row->admin_id);
-                    $this->session->set_userdata('login_user_id', $row->admin_id);
-                    $this->session->set_userdata('name', $row->first_name);
-                    $this->session->set_userdata('login_type', 'admin');
+                    $user_data['admin_login']   = '1';
+                    $user_data['role_id']       = $row->owner_status;
+                    $user_data['admin_id']      = $row->admin_id;
+                    $user_data['login_user_id'] = $row->admin_id;
+                    $user_data['name']          = $row->first_name;
+                    $user_data['login_type']    = 'admin';
+        
+                    $this->session->set_userdata('user_data', $user_data);
                     redirect(base_url() . 'admin/panel/', 'refresh');
                 }
                 if ( $param1 == 'teacher' ) {
 
                     $this->unset_admin();
-                    $this->session->set_userdata('role_id', '5');
-                    $this->session->set_userdata('teacher_login', '1');
-                    $this->session->set_userdata('teacher_id', $row->teacher_id);
-                    $this->session->set_userdata('login_user_id', $row->teacher_id);
-                    $this->session->set_userdata('name', $row->first_name);
-                    $this->session->set_userdata('login_type', 'teacher');
+                    $user_data['teacher_login'] = '1';
+                    $user_data['role_id']       = '5';
+                    $user_data['program_id']    = '0';
+                    $user_data['teacher_id']    = $row->teacher_id;
+                    $user_data['login_user_id'] = $row->teacher_id;
+                    $user_data['name']          = $row->first_name;
+                    $user_data['login_type']    = 'teacher';
+                    $this->session->set_userdata('user_data', $user_data);
 
                     redirect(base_url() . 'teacher/panel/', 'refresh');
                 }
                 if ( $param1 == 'student' ){
                     $this->unset_admin();
-                    $this->session->set_userdata('role_id', '6');
-                    $this->session->set_userdata('program_id', $row->program_id);
-                    $this->session->set_userdata('student_login', '1');
-                    $this->session->set_userdata('student_id', $row->student_id);
-                    $this->session->set_userdata('login_user_id', $row->student_id);
-                    $this->session->set_userdata('name', $row->first_name);
-                    $this->session->set_userdata('login_type', 'student');
+
+                    $user_data['student_login'] = '1';
+                    $user_data['role_id']       = '6';
+                    $user_data['program_id']    = $row->program_id;
+                    $user_data['student_id']    = $row->student_id;
+                    $user_data['login_user_id'] = $row->student_id;
+                    $user_data['name']          = $row->first_name;
+                    $user_data['login_type']    = 'student';
+                    $this->session->set_userdata('user_data', $user_data);
+
                     redirect(base_url() . 'student/panel/', 'refresh');
                 }
                 if ( $param1 == 'parent' ){
@@ -2994,12 +3000,14 @@
                 if ( $param1 == 'accountant' ){
                     
                     $this->unset_admin();
-                    $this->session->set_userdata('role_id', $row->role_id);
-                    $this->session->set_userdata('accountant_login', '1');
-                    $this->session->set_userdata('accountant_id', $row->accountant_id);
-                    $this->session->set_userdata('login_user_id', $row->accountant_id);
-                    $this->session->set_userdata('name', $row->first_name);
-                    $this->session->set_userdata('login_type', 'accountant');
+                    $user_data['accountant_login'] = '1';
+                    $user_data['role_id']       = $row->role_id;
+                    $user_data['accountant_id']    = $row->accountant_id;
+                    $user_data['login_user_id'] = $row->accountant_id;
+                    $user_data['name']          = $row->first_name;
+                    $user_data['login_type']    = 'accountant';
+                    $this->session->set_userdata('user_data', $user_data);
+                    
                     redirect(base_url() . 'accountant/panel/', 'refresh');
                 }
                 if ( $param1 == 'librarian' ){
@@ -3050,7 +3058,7 @@
 
                 if($cashier_id == '')
                 {
-                    $cashier_id = "admin|".$this->session->userdata('login_user_id');
+                    $cashier_id = "admin|".get_login_user_id();
                 }
             }
             else
@@ -3063,7 +3071,7 @@
                 else
                 {
                     $date = date("Y-m-d");
-                    $cashier_id = "admin|".$this->session->userdata('login_user_id');
+                    $cashier_id = "admin|".get_login_user_id();
                 }
             }
     
@@ -5347,19 +5355,13 @@
 
         // unset Admin cookies
         function unset_admin(){
-            $this->session->unset_userdata('admin_login');
-            $this->session->unset_userdata('role_id');
-            $this->session->unset_userdata('admin_id');
-            $this->session->unset_userdata('login_user_id');
-            $this->session->unset_userdata('name');
-            $this->session->unset_userdata('login_type');
-            $this->session->unset_userdata('program_id');
+            $this->session->unset_userdata('user_data');
         }
 
         //Check Admin session and access. 
         function isAdmin($permission_for = '')
         {
-            if ($this->session->userdata('admin_login') != 1 )
+            if (get_admin_login() != 1 )
             {
                 $this->session->set_userdata('last_page', current_url());
                 redirect(base_url(), 'refresh');

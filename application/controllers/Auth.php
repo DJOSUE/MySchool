@@ -34,8 +34,8 @@ class Auth extends EduAppGT
     function facebook()
     {
         parse_str(substr(strrchr($_SERVER['REQUEST_URI'], "?"), 1), $_GET);
-        $account_type = $this->session->userdata('login_type');
-        $account_id = $this->session->userdata('login_user_id');
+        $account_type = get_account_type();
+        $account_id = get_login_user_id();
         if($account_type == "parent")
         {
             $url = "parents";
@@ -251,8 +251,8 @@ class Auth extends EduAppGT
     function loginfacebook()
     {
         parse_str(substr(strrchr($_SERVER['REQUEST_URI'], "?"), 1), $_GET);
-        $account_type = $this->session->userdata('login_type');
-        $account_id = $this->session->userdata('login_user_id');
+        $account_type = get_account_type();
+        $account_id = get_login_user_id();
         if($account_type == "parent")
         {
             $url = "parents";
@@ -376,8 +376,8 @@ class Auth extends EduAppGT
         $gClient->setClientSecret($clientSecret);
         $gClient->setRedirectUri($redirectURL);
         $google_oauthV2 = new Google_Oauth2Service($gClient);
-        $account_type = $this->session->userdata('login_type');
-        $account_id = $this->session->userdata('login_user_id');
+        $account_type = get_account_type();
+        $account_id = get_login_user_id();
         if($account_type == "parent")
         {
             $url = "parents";
@@ -435,8 +435,8 @@ class Auth extends EduAppGT
                 $data['g_picture']  =  $gpUserProfile['picture'];
                 $data['link']       =  $gpUserProfile['link'];
                 $data['g_email']    =  $gpUserProfile['email'];
-                $this->db->where($this->session->userdata('login_type')."_id", $this->session->userdata('login_user_id'));
-                $this->db->update($this->session->userdata('login_type'), $data);
+                $this->db->where(get_account_type()."_id", get_login_user_id());
+                $this->db->update(get_account_type(), $data);
                 if($url == "admin"){
                     redirect(base_url() . 'admin/my_account/2', 'refresh');
                 }

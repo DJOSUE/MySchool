@@ -63,7 +63,7 @@
         function isLogin()
         {
             $array      = ['admin', 'teacher', 'student', 'parent', 'accountant', 'librarian'];
-            $login_type = $this->session->userdata('login_type');
+            $login_type = get_account_type();
             
             if (!in_array($login_type, $array))
             {

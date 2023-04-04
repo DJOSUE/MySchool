@@ -1,5 +1,5 @@
 <?php 
-    $user_id = $this->session->userdata('login_user_id');
+    $user_id = get_login_user_id();
     $applicant_info = $this->db->get_where('applicant' , array('applicant_id' => $applicant_id))->result_array(); 
     $allow_actions = is_student($applicant_id);
     $is_international = is_international($applicant_id);
