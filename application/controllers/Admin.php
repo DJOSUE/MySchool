@@ -4569,6 +4569,54 @@
 
         }
 
+        function task_list_export()
+        {
+            $this->isAdmin('task_module');
+
+            if($_SERVER['REQUEST_METHOD'] === 'POST')
+            {   
+                $department_id  = $this->input->post('department_id');
+                $category_id    = $this->input->post('category_id');
+                $priority_id    = $this->input->post('priority_id');
+                $status_id      = $this->input->post('status_id');
+                $text           = $this->input->post('title');
+                $due_date       = $this->input->post('due_date');
+                $assigned_me    = $this->input->post('assigned_me');
+
+                $data['department_id'] = $department_id;
+                $data['category_id']   = $category_id;
+                $data['priority_id']   = $priority_id;
+                $data['status_id']     = $status_id;
+                $data['text']          = $text;
+                $data['search']        = $search;
+                $data['due_date']      = $due_date;
+                $data['assigned_me']   = $assigned_me;
+
+                $this->session->set_userdata($data);
+            }
+            else
+            {
+                $department_id  = $this->session->userdata('department_id');
+                $category_id    = $this->session->userdata('category_id');
+                $priority_id    = $this->session->userdata('priority_id');
+                $status_id      = $this->session->userdata('status_id');
+                $text           = $this->session->userdata('text');
+                $due_date       = $this->session->userdata('due_date');
+                $assigned_me    = $this->session->userdata('assigned_me');
+
+                $data['department_id'] = $department_id;
+                $data['category_id']   = $category_id;
+                $data['priority_id']   = $priority_id;
+                $data['status_id']     = $status_id;
+                $data['text']          = $text;
+                $data['search']        = $search;
+                $data['due_date']      = $due_date;
+                $data['assigned_me']   = $assigned_me;
+            }
+
+            $result = $this->task->export_task_list($data);   
+        }
+
         function task_applicant()
         {
             $this->isAdmin('task_module');

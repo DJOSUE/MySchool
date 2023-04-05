@@ -114,7 +114,7 @@
                                                 ?>
                                                 <tr>
                                                     <td>
-                                                        <?=  date_format(date_create($row['created_at']), "Y-m-d");?>
+                                                        <?=  date_format(date_create($row['invoice_date']), "Y-m-d");?>
                                                     </td>
                                                     <td class="cell-with-media">
                                                         <span>

@@ -777,4 +777,102 @@ class Task extends School
         $query = $this->db->get("task")->result_array();
         return $query ;
     }
+
+    function export_task_list($data)
+    {
+
+        $user_id            =   get_login_user_id();
+        $account_type       =   get_table_user(get_role_id());    
+    
+        $this->db->reset_query();
+        $this->db->order_by('created_at', 'desc');
+    
+        if($data['department_id'] != '')
+        {
+            $array = $this->task->get_categories_where($data['department_id']);
+            $this->db->where_in('category_id', $array);
+        }
+    
+        if($data['category_id'] != '')
+        {
+            $this->db->where('category_id', $data['category_id']);
+        }
+        if($data['priority_id'] != '')
+        {
+            $this->db->where('priority_id', $data['priority_id']);
+        }
+        if($data['status_id'] != '')
+        {   
+            $this->db->where('status_id', $data['status_id']);
+        }
+        if($data['text'] != '')
+        {
+            $this->db->like('title' , str_replace("%20", " ", $data['text']));
+        }
+        if($data['assigned_me'] == 1)
+        {
+            $this->db->where('assigned_to_type', $account_type);
+            $this->db->where('assigned_to' , $user_id);
+            
+        } 
+        if($data['due_date'] != '')
+        {
+            $this->db->where('due_date' , $data['due_date']);
+        } 
+        $task_query = $this->db->get('task');
+        $tasks = $task_query->result_array();
+
+
+        $objPHPExcel = new PHPExcel();
+        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()->setCellValue('A1', getPhrase('title'));
+        $objPHPExcel->getActiveSheet()->setCellValue('B1', getPhrase('category'));
+        $objPHPExcel->getActiveSheet()->setCellValue('C1', getPhrase('user'));
+        $objPHPExcel->getActiveSheet()->setCellValue('D1', getPhrase('status'));
+        $objPHPExcel->getActiveSheet()->setCellValue('E1', getPhrase('priority'));
+        $objPHPExcel->getActiveSheet()->setCellValue('F1', getPhrase('due_date'));
+        $objPHPExcel->getActiveSheet()->setCellValue('G1', getPhrase('assigned_to'));
+        $objPHPExcel->getActiveSheet()->setCellValue('H1', getPhrase('created_by'));
+        $objPHPExcel->getActiveSheet()->setCellValue('I1', getPhrase('created_at'));
+        $objPHPExcel->getActiveSheet()->setCellValue('J1', getPhrase('updated_by'));
+        $objPHPExcel->getActiveSheet()->setCellValue('K1', getPhrase('updated_at'));
+        
+
+        $a = 2; $b =2; $c =2; $d =2; $e =2; $f =2; $g =2; $h =2; $i =2; $j =2; $k =2;
+
+        foreach($tasks as $row)
+        {            
+            $priority_info  = $this->task->get_priority_info($row['priority_id']);
+            $assigned_to    = trim($row['assigned_to_type'])    != '' ? $this->crud->get_name(trim($row['assigned_to_type']), $row['assigned_to']) : '';
+            $created_by     = trim($row['created_by_type'])     != '' ? $this->crud->get_name(trim($row['created_by_type']), $row['created_by']) : '';
+            $updated_by     = trim($row['updated_by_type'])     != '' ? $this->crud->get_name(trim($row['updated_by_type']), $row['updated_by']) : '';
+
+            $objPHPExcel->getActiveSheet()->setCellValue('A'.$a++, $row['title']);
+            $objPHPExcel->getActiveSheet()->setCellValue('B'.$b++, $this->task->get_category($row['category_id']));
+            $objPHPExcel->getActiveSheet()->setCellValue('C'.$c++, $this->crud->get_name($row['user_type'], $row['user_id']));
+            $objPHPExcel->getActiveSheet()->setCellValue('D'.$d++, $this->task->get_status($row['status_id']));
+            $objPHPExcel->getActiveSheet()->setCellValue('E'.$e++, $priority_info['name']);
+            $objPHPExcel->getActiveSheet()->setCellValue('F'.$f++, $row['due_date']);
+            $objPHPExcel->getActiveSheet()->setCellValue('G'.$g++, $assigned_to);
+            $objPHPExcel->getActiveSheet()->setCellValue('H'.$h++, $created_by);
+            $objPHPExcel->getActiveSheet()->setCellValue('I'.$i++, $row['created_at']);
+            $objPHPExcel->getActiveSheet()->setCellValue('J'.$j++, $updated_by);
+            $objPHPExcel->getActiveSheet()->setCellValue('K'.$k++, $row['updated_at']);
+        }
+
+        $objPHPExcel->getActiveSheet()->setTitle(getPhrase('tasks'));
+    
+        header("Pragma: public");
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Content-Type: application/force-download");
+        header("Content-Type: application/octet-stream");
+        header("Content-Type: application/download");
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="export_tasks_'.date('d-m-y').'.xlsx"');
+        header("Content-Transfer-Encoding: binary ");
+        $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel); 
+        $objWriter->setOffice2003Compatibility(true);
+        $objWriter->save('php://output');
+    }
 }

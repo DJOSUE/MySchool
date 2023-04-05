@@ -2692,7 +2692,7 @@ class Academic extends School
     function get_student_enrollment($student_id)
     {
         $this->db->reset_query();
-        $this->db->select('class_id, class_name, section_id, section_name, year, semester_id, semester_name, modality_name');
+        $this->db->select('class_id, class_name, section_id, section_name, year, semester_id, semester_name, modality_name, teacher_name');
         $this->db->where('year', $this->runningYear);
         $this->db->where('semester_id', $this->runningSemester);
         $this->db->from('v_enrollment');

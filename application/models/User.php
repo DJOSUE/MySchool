@@ -1305,9 +1305,10 @@ class User extends School
         $objPHPExcel->getActiveSheet()->setCellValue('C1', getPhrase('type'));
         $objPHPExcel->getActiveSheet()->setCellValue('D1', getPhrase('class'));   
         $objPHPExcel->getActiveSheet()->setCellValue('E1', getPhrase('modality'));     
-        $objPHPExcel->getActiveSheet()->setCellValue('F1', getPhrase('schedule'));        
+        $objPHPExcel->getActiveSheet()->setCellValue('F1', getPhrase('schedule'));
+        $objPHPExcel->getActiveSheet()->setCellValue('G1', getPhrase('teacher'));
 
-        $a = 2; $b =2; $c =2; $d =2; $e =2; $f =2;
+        $a = 2; $b =2; $c =2; $d =2; $e =2; $f =2; $g =2;
 
         $array_users = array();
 
@@ -1344,21 +1345,21 @@ class User extends School
         foreach($query_admin as $item)
         {
             $name           = $item['first_name'] .' '. $item['last_name'];
-            $array_admin    = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => '', 'modality' => '', 'schedule' => '');
+            $array_admin    = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => '', 'modality' => '', 'schedule' => '', 'teacher' => '');
             array_push($array_users, $array_admin);
         }
 
         foreach($query_teacher as $item)
         {
             $name       = $item['first_name'] .' '. $item['last_name'];
-            $array_item = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => '', 'modality' => '', 'schedule' => '');
+            $array_item = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => '', 'modality' => '', 'schedule' => '', 'teacher' => '');
             array_push($array_users, $array_item);
         }
 
         foreach($query_accountant as $item)
         {
             $name       = $item['first_name'] .' '. $item['last_name'];
-            $array_item = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => '', 'modality' => '', 'schedule' => '');
+            $array_item = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => '', 'modality' => '', 'schedule' => '', 'teacher' => '');
             array_push($array_users, $array_item);
         }
 
@@ -1368,10 +1369,11 @@ class User extends School
             $enrolment  = $this->academic->get_student_enrollment($item['user_id']);
             $class      = $enrolment[0]['class_name'];
             $modality   = $enrolment[0]['modality_name'];
-            $schedule   = $enrolment[0]['section_name'];            
+            $schedule   = $enrolment[0]['section_name'];
+            $teacher    = $enrolment[0]['teacher_name'];
             if($schedule !=  '')
             {
-                $array_item = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => $class, 'modality' => $modality, 'schedule' => $schedule);
+                $array_item = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => $class, 'modality' => $modality, 'schedule' => $schedule, 'teacher' => $teacher);
                 array_push($array_users, $array_item);
             }
         }
@@ -1383,7 +1385,8 @@ class User extends School
             $objPHPExcel->getActiveSheet()->setCellValue('C'.$c++, $row['type_user']);
             $objPHPExcel->getActiveSheet()->setCellValue('D'.$d++, $row['class']);
             $objPHPExcel->getActiveSheet()->setCellValue('E'.$e++, $row['modality']);
-            $objPHPExcel->getActiveSheet()->setCellValue('F'.$f++, $row['schedule']);            
+            $objPHPExcel->getActiveSheet()->setCellValue('F'.$f++, $row['schedule']);
+            $objPHPExcel->getActiveSheet()->setCellValue('G'.$g++, $row['teacher']);   
         }
         $objPHPExcel->getActiveSheet()->setTitle(getPhrase('students'));
     

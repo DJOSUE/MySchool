@@ -150,7 +150,19 @@
                         </div>
                         <div class="row">
                             <div class="table-responsive">
-                                <p><?php echo $links; ?></p>
+                                <div class="row">
+                                    <div class="col">
+                                    <a href="/admin/task_list_export/" class="pagination justify-content-start">
+                                        <button class="btn btn-info btn-sm btn-rounded">
+                                            <i class="picons-thin-icon-thin-0123_download_cloud_file_sync"
+                                                style="font-weight: 300; font-size: 25px;"></i>
+                                        </button>
+                                    </a>
+                                    </div>
+                                    <div class="col">
+                                    <?php echo $links; ?>
+                                    </div>
+                                </div>
                                 <table class="table table-padded" id="dvData">
                                     <thead>
                                         <tr>
