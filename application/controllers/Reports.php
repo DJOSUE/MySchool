@@ -192,10 +192,20 @@ class Reports extends EduAppGT
     {
         $this->isLogin();
         
-        $page_data['page_name']     = 'academic_dashboard';
-        $page_data['page_title']    = getPhrase('academic_dashboard');
-        $page_data['fancy_path']    = $this->fancy_path;
-        $this->load->view('backend/reports/index', $page_data); 
+        if(has_permission('academic_dashboard_report'))
+        {
+            $page_data['page_name']     = 'academic_dashboard';
+            $page_data['page_title']    = getPhrase('academic_dashboard');
+            $page_data['fancy_path']    = $this->fancy_path;
+            $this->load->view('backend/reports/index', $page_data); 
+        }
+        else
+        {
+            redirect(base_url() . 'reports/academic_schedule_class', 'refresh');
+        }
+
+
+        
     }
 
     function academic_schedule_class()

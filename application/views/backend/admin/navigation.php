@@ -69,14 +69,14 @@
                 </li>
                 <!-- Time Card Access -->
                 <?php if(has_permission('time_card_module')):?>
-                <li <?= in_array($page_name, $time_card_pages) ? 'class="currentItem"' : '';?>>
+                <!-- <li <?= in_array($page_name, $time_card_pages) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/time_card/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('time_card');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0844_stopwatch_training_time"></i>
                         </div>
                     </a>
-                </li>
+                </li> -->
                 <?php endif;?>
                 <!-- Tasks -->
                 <?php if(has_permission('task_module')):?>
@@ -124,14 +124,14 @@
                 <?php endif;?>
                 <!-- Class Routine Access -->
                 <?php if(has_permission('schedule_teacher_module')):?>
-                <li <?= in_array($page_name, $routine_pages) ? 'class="currentItem"' : '';?>>
+                <!-- <li <?= in_array($page_name, $routine_pages) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/class_routine_view/" data-toggle="tooltip"
                         data-placement="right" data-original-title="<?php echo getPhrase('class_routine');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0029_time_watch_clock_wall"></i>
                         </div>
                     </a>
-                </li>
+                </li> -->
                 <?php endif;?>
                 <!-- Academic Access -->
                 <?php if(has_permission('academic_module')):?>
@@ -146,25 +146,25 @@
                 <?php endif;?>
                 <!-- Library Access -->
                 <?php if(has_permission('library_module')):?>
-                <li <?= (in_array($page_name, $library_pages)) ? 'class="currentItem"' : '';?>>
+                <!-- <li <?= (in_array($page_name, $library_pages)) ? 'class="currentItem"' : '';?>>
                     <a href="<?php echo base_url();?>admin/library/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('library');?>">
                         <div class="left-menu-icon">
                             <i class="os-icon picons-thin-icon-thin-0017_office_archive"></i>
                         </div>
                     </a>
-                </li>
+                </li> -->
                 <?php endif;?>
                 <!-- Attendance Access -->
                 <?php if(has_permission('attendance_module')):?>
-                <li <? in_array($page_name, $attendance_pages) ? 'class="currentItem"' : '' ;?>>
+                <!-- <li <? in_array($page_name, $attendance_pages) ? 'class="currentItem"' : '' ;?>>
                     <a href="<?php echo base_url();?>admin/teacher_attendance/" data-toggle="tooltip"
                         data-placement="right" data-original-title="<?php echo getPhrase('teacher_attendance');?>">
                         <div class="left-menu-icon">
                             <i class="os-icon picons-thin-icon-thin-0023_calendar_month_day_planner_events"></i>
                         </div>
                     </a>
-                </li>
+                </li> -->
                 <?php endif;?>
                 <!-- Calendar Access -->
                 <?php if(has_permission('calendar_module')):?>
@@ -224,25 +224,25 @@
                 <?php endif;?>
                 <!-- School Bus Access -->
                 <?php if(has_permission('school_bus_module')):?>
-                <li <?php if($page_name == 'school_bus'):?>class="currentItem" <?php endif;?>>
+                <!-- <li <?php if($page_name == 'school_bus'):?>class="currentItem" <?php endif;?>>
                     <a href="<?php echo base_url();?>admin/school_bus/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('school_bus');?>">
                         <div class="left-menu-icon">
                             <i class="os-icon picons-thin-icon-thin-0470_bus_transport"></i>
                         </div>
                     </a>
-                </li>
+                </li> -->
                 <?php endif;?>
                 <!-- Classrooms Access -->
                 <?php if(has_permission('classrooms_module')):?>
-                <li <?php if($page_name == 'classroom'):?>class="currentItem" <?php endif;?>>
+                <!-- <li <?php if($page_name == 'classroom'):?>class="currentItem" <?php endif;?>>
                     <a href="<?php echo base_url();?>admin/classrooms/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('classrooms');?>">
                         <div class="left-menu-icon">
                             <i class="os-icon picons-thin-icon-thin-0047_home_flat"></i>
                         </div>
                     </a>
-                </li>
+                </li> -->
                 <?php endif;?>
                 <!-- Accounting Reports Access -->
                 <?php if(has_permission('accounting_module')):?>
@@ -376,14 +376,14 @@
                 </li>
                 <!-- Time Card Access -->
                 <?php if(has_permission('time_card_module')):?>
-                <li>
+                <!-- <li>
                     <a href="<?php echo base_url();?>admin/time_card/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0844_stopwatch_training_time"></i>
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('time_card');?></span>
                     </a>
-                </li>
+                </li> -->
                 <?php endif;?>
                 <!-- Tasks -->
                 <?php if(has_permission('task_module')):?>
@@ -428,14 +428,14 @@
                 <?php endif;?>
                 <!-- Class Routine Access -->
                 <?php if(has_permission('schedule_teacher_module')):?>
-                <li>
+                <!-- <li>
                     <a href="<?php echo base_url();?>admin/class_routine_view/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0029_time_watch_clock_wall"></i>
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('class_routine');?></span>
                     </a>
-                </li>
+                </li> -->
                 <?php endif;?>
                 <!-- Academic Access -->
                 <?php if(has_permission('academic_module')):?>
@@ -450,25 +450,25 @@
                 <?php endif;?>
                 <!-- Library Access -->
                 <?php if(has_permission('library_module')):?>
-                <li>
+                <!-- <li>
                     <a href="<?php echo base_url();?>admin/library/">
                         <div class="left-menu-icon">
                             <i class="os-icon picons-thin-icon-thin-0017_office_archive"></i>
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('library');?></span>
                     </a>
-                </li>
+                </li> -->
                 <?php endif;?>
                 <!-- Attendance Access -->
                 <?php if(has_permission('attendance_module')):?>
-                <li>
+                <!-- <li>
                     <a href="<?php echo base_url();?>admin/teacher_attendance/">
                         <div class="left-menu-icon">
                             <i class="os-icon picons-thin-icon-thin-0023_calendar_month_day_planner_events"></i>
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('teacher_attendance');?></span>
                     </a>
-                </li>
+                </li> -->
                 <?php endif;?>
                 <!-- Calendar Access -->
                 <?php if(has_permission('calendar_module')):?>
@@ -527,25 +527,25 @@
                 <?php endif;?>
                 <!-- School Bus Access -->
                 <?php if(has_permission('school_bus_module')):?>
-                <li>
+                <!-- <li>
                     <a href="<?php echo base_url();?>admin/school_bus/">
                         <div class="left-menu-icon">
                             <i class="os-icon picons-thin-icon-thin-0470_bus_transport"></i>
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('school_bus');?></span>
                     </a>
-                </li>
+                </li> -->
                 <?php endif;?>
                 <!-- Classrooms Access -->
                 <?php if(has_permission('classrooms_module')):?>
-                <li>
+                <!-- <li>
                     <a href="<?php echo base_url();?>admin/classrooms/">
                         <div class="left-menu-icon">
                             <i class="os-icon picons-thin-icon-thin-0047_home_flat"></i>
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('classrooms');?></span>
                     </a>
-                </li>
+                </li> -->
                 <?php endif;?>
                 <!-- Accounting Reports Access -->
                 <?php if(has_permission('accounting_module')):?>
@@ -688,14 +688,14 @@
                 </li>
                 <!-- Time Card -->
                 <?php if(has_permission('time_card_module')):?>
-                <li>
+                <!-- <li>
                     <a href="<?php echo base_url();?>admin/time_card/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0844_stopwatch_training_time"></i>
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('time_card');?></span>
                     </a>
-                </li>
+                </li> -->
                 <?php endif;?>
                 <!-- Tasks -->
                 <?php if(has_permission('task_module')):?>
@@ -740,14 +740,14 @@
                 <?php endif;?>
                 <!-- Class Routine Access -->
                 <?php if(has_permission('schedule_teacher_module')):?>
-                <li>
+                <!-- <li>
                     <a href="<?php echo base_url();?>admin/class_routine_view/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0029_time_watch_clock_wall"></i>
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('class_routine');?></span>
                     </a>
-                </li>
+                </li> -->
                 <?php endif;?>
                 <!-- Academic Access -->
                 <?php if(has_permission('academic_module')):?>
@@ -762,25 +762,25 @@
                 <?php endif;?>
                 <!-- Library Access -->
                 <?php if(has_permission('library_module')):?>
-                <li>
+                <!-- <li>
                     <a href="<?php echo base_url();?>admin/library/">
                         <div class="left-menu-icon">
                             <i class="os-icon picons-thin-icon-thin-0017_office_archive"></i>
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('library');?></span>
                     </a>
-                </li>
+                </li> -->
                 <?php endif;?>
                 <!-- Attendance Access -->
                 <?php if(has_permission('attendance_module')):?>
-                <li>
+                <!-- <li>
                     <a href="<?php echo base_url();?>admin/teacher_attendance/">
                         <div class="left-menu-icon">
                             <i class="os-icon picons-thin-icon-thin-0023_calendar_month_day_planner_events"></i>
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('teacher_attendance');?></span>
                     </a>
-                </li>
+                </li> -->
                 <?php endif;?>
                 <!-- Calendar Access -->
                 <?php if(has_permission('calendar_module')):?>
@@ -839,25 +839,25 @@
                 <?php endif;?>
                 <!-- School Bus Access -->
                 <?php if(has_permission('school_bus_module')):?>
-                <li>
+                <!-- <li>
                     <a href="<?php echo base_url();?>admin/school_bus/">
                         <div class="left-menu-icon">
                             <i class="os-icon picons-thin-icon-thin-0470_bus_transport"></i>
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('school_bus');?></span>
                     </a>
-                </li>
+                </li> -->
                 <?php endif;?>
                 <!-- Classrooms Access -->
                 <?php if(has_permission('classrooms_module')):?>
-                <li>
+                <!-- <li>
                     <a href="<?php echo base_url();?>admin/classrooms/">
                         <div class="left-menu-icon">
                             <i class="os-icon picons-thin-icon-thin-0047_home_flat"></i>
                         </div>
                         <span class="left-menu-title"><?php echo getPhrase('classrooms');?></span>
                     </a>
-                </li>
+                </li> -->
                 <?php endif;?>
                 <!-- Accounting Reports Access -->
                 <?php if(has_permission('accounting_module')):?>

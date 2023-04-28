@@ -183,6 +183,8 @@
     $card += $card_fee;
 
     $total_payment = ($cash + $card + $check + $venmo + $transfer);
+
+    $total_validation = ($total_income != $total_payment) ? 'style="color: red"' : '';
 ?>
 <style>
 .invoice-w::before {
@@ -314,7 +316,7 @@ td {
                                                             <b>Day's earnings</b>
                                                         </td>
                                                         <td>
-                                                            <span class="currency bold">
+                                                            <span class="currency bold" <?=$total_validation?>>
                                                                 <?= $currency.' '.number_format($total_payment, 2);?>
                                                             </span>
                                                         </td>

@@ -9,6 +9,8 @@
 
     $layout         = in_array($page_name, $message_pages) ? 'class="layout-w"' : '';
 
+    $view_path      =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

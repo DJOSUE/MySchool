@@ -103,7 +103,7 @@
                 <!-- Helpdesk Access -->
                 <?php if(has_permission('helpdesk_module')):?>
                 <li <?php if(in_array($page_name, $helpdesk_pages)):?>class="currentItem" <?php endif;?>>
-                    <a href="<?php echo base_url();?>accountant/helpdesk_dashboard/" data-toggle="tooltip"
+                    <a href="<?php echo base_url();?>helpdesk/dashboard/" data-toggle="tooltip"
                         data-placement="right" data-original-title="<?php echo getPhrase('help_desk');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0309_support_help_talk_call"></i>

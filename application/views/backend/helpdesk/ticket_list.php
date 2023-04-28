@@ -184,11 +184,11 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="table-responsive">
+                            <div class="table-responsive"  style="width: 100%;">
                                 <?php
                                     if($ticket_query->num_rows() > 0):
                                 ?>
-                                <table class="table table-padded" id="dvData">
+                                <table class="table table-padded" id="dvData" style="width: 100%;">
                                     <thead>
                                         <tr>
                                             <th class="text-center"><?= getPhrase('title')?></th>
