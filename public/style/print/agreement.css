@@ -218,6 +218,9 @@ table.checklist th {
     margin-right: auto;
 }
 
+.blank-page {
+    height: 8.5in;
+}
 /* Create two equal columns that floats next to each other */
 .column {
     float: left;

@@ -328,6 +328,11 @@
         </div>
     </div>
 
+    <!-- Blank page-->
+    <div class="blank-page">
+        
+    </div>
+
     <!-- student_registration -->
     <div id="student_registration">
         <div id="student_checklist" class="WordSection3">
@@ -1641,6 +1646,11 @@
     </div>
     <?php endif;?>
 
+    <!-- Blank page-->
+    <div class="blank-page">
+        
+    </div>
+    
     <!-- automatic_payment -->
     <div id="card_information" class=WordSection1>
         <div id="logo">
