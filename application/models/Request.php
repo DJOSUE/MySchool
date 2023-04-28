@@ -291,4 +291,20 @@ class Request extends School
         }
 
     }
+
+    public function get_student_request_totals($year, $semester_id, $type = '')
+    {
+        $this->db->reset_query();
+        $this->db->select('request_type, request_name, program_name, status, status_name, count(request_id) as total');
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        
+        if($type != '')
+            $this->db->where('request_type', $type);
+        
+        $this->db->group_by('request_type, program_name, status');
+        $this->db->order_by('total');
+        $query = $this->db->get('v_student_request')->result_array();
+        return $query;
+    }
 }

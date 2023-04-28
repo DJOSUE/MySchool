@@ -4932,7 +4932,20 @@
         function request_dashboard($param1 = '', $param2 = '')
         {
             $this->isAdmin('request_module');
-            
+
+            if($_SERVER['REQUEST_METHOD'] === 'POST')
+            {   
+                $year_id        = $this->input->post('year_id');
+                $semester_id    = $this->input->post('semester_id');
+            }
+            else
+            {    
+                $year_id        = $this->runningYear;
+                $semester_id    = $this->runningSemester;
+            } 
+
+            $page_data['year_id']       = $year_id;
+            $page_data['semester_id']   = $semester_id;   
             $page_data['page_name']    = 'request_dashboard';
             $page_data['page_title']   = getPhrase('request_dashboard');
             $this->load->view('backend/index', $page_data);
