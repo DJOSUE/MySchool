@@ -1414,7 +1414,7 @@
                             <?= $enroll['class_name']?>
                         </td>
                         <td>
-                            <?= $enroll['modality_id']?>
+                            <?= $this->academic->get_modality_name($enroll['modality_id'])?>
                         </td>
                         <td>
                             <?= $enroll['book_type']?>

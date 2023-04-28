@@ -311,11 +311,9 @@
                     </div>
                     <span class="author-subtitle">
                         <?php 
-                            $account_type = get_role_id();
-
-                            echo $this->system->get_role_name($account_type);
+                            $role_id = get_role_id();
+                            echo $this->system->get_role_name($role_id);
                         ?>
-
                     </span>
                 </a>
             </div>

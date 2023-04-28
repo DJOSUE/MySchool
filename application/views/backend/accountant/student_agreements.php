@@ -117,6 +117,22 @@
                                                                         <i
                                                                             class="os-icon picons-thin-icon-thin-0333_printer"></i>
                                                                     </a>
+                                                                    <?php if($value['has_addendum'] == 1):?>
+                                                                    <a href="/PrintDocument/print_agreement_addendum/<?=base64_encode($value['agreement_id']);?>"
+                                                                        class="grey" data-toggle="tooltip"
+                                                                        data-placement="top"
+                                                                        data-original-title="<?= getPhrase('print_addendum');?>">
+                                                                        <i style="color: #272D65;"
+                                                                            class="os-icon picons-thin-icon-thin-0333_printer"></i>
+                                                                    </a>
+                                                                    <?php endif; ?>
+                                                                    <a href="/accountant/student_agreement_addendum/<?=base64_encode($value['agreement_id']).'/'.$student_id;?>"
+                                                                        class="grey" data-toggle="tooltip"
+                                                                        data-placement="top"
+                                                                        data-original-title="<?= getPhrase('add_addendum');?>">
+                                                                        <i
+                                                                            class="os-icon picons-thin-icon-thin-0002_write_pencil_new_edit"></i>
+                                                                    </a>
                                                                     <!-- <a class="grey" data-toggle="tooltip"
                                                                         data-placement="top" class="danger"
                                                                         data-original-title="<?= getPhrase('delete');?>"

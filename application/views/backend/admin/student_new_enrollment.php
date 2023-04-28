@@ -170,6 +170,8 @@
                                                         </div>
                                                     </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <div class="form-group label-floating">
                                                             <label class="control-label"><?= getPhrase('address');?>
                                                             </label>
@@ -177,7 +179,31 @@
                                                                 value="<?= $row['address'];?>" type="text" disabled>
                                                         </div>
                                                     </div>
-
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class="form-group label-floating">
+                                                            <label class="control-label"><?= getPhrase('city');?>
+                                                            </label>
+                                                            <input class="form-control" name="city" id="city"
+                                                                value="<?= $row['city'];?>" type="text" disabled>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class="form-group label-floating">
+                                                            <label class="control-label"><?= getPhrase('state');?>
+                                                            </label>
+                                                            <input class="form-control" name="state" id="state"
+                                                                value="<?= $row['state'];?>" type="text" disabled>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class="form-group label-floating">
+                                                            <label class="control-label"><?= getPhrase('postal_code');?>
+                                                            </label>
+                                                            <input class="form-control" name="postal_code"
+                                                                id="postal_code" value="<?= $row['postal_code'];?>"
+                                                                type="text" disabled>
+                                                        </div>
+                                                    </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <div class="form-group label-floating">
                                                             <label
@@ -365,7 +391,7 @@
                                             <div class="step-content" id="stepContent3">
                                                 <div class="row">
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                        <div class="form-group label-floating">
+                                                        <div class="form-group label-floating is-select">
                                                             <label class="control-label">
                                                                 <?= getPhrase('cost_tuition');?>
                                                             </label>
@@ -773,7 +799,6 @@ function rest_selection() {
 }
 
 $(function() {
-
     var keyStop = {
         8: ":not(input:text, textarea, input:file, input:password)", // stop backspace = back
         13: "input:text, input:password", // stop enter = submit 
@@ -873,6 +898,8 @@ function validate_amount_1() {
     if (checked) {
         var min = parseFloat(document.getElementById("amount_1").min);
         var amount = parseFloat(document.getElementById("amount_1").value);
+        var number_payments = parseInt(document.getElementById("number_payments").value);
+        var total_agreement = parseFloat(document.getElementById("total_agreement").value);
         var error = "";
 
         if (amount < min) {
@@ -883,14 +910,17 @@ function validate_amount_1() {
             document.getElementById("btn_save").disabled = false;
         }
 
+        if (number_payments == 1 && (amount < total_agreement || amount > total_agreement)) {
+            error = "<b style='color:#ff214f'>The amount must be equal to " + total_agreement + " </b>";
+            document.getElementById("btn_save").disabled = false;
+        }
+        
         add_fees_with_dow();
-        $("#amount_error").html(error);
-
         document.getElementById("totalAmount").innerText = (amount);
-
         payment_total();
-
         reset_total_payment();
+
+        $("#amount_error").html(error);
     }
 }
 
@@ -1013,9 +1043,11 @@ function update_total() {
     document.getElementById('remainingAmount').innerText = remainingAmount;
 
 
-    if (totalPayment == subtotal) {
+    if (totalPayment == subtotal && totalAmount > 0) {
         document.getElementById("btn_save").disabled = false;
         document.getElementById("payment_error").innerHTML = '';
+    } else if (totalAmount == 0) {
+        document.getElementById("btn_save").disabled = true;
     } else {
         document.getElementById("btn_save").disabled = true;
         document.getElementById("payment_error").innerHTML =
@@ -1034,7 +1066,12 @@ function update_info_enable_fields() {
     document.getElementById("gender").disabled = !checked;
     document.getElementById("country_id").disabled = !checked;
     document.getElementById("phone").disabled = !checked;
+
     document.getElementById("address").disabled = !checked;
+    document.getElementById("city").disabled = !checked;
+    document.getElementById("state").disabled = !checked;
+    document.getElementById("postal_code").disabled = !checked;
+
     document.getElementById("password").disabled = !checked;
     document.getElementById("email_address").disabled = !checked;
 
@@ -1107,6 +1144,9 @@ function validate_form() {
     var program_type = $("#program_type_id option:selected").text().trim();
     var program_type_id = document.getElementById("program_type_id").value;
 
+    const input = document.getElementById('tuition');
+    const end = input.value.length;
+
     let length = subjects.length;
 
     var text = "";
@@ -1131,7 +1171,8 @@ function validate_form() {
     if (valid) {
         get_tuition();
         document.getElementById('btnStepContent2').click();
-
+        input.setSelectionRange(end, end);
+        input.focus();
     }
 }
 

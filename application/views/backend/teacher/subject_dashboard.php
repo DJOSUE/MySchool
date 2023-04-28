@@ -573,27 +573,7 @@
                                                 class="h6 author-name">
                                                 <?= getPhrase('books');?>
                                             </a>
-
                                             <hr>
-
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="ui-block">
-                                    <div class="ui-block-title">
-                                        <h6 class="title"><?= getPhrase('latest_news');?></h6>
-                                    </div>
-                                    <div class="ui-block-content">
-                                        <ul class="widget w-personal-info item-block">
-                                            <?php 
-                                                    $this->db->limit(5);
-                                                    $this->db->order_by('news_id', 'desc');
-                                                    $news = $this->db->get('news')->result_array();
-                                                    foreach($news as $row5):
-                                                ?>
-                                            <li><span class="text"><?= $row5['description'];?></span></li>
-                                            <hr>
-                                            <?php endforeach;?>
                                         </ul>
                                     </div>
                                 </div>
@@ -659,18 +639,26 @@
                                         <h6 class="title"><?= getPhrase('students');?></h6>
                                     </div>
                                     <ul class="widget w-friend-pages-added notification-list friend-requests">
-                                        <?php $students   =   $this->db->get_where('enroll' , array('class_id' => $ex[0], 'section_id' => $ex[1] , 'subject_id' => $subject_id , 'year' => $running_year))->result_array();
-                                            foreach($students as $row2):?>
+                                        <?php 
+                                            $students   =   $this->db->get_where('enroll' , array('class_id' => $ex[0], 'section_id' => $ex[1] , 'subject_id' => $subject_id , 'year' => $running_year))->result_array();
+                                            foreach($students as $row2):
+                                                $status_info = $this->studentModel->get_student_status_info($row2['student_id']);
+                                        ?>
                                         <li class="inline-items">
                                             <div class="author-thumb">
                                                 <img src="<?= $this->crud->get_image_url('student', $row2['student_id']);?>"
                                                     width="35px">
                                             </div>
                                             <div class="notification-event">
-                                                <a href="javascript:void(0);"
-                                                    class="h6 notification-friend"><?= $this->crud->get_name('student', $row2['student_id'])?></a>
-                                                <span class="chat-message-item"><?= getPhrase('roll');?>:
-                                                    <?= $this->db->get_where('enroll' , array('student_id' => $row2['student_id']))->row()->roll; ?></span>
+                                                <a class="h6 notification-friend">
+                                                    <?= $this->crud->get_name('student', $row2['student_id'])?>
+                                                </a>
+                                                <span class="chat-message-item"><?= getPhrase('status');?>:
+                                                    <span class="badge"
+                                                        style="background-color: <?=$status_info['color']?>;">
+                                                        <?= $status_info['name'];?>
+                                                    </span>
+                                                </span>
                                             </div>
                                         </li>
                                         <?php endforeach;?>

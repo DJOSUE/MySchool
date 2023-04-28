@@ -2,8 +2,11 @@
     $this->db->reset_query();        
     $this->db->where('year', $year_id);
     $this->db->where('semester_id', $semester_id);
-    $agreements = $this->db->get('agreement')->result_array();
+    $agreements = $this->db->get('v_agreement')->result_array();
 ?>
+
+<?php include $view_path.'_data_table_dependency.php';?>
+
 <div class="content-w">
     <?php include  $fancy_path.'fancy.php';?>
     <div class="header-spacer"></div>
@@ -17,7 +20,7 @@
             <div class="content-box">
                 <div class="element-wrapper">
                     <div class="tab-content">
-                        <?= form_open(base_url() . 'reports/accounting_payments/');?>
+                        <?= form_open(base_url() . 'reports/accounting_agreements/');?>
                         <div class="row">
                             <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                 <div class="form-group label-floating is-select">
@@ -62,30 +65,22 @@
                         </div>
                         <?= form_close()?>
                         <br />
-                        <?php 
-                            // echo '<pre>';
-                            // var_dump($start_date);
-                            // var_dump($end_date);
-                            // echo '</pre>';
-                        ?>
-                        <div class="tab-pane active" id="invoices">
-                            <div class="element-wrapper">
-                                <div>
-                                    <a href="#" id="btnExport"><button class="btn btn-info btn-sm btn-rounded"><i
-                                                class="picons-thin-icon-thin-0123_download_cloud_file_sync"
-                                                style="font-weight: 300; font-size: 25px;"></i></button>
-                                    </a>
-                                </div>
-                                <div class="element-box-tp">
-                                    <div class="table-responsive">
-                                        <table class="table table-padded" id="dvData">
+                        <div class="tab-pane active" id="invoices" style="width: 100%;">
+                            <div class="element-wrapper" style="width: 100%;">
+                                <div class="element-box-tp" style="width: 100%;">
+                                    <div class="table-responsive" style="width: 100%;">
+                                        <table class="table table-padded" id="dvData" style="width: 100%;">
                                             <thead>
-                                                <tr>
+                                                <tr class="text-center">
+                                                    <th><?= getPhrase('id');?></th>
+                                                    <th><?= getPhrase('program');?></th>
+                                                    <th><?= getPhrase('student');?></th>
+                                                    <th><?= getPhrase('phone');?></th>
+                                                    <th><?= getPhrase('email');?></th>
                                                     <th><?= getPhrase('date');?></th>
                                                     <th><?= getPhrase('amount');?></th>
-                                                    <th># <?= getPhrase('payments');?></th>
+                                                    <th>#<?= getPhrase('payments');?></th>
                                                     <th><?= getPhrase('automatic_payment');?></th>
-                                                    <th><?= getPhrase('card_info');?></th>
                                                     <th><?= getPhrase('program_type');?></th>
                                                     <th><?= getPhrase('payment_date');?></th>
                                                     <th><?= getPhrase('year');?></th>
@@ -98,12 +93,37 @@
                                                 <?php 
                                                 foreach ($agreements as $key => $value):
                                                     $amount = ((floatval($value['tuition']) + floatval($value['materials']) + floatval($value['fees'])) - (floatval($value['discounts']) + floatval($value['scholarship'])));                                                   
-                                                    $delete_url = base_url().'admin/student/delete_agreement/'.base64_encode($value['agreement_id']).'/'.base64_encode($student_id);
+                                                    $delete_url = base_url().$account_type.'/student/delete_agreement/'.base64_encode($value['agreement_id']).'/'.base64_encode($student_id);
+                                                    $student_url = '/'.$account_type.'/student_agreements/'.$value['student_id'];
+                                                    $payment_schedule_url = base_url().'modal/popup/modal_agreement_payment_schedule/'.$value['agreement_id'];
+                                                    $card_info_url = base_url().'modal/popup/modal_agreement_card_info/'.$value['agreement_id'];
+
                                                     $this->db->reset_query();        
                                                     $this->db->where('agreement_id', $value['agreement_id']);
                                                     $card = $this->db->get('agreement_card')->row_array();
+                                                    
+                                                    $has_card = $card['card_holder'] == '' ? false : true ;
+                                                    $automatic_payment =intval($value['automatic_payment']) == 0 ? true : false;                                                   
+
                                                 ?>
                                                 <tr class="text-center">
+                                                    <td>
+                                                        <?= $value['agreement_id'];?>
+                                                    </td>
+                                                    <td>
+                                                        <?= $value['program_name'];?>
+                                                    </td>
+                                                    <td>
+                                                        <a href="<?=$student_url;?>" target="_blank" class="grey">
+                                                            <?= $value['first_name'] .' '. $value['last_name'];?>
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <?= $value['phone'];?>
+                                                    </td>
+                                                    <td class="table-td-wrap">
+                                                        <?= $value['email'];?>
+                                                    </td>
                                                     <td>
                                                         <?= $value['agreement_date'];?>
                                                     </td>
@@ -115,9 +135,6 @@
                                                     </td>
                                                     <td>
                                                         <?= intval($value['automatic_payment']) == 0 ? 'No': 'Yes';?>
-                                                    </td>
-                                                    <td>
-                                                        <?= $card['card_holder'] == '' ? 'No': 'Yes';?>
                                                     </td>
                                                     <td>
                                                         <?= $this->academic->get_program_type_name($value['program_type_id']);?>
@@ -138,7 +155,7 @@
                                                         <a href="javascript:void(0);" class="grey" data-toggle="tooltip"
                                                             data-placement="top"
                                                             data-original-title="<?= getPhrase('view_payment_schedule');?>"
-                                                            onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_agreement_payment_schedule/<?=$value['agreement_id'];?>');">
+                                                            onclick="showAjaxModal('<?=$payment_schedule_url?>');">
                                                             <i
                                                                 class="os-icon picons-thin-icon-thin-0023_calendar_month_day_planner_events"></i>
                                                         </a>
@@ -147,6 +164,15 @@
                                                             data-original-title="<?= getPhrase('print_agreement');?>">
                                                             <i class="os-icon picons-thin-icon-thin-0333_printer"></i>
                                                         </a>
+                                                        <?php if(has_permission('management_automate_payments') && $has_card):?>
+                                                        <a class="grey" data-toggle="tooltip" data-placement="top"
+                                                            data-original-title="<?= getPhrase('view_card_info');?>"
+                                                            href="javascript:void(0);"
+                                                            onclick="showAjaxModal('<?=$card_info_url;?>');">
+                                                            <i
+                                                                class="os-icon picons-thin-icon-thin-0407_credit_card"></i>
+                                                        </a>
+                                                        <?php endif;?>
                                                         <?php if(has_permission('management_agreements')):?>
                                                         <a class="grey" data-toggle="tooltip" data-placement="top"
                                                             data-original-title="<?= getPhrase('delete_agreement');?>"
@@ -172,18 +198,18 @@
     </div>
 </div>
 <script>
-$("#btnExport").click(function(e) {
-    var reportName = '<?php echo getPhrase('reports_tabulation').'_'.date('d-m-Y');?>';
-    var a = document.createElement('a');
-    var data_type = 'data:application/vnd.ms-excel;charset=utf-8';
-    var table_html = $('#dvData')[0].outerHTML;
-    table_html = table_html.replace(/<tfoot[\s\S.]*tfoot>/gmi, '');
-    var css_html =
-        '<style>td {border: 0.5pt solid #c0c0c0} .tRight { text-align:right} .tLeft { text-align:left} </style>';
-    a.href = data_type + ',' + encodeURIComponent('<html><head>' + css_html + '</' + 'head><body>' +
-        table_html + '</body></html>');
-    a.download = reportName + '.xls';
-    a.click();
-    e.preventDefault();
-});
+    var table = $('#dvData').DataTable({
+        dom: 'Blifrtp',
+        lengthMenu: [
+            [10, 20, 50, -1],
+            [10, 20, 50, "All"]
+        ],
+        pageLength: 20,
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="picons-thin-icon-thin-0123_download_cloud_file_sync" style="font-size: 20px;"></i>',
+            titleAttr: 'Export to Excel'
+        }]
+    });
+    $("select[name='dvData_length']" ).addClass('select-page');
 </script>

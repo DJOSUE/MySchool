@@ -35,17 +35,17 @@
     <div class="conty">
         <?php include 'fancy.php';?>
         <div class="header-spacer"></div>
-        <div class="cursos cta-with-media" style="background: #<?php echo $subs['color'];?>;">
+        <div class="cursos cta-with-media" style="background: #<?= $subs['color'];?>;">
             <div class="cta-content">
                 <div class="user-avatar">
-                    <img alt="" src="<?php echo base_url();?>public/uploads/subject_icon/<?php echo $subs['icon'];?>"
+                    <img alt="" src="<?= base_url();?>public/uploads/subject_icon/<?= $subs['icon'];?>"
                         style="width:60px;">
                 </div>
-                <h3 class="cta-header"><?php echo $subs['name'];?> - <small><?php echo getPhrase('marks');?></small>
+                <h3 class="cta-header"><?= $subs['name'];?> - <small><?= getPhrase('marks');?></small>
                 </h3>
                 <small
-                    style="font-size:0.90rem; color:#fff;"><?php echo $this->db->get_where('class', array('class_id' => $ex[0]))->row()->name;?>
-                    "<?php echo $this->db->get_where('section', array('section_id' => $ex[1]))->row()->name;?>"
+                    style="font-size:0.90rem; color:#fff;"><?= $this->db->get_where('class', array('class_id' => $ex[0]))->row()->name;?>
+                    "<?= $this->db->get_where('section', array('section_id' => $ex[1]))->row()->name;?>"
                 </small>
             </div>
         </div>
@@ -61,12 +61,12 @@
                         <div class="ui-block">
                             <article class="hentry post thumb-full-width">
                                 <div class="post__author author vcard inline-items">
-                                    <img src="<?php echo base_url();?>public/uploads/<?php echo $this->db->get_where('settings', array('type' => 'logo'))->row()->description;?>"
+                                    <img src="<?= base_url();?>public/uploads/<?= $this->db->get_where('settings', array('type' => 'logo'))->row()->description;?>"
                                         style="border-radius:0px;">
                                     <div class="author-date">
                                         <a class="h6 post__author-name fn"
-                                            href="javascript:void(0);"><?php echo getPhrase('marks');?>
-                                            <small>(<?php echo $this->db->get_where('v_class_units', array('class_id' => $class_id, 'unit_id' => $unit_id))->row()->unit_name;?>)</small>.</a>
+                                            href="javascript:void(0);"><?= getPhrase('marks');?>
+                                            <small>(<?= $this->db->get_where('v_class_units', array('class_id' => $class_id, 'unit_id' => $unit_id))->row()->unit_name;?>)</small>.</a>
                                     </div>
                                 </div>
                                 <div class="edu-posts cta-with-media">
@@ -80,13 +80,17 @@
                     				                $var++;
                     				            ?>
                                                 <li class="<?php if($exam['unit_id'] == $unit_id) echo "act";?>"><a
-                                                        href="<?php echo base_url();?>teacher/subject_daily_marks_average/<?php echo $data.'/'.$exam['unit_id'];?>/"><i
-                                                            class="os-icon picons-thin-icon-thin-0023_calendar_month_day_planner_events"></i><?php echo $exam['unit_name'];?></a>
+                                                        href="<?= base_url();?>teacher/subject_daily_marks_average/<?= $data.'/'.$exam['unit_id'];?>/"><i
+                                                            class="os-icon picons-thin-icon-thin-0023_calendar_month_day_planner_events"></i><?= $exam['unit_name'];?></a>
                                                 </li>
                                                 <?php endforeach;?>
                                                 <li class='<?php if(0 == $unit_id) echo "act";?>'>
-                                                <a href="<?php echo base_url();?>teacher/subject_daily_marks_average/<?php echo $data?>/0/"><i
-                                                            class="os-icon picons-thin-icon-thin-0023_calendar_month_day_planner_events"></i><?php echo getPhrase('average')?></a> 
+                                                    <a
+                                                        href="<?= base_url();?>teacher/subject_daily_marks_average/<?= $data?>/0/">
+                                                        <i
+                                                            class="os-icon picons-thin-icon-thin-0023_calendar_month_day_planner_events"></i>
+                                                        <?= getPhrase('average')?>
+                                                    </a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -96,20 +100,20 @@
                                             <thead>
                                                 <tr style="background:#f2f4f8;">
                                                     <th style="text-align: center;">
-                                                        <?php echo getPhrase('student');?>
+                                                        <?= getPhrase('student');?>
                                                     </th>
                                                     <?php 
                                                         $subjectLabel = $this->db->get_where('subject' , array('subject_id' => $ex[2]))->row();
                                                         for ($i=1; $i <= $quantityGrades; $i++):
                                                             $name = 'la'.$i;
                                                     ?>
-                                                        <th style="text-align: center;">
-                                                            <?php echo $subjectLabel->$name; ?>
-                                                        </th>
+                                                    <th style="text-align: center;">
+                                                        <?= $subjectLabel->$name; ?>
+                                                    </th>
                                                     <?php endfor; ?>
                                                     <th style="text-align: center;">
-                                                        <?php echo getPhrase('average');?>
-                                                        
+                                                        <?= getPhrase('average');?>
+
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -129,6 +133,9 @@
                                                                             )->result_array();
                                                         
                                                         foreach($students as $row):
+
+                                                            $student_id     = $row['student_id'];
+                                                            $status_info    = $this->studentModel->get_student_status_info($student_id);
                                                             
                                                             // Get average
                                                             if($unit_id == 0){
@@ -209,20 +216,31 @@
                                                     ?>
                                                 <tr style="height:25px;">
                                                     <td style="min-width:190px">
-                                                        <img alt=""
-                                                            src="<?php echo $this->crud->get_image_url('student', $row['student_id']);?>"
-                                                            width="25px" style="border-radius: 10px;margin-right:5px;">
-                                                        <?php echo $this->crud->get_name('student', $row['student_id']);?>
+                                                        <div class="inline-items">
+                                                            <div class="author-thumb" style="margin-right: 10px;">
+                                                                <img src="<?= $this->crud->get_image_url('student', $student_id);?>"
+                                                                    width="35px">
+                                                            </div>                                                            
+                                                            <div class="notification-event">
+                                                                <a class="h6 notification-friend">
+                                                                    <?= $this->crud->get_name('student', $student_id)?>
+                                                                </a>
+                                                                <br/>
+                                                                <span class="badge"
+                                                                    style="background-color: <?=$status_info['color']?>;">
+                                                                    <?= $status_info['name'];?>
+                                                                </span>
+                                                            </div>
+                                                        </div>
                                                     </td>
                                                     <?php
                                                         for ($i=0; $i < $quantityGrades; $i++):
                                                             $name = $grades[$i];
                                                     ?>
                                                     <td>
-                                                        <center><label
-                                                                name="<?php echo $name[1].$row['mark_daily_id'];?>"
+                                                        <center><label name="<?= $name[1].$row['mark_daily_id'];?>"
                                                                 style="width:55px; border: 1; text-align: center;">
-                                                                <?php echo $average[0][$name[2]];?></label> </center>
+                                                                <?= $average[0][$name[2]];?></label> </center>
                                                     </td>
                                                     <?php 
                                                         endfor; 
@@ -235,7 +253,7 @@
                                                             <?php endif;?>
                                                             <?php if($mark >= $min):?>
                                                             <a class="btn btn-rounded btn-sm btn-info"
-                                                                style="color:white"><?php echo $mark;?></a>
+                                                                style="color:white"><?= $mark;?></a>
                                                             <?php endif;?>
                                                         </center>
                                                     </td>
@@ -251,8 +269,7 @@
                 </div>
             </div>
             <a class="back-to-top" href="javascript:void(0);">
-                <img src="<?php echo base_url();?>public/style/olapp/svg-icons/back-to-top.svg" alt="arrow"
-                    class="back-icon">
+                <img src="<?= base_url();?>public/style/olapp/svg-icons/back-to-top.svg" alt="arrow" class="back-icon">
             </a>
         </div>
     </div>

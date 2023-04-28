@@ -23,7 +23,10 @@ class StudentModel extends School
         $data['country_id']      = $this->input->post('country_id');
         $data['email']           = $this->input->post('email');
         $data['phone']           = $this->input->post('phone');
-        $data['address']         = $this->input->post('address');        
+        $data['address']         = $this->input->post('address');
+        $data['city']            = $this->input->post('city');
+        $data['state']           = $this->input->post('state');
+        $data['postal_code']     = $this->input->post('postal_code');
         
         if($this->input->post('password') != "")
         {
@@ -118,12 +121,42 @@ class StudentModel extends School
 
     /**** functions */
 
+    public function update_student_collection_profile($student_id, $collection_id)
+    {
+        $data['collection'] = $collection_id;
+
+        $this->db->reset_query();
+        $this->db->where('student_id', $student_id);
+        $this->db->update('student', $data);
+
+        $table      = 'student';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $student_id, $data);
+
+    }
+
     public function get_status()
     {
         $this->db->reset_query();
         $this->db->select('code as status_id, name, value_1 as color, value_2 as icon');
         $this->db->where('parameter_id', 'STUDENTSTA');
         $query = $this->db->get('parameters')->result_array();;
+        
+        return $query;
+    }
+
+    public function get_student_status_info($student_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('student_session');
+        $this->db->where('student_id', $student_id);
+        $status_id = $this->db->get('student')->row()->student_session;        
+        
+        $this->db->reset_query();
+        $this->db->select('code as status_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'STUDENTSTA');
+        $this->db->where('code', $status_id);
+        $query = $this->db->get('parameters')->row_array();
         
         return $query;
     }
@@ -385,8 +418,121 @@ class StudentModel extends School
         return $student_id;
     }
 
-    public function get_student_collection_profile($student_id, $year = "", $semester_id = "")
+    public function get_student_financial_profile($student_id)
     {
+        $result = 'red';
 
+        // $this->db->reset_query();
+        // $this->db->select('*');
+        // $this->db->from('agreement');
+        // $this->db->join('agreement_amortization', 'agreement_amortization.agreement_id = agreement.agreement_id');
+        // $this->db->where('agreement.student_id', $student_id);
+        // $this->db->where('agreement_amortization.due_date <', date("Y-m-d"));
+        // $this->db->where_in('agreement_amortization.status_id', array(DEFAULT_AMORTIZATION_PENDING, DEFAULT_AMORTIZATION_PARTIAL));
+        // $due = $this->db->get()->num_rows();
+
+        // if($due == 0)
+        // {
+        //     $result = 'green';
+        // }
+        // else if ( $due == 1)
+        // {
+        //     $result = 'yellow';
+        // }
+        // else
+        // {
+        //     $result = 'red';
+        // }
+        
+
+        $this->db->reset_query();
+        $this->db->select('financial');
+        $this->db->where('student_id', $student_id);
+        $result = $this->db->get('student')->row()->financial;
+        
+        return $result;
+    }
+
+    public function get_student_installments_due($student_id, $due_date)
+    {
+        $this->db->reset_query();
+        $this->db->select('*');
+        $this->db->from('agreement');
+        $this->db->join('agreement_amortization', 'agreement_amortization.agreement_id = agreement.agreement_id');
+        $this->db->where('agreement.student_id', $student_id);
+        $this->db->where('agreement_amortization.due_date <', $due_date);
+        $this->db->where_in('agreement_amortization.status_id', array(DEFAULT_AMORTIZATION_PENDING, DEFAULT_AMORTIZATION_PARTIAL));
+        $number = $this->db->get()->num_rows();
+
+        $this->db->reset_query();
+        $this->db->select_sum('amount');        
+        $this->db->from('agreement');
+        $this->db->join('agreement_amortization', 'agreement_amortization.agreement_id = agreement.agreement_id');
+        $this->db->where('agreement.student_id', $student_id);
+        $this->db->where('agreement_amortization.due_date <', $due_date);
+        $this->db->where_in('agreement_amortization.status_id', array(DEFAULT_AMORTIZATION_PENDING, DEFAULT_AMORTIZATION_PARTIAL));        
+        $amount = $this->db->get()->row()->amount;
+
+        $this->db->reset_query();
+        $this->db->select_sum('agreement_amortization.materials');        
+        $this->db->from('agreement');
+        $this->db->join('agreement_amortization', 'agreement_amortization.agreement_id = agreement.agreement_id');
+        $this->db->where('agreement.student_id', $student_id);
+        $this->db->where('agreement_amortization.due_date <', $due_date);
+        $this->db->where_in('agreement_amortization.status_id', array(DEFAULT_AMORTIZATION_PENDING, DEFAULT_AMORTIZATION_PARTIAL));        
+        $materials = $this->db->get()->row()->materials;
+
+        $this->db->reset_query();
+        $this->db->select_sum('agreement_amortization.fees');        
+        $this->db->from('agreement');
+        $this->db->join('agreement_amortization', 'agreement_amortization.agreement_id = agreement.agreement_id');
+        $this->db->where('agreement.student_id', $student_id);
+        $this->db->where('agreement_amortization.due_date <', $due_date);
+        $this->db->where_in('agreement_amortization.status_id', array(DEFAULT_AMORTIZATION_PENDING, DEFAULT_AMORTIZATION_PARTIAL));        
+        $fees = $this->db->get()->row()->fees;
+
+        $total_amount = $amount + $materials + $fees;
+
+
+        $result = array('number' => $number, 'amount' => $total_amount);
+        
+        return $result;
+    }
+
+    public function get_student_collection_profile($student_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('collection');
+        $this->db->where('student_id', $student_id);
+        $collection_id = $this->db->get('student')->row()->collection;
+
+        $this->db->reset_query();
+        $this->db->select('code as collection_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'COLLECTION_PROFILE');
+        $this->db->where('code', $collection_id);
+        $query = $this->db->get('parameters')->row_array();
+        
+        return $query;
+    }
+
+    public function get_collection_profiles()
+    {
+        $this->db->reset_query();
+        $this->db->select('code as collection_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'COLLECTION_PROFILE');        
+        $query = $this->db->get('parameters')->result_array();
+
+        return $query;
+    }
+
+    public function get_collection_profile_info($collection_id)
+    {
+        $this->db->reset_query();
+        $this->db->select('code as collection_id, name, value_1 as color, value_2 as icon');
+        $this->db->where('parameter_id', 'COLLECTION_PROFILE');
+        $this->db->where('code', $collection_id);
+        $query = $this->db->get('parameters')->row_array();
+
+        return $query;
     }
 }

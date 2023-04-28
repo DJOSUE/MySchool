@@ -419,7 +419,7 @@ class Accountant extends EduAppGT
             $this->session->set_flashdata('flash_message', getPhrase('successfully_updated'));
         }
 
-        redirect(base_url().'admin/time_card/', 'refresh');
+        redirect(base_url().'accountant/time_card/', 'refresh');
     }
 
     // Time Sheet
@@ -460,8 +460,9 @@ class Accountant extends EduAppGT
         $page_data['student_id'] =  $user_id;
         $page_data['page_name']  = 'student_payments';
         $page_data['page_title'] =  getPhrase('student_payments');
+
+        redirect(base_url().'accountant/student_payments/'.$user_id, 'refresh');        
         
-        $this->load->view('backend/index', $page_data);
     }
 
     function payment_invoice($payment_id)
@@ -546,7 +547,30 @@ class Accountant extends EduAppGT
         $this->load->view('backend/index', $page_data);
     }
 
-    
+    function student_agreement_addendum($agreement_id, $student_id)
+    {
+        $this->isAccountant();           
+        $page_data['page_name']  = 'student_agreement_addendum';
+        $page_data['page_title'] =  getPhrase('agreement_addendum');
+        $page_data['agreement_id'] =  base64_decode($agreement_id);
+        $page_data['student_id'] =  $student_id;
+        $this->load->view('backend/index', $page_data);
+    }
+
+    function agreement($action, $param1 = '', $param2 = '')
+    {
+        $agreement_id = base64_decode($param1); 
+        $student_id = base64_decode($param2);
+         
+        switch ($action) {
+            case 'update':
+                $this->agreement->add_addendum($agreement_id);
+                break;
+        }
+
+        $this->session->set_flashdata('flash_message', getPhrase('successfully_added'));        
+        redirect(base_url() . 'accountant/student_agreements/'.$student_id, 'refresh');
+    }
 
     function student_grades($student_id, $param1='')
     {
@@ -628,6 +652,9 @@ class Accountant extends EduAppGT
         
         $this->load->view('backend/index', $page_data);
     }
+
+
+
 /***** Applicant Module ******************************************************************************************************************************/
     function applicant_profile($applicant_id, $param1='')
     {

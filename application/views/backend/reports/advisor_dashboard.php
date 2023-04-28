@@ -14,7 +14,6 @@
         $labelName .= "'".$name."',"; 
     }
 
-
     $record_students = $this->applicant->student_total_by_date($start_date, $end_date);
     $id_students     = array_column($record_students, 'assigned_to');
     $name_students   = array_column($record_students, 'assigned_to_name');
@@ -25,6 +24,18 @@
     foreach($name_students as $item)
     {
         $label_student .= "'".$item."',"; 
+    }
+
+    $record_students_update = $this->applicant->student_total_by_update_date($start_date, $end_date);
+    $id_students_update     = array_column($record_students_update, 'assigned_to');
+    $name_students_update   = array_column($record_students_update, 'assigned_to_name');
+    $total_students_update  = array_column($record_students_update, 'total');
+
+    $label_student_update = "";
+
+    foreach($name_students_update as $item)
+    {
+        $label_student_update .= "'".$item."',"; 
     }
 
 ?>
@@ -84,6 +95,11 @@
                             <div class="col-sm-6">
                                 <div class="element-box">
                                     <canvas id="myChartRegister"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="element-box">
+                                    <canvas id="myChartConvert"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -188,8 +204,12 @@
                 },
                 title: {
                     display: true,
-                    text: 'Register by Advisors'
-                }
+                    text: 'Registered and Converted'
+                },
+                subtitle: {
+                    display: true,
+                    text: '(<?=$start_date .' to '. $end_date?>)'
+                },
             }
         },
     });
@@ -202,6 +222,79 @@
 
         var f = $("<form target='_blank' method='POST' style='display:none;'></form>").attr({
             action: '/admin/admission_applicants/'
+        }).appendTo(document.body);
+
+        $('<input type="hidden" />').attr({
+            name: 'advisor_id',
+            value: ids[index]
+        }).appendTo(f);
+
+        $('<input type="hidden" />').attr({
+            name: 'start_date',
+            value: '<?=$start_date;?>'
+        }).appendTo(f);
+
+        $('<input type="hidden" />').attr({
+            name: 'end_date',
+            value: '<?=$end_date;?>'
+        }).appendTo(f);
+
+        $('<input type="hidden" />').attr({
+            name: 'status_id',
+            value: '3'
+        }).appendTo(f);
+
+        f.submit();
+
+        f.remove();
+
+    };
+</script>
+<script>
+// Convert
+    const labelConvert = [<?= $label_student_update;?>];
+    const dataConvert = {
+        labels: labelConvert,
+        datasets: [{
+            label: 'Convert',
+            data: [<?= implode(',', $total_students_update);?>],
+            borderWidth: 2,
+            borderRadius: Number.MAX_VALUE,
+            borderSkipped: false,
+        }]
+    };
+    var ctx = document.getElementById("myChartConvert");
+    var myChartConvert = new Chart(ctx, {
+        type: 'bar',
+        data: dataConvert,
+        options: {
+            responsive: true,
+            indexAxis: 'y',
+            plugins: {
+                legend: {
+                    display: false,
+                },
+                title: {
+                    display: true,
+                    text: 'Converted to Students'
+                },
+                subtitle: {
+                    display: true,
+                    text: '(<?=$start_date .' to '. $end_date?>)'
+                },
+
+            }
+        },
+    });
+    document.getElementById("myChartConvert").onclick = function(evt) {
+        var ids = [<?=implode(',', $id_students);?>]
+        var activePoints = myChartConvert.getElementsAtEventForMode(evt, 'point', myChart.options);
+        var firstPoint = activePoints[0];
+        var index = firstPoint['index']
+        console.log(ids[index]);
+
+        var f = $("<form target='_blank' method='POST' style='display:none;'></form>").attr({
+            action: '/admin/admission_converted/'
         }).appendTo(document.body);
 
         $('<input type="hidden" />').attr({

@@ -44,7 +44,7 @@
 </head>
 <body class="menu-position-side menu-side-left full-screen with-content-panel">
     <div class="with-side-panel">
-    <div <?php $layout;?>>
+        <div <?php $layout;?>>
             <?php include $backend_path.$account_type.'/navigation.php';?>            
             <?php include $backend_path.'reports/'.$page_name.'.php';?>
         </div>

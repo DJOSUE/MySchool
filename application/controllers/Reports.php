@@ -48,7 +48,6 @@ class Reports extends EduAppGT
         
         if (!in_array($login_type, $array))
         {
-            $this->session->set_userdata('last_page', current_url());
             redirect(base_url(), 'refresh');
         }
 
@@ -81,39 +80,40 @@ class Reports extends EduAppGT
     {     
         $this->isLogin();
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $date = html_escape($this->input->post('date'));
-            $cashier_id = html_escape($this->input->post('cashier_id'));
+        $cashier_all  = has_permission('accounting_dashboard');
+        $login_type = get_account_type();
 
-            if($cashier_id == '')
-            {
-                $cashier_id = "admin|".get_login_user_id();
-            }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $date_start = html_escape($this->input->post('date_start'));
+            $date_end = html_escape($this->input->post('date_end'));
+
+            if($cashier_all)
+                $cashier_id = html_escape($this->input->post('cashier_id'));
+            else
+                $cashier_id = $login_type.":".get_login_user_id();
         }
         else
         {
-            if(has_permission('accounting_dashboard'))
+            if($cashier_all)
             {
                 $date = "";
                 $cashier_id = "";
             }
             else
             {
-                $date = date("Y-m-d");
-                $cashier_id = "admin|".get_login_user_id();
+                $date = "";
+                $cashier_id = $login_type.":".get_login_user_id();
             }
         }
 
-        $page_data['date']          = $date;
+        $page_data['date_start']    = $date_start;
+        $page_data['date_end']      = $date_end;
         $page_data['cashier_id']    = $cashier_id;
-        $page_data['cashier_all']   = has_permission('accounting_dashboard');            
-        $page_data['fancy_path']    = $this->fancy_path;
+        $page_data['cashier_all']   = $cashier_all; 
+        $page_data['fancy_path']    = $this->fancy_path;        
         $page_data['page_name']     = 'accounting_daily_income';
-        $page_data['page_title']    = getPhrase('daily_income');
-        $page_data['fancy_path']    = $this->fancy_path;
+        $page_data['page_title']    = getPhrase('daily_income');        
         $this->load->view('backend/reports/index', $page_data); 
-        
-
     }
 
     function accounting_payments()
@@ -169,6 +169,23 @@ class Reports extends EduAppGT
         $this->load->view('backend/reports/index', $page_data); 
     }
 
+    function accounting_collection_management()
+    {
+        $this->isLogin();
+        $end_date = date("Y-m-d");
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST')
+        {            
+            $end_date = html_escape($this->input->post('end_date'));
+        }
+
+        $page_data['end_date']      = $end_date;
+        $page_data['page_name']     = 'accounting_collection_management';
+        $page_data['page_title']    = getPhrase('collection_management');
+        $page_data['fancy_path']    = $this->fancy_path;
+        $this->load->view('backend/reports/index', $page_data); 
+    }
+
 /***** Academic Reports   *******************************************************************************************************************************/
 
     function academic_dashboard()
@@ -178,6 +195,29 @@ class Reports extends EduAppGT
         $page_data['page_name']     = 'academic_dashboard';
         $page_data['page_title']    = getPhrase('academic_dashboard');
         $page_data['fancy_path']    = $this->fancy_path;
+        $this->load->view('backend/reports/index', $page_data); 
+    }
+
+    function academic_schedule_class()
+    {
+        $this->isLogin('academic_schedule_class_report');
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST')
+        {   
+            $year_id        = $this->input->post('year_id');
+            $semester_id    = $this->input->post('semester_id');
+        }
+        else
+        {    
+            $year_id        = $this->runningYear;
+            $semester_id    = $this->runningSemester;
+        } 
+        
+        $page_data['year_id']       = $year_id;
+        $page_data['semester_id']   = $semester_id;            
+        $page_data['fancy_path']    = $this->fancy_path;
+        $page_data['page_name']     = 'academic_schedule_class';
+        $page_data['page_title']    = getPhrase('schedule_class');
         $this->load->view('backend/reports/index', $page_data); 
     }
 
@@ -222,11 +262,27 @@ class Reports extends EduAppGT
             $end_date   = date('Y-m-d', strtotime('+'.(6-$day).' days'));         
         }        
         
-        $page_data['start_date'] = $start_date;
-        $page_data['end_date']   = $end_date;
-        $page_data['page_name']     = 'academic_absence';
-        $page_data['page_title']    = getPhrase('academic_absence');
+        $page_data['start_date']    = $start_date;
+        $page_data['end_date']      = $end_date;
         $page_data['fancy_path']    = $this->fancy_path;
+        $page_data['page_name']     = 'academic_absence';
+        $page_data['page_title']    = getPhrase('academic_absence');        
+        $this->load->view('backend/reports/index', $page_data); 
+    }
+
+    function academic_students_achievement()
+    {
+        $this->isLogin('academic_students_achievement');
+
+        $year_id = $this->input->post( 'year_id' );
+        if ($year_id == '') {
+            $year_id = $this->runningYear;
+        }
+        
+        $page_data['year_id']       = $year_id;            
+        $page_data['fancy_path']    = $this->fancy_path;
+        $page_data['page_name']     = 'academic_students_achievement';
+        $page_data['page_title']    = getPhrase('students_achievement');
         $this->load->view('backend/reports/index', $page_data); 
     }
 

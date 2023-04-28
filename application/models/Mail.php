@@ -377,7 +377,6 @@ class Mail extends School
 	function submit($to, $subject, $message, $type)
 	{
         $this->load->library('email');
-        // $this->load->library('encrypt');
         
         $from = get_settings('system_email');
         $fromName = get_settings('system_name');
@@ -401,7 +400,15 @@ class Mail extends School
         $this->email->set_mailtype("html");
         $this->email->set_newline("\r\n");
 
-        $this->email->to($to);
+        if(!IS_TESTING)
+        {
+            $this->email->to($to);
+        }
+        else 
+        {
+            $this->email->to(DEFAULT_TESTING_EMAIL);
+        }
+        
         $this->email->from($from, $fromName);
         $this->email->subject($subject);
 
@@ -521,6 +528,34 @@ class Mail extends School
         {
             $this->submit($email_to,$email_sub,$data,'notify');
         }
+    }
+
+    //Send payment reminder.
+    function payment_reminder($user_name, $user_email, $email_code)
+    {
+        $email_template = $this->get_email_template($email_code);
+        $body           = $email_template['body'];
+        $subject        = $email_template['subject'];
+    
+        $email_msg      = str_replace('[USER_NAME]' , $user_name , $body);
+        $email_to       = $user_email;
+        
+        $data = array(
+            'email_msg' => $email_msg
+        );
+        if($email_to != '')
+        {
+            $this->submit($email_to, $subject, $data, 'notify');
+        }
+    }
+
+    private function get_email_template($email_template)
+    {
+        $this->db->reset_query();
+        $this->db->where_in('task', $email_template);
+        $result = $this->db->get('email_template')->row_array();
+
+        return $result;
     }
     
     //End of Mail.php

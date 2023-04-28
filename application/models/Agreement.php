@@ -217,35 +217,108 @@ class Agreement extends School
         //DownPayment add the payment
         if($has_down_payment == 1)
         {
-            $down_payment = floatval($this->input->post('amount_1'));
-            $fees = floatval($data['fees']);
-            $materials = floatval($data['materials']);
+            $payment_total      = floatval($this->input->post('amount_1'));
+            $temp_payment       = floatval($this->input->post('amount_1'));
+            $tuition_payment    = 0.00;            
+            $fees               = floatval($data['fees']);
+            $fees_dif           = 0.00;
+            $fees_payment       = 0.00;
+            $materials          = floatval($data['materials']);
+            $materials_dif      = 0.00;
+            $materials_payment  = 0.00;
+
+            if($fees > 0)
+            {
+                if($temp_payment >= $fees)
+                {
+                    $fees_payment = $fees;
+                    $temp_payment -= $fees;
+                }
+                else
+                {
+                    $fees_payment = $temp_payment;
+                    $fees_dif     = $fees - $temp_payment;
+                    $temp_payment = 0;                    
+                }
+            }
+
+            if($materials > 0)
+            {
+                if ($temp_payment > 0)
+                {                
+                    if($temp_payment >= $materials)
+                    {
+                        $materials_payment = $materials;
+                        $temp_payment -= $materials;
+                    }
+                    else
+                    {
+                        $materials_payment = $temp_payment;
+                        $materials_dif     = $materials - $temp_payment;
+                        $temp_payment      = 0;
+                    }
+                }
+                else
+                {
+                    $materials_dif = $materials;
+                }
+            }
+
+            if($temp_payment > 0)
+            {
+                $tuition_payment = $temp_payment;
+            }            
             
-            $this->payment->create_down_payment($student_id, 'student', $agreement_id, $down_payment_id, $down_payment, $materials, $fees);
+            $this->payment->create_down_payment($student_id, 'student', $agreement_id, $down_payment_id, $payment_total, $tuition_payment, $materials_payment, $fees_payment);
+
+            // If the down payment is less than fee + materials add to the next amortization
+            // Update the amortization
+            $amortization_id = $down_payment_id + 1; 
+            $this->update_amortization_by_down_payment($amortization_id, $fees_dif, $materials_dif);
+
         }
 
         //Add Card info(Automatic payment)
-        // if($has_automatic_payment == 1)
-        // {
-            $dataCard['agreement_id']       = $agreement_id;
-            $dataCard['type_card_id']       = $this->input->post('type_card_id');
-            $dataCard['card_holder']        = $this->input->post('card_holder');
-            $dataCard['card_number']        = get_encrypt($this->input->post('card_number'));
-            $dataCard['security_code']      = get_encrypt($this->input->post('security_code'));
-            $dataCard['expiration_date']    = get_encrypt($this->input->post('expiration_date'));
-            $dataCard['zip_code']           = get_encrypt($this->input->post('zip_code'));
+        $dataCard['agreement_id']       = $agreement_id;
+        $dataCard['type_card_id']       = $this->input->post('type_card_id');
+        $dataCard['card_holder']        = $this->input->post('card_holder');
+        $dataCard['card_number']        = get_encrypt($this->input->post('card_number'));
+        $dataCard['security_code']      = get_encrypt($this->input->post('security_code'));
+        $dataCard['expiration_date']    = get_encrypt($this->input->post('expiration_date'));
+        $dataCard['zip_code']           = get_encrypt($this->input->post('zip_code'));
 
-            $this->db->insert('agreement_card', $dataCard);
+        $this->db->insert('agreement_card', $dataCard);
 
-            $table      = 'agreement_card';
-            $action     = 'insert';
-            $table_id  = $this->db->insert_id();
-            $this->crud->save_log($table, $action, $table_id, $data);            
-        //}
+        $table      = 'agreement_card';
+        $action     = 'insert';
+        $table_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $table_id, $data);            
+
         
         return $agreement_id;
     }
 
+    public function update_amortization_by_down_payment($amortization_id, $fees, $materials)
+    {
+        $this->db->reset_query();        
+        $this->db->where('amortization_id', $amortization_id);
+        $amortization = $this->db->get('agreement_amortization')->row_array();
+        
+
+        $data = array();
+        $data['amount']     = $amortization['amount'] - ($materials + $fees);
+        $data['materials']  = $materials;
+        $data['fees']       = $fees;
+
+        $this->db->reset_query();
+        $this->db->where('amortization_id', $amortization_id);
+        $this->db->update('agreement_amortization', $data);
+
+        $table      = 'agreement_amortization';
+        $action     = 'update';        
+        $this->crud->save_log($table, $action, $amortization_id, $data);
+    }
+    
     public function create_agreement_accountant($student_id)
     {        
         $year        = $this->runningYear;
@@ -383,7 +456,16 @@ class Agreement extends School
     {
         $this->db->reset_query();
         $this->db->where('agreement_id', $agreement_id);
-        $query = $this->db->get('agreement')->row_array();
+        $query = $this->db->get('v_agreement')->row_array();
+        
+        return $query;
+    }
+
+    public function get_agreement_archive($agreement_id)
+    {
+        $this->db->reset_query();
+        $this->db->where('agreement_id', $agreement_id);
+        $query = $this->db->get('archive_agreement')->first_row();
         
         return $query;
     }
@@ -407,9 +489,47 @@ class Agreement extends School
         return $amortizations;
     }
 
-    public function delete_agreement($agreement_id)
+    public function get_agreement_amount_paid($agreement_id)
     {
-        $agreement_id = base64_decode($agreement_id);
+        $this->db->reset_query();                                                
+        $this->db->order_by('due_date' , 'ASC');
+        $this->db->where('agreement_id', $agreement_id);
+        $amortization = $this->db->get('agreement_amortization')->result_array();
+        $total_paid = 0;
+
+        foreach($amortization as $item)
+        {
+            $status_id          = $item['status_id'];
+            $tuition            = floatval($item['amount']);
+            $materials          = floatval($item['materials']);
+            $fees               = floatval($item['fees']);
+            $amortization_id    = $item['amortization_id']; 
+
+            $total_amount = $tuition + $materials + $fees;
+
+            // Partial Payment
+            if($status_id == DEFAULT_AMORTIZATION_PARTIAL)
+            {                                                      
+                $this->db->reset_query();
+                $this->db->select_sum('amount');
+                $this->db->where('amortization_id =', $amortization_id);                
+                $paid = $this->db->get('payment_details')->row()->amount;
+            }
+
+            // calculate the pending 
+            if($status_id == DEFAULT_AMORTIZATION_PARTIAL || $status_id == DEFAULT_AMORTIZATION_PENDING)
+            {
+                $total_paid += $paid;
+                
+            }
+        }
+
+        return $total_paid;
+    } 
+
+    public function delete_agreement($param)
+    {
+        $agreement_id = base64_decode($param);
 
         $agreement = $this->get_agreement_info($agreement_id);
         $amortizations = $this->get_agreement_agreement_amortization($agreement_id);
@@ -418,17 +538,17 @@ class Agreement extends School
         $year           = $agreement['year'];
         $semester_id    = $agreement['semester_id'];
         $student_id     = $agreement['student_id'];
-        $this->academic->delete_student_enrollment($student_id, $semester_id, $year);
+        $this->academic->delete_student_enrollment($student_id, $year, $semester_id);
 
-        //Delete all payments
-        // foreach ($amortizations as $item) {
-        //     $payment_id = $item
-        // }
+        foreach ($amortizations as $item) 
+        {
+            $this->db->reset_query();        
+            $this->db->where('amortization_id =', $item['item']);
+            $this->db->where('concept_type =', CONCEPT_TUITION_ID);
+            $payment_id = $this->db->get('payment_details')->row()->payment_id;
 
-        $year           = $agreement['year'];
-        $semester_id    = $agreement['semester_id'];
-        $student_id     = $agreement['student_id'];
-        $this->academic->delete_student_enrollment($student_id, $semester_id, $year);
+            $this->payment->delete_payment($payment_id);
+        }
 
         $this->db->reset_query();
         $this->db->where('agreement_id', $agreement_id);
@@ -451,6 +571,123 @@ class Agreement extends School
         $table      = 'agreement_card';
         $action     = 'delete';
         $this->crud->save_log($table, $action, $agreement_id, []);
+
+    }
+
+    public function add_addendum($agreement_id)
+    {
+        
+    // Copy Data
+        $this->db->reset_query();
+        $this->db->where('agreement_id', $agreement_id);
+        $data_agreement = $this->db->get('agreement')->row_array();
+
+        $amount_paid = $this->get_agreement_amount_paid($agreement_id);
+
+        $this->db->reset_query();
+        $this->db->insert('archive_agreement', $data_agreement);
+
+        $table      = 'archive_agreement';
+        $action     = 'insert';
+        $archive_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $archive_id, $data_agreement);
+
+        // Update paid
+        $data_paid['paid']    = $amount_paid;
+
+        $this->db->reset_query();
+        $this->db->where('archive_id', $archive_id);
+        $this->db->update('archive_agreement', $data_paid);
+
+        $this->db->reset_query();
+        $this->db->select($archive_id.' as archive_id, amortization_no, amount, materials, fees, due_date, orig_due_date, status_id');
+        $this->db->where('agreement_id', $agreement_id);
+        $data_amortization = $this->db->get('agreement_amortization');
+
+        $this->db->reset_query();
+        $this->db->insert_batch('archive_agreement_amortization', $data_amortization->result());
+
+        $table      = 'archive_agreement_amortization';
+        $action     = 'insert';
+        $new_agreement_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $new_agreement_id, $data_amortization->result());
+
+        
+
+
+    // Update Contract        
+        $new_number_payments = html_escape($this->input->post('new_number_payments'));
+        $number_payments     = intval($data_agreement['number_payments']);
+
+        $user_id    = get_login_user_id();
+        $user_type  = get_table_user(get_role_id());
+
+        $new_data['updated_by']         = $user_id;
+        $new_data['has_addendum']       = '1';
+        $new_data['updated_by_type']    = $user_type;
+        $new_data['number_payments']    = $new_number_payments;
+
+        $this->db->reset_query();
+        $this->db->where('agreement_id', $agreement_id);
+        $this->db->update('agreement', $new_data);
+
+        $table      = 'agreement';
+        $action     = 'update';        
+        $this->crud->save_log($table, $action, $agreement_id, $new_data);    
+
+    // Update Amortization
+        $this->db->reset_query();        
+        $this->db->where('agreement_id', $agreement_id);
+        $update_data = $this->db->get('agreement_amortization')->result_array();
+        
+        foreach($update_data as $amortization)
+        {
+            if($amortization['status_id'] == DEFAULT_AMORTIZATION_PENDING)
+            {
+
+                $amortization_id                    =  $amortization['amortization_id'];                
+                $new_data_amortization              = array();
+                $new_data_amortization['amount']    = $this->input->post('amount_'.$amortization_id);                
+                $new_data_amortization['fees']      = $this->input->post('fees_'.$amortization_id);
+                $new_data_amortization['materials'] = $this->input->post('materials_'.$amortization_id);
+                $new_data_amortization['due_date']  = $this->input->post('due_date_'.$amortization_id);
+
+                $this->db->reset_query();
+                $this->db->where('amortization_id', $amortization_id);
+                $this->db->update('agreement_amortization', $new_data_amortization);
+        
+                $table      = 'agreement_amortization';
+                $action     = 'update';        
+                $this->crud->save_log($table, $action, $agreement_id, $new_data_amortization);
+            }
+        }
+
+        // Add the new amortization 4 -> 6 
+        if($new_number_payments > $number_payments)
+        {
+
+            for ($i=($number_payments + 1); $i <= $new_number_payments; $i++) { 
+                
+                $new_data_amortization                  = array();                
+                $new_data_amortization['amount']        = $this->input->post('amount_'.$i);
+                $new_data_amortization['fees']          = $this->input->post('fees_'.$i);
+                $new_data_amortization['materials']     = $this->input->post('materials_'.$i);
+                $new_data_amortization['due_date']      = $this->input->post('due_date_'.$i);
+                $new_data_amortization['agreement_id']  = $agreement_id;
+                $new_data_amortization['amortization_no'] = $i;
+
+                $this->db->reset_query();
+                $this->db->insert('agreement_amortization', $new_data_amortization);
+        
+                $table           = 'agreement_amortization';
+                $action          = 'update';       
+                $amortization_id = $this->db->insert_id(); 
+                $this->crud->save_log($table, $action, $amortization_id, $new_data_amortization);
+            }
+        }
+
+
+
 
     }
 }

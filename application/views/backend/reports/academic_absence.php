@@ -12,9 +12,10 @@
     $this->db->where('labuno', '0');
     $this->db->group_by('student_id, class_id, section_id, subject_id');
     $this->db->order_by('first_name');
-    $payments = $this->db->get('v_mark_daily')->result_array();
+    $absence = $this->db->get('v_mark_daily')->result_array();
 
 ?>
+<?php include $view_path.'_data_table_dependency.php';?>
 <div class="content-w">
     <?php include  $fancy_path.'fancy.php';?>
     <div class="header-spacer"></div>
@@ -63,12 +64,6 @@
                         <br />
                         <div class="tab-pane active" id="invoices">
                             <div class="element-wrapper">
-                                <div>
-                                    <a href="#" id="btnExport"><button class="btn btn-info btn-sm btn-rounded"><i
-                                                class="picons-thin-icon-thin-0123_download_cloud_file_sync"
-                                                style="font-weight: 300; font-size: 25px;"></i></button>
-                                    </a>
-                                </div>
                                 <div class="element-box-tp">
                                     <div class="table-responsive">
                                         <table class="table table-padded" id="dvData">
@@ -83,14 +78,28 @@
                                                     <th class="orderby"><?= getPhrase('modality');?></th>
                                                     <th class="orderby"><?= getPhrase('teacher');?></th>
                                                     <th class="orderby"># <?= getPhrase('absence');?></th>
+                                                    <th class="orderby"><?= getPhrase('dates');?></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php
-                                                    foreach($payments as $row):
+                                                    foreach($absence as $row):
                                                         $this->db->reset_query();
                                                         $this->db->where('subject_id', $row['subject_id']);
                                                         $subject_info = $this->db->get('v_subject')->row_array();
+
+                                                        $this->db->reset_query();
+                                                        $this->db->select('date');
+                                                        $this->db->where('date >=', $startDate);
+                                                        $this->db->where('date <=', $endDate);
+                                                        $this->db->where('labuno', '0');
+                                                        $this->db->where('student_id', $row['student_id']);
+                                                        $this->db->where('class_id', $row['class_id']);
+                                                        $this->db->where('section_id', $row['section_id']);
+                                                        $this->db->where('subject_id', $row['subject_id']);
+                                                        $this->db->group_by('student_id, class_id, section_id, subject_id, date');
+                                                        $this->db->order_by('first_name');
+                                                        $dates = $this->db->get('v_mark_daily')->result_array();
                                                         
                                                 ?>
                                                 <tr>
@@ -121,7 +130,13 @@
                                                     <td>
                                                         <?=  $row['absence'] ?>
                                                     </td>
-
+                                                    <td>
+                                                        <?php
+                                                        foreach ($dates as $item) {
+                                                            echo $item['date'].'<br/>';
+                                                        }
+                                                        ?>
+                                                    </td>
                                                 </tr>
                                                 <?php endforeach;?>
                                             </tbody>
@@ -137,44 +152,20 @@
     </div>
 </div>
 <script>
-$("#btnExport").click(function(e) {
-    var reportName = '<?php echo getPhrase('reports_tabulation').'_'.date('d-m-Y');?>';
-    var a = document.createElement('a');
-    var data_type = 'data:application/vnd.ms-excel;charset=utf-8';
-    var table_html = $('#dvData')[0].outerHTML;
-    table_html = table_html.replace(/<tfoot[\s\S.]*tfoot>/gmi, '');
-    var css_html =
-        '<style>td {border: 0.5pt solid #c0c0c0} .tRight { text-align:right} .tLeft { text-align:left} </style>';
-    a.href = data_type + ',' + encodeURIComponent('<html><head>' + css_html + '</' + 'head><body>' +
-        table_html + '</body></html>');
-    a.download = reportName + '.xls';
-    a.click();
-    e.preventDefault();
+var table = $('#dvData').DataTable({
+    dom: 'Bflrtip',
+    lengthMenu: [
+        [10, 20, 50, -1],
+        [10, 20, 50, "All"]
+    ],
+    pageLength: 20,
+    buttons: [{
+        extend: 'excelHtml5',
+        text: '<i class="picons-thin-icon-thin-0123_download_cloud_file_sync" style="font-size: 20px;"></i>',
+        titleAttr: 'Export to Excel'
+    }]
 });
-</script>
 
-<script type="text/javascript">
-$('.orderby').click(function() {
-    var table = $(this).parents('table').eq(0)
-    var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
-    this.asc = !this.asc
-    if (!this.asc) {
-        rows = rows.reverse()
-    }
-    for (var i = 0; i < rows.length; i++) {
-        table.append(rows[i])
-    }
-})
+$("select[name='dvData_length']" ).addClass('select-page');;
 
-function comparer(index) {
-    return function(a, b) {
-        var valA = getCellValue(a, index),
-            valB = getCellValue(b, index)
-        return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
-    }
-}
-
-function getCellValue(row, index) {
-    return $(row).children('td').eq(index).text()
-}
 </script>

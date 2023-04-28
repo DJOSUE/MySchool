@@ -4549,6 +4549,56 @@ input[type="button"].btn-block {
 
 .tab-content>.active {
     display: block;
+    animation: fadeIn ease 2s;
+    -webkit-animation: fadeIn ease 2s;
+    -moz-animation: fadeIn ease 2s;
+    -o-animation: fadeIn ease 2s;
+    -ms-animation: fadeIn ease 2s;
+}
+
+@keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+}
+
+@-moz-keyframes fadeIn {
+0% {
+    opacity:0;
+}
+100% {
+    opacity:1;
+}
+}
+
+@-webkit-keyframes fadeIn {
+0% {
+    opacity:0;
+}
+100% {
+    opacity:1;
+}
+}
+
+@-o-keyframes fadeIn {
+0% {
+    opacity:0;
+}
+100% {
+    opacity:1;
+}
+}
+
+@-ms-keyframes fadeIn {
+0% {
+    opacity:0;
+}
+100% {
+    opacity:1;
+}
 }
 
 .breadcrumb {
@@ -27622,4 +27672,39 @@ table {
 
 .orderby {
     cursor: pointer;
+}
+
+.currency {
+    padding-left: 12px;
+    text-align: end;
+    float: right;
+}
+
+.currency-symbol {
+    position: absolute;
+    padding: 2px 5px;
+}
+
+.dt-buttons {
+    margin-right: 15px !important;
+}
+
+.select-page {
+    padding: 5px 35px 5px 5px;
+    border: 2px solid #ccc;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #fff !important;
+    background: url("/public/uploads/icons/down_arrow.svg") 96% / 15% no-repeat #eee;
+}
+
+.table-td-wrap {
+    width: 105px;
+    word-wrap: break-word;
+    display: inline-block;
+}
+
+.dt-button.buttons-excel.buttons-html5{
+    border-radius: 25px;
 }

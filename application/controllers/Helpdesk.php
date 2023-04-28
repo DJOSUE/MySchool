@@ -90,6 +90,12 @@ class Helpdesk extends EduAppGT
 
     function ticket_info($ticket_code = '', $param2 = '')
     {
+        parse_str(substr(strrchr($_SERVER['REQUEST_URI'], "?"), 1), $_GET);
+        if(html_escape($_GET['id']) != "")
+        {
+            $this->notification->update(html_escape($_GET['id']), 1);
+        } 
+
         $this->isLogin('helpdesk_module');
         $page_data['ticket_code']   = $ticket_code;
         $page_data['page_name']     = 'ticket_info';
@@ -159,20 +165,24 @@ class Helpdesk extends EduAppGT
 
         switch ($action) {
             case 'add':
+                
+                $status_id_old = $this->db->get_where('ticket' , array('ticket_code' => $ticket_code))->row()->status_id;
 
-                if($ticket_code != '')
+                $status_id_new = $this->input->post('status_id');
+
+                $update_status = $status_id_old != $status_id_new;
+
+                if($update_status)
                 {
-                    $status_id_old = $this->db->get_where('ticket' , array('ticket_code' => $ticket_code))->row()->status_id;
-    
-                    $status_id_new = $this->input->post('status_id');
-    
-                    if($status_id_old != $status_id_new)
-                    {
-                        $this->ticket->update_status($ticket_code, $status_id_new);
-                    }
-                }
+                    $this->ticket->update_status($ticket_code, $status_id_new);
+
+                }            
 
                 $this->ticket->add_message($ticket_code);
+
+                $this->ticket->send_notification($ticket_code, 'add_comment', $update_status ? $status_id_new : '');
+
+
                 $message =  getPhrase('successfully_added');
 
                 break;

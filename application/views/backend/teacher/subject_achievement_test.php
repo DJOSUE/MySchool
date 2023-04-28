@@ -54,7 +54,8 @@ use function PHPSTORM_META\map;
                                     <img src="<?php echo base_url();?>public/uploads/<?php echo $this->db->get_where('settings', array('type' => 'logo'))->row()->description;?>"
                                         style="border-radius:0px;">
                                     <div class="author-date">
-                                        <a class="h6 post__author-name fn"><?php echo getPhrase('achievement_test');?></a>
+                                        <a
+                                            class="h6 post__author-name fn"><?php echo getPhrase('achievement_test');?></a>
                                     </div>
                                 </div>
                                 <div class="edu-posts cta-with-media">
@@ -96,14 +97,28 @@ use function PHPSTORM_META\map;
                                                         foreach($test_students as $row):
                                                             $key = array_search($row['student_id'], array_column($students, 'student_id'));
                                                             if(is_numeric($key)):
+                                                                $student_id     = $row['student_id'];
+                                                                $status_info    = $this->studentModel->get_student_status_info($student_id);
                                                                 $count++;
                                                     ?>
                                                 <tr style="height:25px;">
                                                     <td style="min-width:190px">
-                                                        <img alt=""
-                                                            src="<?php echo $this->crud->get_image_url('student', $row['student_id']);?>"
-                                                            width="25px" style="border-radius: 10px;margin-right:5px;">
-                                                        <?php echo $this->crud->get_name('student', $row['student_id']);?>
+                                                        <div class="inline-items">
+                                                            <div class="author-thumb" style="margin-right: 10px;">
+                                                                <img src="<?= $this->crud->get_image_url('student', $student_id);?>"
+                                                                    width="35px">
+                                                            </div>                                                            
+                                                            <div class="notification-event">
+                                                                <a class="h6 notification-friend">
+                                                                    <?= $this->crud->get_name('student', $student_id)?>
+                                                                </a>
+                                                                <br/>
+                                                                <span class="badge"
+                                                                    style="background-color: <?=$status_info['color']?>;">
+                                                                    <?= $status_info['name'];?>
+                                                                </span>
+                                                            </div>
+                                                        </div>
                                                     </td>
                                                     <?php 
                                                         for ($i=1; $i <= $quantity_score; $i++):
@@ -111,13 +126,12 @@ use function PHPSTORM_META\map;
                                                     ?>
                                                     <td>
                                                         <center><input type="number"
-                                                                name="<?= $name.'_'.$row['test_id'];?>"
-                                                                placeholder="0"
+                                                                name="<?= $name.'_'.$row['test_id'];?>" placeholder="0"
                                                                 max="<?= $achievement_weighting[$name] ?>"
                                                                 style="width:85px; border: 1; text-align: center;"
                                                                 value="<?php echo $row[$name];?>"> </center>
                                                     </td>
-                                                    
+
                                                     <?php endfor;?>
                                                     <td>
                                                         <center><input type="text" class="form-control"
@@ -135,7 +149,7 @@ use function PHPSTORM_META\map;
                                         <?php echo form_close();?>
                                     </div>
                                     <?php form_close(); ?>
-                                </div>                                
+                                </div>
                             </article>
                         </div>
                     </main>

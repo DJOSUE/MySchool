@@ -119,17 +119,30 @@
                                                         $count = 1;
                                                         $students = $this->academic->get_student_list_by_subject($class_id, $section_id, $subject_id);
                                                         $students_list = "";
-                                                        foreach ($students as $key => $row) :
+                                                        foreach ($students as $key => $row) :                                                            
                                                             $student_id     = $row['student_id'];
+                                                            $status_info    = $this->studentModel->get_student_status_info($student_id);
                                                             $mark_daily_id  = $this->academic->get_daily_mark_id($student_id, $class_id, $section_id, $subject_id, $date, $unit_id);
                                                             $student_mark   = $this->db->get_where('mark_daily' , array('mark_daily_id' => $mark_daily_id))->row_array();
                                                     ?>
                                                 <tr style="height:25px;">
                                                     <td style="min-width:190px">
-                                                        <img name="<?=$student_id?>" alt=""
-                                                            src="<?= $this->crud->get_image_url('student', $student_id);?>"
-                                                            width="25px" style="border-radius: 10px;margin-right:5px;">
-                                                        <?= $this->crud->get_name('student', $student_id);?>
+                                                        <div class="inline-items">
+                                                            <div class="author-thumb" style="margin-right: 10px;">
+                                                                <img src="<?= $this->crud->get_image_url('student', $student_id);?>"
+                                                                    width="35px">
+                                                            </div>                                                            
+                                                            <div class="notification-event">
+                                                                <a class="h6 notification-friend">
+                                                                    <?= $this->crud->get_name('student', $student_id)?>
+                                                                </a>
+                                                                <br/>
+                                                                <span class="badge"
+                                                                    style="background-color: <?=$status_info['color']?>;">
+                                                                    <?= $status_info['name'];?>
+                                                                </span>
+                                                            </div>
+                                                        </div>
                                                     </td>
                                                     <?php 
                                                         for ($i=0; $i < $quantityGrades; $i++):
@@ -139,8 +152,8 @@
                                                     ?>
                                                     <td>
                                                         <center>
-                                                            <input type="text" name="<?= $mark_name;?>"
-                                                                placeholder="0" maxlength="3"
+                                                            <input type="text" name="<?= $mark_name;?>" placeholder="0"
+                                                                maxlength="3"
                                                                 style="width:65px; border: 1; text-align: center;"
                                                                 value="<?= $student_mark[$name[2]];?>">
                                                         </center>

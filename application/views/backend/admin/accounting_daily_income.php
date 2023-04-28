@@ -15,7 +15,17 @@
         $objDate = date_create($date);
     }
 
-    $first_date = date_format($objDate, "Y-m-d");    
+    $first_date = date_format($objDate, "Y-m-d");   
+    
+    if($date_end == "")
+    {
+        $objDateEnd = date_create(date("Y-m-d"));
+    }
+    else
+    {
+        $objDateEnd = date_create($date_end);
+    }    
+    $second_date = date_format($objDateEnd, "Y-m-d");
     
     $tuition_int = 0.00;
     $application_int = 0.00;
@@ -34,7 +44,8 @@
     $transfer = 0.00;
 
     $this->db->reset_query();    
-    $this->db->where('invoice_date >=', $first_date);
+    $this->db->where('DATE(invoice_date) >=', $first_date);
+    $this->db->where('DATE(invoice_date) <=', $second_date);
 
     $assigned_to = "";
     $assigned_to_type = "";

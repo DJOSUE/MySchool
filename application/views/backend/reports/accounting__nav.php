@@ -16,15 +16,15 @@
                             </a>
                         </li>
                         <?php if(has_permission('accounting_dashboard')):?>
-                        <li class="navs-item">
+                        <!-- <li class="navs-item">
                             <a class="navs-links <?= $page_name == 'accounting_payments' ? 'active' : ''?>"
                                 href="<?php echo base_url();?>reports/accounting_monthly_income/">
                                 <i class="os-icon picons-thin-icon-thin-0426_money_payment_dollars_coins_cash"></i>
                                 <span><?php echo getPhrase('monthly_income');?></span>
                             </a>
-                        </li>
+                        </li> -->
                         <?php endif;?>
-                        <?php if(has_permission('accounting_dashboard')):?>
+                        <?php if(has_permission('accounting_payments')):?>
                         <li class="navs-item">
                             <a class="navs-links <?= $page_name == 'accounting_payments' ? 'active' : ''?>"
                                 href="<?php echo base_url();?>reports/accounting_payments/">
@@ -41,7 +41,16 @@
                                 <span><?php echo getPhrase('agreements');?></span>
                             </a>
                         </li>
-                        <?php endif;?>                           
+                        <?php endif;?>
+                        <?php if(has_permission('collection_management')):?>
+                        <li class="navs-item">
+                            <a class="navs-links <?= $page_name == 'accounting_collection_management' ? 'active' : ''?>"
+                                href="<?php echo base_url();?>reports/accounting_collection_management/">
+                                <i class="os-icon picons-thin-icon-thin-0394_business_handshake_deal_contract_sign"></i>
+                                <span><?php echo getPhrase('collection_management');?></span>
+                            </a>
+                        </li>
+                        <?php endif;?>  
                         <!-- <li class="navs-item">
                             <a class="navs-links <?= $page_name == 'report_dashboard' ? 'active' : ''?>" href="<?php echo base_url();?>reports/expense/"><i
                                     class="os-icon picons-thin-icon-thin-0420_money_cash_coins_payment_dollars"></i><span><?php echo getPhrase('expense');?></span></a>

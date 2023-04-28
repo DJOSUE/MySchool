@@ -57,7 +57,7 @@
                                     <div id="stepContent3">
                                         <div class="row">
                                             <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                <div class="form-group label-floating">
+                                                <div class="form-group label-floating is-select">
                                                     <label class="control-label">
                                                         <?= getPhrase('cost_tuition');?>
                                                     </label>

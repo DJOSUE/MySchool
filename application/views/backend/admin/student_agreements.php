@@ -52,7 +52,7 @@
                                             <div class="form-buttons">
                                                 <a id="create_agreement"
                                                     href="/admin/student_new_enrollment/<?=$student_id?>"
-                                                    class="btn btn-rounded btn-success <?= $disabled?>">
+                                                    class="btn btn-rounded btn-success">
                                                     <?= getPhrase('create_new_agreement');?>
                                                 </a>
                                             </div>
@@ -148,7 +148,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- current enrollments -->
                         <div>
                             <div class="ui-block">
@@ -180,6 +179,9 @@
                                                             <?= getPhrase('teacher');?>
                                                         </th>
                                                         <th>
+                                                            <?= getPhrase('modality');?>
+                                                        </th>
+                                                        <th>
                                                             <?= getPhrase('classroom');?>
                                                         </th>
                                                         <!-- <th>
@@ -189,12 +191,11 @@
                                                 </thead>
                                                 <tbody>
                                                     <?php 
-                                                        $enrollments = $this->db->get_where('v_enrollment', array('student_id' => $student_id))->result_array();
-                                                        
-                                                        // echo '<pre>';
-                                                        // var_dump($enrollments);
-                                                        // echo '</pre>';
-
+                                                        $this->db->reset_query();        
+                                                        $this->db->where('student_id', $student_id);
+                                                        $this->db->order_by("year", "DESC");
+                                                        $this->db->order_by("semester_id", "DESC");
+                                                        $enrollments = $this->db->get('v_enrollment')->result_array();
                                                         foreach ($enrollments as $item):
                                                     ?>
                                                     <tr>
@@ -249,6 +250,14 @@
                                                                     placeholder="0"
                                                                     style="border: 1; text-align: center;">
                                                                     <?= $item['teacher_name'];?>
+                                                                </label>
+                                                            </center>
+                                                        </td><td class="text-center">
+                                                            <center>
+                                                                <label name="teacher_<?= $item['enroll_id'];?>"
+                                                                    placeholder="0"
+                                                                    style="border: 1; text-align: center;">
+                                                                    <?= $item['modality_name'];?>
                                                                 </label>
                                                             </center>
                                                         </td>

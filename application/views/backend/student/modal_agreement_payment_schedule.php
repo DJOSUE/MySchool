@@ -29,8 +29,6 @@
                         $this->db->where('agreement_id', $param2);
                         $agreement = $this->db->get('agreement_amortization')->result_array();
 
-                        $next_agreement = $this->payment->get_next_amortization($student_id);
-
                         foreach($agreement as $row2):
                             $allow_payment      = true;
                             $overdue            = false;

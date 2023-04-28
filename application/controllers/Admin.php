@@ -1882,8 +1882,10 @@
             if($param1 == 'delete_agreement')
             {
                 $agreement_id = $this->agreement->delete_agreement($param2);
+
+
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
-                redirect(base_url() . 'admin/student_enrollments/'. $param3.'/', 'refresh');             
+                redirect(base_url() . 'admin/student_enrollments/'. base64_decode($param3).'/', 'refresh');             
             }
         }
 
@@ -3206,10 +3208,43 @@
 
             if($user_type === 'applicant')
             {
-                $return_url = 'admin/admission_applicant/'.$user_id;
+                $return_url = 'admin/admission_applicant_payment/'.$user_id;
             }
 
             $this->session->set_flashdata('flash_message', getPhrase('successfully_added'));
+            
+            redirect(base_url() . $return_url, 'refresh');
+        }
+
+        function student_payment_edit($studentId, $paymentId)
+        {
+            $this->isAdmin();
+
+            $student_id = base64_decode($studentId);
+            $payment_id = base64_decode($paymentId);
+
+            $page_data['student_id'] =  $student_id;
+            $page_data['payment_id'] =  $payment_id;            
+            $page_data['page_name']  = 'student_payment_edit';
+            $page_data['page_title'] =  getPhrase('student_payment_edit');
+            
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function payment_update($paymentId, $user_id, $user_type)
+        {
+            $payment_id = base64_decode($paymentId);
+
+            $this->payment->update_payment_info($payment_id);
+
+            $return_url = 'admin/student_payments/'.$user_id;
+
+            if($user_type === 'applicant')
+            {
+                $return_url = 'admin/admission_applicant/'.$user_id;
+            }
+
+            $this->session->set_flashdata('flash_message', getPhrase('successfully_updated'));
             
             redirect(base_url() . $return_url, 'refresh');
         }
@@ -3410,6 +3445,67 @@
             $page_data['end_date']    = $end_date;
             $page_data['page_name']   = 'admission_applicants';
             $page_data['page_title']  =  getPhrase('admission_applicants');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function admission_converted($param1 = '')
+        {
+            $this->isAdmin('admission_module');
+
+            if($param1 != '')
+            {
+                $array      = explode('|',base64_decode($param1));
+                
+                $name        = "";
+                $country_id  = "";
+                $status_id   = APPLICANT_CONVERTED_STATUS_ID;
+                $type_id     = $array[0];
+                $assigned_me = 0;
+                $tag_id      = "";
+                $advisor_id  = "";
+                $start_date  = "";
+                $end_date    = "";
+            }
+            else
+            {
+                $name        = "";
+                $country_id  = "";
+                $status_id   = APPLICANT_CONVERTED_STATUS_ID;
+                $type_id     = "";
+                $assigned_me = 1;
+                $tag_id      = "";
+                $advisor_id  = "";
+                $start_date  = "";
+                $end_date    = "";
+            }
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') 
+            {
+                $country_id  = $this->input->post('country_id');
+                $status_id   = APPLICANT_CONVERTED_STATUS_ID;
+                $type_id     = $this->input->post('type_id');
+                $name        = $this->input->post('name');
+                $search      = true;
+                $assigned_me = $this->input->post('assigned_me'); 
+                $tag_id      = $this->input->post('tag_id');
+                $advisor_id  = $this->input->post('advisor_id'); 
+                $start_date  = $this->input->post('start_date'); 
+                $end_date    = $this->input->post('end_date'); 
+                
+            }
+
+            $page_data['country_id']  = $country_id;
+            $page_data['status_id']   = $status_id;
+            $page_data['type_id']     = $type_id;
+            $page_data['search']      = $search;
+            $page_data['name']        = $name;
+            $page_data['assigned_me'] = $assigned_me;
+            $page_data['tag_id']      = $tag_id;
+            $page_data['advisor_id']  = $advisor_id;
+            $page_data['start_date']  = $start_date;
+            $page_data['end_date']    = $end_date;
+            $page_data['page_name']   = 'admission_converted';
+            $page_data['page_title']  =  getPhrase('admission_converted');
             $this->load->view('backend/index', $page_data);
         }
 

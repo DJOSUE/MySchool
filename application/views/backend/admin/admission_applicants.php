@@ -43,11 +43,7 @@
     $students = $student_query->result_array();
     
 ?>
-<style>
-th {
-    cursor: pointer;
-}
-</style>
+<?php include  $view_path.'_data_table_dependency.php';?>
 <div class="content-w">
     <?php include 'fancy.php';?>
     <div class="header-spacer"></div>
@@ -219,17 +215,8 @@ th {
                         <div class="row">
                             <div class="table-responsive">
                                 <?php
-                                    if($student_query->num_rows() > 0):
-                                    ?>
-                                <a href="#" id="btnExport" data-toggle="tooltip" data-placement="top"
-                                    data-original-title="<?= getPhrase('download');?>">
-                                    <button class="btn btn-info btn-sm btn-rounded">
-                                        <i class="picons-thin-icon-thin-0123_download_cloud_file_sync"
-                                            style="font-weight: 300; font-size: 25px;"></i>
-                                    </button>
-                                </a>
-                                <br />
-                                <br />
+                                if($student_query->num_rows() > 0):
+                                ?>
                                 <table class="table table-padded" id="dvData">
                                     <thead>
                                         <tr>
@@ -371,43 +358,19 @@ th {
     </div>
 </div>
 <script type="text/javascript">
-$('th').click(function() {
-    var table = $(this).parents('table').eq(0)
-    var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
-    this.asc = !this.asc
-    if (!this.asc) {
-        rows = rows.reverse()
-    }
-    for (var i = 0; i < rows.length; i++) {
-        table.append(rows[i])
-    }
-})
-
-function comparer(index) {
-    return function(a, b) {
-        var valA = getCellValue(a, index),
-            valB = getCellValue(b, index)
-        return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
-    }
-}
-
-function getCellValue(row, index) {
-    return $(row).children('td').eq(index).text()
-}
-</script>
-<script>
-$("#btnExport").click(function(e) {
-    var reportName = '<?= getPhrase('applicants').'_'.date('d-m-Y');?>';
-    var a = document.createElement('a');
-    var data_type = 'data:application/vnd.ms-excel;charset=utf-8';
-    var table_html = $('#dvData')[0].outerHTML;
-    table_html = table_html.replace(/<tfoot[\s\S.]*tfoot>/gmi, '');
-    var css_html =
-        '<style>td {border: 0.5pt solid #c0c0c0} .tRight { text-align:right} .tLeft { text-align:left} </style>';
-    a.href = data_type + ',' + encodeURIComponent('<html><head>' + css_html + '</' + 'head><body>' +
-        table_html + '</body></html>');
-    a.download = reportName + '.xls';
-    a.click();
-    e.preventDefault();
-});
+    var table = $('#dvData').DataTable({
+    dom: 'Blifrtp',
+    scrollX: true,
+    lengthMenu: [
+        [10, 20, 50, -1],
+        [10, 20, 50, "All"]
+    ],
+    pageLength: 20,
+    buttons: [{
+        extend: 'excelHtml5',
+        text: '<i class="picons-thin-icon-thin-0123_download_cloud_file_sync" style="font-size: 20px;"></i>',
+        titleAttr: 'Export to Excel'
+    }]
+    });
+    $("select[name='dvData_length']" ).addClass('select-page');
 </script>

@@ -39,6 +39,29 @@ class Notification extends School
         $this->crud->save_log($table, $action, $insert_id, $notify);
     }
 
+    function create_message($message, $user_id, $user_type, $url_encode)
+    {
+        $original_id = get_login_user_id();
+        $original_type = get_account_type();
+        $url = base64_decode($url_encode);
+
+        $notify['notify']        = $message;
+        $notify['user_id']       = $user_id;
+        $notify['user_type']     = $user_type;
+        $notify['url']           = $url;
+        $notify['date']          = $this->crud->getDateFormat();
+        $notify['time']          = date('h:i A');
+        $notify['status']        = 0;
+        $notify['original_id']   = $original_id;
+        $notify['original_type'] = $original_type;
+        $this->db->insert('notification', $notify);
+        
+        $table      = 'notification';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $notify);
+    }
+
     function teacher_student_request($message_code, $student_name, $user_id, $user_type, $start_date, $end_date)
     {
         $original_id = get_login_user_id();

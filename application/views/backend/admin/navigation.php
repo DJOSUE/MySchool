@@ -7,7 +7,7 @@
     // Array Pages
     $task_pages         = array('task_dashboard', 'task_student', 'task_applicant', 'task_info','task_update');
     $message_pages      = array('message', 'group');
-    $admissions_pages   = array('admission_dashboard', 'admission_applicants','admission_new_applicant', 'admission_applicant','admission_new_student');
+    $admissions_pages   = array('admission_dashboard', 'admission_applicants','admission_converted','admission_new_applicant', 'admission_applicant','admission_new_student');
     $routine_pages      = array('class_routine_view', 'teacher_routine');
     $library_pages      = array('library', 'book_request', 'update_book');
     $time_card_pages    = array('time_card', 'time_sheet', 'payment_period', 'worker_schedule', 'workers', 'worked_hours');
@@ -32,13 +32,13 @@
 
     $helpdesk_pages     = array('dashboard', 'ticket_list', 'ticket_info');
 
-    $accounting_pages   = array('accounting_dashboard', 'accounting_daily_income', 'invoice_details', 'payments', 'students_payments', 'expense', 'new_payment');    
+    $accounting_pages   = array('accounting_dashboard', 'accounting_daily_income', 'accounting_payments','accounting_agreements', 'accounting_collection_management','invoice_details', 'payments', 'students_payments', 'expense', 'new_payment');    
 
     $upload_pages       = array('upload_agreements');
 
     $student_month_pages = array('student_month_dashboard');
 
-    $academic_report_pages  = array('academic_dashboard');
+    $academic_report_pages  = array('academic_dashboard', 'academic_schedule_class');
 
     $advisor_report_pages  = array('advisor_dashboard');
     

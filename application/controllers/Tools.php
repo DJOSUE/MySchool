@@ -192,7 +192,6 @@
                 echo '<option value="' . $row['student_id'] . '">' . $row['full_name'] . '</option>';
             }
         }
-        
 
         //Get Students by sectionId function of the current semester.
         function get_class_students($section_id = '')
@@ -209,7 +208,6 @@
             }
         }
 
-
         function update_subject($subject_id, $return_url = '')
         {
             $this->isLogin();
@@ -219,35 +217,36 @@
             redirect(base_url() . 'teacher/cursos/'.base64_encode($class_id)."/", 'refresh');
         }
 
-/******* Test **************/        
-        //Get Students by sectionId function of the current semester.
-        function get_pass_student_class($class_id, $year = "", $semester_id = "")
+        function run_agent($token = '', $data = '')
         {
-            echo '<pre>';
-            var_dump($this->academic->get_pass_student_class($class_id, $year, $semester_id));
-            echo '</pre>';
+            // 87878b73a13af46d24edf62640b80ca2d20c1d95
+
+            if ($token === DEFAULT_TOKEN_AGENT) {
+                $agent_name = base64_decode($data);
+
+                switch ($agent_name) {
+                    case 'payment_reminder':
+                        // cGF5bWVudF9yZW1pbmRlcg
+                        $this->agent->payment_reminder();
+                        break;
+                        
+                    case 'late_payment_reminder':
+                        // bGF0ZV9wYXltZW50X3JlbWluZGVy
+                        $this->agent->late_payment_reminder();
+                        break;
+                }
+            }            
         }
 
-        function accept_request($request_id, $user_type, $message = "")
+        // test 
+        function can_request($year, $semester_id, $request_type, $student_id)
         {
-            // $this->notification->teacher_student_request('absence_approved_teacher', $user_name,$teacher_id, 'teacher', '', $request_info['start_date'], $request_info['end_date']);                    
-
-            $this->request->accept_request($request_id, $user_type, $message);
+            $this->request->can_request($year, $semester_id, $request_type, $student_id);
         }
 
-        function get_last_student_code()
-        {
-            $last_student_code = $this->studentModel->get_last_student_code();
-
-            echo '<pre>';
-            var_dump($last_student_code);
-            echo '</pre>'; 
-        }
-
-        function request_approved($user_id, $user_type, $request_type)
-        {
-            // $this->notification->teacher_student_request('absence_approved_teacher', $user_name,$teacher_id, 'teacher', '', $request_info['start_date'], $request_info['end_date']);                    
-
-            $this->mail->request_approved($user_id, $user_type, $request_type);
-        }
+        // function ticket_notification($ticket_code)
+        // {
+        //     $this->ticket->send_notification($ticket_code, 'add_comment', 2);
+            
+        // }
     }

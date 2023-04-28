@@ -2089,7 +2089,6 @@ class Academic extends School
         }
 
         // Change the status to be Active
-
         $data_student['student_session'] = 1;
         $this->db->where('student_id', $student_id);
         $this->db->update('student', $data_student);  
@@ -2877,7 +2876,7 @@ class Academic extends School
         $this->db->reset_query();
         $this->db->where('student_id', $student_id);
         $this->db->where('year', $year);
-        $this->db->where('semester_id', $semester_id);
+        $this->db->where('semester_id', $semester_id);     
         $this->db->delete('enroll');
 
         $table      = 'enroll';

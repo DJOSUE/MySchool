@@ -1044,11 +1044,12 @@
             {
                 $year           = $this->input->post('year');
                 $semester_id    = $this->input->post('semester_id');
-                $can_request    = $this->request->can_request($year, $semester_id, 'vacation', $student_id);
+                $can_request    = $this->request->can_request($year, $semester_id, 1, $student_id);
 
                 // echo $can_request;
                 // Validate if has more of 2
-                if($can_request == false){
+                if($can_request == 'false')
+                {
                     $this->request->student_vacation_request();
                     $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
                 }

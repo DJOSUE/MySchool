@@ -7,6 +7,8 @@
 
     $layout         = in_array($page_name, $message_pages) ? 'class="layout-w"' : '';
 
+    $view_path      =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,21 +43,14 @@
     var select_qn = '<?= getPhrase('select_question_type');?>';
     </script>
 </head>
-
-<!-- <div>
-    <?php
-        echo '<pre>';
-        var_dump($_SESSION);
-        echo '</pre>';
-    ?>
-</div> -->
 <body class="menu-position-side menu-side-left full-screen with-content-panel">
     <div class="with-side-panel">
         <div <?php $layout;?>>
             <?php include $account_type.'/navigation.php';?>
             <?php  include $account_type.'/'.$page_name.'.php'; ?>
         </div>
-        <div class="display-type"></div>
+        <div class="display-type">
+        </div>
     </div>
     <?php include 'modal.php';?>
     <?php include 'scripts.php';?>

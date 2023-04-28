@@ -53,5 +53,28 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-6">
+            <?php 
+            $financial = $this->studentModel->get_student_financial_profile($row['student_id']);
+            $collection = $this->studentModel->get_student_collection_profile($row['student_id']);
+            ?>
+            <?php if($financial != ''):?>
+            <div class="value-pair">
+                <div><?= getPhrase('financial_categorization');?>:</div>
+                <div class="value">
+                    <img class="nav-icon" src="/public/uploads/icons/<?=$financial;?>.png">
+                </div>          
+            </div>
+            <?php endif;?>
+            <?php if($collection):?>
+            <div class="value-pair">
+                <div><?= getPhrase('collection_profile');?>:</div>
+                <div class="value badge-status badge-pill badge-primary"
+                    style="background-color: <?=$collection['color']?>;">
+                    <?= $collection['name'];?>
+                </div>       
+            </div>
+            <?php endif;?>
+        </div>
     </div>
 </div>

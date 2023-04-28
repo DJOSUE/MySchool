@@ -1,28 +1,35 @@
 <?php 
+    $running_year = $this->crud->getInfo('running_year'); 
+    $advisor = $this->user->get_advisor();
+    $accounters = $this->user->get_accounters();
+    $currency = $this->crud->getInfo('currency');
 
-    
+    $interval = date_interval_create_from_date_string('1 days');
 
-    $running_year   = $this->crud->getInfo('running_year'); 
-    $advisor        = $this->user->get_advisor();
-    $accounters     = $this->user->get_accounters();
-    $legal          = $this->user->get_legal_office();
-    $currency       = $this->crud->getInfo('currency');
-
-    $interval       = date_interval_create_from_date_string('1 days');
-
-    if($date == "")
+    if($date_start == "")
     {
-        $objDate = date_create(date("Y-m-d"));
+        $objDateStart = date_create(date("Y-m-d"));
     }
     else
     {
-        $objDate = date_create($date);
+        $objDateStart = date_create($date_start);
     }
 
-    $first_date = date_format($objDate, "Y-m-d");    
+    $first_date = date_format($objDateStart, "Y-m-d");
+
+    if($date_end == "")
+    {
+        $objDateEnd = date_create(date("Y-m-d"));
+    }
+    else
+    {
+        $objDateEnd = date_create($date_end);
+    }    
+    $second_date = date_format($objDateEnd, "Y-m-d");
     
     $tuition_int = 0.00;
     $application_int = 0.00;
+    $others = 0.00;
 
     $tuition_local = 0.00;
     $application_local = 0.00;
@@ -37,22 +44,28 @@
     $venmo = 0.00;
     $transfer = 0.00;
 
-    $this->db->reset_query();    
-    $this->db->where('invoice_date >=', $first_date);
 
-    $assigned_to = "";
-    $assigned_to_type = "";
+    $this->db->reset_query();
+    $this->db->where('invoice_date >=', $first_date);
+    $this->db->where('invoice_date <=', $second_date);
+    // $this->db->where('created_at <=', $second_date);
+
     if($cashier_id != "")
     {
-        $ex = explode('|', $cashier_id);
+        $ex = explode(':',$cashier_id);
 
-        $assigned_to_type   = $ex['0'];
-        $assigned_to        = $ex['1'];
-
-        $this->db->where('created_by', $assigned_to);
-        $this->db->where('created_by_type', $assigned_to_type);
+        $this->db->where('created_by', $ex['1']);
+        $this->db->where('created_by_type', $ex['0']);       
     }    
-    $payments = $this->db->get('payment')->result_array();    
+    $payments = $this->db->get('payment')->result_array();
+
+    if($cashier_id != "")
+    {
+        $ex = explode(':',$cashier_id);
+        $cashier_name = $this->crud->get_name($ex['0'], $ex['1']);
+    }
+
+    
 
     foreach ($payments as $key => $value) {
         
@@ -170,34 +183,29 @@
     $card += $card_fee;
 
     $total_payment = ($cash + $card + $check + $venmo + $transfer);
-
-    if($assigned_to != '')
-        $cashier_name = $this->crud->get_name($assigned_to_type, $assigned_to);
-        
-    $userList = $this->user->get_cashiers($assigned_to, $assigned_to_type);
 ?>
 <style>
-    .invoice-w::before {
-        background-color: transparent !important;
-    }
+.invoice-w::before {
+    background-color: transparent !important;
+}
 
-    .currency {
-        padding-left: 12px;
-        padding-right: 5px;
-        text-align: end;
-        float: right;
-    }
+.currency {
+    padding-left: 12px;
+    padding-right: 5px;
+    text-align: end;
+    float: right;
+}
 
-    .bold {
-        font-weight: bold;
-    }
+.bold {
+    font-weight: bold;
+}
 
-    td {
-        padding: 6px 0px;
-    }
+td {
+    padding: 6px 0px;
+}
 </style>
 <div class="content-w">
-    <?php include $fancy_path.'fancy.php';?>
+    <?php include  $fancy_path.'fancy.php';?>
     <div class="header-spacer"></div>
     <div class="conty">
         <div class="os-tabs-w menu-shad">
@@ -207,7 +215,7 @@
         </div><br>
         <?php 
             // echo '<pre>';
-            // var_dump( $first_date);
+            // var_dump($payments);
             // echo '</pre>';
         ?>
         <div class="content-i">
@@ -225,18 +233,38 @@
                                         <div class="select">
                                             <select name="cashier_id" <?= $cashier_all == false ? 'disabled' : ''?>>
                                                 <option value=""><?= getPhrase('select');?></option>
-                                                <?= $userList; ?>
+                                                <?php foreach($advisor as $row): ?>
+                                                <option value="admin:<?= $row['admin_id'];?>"
+                                                    <?php if($cashier_id == ('admin:'.$row['admin_id'])) echo "selected";?>>
+                                                    <?= $row['first_name'].' '.$row['last_name'];?></option>
+                                                <?php endforeach;?>
+                                                <?php foreach($accounters as $item): ?>
+                                                <option value="accountant:<?= $item['accountant_id'];?>"
+                                                    <?php if($cashier_id == ('accountant:'.$item['accountant_id'])) echo "selected";?>>
+                                                    <?= $item['first_name'].' '.$item['last_name'];?></option>
+                                                <?php endforeach;?>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                                <div class="col col-xl-2 col-lg-4 col-md-4 col-sm-8 col-8">
                                     <div class="form-group label-floating is-select" style="background-color: #fff;">
                                         <label class="control-label"><?php echo getPhrase('date');?></label>
                                         <div class="form-group date-time-picker">
                                             <input type="text" autocomplete="off" class="datepicker-here"
-                                                data-position="bottom left" data-language='en' name="date" id="date"
-                                                value="<?=$date?>">
+                                                data-position="bottom left" data-language='en' name="date_start"
+                                                id="date_start" value="<?=date_format($objDateStart, "Y-m-d");?>">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-xl-2 col-lg-4 col-md-4 col-sm-8 col-8">
+                                    <div class="form-group label-floating is-select" style="background-color: #fff;">
+                                        <label class="control-label"><?php echo getPhrase('date');?></label>
+                                        <div class="form-group date-time-picker">
+                                            <input type="text" autocomplete="off" class="datepicker-here"
+                                                data-position="bottom left" data-language='en' name="date_end"
+                                                id="date_end" value="<?=date_format($objDateEnd, "Y-m-d");?>">
 
                                         </div>
                                     </div>
@@ -257,7 +285,7 @@
                                     <br><br>
                                     <div class="invoice-w" id="invoice_id">
                                         <div class="invoice-heading">
-                                            <h3><?= getPhrase('daily_income');?></h3>
+                                            <h3><?= getPhrase('income');?></h3>
                                         </div>
                                         <div class="invoice-body">
                                             <table class="table-bordered" style="padding: 6px 0px;">
@@ -267,7 +295,8 @@
                                                             <b><?= getPhrase('date');?></b>
                                                         </td>
                                                         <td class="text-center" colspan="3">
-                                                            <b><?= date_format(date_create($first_date), 'F j Y (l)');  ?></b><br />                                                            
+                                                            <b><?= date_format(date_create($first_date), 'F j Y (l)');  ?></b><br/>
+                                                            <b><?= date_format(date_create($second_date), 'F j Y (l)');  ?></b>
                                                         </td>
                                                     </tr>
                                                 </thead>
@@ -452,7 +481,14 @@
         </div>
     </div>
 </div>
-
+<!-- <script>
+    window.onload = function exampleFunction() {
+        // var $datepicker = $('#date_start');
+        // $datepicker.datepicker();
+        // $datepicker.datepicker('setDate', '<?=date_format($objDateStart, "Y-m-d");?>');
+        console.log('The Script will load now.');
+    }
+</script> -->
 <script>
 function Print(div) {
     var printContents = document.getElementById(div).innerHTML;

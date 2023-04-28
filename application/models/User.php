@@ -112,6 +112,10 @@ class User extends School
         $this->db->where('librarian_id', $librarianId);
         $this->db->update('librarian', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/librarian_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'librarian';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $librarianId, $data);
     }
     
     public function deleteLibrarian($librarianId)
@@ -120,6 +124,10 @@ class User extends School
         $this->db->where('librarian_id', $librarianId);
         $this->db->update('librarian', $data);
         // $this->db->delete('librarian');
+
+        $table      = 'librarian';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $librarianId, $data);
     }
     
     public function createAccountant()
@@ -171,6 +179,10 @@ class User extends School
         $this->db->where('accountant_id', $accountantId);
         $this->db->update('accountant', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/accountant_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'accountant';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $accountantId, $data);
     }
     
     public function deleteAccountant($accountantId)
@@ -179,6 +191,9 @@ class User extends School
         $this->db->where('accountant_id', $accountantId);
         $this->db->update('accountant', $data);
         // $this->db->delete('accountant');
+        $table      = 'accountant';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $accountantId, $data);
     }
     
     public function createAdmin()
@@ -240,6 +255,10 @@ class User extends School
         $this->db->where('admin_id', $adminId);
         $this->db->update('admin', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/admin_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'admin';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $adminId, $data);
     }
     
     public function deleteAdmin($adminId)
@@ -247,6 +266,10 @@ class User extends School
         $data['status']   = 0;
         $this->db->where('admin_id', $adminId);
         $this->db->update('admin', $data);
+
+        $table      = 'admin';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $adminId, $data);
     }
 
     public function acceptTeacher($teacherId)
@@ -325,6 +348,10 @@ class User extends School
         $this->db->where('teacher_id', $teacherId);
         $this->db->update('teacher', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/teacher_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'teacher';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $teacherId, $data);
     }
     
     public function deleteTeacher($teacherId)
@@ -333,6 +360,10 @@ class User extends School
         $this->db->where('teacher_id', $teacherId);
         $this->db->update('teacher', $data);
         // $this->db->delete('teacher');
+
+        $table      = 'teacher';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $teacherId, $data);
     }
     
     public function createParent()
@@ -388,6 +419,10 @@ class User extends School
         $this->db->where('parent_id' , $parentId);
         $this->db->update('parent' , $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/parent_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'parent';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $parentId, $data);
     }
     
     
@@ -424,6 +459,10 @@ class User extends School
         $this->db->where('parent_id' , $parentId);
         $this->db->update('parent', $data);
         // $this->db->delete('parent');
+
+        $table      = 'parent';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $parentId, $data);
     }
     
     public function updateCurrentAdmin()
@@ -449,6 +488,10 @@ class User extends School
         $this->db->where('admin_id', get_login_user_id());
         $this->db->update('admin', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/admin_image/' . md5(date('d-m-y H:i:s')).str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'admin';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, get_login_user_id(), $data);
     }
     
     public function removeGoogle()
@@ -464,6 +507,10 @@ class User extends School
         unset($_SESSION['token']);
         unset($_SESSION['userData']);
         $this->crud->googleRevokeToken();
+
+        $table      = get_account_type();
+        $action     = 'update';
+        $this->crud->save_log($table, $action, get_login_user_id(), $data);
     }
     
     public function removeFacebook()
@@ -477,6 +524,10 @@ class User extends School
         unset($_SESSION['userData']);
         $this->db->where(get_account_type().'_id', get_login_user_id());
         $this->db->update(get_account_type(), $data);
+
+        $table      = get_account_type();
+        $action     = 'update';
+        $this->crud->save_log($table, $action, get_login_user_id(), $data);
     }
     
     public function rejectStudent($studentId)
@@ -810,8 +861,19 @@ class User extends School
             $data['postal_code']   = html_escape($this->input->post('postal_code'));
             
 
+        if(!empty($this->input->post('financial')))
+            $data['financial']   = html_escape($this->input->post('financial'));
+
+        if(!empty($this->input->post('collection')))
+            $data['collection']   = html_escape($this->input->post('collection'));
+
+
         $this->db->where('student_id', $studentId);
         $this->db->update('student', $data);
+
+        $table      = 'student';
+        $action     = 'update';        
+        $this->crud->save_log($table, $action, $studentId, $data);
         
         move_uploaded_file($_FILES['userfile']['tmp_name'], PATH_STUDENT_IMAGE . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
     }
@@ -835,6 +897,10 @@ class User extends School
         $this->db->update('student', $data);
 
         move_uploaded_file($_FILES['userfile']['tmp_name'], PATH_STUDENT_IMAGE . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'student';
+        $action     = 'update';        
+        $this->crud->save_log($table, $action, get_login_user_id(), $data);
     }
 
     public function updateAvatar($table){
@@ -857,6 +923,9 @@ class User extends School
             $this->db->update($table, $data_update);
 
             file_put_contents($destination, $data);
+            
+            $action     = 'update';        
+            $this->crud->save_log($table, $action, $user_id, $data);
         }
     }
     
@@ -881,6 +950,10 @@ class User extends School
         $this->db->where('student_id', $studentId);
         $this->db->update('student', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], PATH_STUDENT_IMAGE . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'student';
+        $action     = 'update';        
+        $this->crud->save_log($table, $action, $studentId, $data);
     }
     
     public function downloadExcel()
@@ -945,6 +1018,10 @@ class User extends School
         $this->db->where('accountant_id', get_login_user_id());
         $this->db->update('accountant', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/accountant_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'accountant';
+        $action     = 'update';        
+        $this->crud->save_log($table, $action, get_login_user_id(), $data);
     }
     
     public function updateCurrentLibrarian()
@@ -963,6 +1040,10 @@ class User extends School
         $this->db->where('librarian_id', get_login_user_id());
         $this->db->update('librarian', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/librarian_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'librarian';
+        $action     = 'update';        
+        $this->crud->save_log($table, $action, get_login_user_id(), $data);
     }
     
     public function createPublicTeacherAccount()
@@ -1119,6 +1200,10 @@ class User extends School
         $this->db->where('teacher_id', get_login_user_id());
         $this->db->update('teacher', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/teacher_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'teacher';
+        $action     = 'update';        
+        $this->crud->save_log($table, $action, get_login_user_id(), $data);
     }
 
     public function updatePasswordUser($table, $password, $user_id){
@@ -1132,6 +1217,9 @@ class User extends School
 
         $this->db->where($table.'_id', $user_id);
         $this->db->update($table, $data_update);
+        
+        $action     = 'update';        
+        $this->crud->save_log($table, $action, $user_id, $data_update);
     }
 
     function add_interaction()

@@ -23,8 +23,10 @@
     $this->db->where('invoice_date >=', $startDate);
     $this->db->where('invoice_date <=', $endDate);
     $payments = $this->db->get('payment')->result_array();
-
 ?>
+
+<?php include  $view_path.'_data_table_dependency.php';?>
+
 <div class="content-w">
     <?php include  $fancy_path.'fancy.php';?>
     <div class="header-spacer"></div>
@@ -93,23 +95,11 @@
                         </div>
                         <?= form_close()?>
                         <br />
-                        <?php 
-                            // echo '<pre>';
-                            // var_dump($start_date);
-                            // var_dump($end_date);
-                            // echo '</pre>';
-                        ?>
                         <div class="tab-pane active" id="invoices">
-                            <div class="element-wrapper">
-                                <div>
-                                    <a href="#" id="btnExport"><button class="btn btn-info btn-sm btn-rounded"><i
-                                                class="picons-thin-icon-thin-0123_download_cloud_file_sync"
-                                                style="font-weight: 300; font-size: 25px;"></i></button>
-                                    </a>
-                                </div>
-                                <div class="element-box-tp">
-                                    <div class="table-responsive">
-                                        <table class="table table-padded" id="dvData">
+                            <div class="">
+                                <div class="">
+                                    <div class="">
+                                        <table class="display" id="dvData" > 
                                             <thead>
                                                 <tr>
                                                     <th><?= getPhrase('date');?></th>
@@ -130,7 +120,6 @@
                                             <tbody>
                                                 <?php
                                                     foreach($payments as $row):
-
                                                         if($row['user_type'] === 'student')
                                                         {
                                                             $program = ucfirst($row['user_type']) .' - '. $this->studentModel->get_student_program_name($row['user_id']);
@@ -139,8 +128,6 @@
                                                         {
                                                             $program = ucfirst($row['user_type']) .' - '.  $this->applicant->get_applicant_program_name($row['user_id']);
                                                         }
-
-                                                        
 
                                                         // Get Discounts
                                                         $this->db->reset_query();
@@ -217,18 +204,19 @@
     </div>
 </div>
 <script>
-$("#btnExport").click(function(e) {
-    var reportName = '<?php echo getPhrase('reports_tabulation').'_'.date('d-m-Y');?>';
-    var a = document.createElement('a');
-    var data_type = 'data:application/vnd.ms-excel;charset=utf-8';
-    var table_html = $('#dvData')[0].outerHTML;
-    table_html = table_html.replace(/<tfoot[\s\S.]*tfoot>/gmi, '');
-    var css_html =
-        '<style>td {border: 0.5pt solid #c0c0c0} .tRight { text-align:right} .tLeft { text-align:left} </style>';
-    a.href = data_type + ',' + encodeURIComponent('<html><head>' + css_html + '</' + 'head><body>' +
-        table_html + '</body></html>');
-    a.download = reportName + '.xls';
-    a.click();
-    e.preventDefault();
-});
+    var table = $('#dvData').DataTable({
+        dom: 'Blifrtp',
+        scrollX: true,
+        lengthMenu: [
+            [10, 20, 50, -1],
+            [10, 20, 50, "All"]
+        ],
+        pageLength: 20,
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="picons-thin-icon-thin-0123_download_cloud_file_sync" style="font-size: 20px;"></i>',
+            titleAttr: 'Export to Excel'
+        }]
+    });
+    $("select[name='dvData_length']" ).addClass('select-page');
 </script>

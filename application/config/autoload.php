@@ -1,12 +1,13 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 $autoload['packages'] = array();
-$autoload['libraries'] = array('pagination', 'xmlrpc' , 'form_validation', 'email','upload','paypal');
+$autoload['libraries'] = array('pagination', 'xmlrpc' , 'form_validation', 'email','upload','paypal', 'Pdf');
 $autoload['drivers'] = array();
 $autoload['helper'] = array('url','file','form','security','string','inflector','directory','download','multi_language', 'common');
 $autoload['config'] = array();
 $autoload['language'] = array();
 if(!is_file(APPPATH.'controllers/Install.php'))
 {
-	$autoload['model'] = array('crud', 'academic', 'user', 'payment', 'mail', 'applicant', 'studentModel', 'task', 'system', 'ticket', 'apiModel', 'agreement', 'notification', 'request', 'UploadBulk');
+	$autoload['model'] = array('crud', 'academic', 'user', 'payment', 'mail', 'applicant', 'studentModel', 'task', 'system', 
+							   'ticket', 'apiModel', 'agreement', 'notification', 'request', 'UploadBulk', 'agent');
 }

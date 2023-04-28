@@ -31,10 +31,14 @@ class Modal extends EduAppGT
 	//Load popup modal function.
 	function popup($page_name = '' , $param2 = '' , $param3 = '', $param4 = '')
 	{
-		$account_type		=	get_account_type();
-		$page_data['param2']		=	$param2;
-		$page_data['param3']		=	$param3;
-		$page_data['param4']		=	$param4;
+		// echo '<pre>';
+        // var_dump($param2);
+        // echo '</pre>';
+
+		$account_type			=	get_account_type();
+		$page_data['param2']	=	$param2;
+		$page_data['param3']	=	$param3;
+		$page_data['param4']	=	$param4;
 		$this->load->view( 'backend/'.$account_type.'/'.$page_name.'.php' ,$page_data);
 		
 	}

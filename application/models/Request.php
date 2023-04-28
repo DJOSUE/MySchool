@@ -277,6 +277,10 @@ class Request extends School
         $this->db->where('student_id', $student_id);
         $query = $this->db->get('student_request')->num_rows();
 
+        // echo '<pre>';
+        // var_dump($query);
+        // echo '</pre>';
+
         if($query > 2)
         {
             return 'true';

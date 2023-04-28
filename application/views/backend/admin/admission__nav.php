@@ -13,6 +13,12 @@
                             <span><?php echo getPhrase('applicants');?></span></a>
                     </li>
                     <li class="navs-item">
+                        <a class="navs-links <?= $page_name == 'admission_converted' ? 'active' : ''?>"
+                            href="<?php echo base_url();?>admin/admission_converted/">
+                            <i class="os-icon picons-thin-icon-thin-0093_list_bullets"></i>
+                            <span><?php echo getPhrase('converted');?></span></a>
+                    </li>
+                    <li class="navs-item">
                         <a class="navs-links <?= $page_name == 'admission_new_applicant' ? 'active' : ''?>"
                             href="<?= base_url();?>admin/admission_new_applicant/">
                             <i class="os-icon picons-thin-icon-thin-0716_user_profile_add_new"></i>

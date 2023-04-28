@@ -564,7 +564,7 @@
                                                 <div class="step-content" id="stepContent4" name="payment_info">
                                                     <div class="row">
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                            <div class="form-group label-floating">
+                                                            <div class="form-group label-floating is-select">
                                                                 <label class="control-label">
                                                                     <?= getPhrase('cost_tuition');?>
                                                                 </label>
@@ -1266,6 +1266,9 @@ function validate_form_class() {
     var program_type = $("#program_type_id option:selected").text().trim();
     var program_type_id = document.getElementById("program_type_id").value;
 
+    const input = document.getElementById('tuition');
+    const end = input.value.length;
+
     let length = subjects.length;
 
     var text = "";
@@ -1290,7 +1293,8 @@ function validate_form_class() {
     if (valid) {
         get_tuition();
         document.getElementById('btnStepContent4').click();
-
+        input.setSelectionRange(end, end);
+        input.focus();
     }
 }
 
@@ -1469,6 +1473,8 @@ function validate_amount_1() {
     if (checked) {
         var min = parseFloat(document.getElementById("amount_1").min);
         var amount = parseFloat(document.getElementById("amount_1").value);
+        var number_payments = parseInt(document.getElementById("number_payments").value);
+        var total_agreement = parseFloat(document.getElementById("total_agreement").value);
         var error = "";
 
         if (amount < min) {
@@ -1479,14 +1485,17 @@ function validate_amount_1() {
             document.getElementById("btn_save").disabled = false;
         }
 
+        if (number_payments == 1 && (amount < total_agreement || amount > total_agreement)) {
+            error = "<b style='color:#ff214f'>The amount must be equal to " + total_agreement + " </b>";
+            document.getElementById("btn_save").disabled = false;
+        }
+
         add_fees_with_dow();
-        $("#amount_error").html(error);
-
         document.getElementById("totalAmount").innerText = (amount);
-
         payment_total();
-
         reset_total_payment();
+
+        $("#amount_error").html(error);
     }
 }
 
@@ -1539,11 +1548,19 @@ function update_total() {
 
     document.getElementById('remainingAmount').innerText = remainingAmount;
 
+    console.log(totalAmount);
 
-    if (totalPayment == subtotal) {
+    if (totalPayment == subtotal && totalAmount > 0)
+    {
         document.getElementById("btn_save").disabled = false;
         document.getElementById("payment_error").innerHTML = '';
-    } else {
+    } 
+    else if(totalAmount == 0)
+    {
+        document.getElementById("btn_save").disabled = true;
+    }
+    else 
+    {
         document.getElementById("btn_save").disabled = true;
         document.getElementById("payment_error").innerHTML =
             "<b style='color:#ff214f'>Validate that \"Remaining to Pay\" is 00.00</b>";

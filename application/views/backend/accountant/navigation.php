@@ -10,7 +10,7 @@
     $time_card_pages    = array('time_card', 'time_sheet', 'payment_period', 'worker_schedule', 'workers', 'worked_hours');
     $calendar_pages     = array('calendar');
     $helpdesk_pages     = array('helpdesk_dashboard', 'helpdesk_ticket_list', 'helpdesk_ticket_info');
-    $reports_pages      = array('accounting_dashboard', 'students_payments', 'expense', 'new_payment');
+    $reports_pages      = array('accounting_dashboard', 'accounting_daily_income', 'accounting_payments', 'new_payment');
 
 ?>
 <div class="fixed-sidebar">
@@ -81,7 +81,7 @@
                 <?php endif;?>
                 <!-- Accounting Reports Access -->
                 <li <?= in_array($page_name, $reports_pages) ? 'class="currentItem"' : '';?>>
-                    <a href="<?php echo base_url();?>accountant/report_dashboard/" data-toggle="tooltip" data-placement="right"
+                    <a href="<?php echo base_url();?>reports/accounting_dashboard/" data-toggle="tooltip" data-placement="right"
                         data-original-title="<?php echo getPhrase('accounting_report');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0428_money_payment_dollar_bag_cash"></i>
