@@ -123,16 +123,24 @@ class StudentModel extends School
 
     public function update_student_collection_profile($student_id, $collection_id)
     {
-        $data['collection'] = $collection_id;
 
         $this->db->reset_query();
+        $this->db->select('student_session');
         $this->db->where('student_id', $student_id);
-        $this->db->update('student', $data);
+        $current_collection_id = $this->db->get('student')->row()->collection_id;
 
-        $table      = 'student';
-        $action     = 'update';
-        $this->crud->save_log($table, $action, $student_id, $data);
+        if($current_collection_id == DEFAULT_COLLECTION_ID_REMINDER || $current_collection_id == DEFAULT_COLLECTION_ID_LATE)
+        {
+            $data['collection'] = $collection_id;
 
+            $this->db->reset_query();
+            $this->db->where('student_id', $student_id);
+            $this->db->update('student', $data);
+    
+            $table      = 'student';
+            $action     = 'update';
+            $this->crud->save_log($table, $action, $student_id, $data);
+        }
     }
 
     public function get_status()

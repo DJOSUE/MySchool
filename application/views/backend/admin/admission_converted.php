@@ -213,10 +213,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="table-responsive">
-                                <?php
-                                if($student_query->num_rows() > 0):
-                                ?>                                
+                            <div class="table-responsive">                              
                                 <table class="table table-padded" id="dvData" style="width: 100%;">
                                     <thead>
                                         <tr>
@@ -239,11 +236,13 @@
                                         <?php $students = $student_query->result_array();
                                             foreach($students as $row) :
                                                 $allow_actions = is_student($row['applicant_id']);
+                                                // $info = $this->db->get_where('accountant', array('accountant_id' => $accountant_id))->result_array();
+                                                $student_info = $this->db->get_where('student', array('applicant_id' => $row['applicant_id']))->row_array();
                                         ?>
                                         <tr style="height:25px;">
                                             <td>
                                                 <center>
-                                                    <a href="<?= base_url();?>admin/admission_applicant/<?= $row['applicant_id'];?>"
+                                                    <a href="<?= base_url();?>admin/student_portal/<?= $student_info['student_id'];?>"
                                                         class="grey">
                                                         <?= ($row['first_name']);?>
                                                     </a>
@@ -340,15 +339,6 @@
                                         <?php endforeach;?>
                                     </tbody>
                                 </table>
-                                <?php else:?>
-                                <div class="bg-danger" style="border-radius: 10px">
-                                    <div class="container">
-                                        <div class="col-sm-12"><br><br>
-                                            <h3 class="text-white"> <?= getPhrase('no_results_found');?></h3><br><br>
-                                        </div>
-                                    </div>
-                                </div>
-                                <?php endif;?>
                             </div>
                         </div>
                     </div>
