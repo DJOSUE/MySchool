@@ -431,7 +431,7 @@ class Ticket extends School
         $url_encode = base64_encode('helpdesk/ticket_info/'.$ticket_code);
         $this->notification->create_message($message, $user_id, $user_type, $url_encode);
 
-        echo $url_encode;
+        
     }
 
 }

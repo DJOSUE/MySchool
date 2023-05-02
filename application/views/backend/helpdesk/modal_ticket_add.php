@@ -56,7 +56,7 @@
                     <div class="select">
                         <select name="priority_id" style="width: 200px;">
                             <?php
-                        $priorities = $this->task->get_priorities();
+                        $priorities = $this->ticket->get_priorities();
                         foreach($priorities as $priority_row):
                         ?>
                             <option value="<?= $priority_row['priority_id']?>"

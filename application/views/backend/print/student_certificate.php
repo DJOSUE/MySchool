@@ -1,6 +1,7 @@
 <?php 
     $student_info   = $this->db->get_where('student' , array('student_id' => $student_id))->row_array();
     $semester_info  = $this->db->get_where('semester_enroll' , array('semester_id' => $semester_id, 'year' => $year))->row_array();
+    $level_info     = $this->academic->get_class_info($class_id);
 ?>
 
 <html>
@@ -23,7 +24,7 @@
         <p style="padding-top: 10pt; text-align: center;">
             has successfully completed the required 16 credit hours
             <br/>
-            of study for Intermediateand is therefore awarded this.
+            of study for <?=$level_info['name']?> and is therefore awarded this.
         </p>
         <br/>
         <p style="padding-left: 0pt; padding-top: 50pt; text-align: center;">

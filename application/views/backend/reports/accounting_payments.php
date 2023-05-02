@@ -99,7 +99,7 @@
                             <div class="">
                                 <div class="">
                                     <div class="">
-                                        <table class="display" id="dvData" > 
+                                        <table class="display" id="dvData" style="width: 100%;"> 
                                             <thead>
                                                 <tr>
                                                     <th><?= getPhrase('date');?></th>

@@ -89,26 +89,27 @@
                                                         foreach ($student_enroll as $item): 
                                                             $count++;
                                                     ?>
-                                                            <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                                <div class="form-group label-floating is-select">
-                                                                    <label
-                                                                        class="control-label"><?php echo getPhrase('subject').'_'.$count ;?></label>
-                                                                    <div class="select">
-                                                                        <select name="current_subject_id_<?= $item['subject_id']; ?>">
-                                                                            <option value="<?php echo $item['subject_id'];?>">
-                                                                                <?php echo $item['subject_name'];?>
-                                                                            </option> 
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class="form-group label-floating is-select">
+                                                            <label
+                                                                class="control-label"><?php echo getPhrase('subject').'_'.$count ;?></label>
+                                                            <div class="select">
+                                                                <select
+                                                                    name="current_subject_id_<?= $item['subject_id']; ?>">
+                                                                    <option value="<?php echo $item['subject_id'];?>">
+                                                                        <?php echo $item['subject_name'];?>
+                                                                    </option>
+                                                                </select>
                                                             </div>
+                                                        </div>
+                                                    </div>
                                                     <?php endforeach; ?>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <!-- future_class -->
-                                    <div >
+                                    <div>
                                         <div class="ui-block">
                                             <div class="ui-block-title bg-warning">
                                                 <h6 class="title"><?php echo getPhrase('future_class');?></h6>
@@ -117,11 +118,37 @@
                                                 <div class="row">
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <div class="form-group label-floating is-select">
+                                                            <label class="control-label">
+                                                                <?php echo getPhrase('modality');?>
+                                                            </label>
+                                                            <div class="select">
+                                                                <select name="modality_id" id="modality_id" required=""
+                                                                    onchange="rest_selection()">
+                                                                    <?php 
+                                                                        $modalities = $this->academic->get_modality();
+                                                                        foreach($modalities as $item):
+                                                                    ?>
+                                                                    <option value="<?= $item['modality_id']; ?>">
+                                                                        <?= $item['name']; ?>
+                                                                    </option>
+                                                                    <?php endforeach?>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="ui-block-content">
+                                                <div class="row">
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class="form-group label-floating is-select">
                                                             <label
                                                                 class="control-label"><?php echo getPhrase('class');?></label>
                                                             <div class="select">
-                                                                <select name="future_class_id" id="future_class_id" onchange="get_class_sections(this.value);">
-                                                                    <option value=""><?php echo getPhrase('select');?></option>
+                                                                <select name="future_class_id" id="future_class_id"
+                                                                    onchange="get_class_sections(this.value);">
+                                                                    <option value=""><?php echo getPhrase('select');?>
+                                                                    </option>
                                                                     <?php $classes = $this->db->get('class')->result_array();
                                                                         foreach($classes as $class):
                                                                     ?>
@@ -137,17 +164,20 @@
                                                             <label
                                                                 class="control-label"><?php echo getPhrase('section');?></label>
                                                             <div class="select">
-                                                                <select name="future_section_id" id="section_selector_holder" onchange="get_class_section_subjects(this.value);">
-                                                                    <option value=""><?php echo getPhrase('select');?></option>
+                                                                <select name="future_section_id"
+                                                                    id="section_selector_holder"
+                                                                    onchange="get_class_section_subjects(this.value);">
+                                                                    <option value=""><?php echo getPhrase('select');?>
+                                                                    </option>
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                    </div>                                                    
+                                                    </div>
                                                 </div>
                                                 <div class="row" id="subject_selector_holder">
 
                                                 </div>
-                                                <div class="row" >
+                                                <div class="row">
                                                     <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
                                                         <div class="form-buttons-w">
                                                             <button class="btn btn-rounded btn-success" type="submit">
@@ -172,6 +202,12 @@
 <?php endforeach;?>
 
 <script type="text/javascript">
+    function rest_selection() {
+
+        document.getElementById("future_class_id").selectedIndex = 0;
+        document.getElementById("section_selector_holder").selectedIndex = 0;
+    }
+
     function get_class_sections(class_id) {
         $.ajax({
             url: '<?php echo base_url();?>admin/get_class_section/' + class_id,
@@ -182,11 +218,13 @@
     }
 
     function get_class_section_subjects(section_id) {
+        var modality_id = document.getElementById("modality_id").value;
         var class_id = document.getElementById("future_class_id").value;
         var student_id = <?= $student_id;?>;
 
         $.ajax({
-            url: '<?php echo base_url();?>admin/get_class_section_subjects_for_update/' + student_id + '/' + class_id + '/' + section_id,
+            url: '<?php echo base_url();?>admin/get_class_section_subjects_for_update/' + student_id + '/' +
+                class_id + '/' + section_id + '/' + modality_id,
             success: function(response) {
                 jQuery('#subject_selector_holder').html(response);
             }

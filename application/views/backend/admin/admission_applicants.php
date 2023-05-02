@@ -217,7 +217,7 @@
                                 <?php
                                 if($student_query->num_rows() > 0):
                                 ?>
-                                <table class="table table-padded" id="dvData">
+                                <table class="table table-padded" id="dvData" style="width: 100%;">
                                     <thead>
                                         <tr>
                                             <th class="text-center"><?= getPhrase('first_name')?></th>

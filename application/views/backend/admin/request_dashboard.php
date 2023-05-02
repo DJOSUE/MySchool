@@ -12,6 +12,32 @@
         $labelName .= "'".$name."',"; 
     }
 
+    $absence_l = $this->request->get_student_type_request_totals($year_id, $semester_id, '2', 'Local');
+
+    $ids_absence_l     = array_column($absence_l, 'status');
+    $names_absence_l   = array_column($absence_l, 'status_name');
+    $totals_absence_l  = array_column($absence_l, 'total');
+    
+    $labelName_absence_l = "";
+
+    foreach($names_absence_l as $name)
+    {
+        $labelName_absence_l .= "'".$name."',"; 
+    }
+
+    $absence_i = $this->request->get_student_type_request_totals($year_id, $semester_id, '2', 'International');
+
+    $ids_absence_i     = array_column($absence_i, 'status');
+    $names_absence_i   = array_column($absence_i, 'status_name');
+    $totals_absence_i  = array_column($absence_i, 'total');
+    
+    $labelName_absence_i = "";
+
+    foreach($names_absence_i as $name)
+    {
+        $labelName_absence_i .= "'".$name."',"; 
+    }
+
 ?>
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -30,7 +56,7 @@
                         <div class="row">
                             <div class="content-i">
                                 <div class="content-box">
-                                    <?= form_open(base_url() . 'admin/request_vacation/', array('class' => 'form m-b'));?>
+                                    <?= form_open(base_url() . 'admin/request_dashboard/', array('class' => 'form m-b'));?>
                                     <div class="row" style="margin-top: -30px; border-radius: 5px;">
                                         <div class="col-sm-2">
                                             <div class="form-group label-floating is-select">
@@ -82,12 +108,7 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="element-box">
-                                                <canvas id="myChartPermissionStatus"></canvas>
-                                                <?php 
-                                                echo '<pre>';
-                                                var_dump($vacation);
-                                                echo '</pre>';
-                                                ?>
+                                                <canvas id="myChartPermissionStatus"></canvas>                                                
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -105,6 +126,11 @@
         </div>
     </div>
 </div>
+<?php 
+    echo '<pre>';
+    var_dump($labelName_absence_i);
+    echo '</pre>';
+?>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/helpers.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.umd.js"></script>
@@ -114,7 +140,7 @@
     const data = {
         labels: labels,
         datasets: [{
-            label: 'Created',
+            label: 'Number of requests',
             data: [<?= implode(',', $totals);?>],            
         }]
     };
@@ -131,6 +157,40 @@
                 title: {
                     display: true,
                     text: 'Vacation'
+                }
+            }
+        },
+    });
+</script>
+<script>
+// Created
+    const labels_absence_l = [<?= $labelName_absence_i;?>];
+    const data_absence_l = {
+        labels: labels_absence_l,
+        datasets: [
+            {
+                label: 'Local',
+                data: [<?= implode(',', $totals_absence_l);?>],            
+            },
+            {
+                label: 'International',
+                data: [<?= implode(',', $totals_absence_i);?>],            
+            }
+        ]
+    };
+    var ctx = document.getElementById("myChartPermissionStatus");
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: data_absence_l,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Absence'
                 }
             }
         },

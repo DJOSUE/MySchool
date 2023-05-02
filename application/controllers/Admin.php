@@ -5649,14 +5649,14 @@
         }
 
         //Get subjects by classId and sectionId of the current semester.
-        function get_class_section_subjects_for_update($student_id = '', $class_id = '', $section_id = '')
+        function get_class_section_subjects_for_update($student_id = '', $class_id = '', $section_id = '', $modality_id = '')
         {
             $running_year = $this->runningYear;
             $running_semester = $this->runningSemester;
 
             $student_enroll = $this->db->get_where('v_enroll', array('student_id' => $student_id, 'year' => $running_year, 'semester_id' => $running_semester ))->result_array(); 
 
-            $subjects = $this->db->get_where( 'v_subject', array( 'class_id' => $class_id, 'section_id' => $section_id  ) )->result_array();
+            $subjects = $this->db->get_where( 'v_subject', array( 'class_id' => $class_id, 'section_id' => $section_id, 'modality_id' => $modality_id ) )->result_array();
             $html = "";
             $count = 0;
     

@@ -49,7 +49,7 @@
                             <div class="element-wrapper">
                                 <div class="element-box-tp">
                                     <div class="table-responsive">
-                                        <table class="table table-padded" id="dvData">
+                                        <table class="table table-padded" id="dvData" style="width: 100%;">
                                             <thead>
                                                 <tr>
                                                     <th><?= getPhrase('agreement_id');?></th>

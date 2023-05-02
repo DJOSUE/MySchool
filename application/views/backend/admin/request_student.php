@@ -40,11 +40,7 @@
     $this->db->where('request_type', '2');
     $requests = $this->db->get('student_request')->result_array();
 ?>
-<style>
-th {
-    cursor: pointer;
-}
-</style>
+<?php include $view_path.'_data_table_dependency.php';?>
 <div class="content-w">
     <?php include 'fancy.php';?>
     <div class="header-spacer"></div>
@@ -140,15 +136,8 @@ th {
                             </div>
                         </div>
                         <div class="element-box-tp">
-                            <div>
-                                <a href="#" id="btnExport"><button class="btn btn-info btn-sm btn-rounded"><i
-                                            class="picons-thin-icon-thin-0123_download_cloud_file_sync"
-                                            style="font-weight: 300; font-size: 25px;"></i></button>
-                                </a>
-                            </div>
-                            <br />
                             <div class="table-responsive">
-                                <table class="table table-padded" id="dvData">
+                                <table class="table table-padded" id="dvData" style="width: 100%;">
                                     <thead>
                                         <tr>
                                             <th><?= getPhrase('title');?></th>
@@ -273,44 +262,19 @@ function confirm_delete(request_id) {
 </script>
 
 <script>
-$("#btnExport").click(function(e) {
-    var reportName = '<?php echo getPhrase('permission_request').'_'.date('d-m-Y');?>';
-    var a = document.createElement('a');
-    var data_type = 'data:application/vnd.ms-excel;charset=utf-8';
-    var table_html = $('#dvData')[0].outerHTML;
-    table_html = table_html.replace(/<tfoot[\s\S.]*tfoot>/gmi, '');
-    var css_html =
-        '<style>td {border: 0.5pt solid #c0c0c0} .tRight { text-align:right} .tLeft { text-align:left} </style>';
-    a.href = data_type + ',' + encodeURIComponent('<html><head>' + css_html + '</' + 'head><body>' +
-        table_html + '</body></html>');
-    a.download = reportName + '.xls';
-    a.click();
-    e.preventDefault();
-});
-</script>
-
-<script type="text/javascript">
-$('th').click(function() {
-    var table = $(this).parents('table').eq(0)
-    var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
-    this.asc = !this.asc
-    if (!this.asc) {
-        rows = rows.reverse()
-    }
-    for (var i = 0; i < rows.length; i++) {
-        table.append(rows[i])
-    }
-})
-
-function comparer(index) {
-    return function(a, b) {
-        var valA = getCellValue(a, index),
-            valB = getCellValue(b, index)
-        return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
-    }
-}
-
-function getCellValue(row, index) {
-    return $(row).children('td').eq(index).text()
-}
+    var table = $('#dvData').DataTable({
+        dom: 'Blifrtp',
+        scrollX: true,
+        lengthMenu: [
+            [10, 20, 50, -1],
+            [10, 20, 50, "All"]
+        ],
+        pageLength: 50,
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="picons-thin-icon-thin-0123_download_cloud_file_sync" style="font-size: 20px;"></i>',
+            titleAttr: 'Export to Excel'
+        }]
+    });
+    $("select[name='dvData_length']" ).addClass('select-page');
 </script>
