@@ -7,7 +7,7 @@
 
     $student_info = $this->db->get_where('student' , array('student_id' => $student_id))->result_array(); 
 
-    $student_enroll = $this->db->get_where('v_enroll', array('student_id' => $student_id, 'year' => $running_year, 'semester_id' => $running_semester ))->result_array(); 
+    $student_enroll = $this->db->get_where('v_enrollment', array('student_id' => $student_id, 'year' => $running_year, 'semester_id' => $running_semester ))->result_array(); 
 
     $class_id = $student_enroll[0]['class_id'];
     $section_id = $student_enroll[0]['section_id'];
@@ -28,7 +28,7 @@
         <div class="content-box">
             <div class="conty">
                 <div class="back" style="margin-top:-20px;margin-bottom:10px">
-                    <a title="<?php echo getPhrase('return');?>" href="<?php echo base_url();?>admin/students/"><i
+                    <a title="<?= getPhrase('return');?>" href="<?= base_url();?>admin/students/"><i
                             class="picons-thin-icon-thin-0131_arrow_back_undo"></i></a>
                 </div>
                 <div class="row">
@@ -39,19 +39,35 @@
                                     <?php include 'student_area_header.php';?>
                                 </div>
                                 <div>
-                                    <?php echo form_open(base_url() . 'admin/student_update_class_process/'.$row['student_id'] , array('enctype' => 'multipart/form-data'));?>
+                                    <?= form_open(base_url() . 'admin/student_update_class_process/'.$row['student_id'] , array('enctype' => 'multipart/form-data'));?>
                                     <!-- current_class -->
                                     <div>
                                         <div class="ui-block">
                                             <div class="ui-block-title bg-info">
-                                                <h6 class="title"><?php echo getPhrase('current_class');?></h6>
+                                                <h6 class="title"><?= getPhrase('current_class');?></h6>
                                             </div>
                                             <div class="ui-block-content">
                                                 <div class="row">
+                                                <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class="form-group label-floating is-select">
+                                                            <label
+                                                                class="control-label"><?= getPhrase('modality');?></label>
+                                                            <div class="select">
+                                                                <select name="">
+                                                                    <option value="" selected>
+                                                                        <?= $student_enroll[0]['modality_name'];?></option>
+                                                                        
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+
+                                                    </div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <div class="form-group label-floating is-select">
                                                             <label
-                                                                class="control-label"><?php echo getPhrase('class');?></label>
+                                                                class="control-label"><?= getPhrase('class');?></label>
                                                             <div class="select">
                                                                 <select name="current_class_id">
                                                                     <?php 
@@ -59,9 +75,9 @@
 
                                                                         foreach($classes as $class):
                                                                     ?>
-                                                                    <option value="<?php echo $class['class_id'];?>"
+                                                                    <option value="<?= $class['class_id'];?>"
                                                                         <?php if($class['class_id'] == $class_id) echo "selected";?>>
-                                                                        <?php echo $class['name'];?></option>
+                                                                        <?= $class['name'];?></option>
                                                                     <?php endforeach;?>
                                                                 </select>
                                                             </div>
@@ -70,16 +86,16 @@
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <div class="form-group label-floating is-select">
                                                             <label
-                                                                class="control-label"><?php echo getPhrase('section');?></label>
+                                                                class="control-label"><?= getPhrase('section');?></label>
                                                             <div class="select">
                                                                 <select name="current_section_id">
                                                                     <?php 
                                                                         $sections = $this->db->get_where('section', array('class_id' => $class_id, 'section_id' => $section_id))->result_array();
                                                                         foreach($sections as $section):
                                                                     ?>
-                                                                    <option value="<?php echo $section['section_id'];?>"
+                                                                    <option value="<?= $section['section_id'];?>"
                                                                         <?php if($section['section_id'] == $section_id) echo "selected";?>>
-                                                                        <?php echo $section['name'];?></option>
+                                                                        <?= $section['name'];?></option>
                                                                     <?php endforeach;?>
                                                                 </select>
                                                             </div>
@@ -92,12 +108,12 @@
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <div class="form-group label-floating is-select">
                                                             <label
-                                                                class="control-label"><?php echo getPhrase('subject').'_'.$count ;?></label>
+                                                                class="control-label"><?= getPhrase('subject').'_'.$count ;?></label>
                                                             <div class="select">
                                                                 <select
                                                                     name="current_subject_id_<?= $item['subject_id']; ?>">
-                                                                    <option value="<?php echo $item['subject_id'];?>">
-                                                                        <?php echo $item['subject_name'];?>
+                                                                    <option value="<?= $item['subject_id'];?>">
+                                                                        <?= $item['subject_name'];?>
                                                                     </option>
                                                                 </select>
                                                             </div>
@@ -112,14 +128,14 @@
                                     <div>
                                         <div class="ui-block">
                                             <div class="ui-block-title bg-warning">
-                                                <h6 class="title"><?php echo getPhrase('future_class');?></h6>
+                                                <h6 class="title"><?= getPhrase('future_class');?></h6>
                                             </div>
                                             <div class="ui-block-content">
                                                 <div class="row">
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <div class="form-group label-floating is-select">
                                                             <label class="control-label">
-                                                                <?php echo getPhrase('modality');?>
+                                                                <?= getPhrase('modality');?>
                                                             </label>
                                                             <div class="select">
                                                                 <select name="modality_id" id="modality_id" required=""
@@ -143,17 +159,17 @@
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <div class="form-group label-floating is-select">
                                                             <label
-                                                                class="control-label"><?php echo getPhrase('class');?></label>
+                                                                class="control-label"><?= getPhrase('class');?></label>
                                                             <div class="select">
                                                                 <select name="future_class_id" id="future_class_id"
                                                                     onchange="get_class_sections(this.value);">
-                                                                    <option value=""><?php echo getPhrase('select');?>
+                                                                    <option value=""><?= getPhrase('select');?>
                                                                     </option>
                                                                     <?php $classes = $this->db->get('class')->result_array();
                                                                         foreach($classes as $class):
                                                                     ?>
-                                                                    <option value="<?php echo $class['class_id'];?>">
-                                                                        <?php echo $class['name'];?></option>
+                                                                    <option value="<?= $class['class_id'];?>">
+                                                                        <?= $class['name'];?></option>
                                                                     <?php endforeach;?>
                                                                 </select>
                                                             </div>
@@ -162,12 +178,12 @@
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <div class="form-group label-floating is-select">
                                                             <label
-                                                                class="control-label"><?php echo getPhrase('section');?></label>
+                                                                class="control-label"><?= getPhrase('section');?></label>
                                                             <div class="select">
                                                                 <select name="future_section_id"
                                                                     id="section_selector_holder"
                                                                     onchange="get_class_section_subjects(this.value);">
-                                                                    <option value=""><?php echo getPhrase('select');?>
+                                                                    <option value=""><?= getPhrase('select');?>
                                                                     </option>
                                                                 </select>
                                                             </div>
@@ -181,14 +197,14 @@
                                                     <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
                                                         <div class="form-buttons-w">
                                                             <button class="btn btn-rounded btn-success" type="submit">
-                                                                <?php echo getPhrase('update');?></button>
+                                                                <?= getPhrase('update');?></button>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <?php echo form_close();?>
+                                    <?= form_close();?>
                                 </div>
                             </div>
                         </div>
@@ -210,7 +226,7 @@
 
     function get_class_sections(class_id) {
         $.ajax({
-            url: '<?php echo base_url();?>admin/get_class_section/' + class_id,
+            url: '<?= base_url();?>admin/get_class_section/' + class_id,
             success: function(response) {
                 jQuery('#section_selector_holder').html(response);
             }
@@ -223,7 +239,7 @@
         var student_id = <?= $student_id;?>;
 
         $.ajax({
-            url: '<?php echo base_url();?>admin/get_class_section_subjects_for_update/' + student_id + '/' +
+            url: '<?= base_url();?>admin/get_class_section_subjects_for_update/' + student_id + '/' +
                 class_id + '/' + section_id + '/' + modality_id,
             success: function(response) {
                 jQuery('#subject_selector_holder').html(response);
