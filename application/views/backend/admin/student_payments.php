@@ -727,6 +727,7 @@ function make_payment(amortization_id, year, semester_id, amount, materials, fee
 
     if (overdue == 1) {
         document.getElementById(late_fee).value = <?= CONCEPT_LATE_FEE;?>;
+        document.getElementById('show_value_7').value = <?= CONCEPT_LATE_FEE;?>;
     } else {
         document.getElementById(late_fee).value = 0;
     }

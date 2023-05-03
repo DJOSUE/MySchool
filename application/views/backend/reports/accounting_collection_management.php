@@ -84,7 +84,7 @@
                                                     $card = $this->db->get('agreement_card')->row_array();
                                                     
                                                     $has_card = $card['card_holder'] == '' ? false : true ;
-                                                    $automatic_payment =intval($item['automatic_payment']) == 0 ? true : false;  
+                                                    $automatic_payment =intval($agreement['automatic_payment']) == 0 ? false : true;  
 
                                                 ?>
                                                 <tr class="text-center">
@@ -110,7 +110,7 @@
                                                         <?= $currency.' '.number_format($due['amount'], 2);?>
                                                     </td>
                                                     <td>
-                                                        <?= intval($item['automatic_payment']) == 0 ? 'No': 'Yes';?>
+                                                        <?= $automatic_payment ? 'Yes' : 'No' ;?>
                                                     </td>
                                                     <td>
                                                         <?= intval($item['updated_by']) > 0 ? 'Payment Agreement': 'Contract';?>

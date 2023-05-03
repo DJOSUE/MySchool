@@ -156,8 +156,13 @@ defined('DEFAULT_ROWS_PAGE')  OR define('DEFAULT_ROWS_PAGE', 50); // no errors
 
 defined('DEFAULT_TOKEN_AGENT')  OR define('DEFAULT_TOKEN_AGENT', '87878b73a13af46d24edf62640b80ca2d20c1d95'); // no errors
 
-defined('IS_TESTING')  OR define('IS_TESTING', true); // no errors
+defined('IS_TESTING')  OR define('IS_TESTING', false); // no errors
 defined('DEFAULT_TESTING_EMAIL')  OR define('DEFAULT_TESTING_EMAIL', 'noreply@dhcoder.com'); // no errors
 
 defined('DEFAULT_COLLECTION_ID_REMINDER')  OR define('DEFAULT_COLLECTION_ID_REMINDER', 1); // no errors
 defined('DEFAULT_COLLECTION_ID_LATE')  OR define('DEFAULT_COLLECTION_ID_LATE', 2); // no errors
+
+
+defined('DEFAULT_STUDENT__STATUS_VACATION')    OR define('DEFAULT_STUDENT__STATUS_VACATION', 3); // no errors
+defined('DEFAULT_STUDENT__STATUS_NOT_ENROLLED')    OR define('DEFAULT_STUDENT__STATUS_NOT_ENROLLED', 1); // no errors
+defined('DEFAULT_STUDENT__STATUS_ENROLLED')    OR define('DEFAULT_STUDENT__STATUS_ENROLLED', 2); // no errors

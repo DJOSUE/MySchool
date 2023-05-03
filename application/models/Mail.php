@@ -402,13 +402,14 @@ class Mail extends School
 
         if(!IS_TESTING)
         {
-            $this->email->to($to);
+            $email_to = $to;
         }
         else 
         {
-            $this->email->to(DEFAULT_TESTING_EMAIL);
+            $email_to = DEFAULT_TESTING_EMAIL;
         }
         
+        $this->email->to($email_to);
         $this->email->from($from, $fromName);
         $this->email->subject($subject);
 
@@ -430,10 +431,7 @@ class Mail extends School
         
         $this->email->send();
 
-        // if (!$this->email->send()) 
-        // {
-        //     show_error($this->email->print_debugger());
-        // }
+        $this->insert_logs($email_to, $subject, $msg);        
 	}
 
     //Sent password to the new student
@@ -558,5 +556,20 @@ class Mail extends School
         return $result;
     }
     
+    private function insert_logs($email, $subject, $body)
+    {
+
+        $data['email'] = $email;
+        $data['subject'] = $subject;
+        $data['body'] = $body;
+
+        $this->db->insert('email_logs', $data);
+
+        $table      = 'email_logs';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+    }
+
     //End of Mail.php
 }

@@ -161,6 +161,9 @@
                                                 <thead style="text-align: center;">
                                                     <tr>
                                                         <th>
+                                                            <?= getPhrase('id');?>
+                                                        </th>
+                                                        <th>
                                                             <?= getPhrase('year');?>
                                                         </th>
                                                         <th>
@@ -199,6 +202,11 @@
                                                         foreach ($enrollments as $item):
                                                     ?>
                                                     <tr>
+                                                     <td class="text-center">
+                                                            <center>
+                                                                <?= $item['subject_id'] ?>
+                                                            </center>
+                                                        </td>
                                                         <td class="text-center">
                                                             <center>
                                                                 <label name="year_<?= $item['enroll_id'];?>"

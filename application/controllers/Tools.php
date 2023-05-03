@@ -221,8 +221,10 @@
         {
             // 87878b73a13af46d24edf62640b80ca2d20c1d95
 
-            if ($token === DEFAULT_TOKEN_AGENT) {
+            if ($token == DEFAULT_TOKEN_AGENT) {
+                
                 $agent_name = base64_decode($data);
+                echo $agent_name;
 
                 switch ($agent_name) {
                     case 'payment_reminder':

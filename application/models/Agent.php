@@ -25,6 +25,10 @@ class Agent extends School
         $this->db->group_by('agreement_id');
         $agreement_ids = $this->db->get('agreement_amortization')->result_array();
 
+        // echo '<pre>';
+        // var_dump($agreement_ids);
+        // echo '</pre>';
+
         $array = [];
         foreach($agreement_ids as  $value){
             array_push($array, $value['agreement_id']);
@@ -34,16 +38,15 @@ class Agent extends School
         {
             $this->db->reset_query();
             $this->db->where_in('agreement_id', $array);
-            $agreements = $this->db->get('v_agreement')->result_array();
+            $agreements = $this->db->get('v_agreement')->result_array();            
 
             foreach ($agreements as $item) {
                 $user_name = $item['last_name'].', '.$item['first_name'];
                 $user_email = $item['email'];
-                $student_id = $item['student_id'];
+                $student_id = $item['student_id'];                
                 
                 $this->studentModel->update_student_collection_profile($student_id, DEFAULT_COLLECTION_ID_REMINDER);
-                $this->mail->payment_reminder($user_name, $user_email, 'payment_reminder');
-                return;
+                $this->mail->payment_reminder($user_name, $user_email, 'payment_reminder');                
             }
         }
     }
@@ -84,6 +87,17 @@ class Agent extends School
         }
 
 
+    }
+
+    public function update_student_status()
+    {
+        // Get all students on status Active or vacation
+        $this->db->reset_query();        
+        $this->db->where_in('status_id', array(DEFAULT_STUDENT__STATUS_ENROLLED, DEFAULT_STUDENT__STATUS_VACATION));
+        $students = $this->db->get('student')->result_array();
+
+        
+        
     }
     
 }

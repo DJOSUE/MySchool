@@ -191,9 +191,22 @@ class Reports extends EduAppGT
     function academic_dashboard()
     {
         $this->isLogin();
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST')
+        {   
+            $year_id        = $this->input->post('year_id');
+            $semester_id    = $this->input->post('semester_id');
+        }
+        else
+        {    
+            $year_id        = $this->runningYear;
+            $semester_id    = $this->runningSemester;
+        } 
         
         if(has_permission('academic_dashboard_report'))
         {
+            $page_data['year_id']       = $year_id;
+            $page_data['semester_id']   = $semester_id;  
             $page_data['page_name']     = 'academic_dashboard';
             $page_data['page_title']    = getPhrase('academic_dashboard');
             $page_data['fancy_path']    = $this->fancy_path;
@@ -228,6 +241,29 @@ class Reports extends EduAppGT
         $page_data['fancy_path']    = $this->fancy_path;
         $page_data['page_name']     = 'academic_schedule_class';
         $page_data['page_title']    = getPhrase('schedule_class');
+        $this->load->view('backend/reports/index', $page_data); 
+    }
+
+    function academic_student_enrollments()
+    {
+        $this->isLogin('academic_student_enrollments_report');
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST')
+        {   
+            $year_id        = $this->input->post('year_id');
+            $semester_id    = $this->input->post('semester_id');
+        }
+        else
+        {    
+            $year_id        = $this->runningYear;
+            $semester_id    = $this->runningSemester;
+        } 
+        
+        $page_data['year_id']       = $year_id;
+        $page_data['semester_id']   = $semester_id;            
+        $page_data['fancy_path']    = $this->fancy_path;
+        $page_data['page_name']     = 'academic_student_enrollments';
+        $page_data['page_title']    = getPhrase('student_enrollments');
         $this->load->view('backend/reports/index', $page_data); 
     }
 

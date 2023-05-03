@@ -17,6 +17,15 @@
                             </a>
                         </li>
                         <?php endif;?> 
+                        <?php if(has_permission('academic_student_enrollments_report')):?>
+                        <!-- <li class="navs-item">
+                            <a class="navs-links <?= $page_name == 'academic_student_enrollments' ? 'active' : ''?>"
+                                href="<?php echo base_url();?>reports/academic_student_enrollments/">
+                                <i class="os-icon picons-thin-icon-thin-0394_business_handshake_deal_contract_sign"></i>
+                                <span><?php echo getPhrase('schedule_class');?></span>
+                            </a>
+                        </li> -->
+                        <?php endif;?> 
                         <?php if(has_permission('academic_absence_report')):?>
                         <li class="navs-item">
                             <a class="navs-links <?= $page_name == 'academic_absence' ? 'active' : ''?>"
