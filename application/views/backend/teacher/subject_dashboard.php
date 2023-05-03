@@ -43,16 +43,18 @@
                 <div class="row">
                     <main class="col col-xl-6 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12">
                         <div id="newsfeed-items-grid">
-                            <?php 
-                                $db = $this->db->query("SELECT homework_id, wall_type, publish_date FROM homework WHERE class_id = $ex[0] AND subject_id = $ex[2] AND section_id = $ex[1] 
-                                                        UNION SELECT document_id, wall_type, publish_date FROM document WHERE class_id = $ex[0] AND subject_id = $ex[2] AND section_id = $ex[1] 
-                                                        UNION SELECT online_exam_id, wall_type, publish_date FROM online_exam WHERE class_id = $ex[0] AND subject_id = $ex[2] AND section_id = $ex[1] 
-                                                        UNION SELECT post_id, wall_type, publish_date FROM forum WHERE class_id = $ex[0] AND subject_id = $ex[2] AND section_id = $ex[1] 
-                                                        ORDER BY publish_date DESC LIMIT 10");
-                                if($db->num_rows() > 0):
-                                foreach($db->result_array() as $wall):
+                        <?php 
+                            $db = $this->db->query("SELECT homework_id, wall_type, publish_date FROM homework WHERE class_id = $ex[0] AND subject_id = $ex[2] AND section_id = $ex[1] 
+                                                    UNION SELECT document_id, wall_type, publish_date FROM document WHERE class_id = $ex[0] AND subject_id = $ex[2] AND section_id = $ex[1] 
+                                                    UNION SELECT online_exam_id, wall_type, publish_date FROM online_exam WHERE class_id = $ex[0] AND subject_id = $ex[2] AND section_id = $ex[1] 
+                                                    UNION SELECT post_id, wall_type, publish_date FROM forum WHERE class_id = $ex[0] AND subject_id = $ex[2] AND section_id = $ex[1] 
+                                                    ORDER BY publish_date DESC LIMIT 10");
+                            if($db->num_rows() > 0):
+                            foreach($db->result_array() as $wall):
+                        ?>
+                            <?php if($wall['wall_type'] == 'homework'):
+                                $comment =   html_entity_decode(str_replace(array("\r", "\n"), '', $this->db->get_where('homework', array('homework_id' => $wall['homework_id']))->row()->description));    
                             ?>
-                            <?php if($wall['wall_type'] == 'homework'):?>
                             <div class="ui-block">
                                 <article class="hentry post thumb-full-width">
                                     <div class="post__author author vcard inline-items">
@@ -89,7 +91,7 @@
                                                 <?= $this->db->get_where('homework', array('homework_id' => $wall['homework_id']))->row()->title;?>
                                             </h3>
                                             <div class="descripcion">
-                                                <?= strip_tags($this->db->get_where('homework', array('homework_id' => $wall['homework_id']))->row()->description);?>
+                                                <?= $comment;?>
                                             </div>
                                             <?php if($this->db->get_where('homework', array('homework_id' => $wall['homework_id']))->row()->file_name != ""):?>
                                             <div class="table-responsive">

@@ -4499,7 +4499,7 @@
             $this->load->view('backend/index', $page_data);
         }
 
-        function task_list_old($param1 = '')
+        function task_list($param1 = '')
         {
             $this->isAdmin('task_module');
 
@@ -4546,7 +4546,7 @@
             $this->load->view('backend/index', $page_data);
         }
 
-        function task_list($page = '')
+        function task_list_new($page = '')
         {
             $this->isAdmin('task_module');
 

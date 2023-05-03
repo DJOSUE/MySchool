@@ -82,7 +82,6 @@ class Agent extends School
                 
                 $this->studentModel->update_student_collection_profile($student_id, DEFAULT_COLLECTION_ID_LATE);
                 $this->mail->payment_reminder($user_name, $user_email, 'late_payment_reminder');
-                return;
             }
         }
 

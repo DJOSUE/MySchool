@@ -129,7 +129,7 @@ class StudentModel extends School
         $this->db->where('student_id', $student_id);
         $current_collection_id = $this->db->get('student')->row()->collection_id;
 
-        if($current_collection_id == DEFAULT_COLLECTION_ID_REMINDER || $current_collection_id == DEFAULT_COLLECTION_ID_LATE)
+        if($current_collection_id == DEFAULT_COLLECTION_ID_REMINDER || $current_collection_id == DEFAULT_COLLECTION_ID_LATE || $current_collection_id == '')
         {
             $data['collection'] = $collection_id;
 

@@ -4,7 +4,7 @@
         $running_year     =   $this->crud->getInfo('running_year');
         $running_semester =   $this->crud->getInfo('running_semester');
     ?>
-        <script src="<?php echo base_url();?>public/jscolor.js"></script>
+        <script src="<?= base_url();?>public/jscolor.js"></script>
         <?php include 'fancy.php';?>
         <div class="header-spacer"></div>
         <div class="conty">
@@ -18,20 +18,20 @@
                                         <div class="ae-content-w grbg">
                                             <div class="top-header top-header-favorit">
                                                 <div class="top-header-thumb">
-                                                    <img src="<?php echo base_url();?>public/uploads/bglogin.jpg"
+                                                    <img src="<?= base_url();?>public/uploads/bglogin.jpg"
                                                         class="bgcover">
                                                     <div class="top-header-author">
                                                         <div class="author-thumb">
-                                                            <img src="<?php echo base_url();?>public/uploads/<?php echo $this->crud->getInfo('logo');?>"
+                                                            <img src="<?= base_url();?>public/uploads/<?= $this->crud->getInfo('logo');?>"
                                                                 style="background-color: #fff; padding:10px">
                                                         </div>
                                                         <div class="author-content">
                                                             <a href="javascript:void(0);"
-                                                                class="h3 author-name"><?php echo getPhrase('subjects');?>
-                                                                <small>(<?php echo $this->db->get_where('class', array('class_id' => $cl_id))->row()->name;?>)</small></a>
+                                                                class="h3 author-name"><?= getPhrase('subjects');?>
+                                                                <small>(<?= $this->db->get_where('class', array('class_id' => $cl_id))->row()->name;?>)</small></a>
                                                             <div class="country">
-                                                                <?php echo $this->crud->getInfo('system_name');?> |
-                                                                <?php echo $this->crud->getInfo('system_title');?></div>
+                                                                <?= $this->crud->getInfo('system_name');?> |
+                                                                <?= $this->crud->getInfo('system_title');?></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -51,8 +51,8 @@
                                                                             <li class="navs-item">
                                                                                 <a class="navs-links <?php if($active == 1) echo "active";?>"
                                                                                     data-toggle="tab"
-                                                                                    href="#tab<?php echo $rows['section_id'];?>"><?php echo getPhrase('section');?>
-                                                                                    <?php echo $rows['name'];?></a>
+                                                                                    href="#tab<?= $rows['section_id'];?>"><?= getPhrase('section');?>
+                                                                                    <?= $rows['name'];?></a>
                                                                             </li>
                                                                             <?php endforeach;?>
                                                                             <?php endif;?>
@@ -75,7 +75,7 @@
                                                             $sections = $query->result_array();
                                                             foreach ($sections as $row): $active2++;?>
                                                             <div class="tab-pane <?php if($active2 == 1) echo "active";?>"
-                                                                id="tab<?php echo $row['section_id'];?>">
+                                                                id="tab<?= $row['section_id'];?>">
                                                                 <div class="row">
                                                                     <?php 
                                                                     $this->db->order_by('subject_id', 'desc');
@@ -96,12 +96,14 @@
                                                                                         </i>
                                                                                         <ul class="more-dropdown">
                                                                                             <li>
-                                                                                                <a href="<?= $url_dashboard;?>/">
+                                                                                                <a
+                                                                                                    href="<?= $url_dashboard;?>/">
                                                                                                     <?=getPhrase('dashboard')?>
                                                                                                 </a>
                                                                                             </li>
                                                                                             <li>
-                                                                                                <a href='javascript:void(0);' onclick="showAjaxModal('<?= $url_edit;?>')">
+                                                                                                <a href='javascript:void(0);'
+                                                                                                    onclick="showAjaxModal('<?= $url_edit;?>')">
                                                                                                     <?=getPhrase('edit')?>
                                                                                                 </a>
                                                                                             </li>
@@ -109,18 +111,18 @@
                                                                                     </div>
                                                                                     <div class="friend-avatar">
                                                                                         <div class="author-thumb">
-                                                                                            <img src="<?php echo base_url();?>public/uploads/subject_icon/<?php echo $row2['icon'];?>"
+                                                                                            <img src="<?= base_url();?>public/uploads/subject_icon/<?= $row2['icon'];?>"
                                                                                                 width="120px"
-                                                                                                style="background-color:#<?php echo $row2['color'];?>;padding:30px;border-radius:0px;">
+                                                                                                style="background-color:#<?= $row2['color'];?>;padding:30px;border-radius:0px;">
                                                                                         </div>
                                                                                         <div class="author-content">
                                                                                             <a href="<?= $url_dashboard;?>/"
-                                                                                                class="h5 author-name"><?php echo $row2['name'];?>
+                                                                                                class="h5 author-name"><?= $row2['name'];?>
                                                                                                 -
-                                                                                                <?php echo $row['name'];?></a><br><br>
-                                                                                            <img src="<?php echo $this->crud->get_image_url('teacher', $row2['teacher_id']);?>"
+                                                                                                <?= $row['name'];?></a><br><br>
+                                                                                            <img src="<?= $this->crud->get_image_url('teacher', $row2['teacher_id']);?>"
                                                                                                 style="border-radius:50%;width:20px;"><span>
-                                                                                                <?php echo $this->crud->get_name('teacher', $row2['teacher_id']);?></span>
+                                                                                                <?= $this->crud->get_name('teacher', $row2['teacher_id']);?></span>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
