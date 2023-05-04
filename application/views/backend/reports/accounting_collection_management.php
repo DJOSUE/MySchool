@@ -88,6 +88,7 @@
                                                     $automatic_payment =intval($agreement['automatic_payment']) == 0 ? false : true;  
 
                                                     $student_url = '/'.$account_type.'/student_payments/'.$agreement['student_id'];
+                                                    $card_info_url = base_url().'modal/popup/modal_agreement_card_info/'.$item['agreement_id'];
 
                                                 ?>
                                                 <tr class="text-center">
