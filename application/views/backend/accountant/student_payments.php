@@ -283,7 +283,7 @@
                                             </div>
                                             <div class="togglebutton">
                                                 <label>
-                                                    <input name="previous_semester_payment" value="0" type="checkbox">
+                                                    <input name="previous_semester_payment" value="1" type="checkbox">
                                                 </label>
                                             </div>
                                         </div>

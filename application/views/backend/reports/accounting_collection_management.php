@@ -53,6 +53,7 @@
                                             <thead>
                                                 <tr>
                                                     <th><?= getPhrase('agreement_id');?></th>
+                                                    <th>Year - Semester</th>
                                                     <th><?= getPhrase('collection_profile');?></th>
                                                     <th><?= getPhrase('student_type');?></th>
                                                     <th><?= getPhrase('student_name');?></th>
@@ -77,7 +78,7 @@
 
                                                     $program = $this->studentModel->get_student_program_info($student_id);
                                                     $collection_profile = $this->studentModel->get_student_collection_profile($student_id);
-                                                    $due = $this->studentModel->get_student_installments_due($student_id, $end_date);
+                                                    $due = $this->studentModel->get_student_installments_due($student_id, $end_date, $agreement_id);
 
                                                     $this->db->reset_query();        
                                                     $this->db->where('agreement_id', $agreement_id);
@@ -86,10 +87,15 @@
                                                     $has_card = $card['card_holder'] == '' ? false : true ;
                                                     $automatic_payment =intval($agreement['automatic_payment']) == 0 ? false : true;  
 
+                                                    $student_url = '/'.$account_type.'/student_payments/'.$agreement['student_id'];
+
                                                 ?>
                                                 <tr class="text-center">
                                                     <td>
                                                         <?= $item['agreement_id'];?>
+                                                    </td>
+                                                    <td>
+                                                        <?= $agreement['year'].' - '.$agreement['semester_name'] ;?>
                                                     </td>
                                                     <td>
                                                         <?= $collection_profile['name'];?>
@@ -98,7 +104,9 @@
                                                         <?= $program['name'];?>
                                                     </td>
                                                     <td>
-                                                        <?= $agreement['first_name'] .' '. $agreement['last_name'];?>
+                                                        <a class="grey" href="<?=$student_url?>">
+                                                            <?= $agreement['first_name'] .' '. $agreement['last_name'];?>
+                                                        </a>                                                        
                                                     </td>
                                                     <td>
                                                         <?= $item['due_date'];?>

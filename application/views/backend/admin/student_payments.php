@@ -161,7 +161,7 @@
                                                                         $total  -= floatval($paid_amount);
                                                                         $amount -= floatval($paid_amount);
 
-
+                                                                        echo $paid_amount;
                                                                         $this->db->reset_query();
                                                                         $this->db->select_sum('amount');
                                                                         $this->db->where('amortization_id =', $amortization_id);
@@ -281,7 +281,7 @@
                                             </div>
                                             <div class="togglebutton">
                                                 <label>
-                                                    <input name="previous_semester_payment" value="0" type="checkbox">
+                                                    <input name="previous_semester_payment" value="1" type="checkbox">
                                                 </label>
                                             </div>
                                         </div>
@@ -364,7 +364,7 @@
                                                             <b style='color:#D6B31D'>
                                                                 Change the amount if the payment is less.
                                                             </b>
-                                                        </small><br/>
+                                                        </small><br />
                                                         <small id="amount_error"></small>
                                                     </div>
                                                 </div>
@@ -580,6 +580,7 @@
                                         <table class="table table-padded" id="tblPayments">
                                             <thead>
                                                 <tr>
+                                                    <th class="orderby"><?= getPhrase('payment_id');?></th>
                                                     <th class="orderby"><?= getPhrase('invoice_number');?></th>
                                                     <th class="orderby"><?= getPhrase('year');?></th>
                                                     <th class="orderby"><?= getPhrase('semester');?></th>
@@ -600,6 +601,9 @@
                                                 $delete_url = base_url().'payments/delete/'.base64_encode($row2['payment_id']).'/'.base64_encode('admin/student_payments/'.$student_id);
                                         ?>
                                                 <tr>
+                                                    <td>
+                                                        <?= $row2['payment_id'];?>
+                                                    </td>
                                                     <td>
                                                         <?= $row2['invoice_number'];?>
                                                     </td>
@@ -791,8 +795,8 @@ function create_payment() {
     show_payment();
 
     document.getElementById('amortization_id').value = '';
-    document.getElementById('year').value            = '<?=$running_year?>';
-    document.getElementById('semester_id').value     = '<?=$running_semester?>';
+    document.getElementById('year').value = '<?=$running_year?>';
+    document.getElementById('semester_id').value = '<?=$running_semester?>';
 
     document.getElementById('total_amount').readOnly = true;
 
@@ -852,8 +856,7 @@ function amount_total() {
 
 }
 
-function disable_payment(disabled)
-{
+function disable_payment(disabled) {
     var arr = document.querySelectorAll('input[id^="payment_amount_"]');
     for (var i = 0; i < arr.length; i++) {
         arr[i].readOnly = disabled;

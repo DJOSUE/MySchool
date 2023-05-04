@@ -461,7 +461,7 @@ class StudentModel extends School
         return $result;
     }
 
-    public function get_student_installments_due($student_id, $due_date)
+    public function get_student_installments_due($student_id, $due_date, $agreement_id = '')
     {
         $this->db->reset_query();
         $this->db->select('*');
@@ -470,6 +470,8 @@ class StudentModel extends School
         $this->db->where('agreement.student_id', $student_id);
         $this->db->where('agreement_amortization.due_date <', $due_date);
         $this->db->where_in('agreement_amortization.status_id', array(DEFAULT_AMORTIZATION_PENDING, DEFAULT_AMORTIZATION_PARTIAL));
+        if($agreement_id != '')
+            $this->db->where('agreement.agreement_id', $agreement_id);
         $number = $this->db->get()->num_rows();
 
         $this->db->reset_query();
@@ -477,8 +479,10 @@ class StudentModel extends School
         $this->db->from('agreement');
         $this->db->join('agreement_amortization', 'agreement_amortization.agreement_id = agreement.agreement_id');
         $this->db->where('agreement.student_id', $student_id);
-        $this->db->where('agreement_amortization.due_date <', $due_date);
+        $this->db->where('agreement_amortization.due_date <', $due_date);        
         $this->db->where_in('agreement_amortization.status_id', array(DEFAULT_AMORTIZATION_PENDING, DEFAULT_AMORTIZATION_PARTIAL));        
+        if($agreement_id != '')
+            $this->db->where('agreement.agreement_id', $agreement_id);
         $amount = $this->db->get()->row()->amount;
 
         $this->db->reset_query();
@@ -488,6 +492,8 @@ class StudentModel extends School
         $this->db->where('agreement.student_id', $student_id);
         $this->db->where('agreement_amortization.due_date <', $due_date);
         $this->db->where_in('agreement_amortization.status_id', array(DEFAULT_AMORTIZATION_PENDING, DEFAULT_AMORTIZATION_PARTIAL));        
+        if($agreement_id != '')
+            $this->db->where('agreement.agreement_id', $agreement_id);
         $materials = $this->db->get()->row()->materials;
 
         $this->db->reset_query();
@@ -497,6 +503,8 @@ class StudentModel extends School
         $this->db->where('agreement.student_id', $student_id);
         $this->db->where('agreement_amortization.due_date <', $due_date);
         $this->db->where_in('agreement_amortization.status_id', array(DEFAULT_AMORTIZATION_PENDING, DEFAULT_AMORTIZATION_PARTIAL));        
+        if($agreement_id != '')
+            $this->db->where('agreement.agreement_id', $agreement_id);
         $fees = $this->db->get()->row()->fees;
 
         $total_amount = $amount + $materials + $fees;
