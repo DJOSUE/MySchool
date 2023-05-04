@@ -577,65 +577,65 @@ class Agreement extends School
     public function add_addendum($agreement_id)
     {
         
-    // Copy Data
-        $this->db->reset_query();
-        $this->db->where('agreement_id', $agreement_id);
-        $data_agreement = $this->db->get('agreement')->row_array();
+        // Copy Data
+            $this->db->reset_query();
+            $this->db->where('agreement_id', $agreement_id);
+            $data_agreement = $this->db->get('agreement')->row_array();
 
-        $amount_paid = $this->get_agreement_amount_paid($agreement_id);
+            $amount_paid = $this->get_agreement_amount_paid($agreement_id);
 
-        $this->db->reset_query();
-        $this->db->insert('archive_agreement', $data_agreement);
+            $this->db->reset_query();
+            $this->db->insert('archive_agreement', $data_agreement);
 
-        $table      = 'archive_agreement';
-        $action     = 'insert';
-        $archive_id  = $this->db->insert_id();
-        $this->crud->save_log($table, $action, $archive_id, $data_agreement);
+            $table      = 'archive_agreement';
+            $action     = 'insert';
+            $archive_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $archive_id, $data_agreement);
 
-        // Update paid
-        $data_paid['paid']    = $amount_paid;
+            // Update paid
+            $data_paid['paid']    = $amount_paid;
 
-        $this->db->reset_query();
-        $this->db->where('archive_id', $archive_id);
-        $this->db->update('archive_agreement', $data_paid);
+            $this->db->reset_query();
+            $this->db->where('archive_id', $archive_id);
+            $this->db->update('archive_agreement', $data_paid);
 
-        $this->db->reset_query();
-        $this->db->select($archive_id.' as archive_id, amortization_no, amount, materials, fees, due_date, orig_due_date, status_id');
-        $this->db->where('agreement_id', $agreement_id);
-        $data_amortization = $this->db->get('agreement_amortization');
+            $this->db->reset_query();
+            $this->db->select($archive_id.' as archive_id, amortization_no, amount, materials, fees, due_date, orig_due_date, status_id');
+            $this->db->where('agreement_id', $agreement_id);
+            $data_amortization = $this->db->get('agreement_amortization');
 
-        $this->db->reset_query();
-        $this->db->insert_batch('archive_agreement_amortization', $data_amortization->result());
+            $this->db->reset_query();
+            $this->db->insert_batch('archive_agreement_amortization', $data_amortization->result());
 
-        $table      = 'archive_agreement_amortization';
-        $action     = 'insert';
-        $new_agreement_id  = $this->db->insert_id();
-        $this->crud->save_log($table, $action, $new_agreement_id, $data_amortization->result());
+            $table      = 'archive_agreement_amortization';
+            $action     = 'insert';
+            $new_agreement_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $new_agreement_id, $data_amortization->result());
 
-        
+            
 
 
-    // Update Contract        
-        $new_number_payments = html_escape($this->input->post('new_number_payments'));
-        $number_payments     = intval($data_agreement['number_payments']);
+        // Update Contract        
+            $new_number_payments = html_escape($this->input->post('new_number_payments'));
+            $number_payments     = intval($data_agreement['number_payments']);
 
-        $user_id    = get_login_user_id();
-        $user_type  = get_table_user(get_role_id());
+            $user_id    = get_login_user_id();
+            $user_type  = get_table_user(get_role_id());
 
-        $new_data['updated_by']         = $user_id;
-        $new_data['has_addendum']       = '1';
-        $new_data['updated_by_type']    = $user_type;
-        $new_data['number_payments']    = $new_number_payments;
+            $new_data['updated_by']         = $user_id;
+            $new_data['has_addendum']       = '1';
+            $new_data['updated_by_type']    = $user_type;
+            $new_data['number_payments']    = $new_number_payments;
 
-        $this->db->reset_query();
-        $this->db->where('agreement_id', $agreement_id);
-        $this->db->update('agreement', $new_data);
+            $this->db->reset_query();
+            $this->db->where('agreement_id', $agreement_id);
+            $this->db->update('agreement', $new_data);
 
-        $table      = 'agreement';
-        $action     = 'update';        
-        $this->crud->save_log($table, $action, $agreement_id, $new_data);    
+            $table      = 'agreement';
+            $action     = 'update';        
+            $this->crud->save_log($table, $action, $agreement_id, $new_data);    
 
-    // Update Amortization
+        // Update Amortization
         $this->db->reset_query();        
         $this->db->where('agreement_id', $agreement_id);
         $update_data = $this->db->get('agreement_amortization')->result_array();

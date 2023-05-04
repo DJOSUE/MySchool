@@ -241,14 +241,23 @@
         }
 
         // test 
-        function can_request($year, $semester_id, $request_type, $student_id)
-        {
-            $this->request->can_request($year, $semester_id, $request_type, $student_id);
-        }
+        // function can_request($year, $semester_id, $request_type, $student_id)
+        // {
+        //     $this->request->can_request($year, $semester_id, $request_type, $student_id);
+        // }
 
         // function ticket_notification($ticket_code)
         // {
-        //     $this->ticket->send_notification($ticket_code, 'add_comment', 2);
-            
+        //     $this->ticket->send_notification($ticket_code, 'add_comment', 2);            
         // }
+
+        function last_enrollment($student_id)
+        {
+            $result = $this->studentModel->get_student_last_enrollment($student_id);
+
+            echo '<pre>';
+            var_dump($result);
+            echo '</pre>';
+
+        }
     }

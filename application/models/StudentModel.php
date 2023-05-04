@@ -551,4 +551,28 @@ class StudentModel extends School
 
         return $query;
     }
+
+    public function get_student_last_enrollment($student_id)
+    {
+        $this->db->reset_query();                                            
+        $this->db->where('student_id', $student_id);
+        $this->db->order_by('year desc, semester_id desc');
+        $agreement = $this->db->get('v_agreement')->row_array();
+
+        if($agreement['student_id'] != '')
+        {
+            $result = array('year' => $agreement['year'], 'semester' => $agreement['semester_name']);
+        }
+        else
+        {         
+            $this->db->reset_query();
+            $this->db->where('student_id', $student_id);
+            $this->db->order_by('year desc, semester_id desc');
+            $query = $this->db->get('v_enroll')->row_array();
+
+            $result = array('year' => $query['year'], 'semester' => $query['semester_name']);
+        }
+        
+        return $result;
+    }
 }

@@ -44,12 +44,21 @@
                             </a>
                         </li>
                         <?php endif;?>  -->
-                        <?php if(has_permission('academic_students_achievement')):?>
+                        <?php if(has_permission('academic_students_achievement_report')):?>
                         <li class="navs-item">
                             <a class="navs-links <?= $page_name == 'academic_students_achievement' ? 'active' : ''?>"
                                 href="<?php echo base_url();?>reports/academic_students_achievement/">
                                 <i class="os-icon picons-thin-icon-thin-0187_window_graph_analytics"></i>
                                 <span><?php echo getPhrase('students_achievement');?></span>
+                            </a>
+                        </li>
+                        <?php endif;?>
+                         <?php if(has_permission('academic_all_student_report')):?>
+                        <li class="navs-item">
+                            <a class="navs-links <?= $page_name == 'academic_all_student' ? 'active' : ''?>"
+                                href="<?php echo base_url();?>reports/academic_all_student/">
+                                <i class="os-icon picons-thin-icon-thin-0703_users_profile_group_two"></i>
+                                <span><?php echo getPhrase('all_students');?></span>
                             </a>
                         </li>
                         <?php endif;?>

@@ -182,16 +182,81 @@
             echo $html ;
         }
 
-        //Check user is login session.
-        function isLogin()
+        function print_invoice($param1)
         {
-            $array      = ['admin', 'teacher', 'student', 'parent', 'accountant', 'librarian'];
-            $login_type = get_account_type();
+            $payment_id = base64_decode($param1);
+            $data = array(
+                'payment_id' => $payment_id
+            );  
+
+            // coder for CodeIgniter TCPDF Integration
+            // make new advance pdf document
+            $tcpdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);              
             
-            if (!in_array($login_type, $array))
+            //set default header information
+            
+            $tcpdf->SetHeaderData(PDF_HEADER_LOGO, 195, '', '', array(0,0,0), array(255,255,255));
+
+            $tcpdf->setFooterData(array(255,255,255), array(255,255,255));
+            
+            //set header  textual styles
+            $tcpdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+            //set footer textual styles
+            $tcpdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+            
+            //set default monospaced textual style
+            $tcpdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+            
+            // set default margins
+            $tcpdf->SetMargins(PDF_MARGIN_LEFT, 0, PDF_MARGIN_RIGHT);
+            // Set Header Margin
+            $tcpdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+            // Set Footer Margin
+            $tcpdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+            
+            // set auto for page breaks
+            $tcpdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+            
+            // set image for scale factor
+            $tcpdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+            
+            // it is optional :: set some language-dependent strings
+            if (@file_exists(dirname(__FILE__).'/lang/eng.php'))
             {
-                redirect(base_url(), 'refresh');
+            // optional
+            require_once(dirname(__FILE__).'/lang/eng.php');
+            // optional
+            $tcpdf->setLanguageArray($l);
             }
+            
+            // set default font for subsetting mode
+            $tcpdf->setFontSubsetting(true);
+            
+            // Set textual style
+            // dejavusans is an UTF-8 Unicode textual style, on the off chance that you just need to
+            // print standard ASCII roasts, you can utilize center text styles like
+            // helvetica or times to lessen record estimate.
+            $tcpdf->SetFont('dejavusans', '', 14, '', true);
+            
+            // Add a new page
+            // This technique has a few choices, check the source code documentation for more data.
+            $tcpdf->AddPage();
+            
+            
+            // set text shadow for effect
+            $tcpdf->setTextShadow(array('enabled'=>true, 'depth_w'=>0.2, 'depth_h'=>0.2, 'color'=>array(196,197,198), 'opacity'=>1, 'blend_mode'=>'Normal'));
+            
+            //Set some substance to print
+            
+            $set_html = $this->load->view('backend/print/payment_invoice.php',$data, TRUE);
+            
+            //Print content utilizing writeHTMLCell()
+            $tcpdf->writeHTMLCell(0, 0, '', '', $set_html, 0, 1, 0, true, '', true);
+            
+            // Close and yield PDF record
+            // This technique has a few choices, check the source code documentation for more data.
+            $tcpdf->Output('tcpdfexample-onlinecode.pdf', 'I');
+            // successfully created CodeIgniter TCPDF Integration
         }
 
         public function print_agreement_addendum($param1)
@@ -271,4 +336,15 @@
             // successfully created CodeIgniter TCPDF Integration
         }
         
+        //Check user is login session.
+        function isLogin()
+        {
+            $array      = ['admin', 'teacher', 'student', 'parent', 'accountant', 'librarian'];
+            $login_type = get_account_type();
+            
+            if (!in_array($login_type, $array))
+            {
+                redirect(base_url(), 'refresh');
+            }
+        }
     }

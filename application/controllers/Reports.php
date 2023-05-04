@@ -215,10 +215,7 @@ class Reports extends EduAppGT
         else
         {
             redirect(base_url() . 'reports/academic_schedule_class', 'refresh');
-        }
-
-
-        
+        }        
     }
 
     function academic_schedule_class()
@@ -329,6 +326,16 @@ class Reports extends EduAppGT
         $page_data['fancy_path']    = $this->fancy_path;
         $page_data['page_name']     = 'academic_students_achievement';
         $page_data['page_title']    = getPhrase('students_achievement');
+        $this->load->view('backend/reports/index', $page_data); 
+    }
+
+    function academic_all_student()
+    {
+        $this->isLogin('academic_all_student_report');
+
+        $page_data['page_name']     = 'academic_all_student';
+        $page_data['page_title']    = getPhrase('all_student');
+        $page_data['fancy_path']    = $this->fancy_path;
         $this->load->view('backend/reports/index', $page_data); 
     }
 
