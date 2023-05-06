@@ -121,6 +121,16 @@ class StudentModel extends School
 
     /**** functions */
 
+    public function get_student_info($student_id)
+    {
+        $this->db->reset_query();
+        
+        $this->db->where('student_id', $student_id);
+        $student = $this->db->get('v_students')->row_array();
+        
+        return $student;
+    }
+
     public function update_student_collection_profile($student_id, $collection_id)
     {
 

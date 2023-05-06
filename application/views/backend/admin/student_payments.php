@@ -160,8 +160,7 @@
 
                                                                         $total  -= floatval($paid_amount);
                                                                         $amount -= floatval($paid_amount);
-
-                                                                        echo $paid_amount;
+                                                                        
                                                                         $this->db->reset_query();
                                                                         $this->db->select_sum('amount');
                                                                         $this->db->where('amortization_id =', $amortization_id);

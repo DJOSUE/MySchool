@@ -114,6 +114,14 @@ class Applicant extends School
         return $insert_id;
     }
 
+    function get_applicant_info($applicant_id)
+    {
+        $this->db->reset_query();
+        $this->db->where_in('applicant_id', $applicant_id);
+        $query = $this->db->get('v_applicants')->row_array();
+        return $query;
+    }
+
     function update($applicant_id)
     {
         $data['updated_by']     = get_login_user_id();

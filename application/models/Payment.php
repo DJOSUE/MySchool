@@ -1147,7 +1147,7 @@ class Payment extends School
         $this->db->reset_query();
         $this->db->select('code as income_type_id, name');
         $this->db->where('parameter_id', 'INCOME_TYPE');
-        $this->db->where_not_in('name', CONCEPT_CARD_NAME);
+        // $this->db->where_not_in('name', CONCEPT_CARD_NAME);
         $query = $this->db->get('parameters')->result_array();
         return $query;
     }

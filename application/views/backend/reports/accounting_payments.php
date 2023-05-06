@@ -102,6 +102,7 @@
                                         <table class="display" id="dvData" style="width: 100%;"> 
                                             <thead>
                                                 <tr>
+                                                    <th>Id</th>
                                                     <th>Year - Semester</th>
                                                     <th><?= getPhrase('date');?></th>
                                                     <th><?= getPhrase('student');?></th>
@@ -137,6 +138,9 @@
                                                         $discounts = $this->db->get('payment_discounts')->row()->amount;  
                                                 ?>
                                                 <tr>
+                                                    <td>
+                                                        <?=$row['payment_id']?>
+                                                    </td>
                                                     <td>
                                                         <?=  $row['year'].' - '. $this->academic->get_semester_name($row['semester_id']) ;?>
                                                     </td>

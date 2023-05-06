@@ -248,7 +248,7 @@
             
             //Set some substance to print
             
-            $set_html = $this->load->view('backend/print/payment_invoice.php',$data, TRUE);
+            $set_html = $this->load->view('backend/print/payment_invoice_new.php',$data, TRUE);
             
             //Print content utilizing writeHTMLCell()
             $tcpdf->writeHTMLCell(0, 0, '', '', $set_html, 0, 1, 0, true, '', true);

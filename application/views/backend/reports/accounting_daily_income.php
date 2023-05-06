@@ -108,6 +108,13 @@
         $this->db->where('payment_id =', $value['payment_id']);
         $this->db->where('concept_type =', '3');
         $application = $this->db->get('payment_details')->row()->amount; 
+        
+        // Get card fee id = 5
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('concept_type =', '5');
+        $card_fee += $this->db->get('payment_details')->row()->amount;
 
         // Get COS  id = 6
         $this->db->reset_query();
@@ -115,13 +122,6 @@
         $this->db->where('payment_id =', $value['payment_id']);
         $this->db->where('concept_type =', '6');
         $legal_service += $this->db->get('payment_details')->row()->amount;
-
-        // Get card fee id = 5
-        $this->db->reset_query();
-        $this->db->select_sum('amount');
-        $this->db->where('payment_id =', $value['payment_id']);
-        $this->db->where('concept_type =', '5');
-        $card_fee += $this->db->get('payment_details')->row()->amount;
 
         // Get COS  id = 6
         $this->db->reset_query();
@@ -180,7 +180,7 @@
 
     $total_income = ($tuition_int + $application_int + $tuition_local + $application_local + $books + $legal_service + $card_fee + $others);
 
-    $card += $card_fee;
+    // $card += $card_fee;
 
     $total_payment = ($cash + $card + $check + $venmo + $transfer);
 
