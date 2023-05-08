@@ -473,10 +473,10 @@ class Payment extends School
 
                 if($amount > 0)
                 {
+                    
                     $payment_transaction['payment_id']          = $payment_id;
                     $payment_transaction['transaction_type']    = $this->input->post('payment_type_'.$id);
                     $payment_transaction['transaction_code']    = $this->input->post('transaction_code_'.$id);
-                    // $payment_transaction['comment']             = html_escape($this->input->post('comment_'.$id));
                     $payment_transaction['amount']              = $this->input->post('payment_amount_'.$id);
 
                     if($item['name'] == 'Card')
@@ -490,7 +490,6 @@ class Payment extends School
                         {
                             $payment_fee['payment_id']      = $payment_id;
                             $payment_fee['concept_type']    = CONCEPT_CARD_ID;
-                            // $payment_fee['comment']         = html_escape($this->input->post('income_comment_'.$id));
                             $payment_fee['amount']          = round((($amount * $fee)/100), 2);
 
                             $this->db->insert('payment_details', $payment_fee);
@@ -499,6 +498,8 @@ class Payment extends School
                             $action     = 'insert';
                             $insert_id  = $this->db->insert_id();
                             $this->crud->save_log($table, $action, $insert_id, $payment_fee);
+
+                            $payment_transaction['amount'] = floatval($amount) + floatval($payment_fee['amount']);
 
                         }
                     }
