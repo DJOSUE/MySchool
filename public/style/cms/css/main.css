@@ -14399,7 +14399,7 @@ a.el-tablo:hover .label {
     padding-bottom: 20px;
 }
 
-.invoice-w:before {
+/* .invoice-w:before {
     width: 140%;
     height: 450px;
     background-color: #e6f7ff;
@@ -14410,7 +14410,7 @@ a.el-tablo:hover .label {
     transform: rotate(-27deg);
     content: "";
     z-index: 1;
-}
+} */
 
 .invoice-w .infos {
     position: relative;
@@ -14485,8 +14485,8 @@ a.el-tablo:hover .label {
 }
 
 .invoice-heading {
-    margin-bottom: 4rem;
-    margin-top: 7rem;
+    margin-bottom: 5rem;
+    margin-top: 3rem;
     position: relative;
     z-index: 2;
 }

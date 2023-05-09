@@ -36,7 +36,7 @@
         padding-bottom: 20px;
     }
     
-    .invoice-w:before {
+    /* .invoice-w:before {
         width: 140%;
         height: 450px;
         background-color: #e6f7ff;
@@ -47,7 +47,7 @@
         transform: rotate(-27deg);
         content: "";
         z-index: 1;
-    }
+    } */
     
     .invoice-w .infos {
         position: relative;
@@ -124,7 +124,7 @@
     
     .invoice-heading {
         margin-bottom: 4rem;
-        margin-top: 7rem;
+        margin-top: 3rem;
         position: relative;
         z-index: 2;
     }

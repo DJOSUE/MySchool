@@ -29,6 +29,9 @@
                                             <?= getPhrase('id');?>
                                         </th>
                                         <th>
+                                            <?= getPhrase('sevis_number');?>
+                                        </th>
+                                        <th>
                                             <?= getPhrase('name');?>
                                         </th>
                                         <th>
@@ -70,6 +73,9 @@
                                     <tr class="text-center">
                                         <td>
                                             <?= $item['student_id']?>
+                                        </td>
+                                        <td>
+                                            <?= $item['sevis_number']?>
                                         </td>
                                         <td>
                                             <?= $item['full_name']?>

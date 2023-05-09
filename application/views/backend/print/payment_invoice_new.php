@@ -162,29 +162,29 @@
                     </td>
                 </tr>
                 <?php endforeach;?>
+                <?php 
+                foreach($payment_discounts as $item):
+                    $total_discounts += $item['amount'];
+                ?>
+                <tr>
+                    <td>
+                        <small>
+                            <?= $this->payment->get_discount_type_name($item['discount_type']);?>
+                        </small>
+                    </td>
+                    <td class="text-right">
+                        <small>
+                            <?= '-'.$currency_symbol.''.$item['amount'];?>
+                        </small>
+                    </td>
+                </tr>
+                <?php endforeach;?>
                 <tfoot>
                     <tr>
                         <td>                            
                         </td>
                         <td class="text-right">
                             <table>
-                                <?php 
-                                foreach($payment_discounts as $item):
-                                    $total_discounts += $item['amount'];
-                                ?>
-                                <tr>
-                                    <td>
-                                        <small>
-                                            <?= $this->payment->get_discount_type_name($item['discount_type']);?>
-                                        </small>
-                                    </td>
-                                    <td class="text-right">
-                                        <small>
-                                            <?= '-'.$currency_symbol.''.$item['amount'];?>
-                                        </small>
-                                    </td>
-                                </tr>
-                                <?php endforeach;?>
                                 <tr>
                                     <td class="text-right">
                                         <small>
@@ -206,8 +206,3 @@
         </table>
     </div>
 </div>
-<?php 
-    echo '<pre>';
-    var_dump($customer_info);
-    echo '</pre>';
-?>
