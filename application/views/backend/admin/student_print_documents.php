@@ -8,11 +8,14 @@
     $agreements   = $this->agreement->get_student_agreements($student_id);
     $enrollments  = $this->academic->get_student_enrollments($student_id);
 
+    $documents    = $this->document->get_student_documents($student_id);
+
     $student_month = $this->academic->get_student_month_by_student($student_id);
 
     foreach($student_info as $row): 
         $status_info = $this->studentModel->get_status_info($row['student_session']);
         $program_info = $this->studentModel->get_program_info($row['program_id']);
+        $modal_url = base_url().'modal/popup/modal_student_add_document/'.$student_id;
 ?>
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -44,61 +47,133 @@
                                     <div class="row">
                                         <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                             <a target="_blank" href="<?= $url_schedule_agreement;?>/">
-                                            <div class="ui-block list" data-mh="friend-groups-item">
-                                                <div class="friend-item friend-groups">
-                                                    <div class="friend-item-content">
-                                                        <div class="friend-avatar">
-                                                            
-                                                            <img src="<?= base_url();?>public/uploads/icons/doc.svg"
-                                                                width="80px"
-                                                                style="background-color:#fff;padding:15px; border-radius:0px;">
-                                                            <h6 style="font-weight:bold;">
-                                                            <?php echo getPhrase('acceptance_letter');?>
-                                                            </h6>
+                                                <div class="ui-block list" data-mh="friend-groups-item">
+                                                    <div class="friend-item friend-groups">
+                                                        <div class="friend-item-content">
+                                                            <div class="friend-avatar">
+
+                                                                <img src="<?= base_url();?>public/uploads/icons/doc.svg"
+                                                                    width="80px"
+                                                                    style="background-color:#fff;padding:15px; border-radius:0px;">
+                                                                <h6 style="font-weight:bold;">
+                                                                    <?php echo getPhrase('acceptance_letter');?>
+                                                                </h6>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
                                             </a>
                                         </div>
                                         <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                             <a target="_blank" href="<?= $url_schedule_agreement;?>/">
-                                            <div class="ui-block list" data-mh="friend-groups-item">
-                                                <div class="friend-item friend-groups">
-                                                    <div class="friend-item-content">
-                                                        <div class="friend-avatar">
-                                                            
-                                                            <img src="<?= base_url();?>public/uploads/icons/doc.svg"
-                                                                width="80px"
-                                                                style="background-color:#fff;padding:15px; border-radius:0px;">
-                                                            <h6 style="font-weight:bold;">
-                                                            <?php echo getPhrase('student_ID');?>
-                                                            </h6>
+                                                <div class="ui-block list" data-mh="friend-groups-item">
+                                                    <div class="friend-item friend-groups">
+                                                        <div class="friend-item-content">
+                                                            <div class="friend-avatar">
+
+                                                                <img src="<?= base_url();?>public/uploads/icons/doc.svg"
+                                                                    width="80px"
+                                                                    style="background-color:#fff;padding:15px; border-radius:0px;">
+                                                                <h6 style="font-weight:bold;">
+                                                                    <?php echo getPhrase('student_ID');?>
+                                                                </h6>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
                                             </a>
                                         </div>
                                         <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                             <a target="_blank" href="<?= $url_schedule_agreement;?>/">
-                                            <div class="ui-block list" data-mh="friend-groups-item">
-                                                <div class="friend-item friend-groups">
-                                                    <div class="friend-item-content">
-                                                        <div class="friend-avatar">
-                                                            
-                                                            <img src="<?= base_url();?>public/uploads/icons/doc.svg"
-                                                                width="80px"
-                                                                style="background-color:#fff;padding:15px; border-radius:0px;">
-                                                            <h6 style="font-weight:bold;">
-                                                            <?php echo getPhrase('DMV_letter');?>
-                                                            </h6>
+                                                <div class="ui-block list" data-mh="friend-groups-item">
+                                                    <div class="friend-item friend-groups">
+                                                        <div class="friend-item-content">
+                                                            <div class="friend-avatar">
+
+                                                                <img src="<?= base_url();?>public/uploads/icons/doc.svg"
+                                                                    width="80px"
+                                                                    style="background-color:#fff;padding:15px; border-radius:0px;">
+                                                                <h6 style="font-weight:bold;">
+                                                                    <?php echo getPhrase('DMV_letter');?>
+                                                                </h6>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
                                             </a>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="student_documents">
+                            <div class="ui-block">
+                                <div class="ui-block-title">
+                                    <div class="col-sm-2">
+                                        <h6 class="title"><?php echo getPhrase('student_documents');?></h6>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="row" style="justify-content: flex-end;">
+                                            <div class="form-buttons">
+                                                <a href="javascript:void(0);" class="btn btn-rounded btn-primary"
+                                                    onclick="showAjaxModal('<?= $modal_url?>');">
+                                                    <i
+                                                        class="os-icon picons-thin-icon-thin-0071_document_file_paper"></i>
+                                                    <?= getPhrase('add_document');?>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui-block-content">
+                                    <div class="table-responsive">
+                                        <table class="table table-padded">
+                                            <thead>
+                                                <tr class="text-center">
+                                                    <th><?= getPhrase('date');?></th>
+                                                    <th><?= getPhrase('type');?></th>
+                                                    <th><?= getPhrase('name');?></th>
+                                                    <th><?= getPhrase('actions');?></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($documents as $value):
+                                                    $date = date_create($value['created_at']);
+                                                    $create = date_format($date,"Y-m-d");
+                                                    $view_url   = base_url().PATH_STUDENT_DOCUMENTS.$value['file_name'];
+                                                    $delete_url = base_url().'documents/student_document/delete/'.$student_id.'/'.base64_encode($value['document_id']);
+                                                ?>
+                                                <tr class="text-center">
+                                                    <td>
+                                                        <?= $create;?>
+                                                    </td>
+                                                    <td>
+                                                        <?= $this->document->get_type_name($value['type_id']);?>
+                                                    </td>
+                                                    <td>
+                                                        <?= $value['name'];?>
+                                                    </td>
+                                                    <td class="row-actions">
+                                                        <a href="<?=$view_url?>" target="_blank"
+                                                            class="btn btn-rounded btn-sm btn-primary">
+                                                            <i
+                                                                class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible"></i>
+                                                            <?= getPhrase('view');?>
+                                                        </a>
+                                                        <?php if(has_permission('management_documents')):?>
+                                                        <a href="<?= $delete_url;?>"
+                                                            class="btn btn-rounded btn-sm btn-danger"
+                                                            onClick="return confirm('<?= getPhrase('confirm_delete');?>')">
+                                                            <i
+                                                                class="os-icon picons-thin-icon-thin-0056_bin_trash_recycle_delete_garbage_empty"></i>
+                                                            <?= getPhrase('delete_document');?>
+                                                        </a>
+                                                        <?php endif;?>
+                                                    </td>
+                                                </tr>
+                                                <?php endforeach;?>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -404,7 +479,7 @@
                                                         <?= $this->crud->get_name($invoice['created_by_type'], $invoice['created_by']);?>
                                                     </td>
                                                     <td class="row-actions">
-                                                    <a class="btn btn-rounded btn-sm btn-success" target="_blank"
+                                                        <a class="btn btn-rounded btn-sm btn-success" target="_blank"
                                                             style="color:white" href="<?= $url_invoice;?>/">
                                                             <i
                                                                 class="os-icon picons-thin-icon-thin-0393_hand_papers_payment"></i>

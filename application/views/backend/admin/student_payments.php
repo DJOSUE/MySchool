@@ -84,11 +84,19 @@
                                                         $year        = $item['year'];
                                                         $semester_id = $item['semester_id'];
 
-                                                        $active = $year == $running_year && $semester_id == $running_semester;                                                     
+                                                        $active = $year == $running_year && $semester_id == $running_semester;
+                                                        $debt    = $this->payment->get_agreement_pending($item['agreement_id']);
+                                                        $due_style = '';
+                                                        if($debt > 0 && !$active)
+                                                        {
+                                                            $due_style = 'style="color: red;"';
+                                                        }
+                                                        
                                                     ?>
                                                     <li class="navs-item">
                                                         <a class="navs-links <?= $active ? 'active' : ''?>"
                                                             data-toggle="tab"
+                                                            <?= $due_style;?>"
                                                             href="#tab<?= $item['year'].'_'.$item['semester_id'];?>">
                                                             <?= $item['year'].' - '.$item['semester_name'];?>
                                                         </a>
@@ -116,6 +124,8 @@
                                                             <tr>
                                                                 <th class="orderby"><?= getPhrase('nro');?></th>
                                                                 <th class="orderby"><?= getPhrase('amount');?></th>
+                                                                <th class="orderby"><?= getPhrase('paid');?></th>
+                                                                <th class="orderby"><?= getPhrase('debt');?></th>
                                                                 <th class="orderby"><?= getPhrase('due_date');?>
                                                                 </th>
                                                                 <th class="orderby"><?= getPhrase('status_id');?>
@@ -147,7 +157,9 @@
                                                                     $amortization_id    = $row2['amortization_id'];    
                                                                     $status_info        = $this->payment->get_payment_schedule_status_info($row2['status_id']);
                                                                     
+                                                                    $quota = $amount + $materials + $fees;
                                                                     $total = $amount + $materials + $fees;
+                                                                    $paid  = 0;
 
                                                                     // Partial Payment
                                                                     if($status_id == DEFAULT_AMORTIZATION_PARTIAL)
@@ -160,6 +172,7 @@
 
                                                                         $total  -= floatval($paid_amount);
                                                                         $amount -= floatval($paid_amount);
+                                                                        $paid   += floatval($paid_amount);
                                                                         
                                                                         $this->db->reset_query();
                                                                         $this->db->select_sum('amount');
@@ -169,6 +182,7 @@
 
                                                                         $materials  -= floatval($paid_materials);
                                                                         $total      -= floatval($paid_materials);
+                                                                        $paid       += floatval($paid_materials);
 
                                                                         $this->db->reset_query();
                                                                         $this->db->select_sum('amount');
@@ -178,6 +192,7 @@
 
                                                                         $fees   -= floatval($paid_fees);
                                                                         $total  -= floatval($paid_fees);
+                                                                        $paid   += floatval($paid_fees);
 
                                                                     }
                                                                     
@@ -209,6 +224,12 @@
                                                             <tr id="<?=$row2['amortization_id']?>">
                                                                 <td>
                                                                     <?= $row2['amortization_no'];?>
+                                                                </td>
+                                                                <td>
+                                                                    $ <?= number_format($quota, 2); ?>
+                                                                </td>
+                                                                <td>
+                                                                    $ <?= number_format($paid, 2); ?>
                                                                 </td>
                                                                 <td>
                                                                     $ <?= number_format($total, 2); ?>

@@ -320,9 +320,9 @@ class Agreement extends School
     }
     
     public function create_agreement_accountant($student_id)
-    {        
-        $year        = $this->runningYear;
-        $semester_id = $this->runningSemester;
+    {   
+        $year        = html_escape($this->input->post('year_id'));
+        $semester_id = html_escape($this->input->post('semester_id'));
 
         $has_down_payment = html_escape($this->input->post('has_down_payment'));
         $has_automatic_payment = html_escape($this->input->post('automatic_payment'));
@@ -350,7 +350,8 @@ class Agreement extends School
         $data['number_payments']    = html_escape($this->input->post('number_payments'));
         $data['payment_date']       = html_escape($this->input->post('payment_date'));
         $data['automatic_payment']  = $has_automatic_payment;
-        $data['created_by']         = get_login_user_id();        
+        $data['created_by']         = get_login_user_id();
+        $data['created_by_type']    = get_table_user(get_role_id());
         $data['year']               = $year;
         $data['semester_id']        = $semester_id;
         $data['semester_enroll_id'] = $semester_enroll['semester_enroll_id'];        

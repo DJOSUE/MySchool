@@ -45,7 +45,7 @@
                                                         <div class="form-buttons">
                                                             <a id="create_agreement"
                                                                 href="/accountant/student_new_agreement/<?=$student_id?>"
-                                                                class="btn btn-rounded btn-success <?= $disabled?>">
+                                                                class="btn btn-rounded btn-success">
                                                                 <?= getPhrase('create_new_agreement');?>
                                                             </a>
                                                         </div>
@@ -57,6 +57,7 @@
                                                     <table class="table table-padded">
                                                         <thead>
                                                             <tr class="text-center">
+                                                                <th>Id</th>
                                                                 <th><?= getPhrase('date');?></th>
                                                                 <th><?= getPhrase('amount');?></th>
                                                                 <th># <?= getPhrase('payments');?></th>
@@ -75,6 +76,9 @@
                                                                 $amount = ((floatval($value['tuition']) + floatval($value['materials']) + floatval($value['fees'])) - (floatval($value['discounts']) + floatval($value['scholarship'])));
                                                             ?>
                                                             <tr class="text-center">
+                                                                <td>
+                                                                    <?= $value['agreement_id'];?>
+                                                                </td>
                                                                 <td>
                                                                     <?= $value['agreement_date'];?>
                                                                 </td>
@@ -100,7 +104,7 @@
                                                                     <?= $this->academic->get_semester_name($value['semester_id']);?>
                                                                 </td>
                                                                 <td>
-                                                                    <?= $this->crud->get_name('admin', $value['created_by']);?>
+                                                                    <?= $this->crud->get_name($value['created_by_type'], $value['created_by']);?>
                                                                 </td>
                                                                 <td class="row-actions">
                                                                     <a href="javascript:void(0);" class="grey"

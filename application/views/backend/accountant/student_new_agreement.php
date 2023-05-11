@@ -58,6 +58,42 @@
                                         <div class="row">
                                             <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                 <div class="form-group label-floating is-select">
+                                                    <label class="control-label"><?= getPhrase('year');?></label>
+                                                    <div class="select">
+                                                        <select name="year_id" id="year_id" required="">
+                                                            <option value=""><?= getPhrase('select');?></option>
+                                                            <?php 
+                                                            $years = $this->db->get_where('years', array('status' => '1'))->result_array();
+                                                            foreach ($years as $row): ?>
+                                                            <option value="<?= $row['year']; ?>"
+                                                                <?php if($running_year == $row['year']) echo "selected";?>>
+                                                                <?= $row['year']; ?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                <div class="form-group label-floating is-select">
+                                                    <label class="control-label"><?= getPhrase('semester');?></label>
+                                                    <div class="select">
+                                                        <select name="semester_id" id="semester_id" required="">
+                                                            <option value=""><?= getPhrase('select');?></option>
+                                                            <?php 
+                                                            $semesters = $this->db->get_where('semesters', array('status' => '1'))->result_array();
+                                                            foreach ($semesters as $row): ?>
+                                                            <option value="<?= $row['semester_id']; ?>"
+                                                                <?php if($running_semester == $row['semester_id']) echo "selected";?>>
+                                                                <?= $row['name']; ?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                <div class="form-group label-floating is-select">
                                                     <label class="control-label">
                                                         <?= getPhrase('cost_tuition');?>
                                                     </label>
@@ -179,7 +215,7 @@
                                                     </label>
                                                     <input class="form-control" name="amount_1" id="amount_1"
                                                         onfocusout="validate_amount_1()" type="text" required=""
-                                                        value="0" >
+                                                        value="0">
                                                     <small>
                                                         <span id="amount_error"></span>
                                                     </small>
@@ -448,7 +484,7 @@ $("input").on("change", function() {
     this.setAttribute(
         "data-date",
         moment(this.value, "YYYY-MM-DD")
-        .format( this.getAttribute("data-date-format") )
+        .format(this.getAttribute("data-date-format"))
     )
 }).trigger("change")
 

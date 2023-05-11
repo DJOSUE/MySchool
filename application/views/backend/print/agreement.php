@@ -955,7 +955,7 @@
                 style='line-height:normal;page-break-after:avoid;margin-bottom:10px; font-size:8.0pt;font-family:Rubik;text-align: justify;text-justify: inter-word;'>
                 <p>
                     American One English Schools INC which will be known as the “School” and
-                    <b>(<?=$student_name;?>)</b> who will be known as the “Student” on <b><?=$agreement_date;?></b>
+                    <b><?=$student_name;?></b> who will be known as the “Student” on <b><?=$agreement_date;?></b>
                 </p>
                 <p>
                     <b>1. This English classes service agreement</b>, dated on <?=$agreement_date;?>, is made between
@@ -977,23 +977,23 @@
                     services described below for the following trimester <b><?=$semester_name;?></b>.
                 </p>
                 <p>
-                    Start date: <?=$semester_start;?>
-                    End date: <?=$semester_end;?>
+                    <b>Start date:</b> <?= $semester_enroll['start_date']?>
+                    <b>End date:</b> <?= $semester_enroll['end_date']?>
                 </p>
                 <ol type="a">
-                    <li>provide instructional material for the trimester described above;</li>
-                    <li>provide the presence of an instructor in a classroom setting;</li>
-                    <li>provide English classes given by an instructor according to the student’s level; and</li>
-                    <li>provide a comfortable classroom setting.</li>
+                    <li>Provide instructional material for the trimester described above;</li>
+                    <li>Provide the presence of an instructor in a classroom setting;</li>
+                    <li>Provide English classes given by an instructor according to the student’s level; and</li>
+                    <li>Provide a comfortable classroom setting.</li>
                 </ol>
                 <p>
                     <b><?=$student_name;?></b> agrees to pay for said Services as described in the
-                    trimester of <b><?=$semester_name;?></b>.. to the terms and conditions set for this Agreement.
+                    trimester of <b><?= $student_enroll[0]['semester_name']?></b> to the terms and conditions set for this Agreement.
                 </p>
                 <ol type="a">
-                    <li>pay the total cost of the trimester agreement.</li>
-                    <li>pay for instructional materials.</li>
-                    <li>pay for any damages to the classroom setting or any part of the school building caused by the
+                    <li>Pay the total cost of the trimester agreement.</li>
+                    <li>Pay for instructional materials.</li>
+                    <li>Pay for any damages to the classroom setting or any part of the school building caused by the
                         student in this agreement.</li>
                 </ol>
                 <p>
@@ -1063,13 +1063,13 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <b>Total Payment:</b>
+                                    <b>Total Payment</b>
                                 </td>
                                 <td>
-                                    <?= (($agreement['tuition'] + $agreement['fees'] + $agreement['materials']) - ($agreement['scholarship'] +  $agreement['discounts']));?>
+                                    <b><?= (($agreement['tuition'] + $agreement['fees'] + $agreement['materials']) - ($agreement['scholarship'] +  $agreement['discounts']));?></b>
                                 </td>
                                 <td>
-                                    Materials fee:
+                                    Materials fee
                                 </td>
                                 <td>
                                     <?= $agreement['materials'];?>
@@ -1276,13 +1276,13 @@
                 <thead>
                     <tr>
                         <th>
-                            Full Name:
+                            FULL NAME
                         </th>
                         <th>
-                            Phone Number:
+                            PHONE NUMBER
                         </th>
                         <th>
-                            Country:
+                            COUNTRY
                         </th>
                     </tr>
                 </thead>
@@ -1304,9 +1304,9 @@
         <h3>
             CURRENT SEMESTER
         </h3>
-        <h6>
+        <h4>
             <?= $student_enroll[0]['year'].' - '.$student_enroll[0]['semester_name']?>
-        </h6>
+        </h4>
         <div align="center">
             <table class="info">
                 <thead>
@@ -1322,7 +1322,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <?= $semester_enroll['start_date']?>
+                            <?=$agreement_date;?>
                         </td>
                         <td>
                             <?= $semester_enroll['end_date']?>
@@ -1339,22 +1339,22 @@
                 <thead>
                     <tr>
                         <th>
-                            Type of student
+                            TYPE OF STUDENT
                         </th>
                         <th>
-                            Program
+                            PROGRAM
                         </th>
                         <th>
-                            Level
+                            LEVEL
                         </th>
                         <th>
-                            Class Modality
+                            MODALITY
                         </th>
                         <th>
-                            Books
+                            BOOKS
                         </th>
                         <th>
-                            Class Time
+                            SCHEDULE
                         </th>
                     </tr>
                 </thead>

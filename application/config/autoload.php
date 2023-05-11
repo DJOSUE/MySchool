@@ -9,5 +9,5 @@ $autoload['language'] = array();
 if(!is_file(APPPATH.'controllers/Install.php'))
 {
 	$autoload['model'] = array('crud', 'academic', 'user', 'payment', 'mail', 'applicant', 'studentModel', 'task', 'system', 
-							   'ticket', 'apiModel', 'agreement', 'notification', 'request', 'UploadBulk', 'agent');
+							   'ticket', 'apiModel', 'agreement', 'notification', 'request', 'UploadBulk', 'agent', 'document');
 }

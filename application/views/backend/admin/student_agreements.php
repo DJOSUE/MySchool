@@ -64,6 +64,7 @@
                                         <table class="table table-padded">
                                             <thead>
                                                 <tr class="text-center">
+                                                    <th>Id</th>
                                                     <th><?= getPhrase('date');?></th>
                                                     <th><?= getPhrase('amount');?></th>
                                                     <th># <?= getPhrase('payments');?></th>
@@ -87,6 +88,9 @@
                                                     $card = $this->db->get('agreement_card')->row_array();
                                                 ?>
                                                 <tr class="text-center">
+                                                    <td>
+                                                        <?= $value['agreement_id'];?>
+                                                    </td>
                                                     <td>
                                                         <?= $value['agreement_date'];?>
                                                     </td>

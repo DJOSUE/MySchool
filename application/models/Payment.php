@@ -499,7 +499,7 @@ class Payment extends School
                             $insert_id  = $this->db->insert_id();
                             $this->crud->save_log($table, $action, $insert_id, $payment_fee);
 
-                            $payment_transaction['amount'] = floatval($amount) + floatval($payment_fee['amount']);
+                            $payment_transaction['amount'] = floatval($amount) + round((($amount * $fee)/100), 2);
 
                         }
                     }

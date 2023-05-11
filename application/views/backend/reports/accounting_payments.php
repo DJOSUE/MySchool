@@ -95,10 +95,10 @@
                         </div>
                         <?= form_close()?>
                         <br />
-                        <div class="tab-pane active" id="invoices">
-                            <div class="">
-                                <div class="">
-                                    <div class="">
+                        <div class="tab-pane active" id="invoices" style="width: 100%;">
+                            <div class="" style="width: 100%;">
+                                <div class="" style="width: 100%;">
+                                    <div class="" style="width: 100%;">
                                         <table class="display" id="dvData" style="width: 100%;"> 
                                             <thead>
                                                 <tr>
