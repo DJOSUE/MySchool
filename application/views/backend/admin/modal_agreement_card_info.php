@@ -32,7 +32,7 @@
                             <?= getPhrase('postal_code');?>:
                         </span>
                         <span class="text">
-                            <?= $card_info['zip_code'];?>
+                            <?= get_decrypt($card_info['zip_code']);?>
                         </span>
                     </li>
                 </ul>

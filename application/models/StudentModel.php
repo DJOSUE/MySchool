@@ -478,7 +478,7 @@ class StudentModel extends School
         $this->db->from('agreement');
         $this->db->join('agreement_amortization', 'agreement_amortization.agreement_id = agreement.agreement_id');
         $this->db->where('agreement.student_id', $student_id);
-        $this->db->where('agreement_amortization.due_date <', $due_date);
+        $this->db->where('agreement_amortization.due_date <=', $due_date);
         $this->db->where_in('agreement_amortization.status_id', array(DEFAULT_AMORTIZATION_PENDING, DEFAULT_AMORTIZATION_PARTIAL));
         if($agreement_id != '')
             $this->db->where('agreement.agreement_id', $agreement_id);
@@ -489,7 +489,7 @@ class StudentModel extends School
         $this->db->from('agreement');
         $this->db->join('agreement_amortization', 'agreement_amortization.agreement_id = agreement.agreement_id');
         $this->db->where('agreement.student_id', $student_id);
-        $this->db->where('agreement_amortization.due_date <', $due_date);        
+        $this->db->where('agreement_amortization.due_date <=', $due_date);        
         $this->db->where_in('agreement_amortization.status_id', array(DEFAULT_AMORTIZATION_PENDING, DEFAULT_AMORTIZATION_PARTIAL));        
         if($agreement_id != '')
             $this->db->where('agreement.agreement_id', $agreement_id);
@@ -500,7 +500,7 @@ class StudentModel extends School
         $this->db->from('agreement');
         $this->db->join('agreement_amortization', 'agreement_amortization.agreement_id = agreement.agreement_id');
         $this->db->where('agreement.student_id', $student_id);
-        $this->db->where('agreement_amortization.due_date <', $due_date);
+        $this->db->where('agreement_amortization.due_date <=', $due_date);
         $this->db->where_in('agreement_amortization.status_id', array(DEFAULT_AMORTIZATION_PENDING, DEFAULT_AMORTIZATION_PARTIAL));        
         if($agreement_id != '')
             $this->db->where('agreement.agreement_id', $agreement_id);
@@ -511,7 +511,7 @@ class StudentModel extends School
         $this->db->from('agreement');
         $this->db->join('agreement_amortization', 'agreement_amortization.agreement_id = agreement.agreement_id');
         $this->db->where('agreement.student_id', $student_id);
-        $this->db->where('agreement_amortization.due_date <', $due_date);
+        $this->db->where('agreement_amortization.due_date <=', $due_date);
         $this->db->where_in('agreement_amortization.status_id', array(DEFAULT_AMORTIZATION_PENDING, DEFAULT_AMORTIZATION_PARTIAL));        
         if($agreement_id != '')
             $this->db->where('agreement.agreement_id', $agreement_id);

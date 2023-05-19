@@ -74,6 +74,7 @@
                                                 <tr class="text-center">
                                                     <th><?= getPhrase('id');?></th>
                                                     <th><?= getPhrase('program');?></th>
+                                                    <th><?= getPhrase('sevis_number');?></th>
                                                     <th><?= getPhrase('student');?></th>
                                                     <th><?= getPhrase('phone');?></th>
                                                     <th><?= getPhrase('email');?></th>
@@ -112,6 +113,9 @@
                                                     </td>
                                                     <td>
                                                         <?= $value['program_name'];?>
+                                                    </td>
+                                                    <td>
+                                                        <?= $value['sevis_number'];?>
                                                     </td>
                                                     <td>
                                                         <a href="<?=$student_url;?>" target="_blank" class="grey">

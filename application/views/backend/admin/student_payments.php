@@ -195,6 +195,16 @@
                                                                         $paid   += floatval($paid_fees);
 
                                                                     }
+
+                                                                    if($status_id == DEFAULT_AMORTIZATION_PAID)
+                                                                    {                                                      
+                                                                        $this->db->reset_query();
+                                                                        $this->db->select_sum('amount');
+                                                                        $this->db->where('amortization_id =', $amortization_id);
+                                                                        $paid_amount = $this->db->get('payment_details')->row()->amount; 
+
+                                                                        $paid   += floatval($paid_amount);
+                                                                    }
                                                                     
                                                                     //Due date
                                                                     if($row2['due_date'] < date("Y-m-d") && $status_id != 0)
@@ -223,7 +233,7 @@
                                                                 ?>
                                                             <tr id="<?=$row2['amortization_id']?>">
                                                                 <td>
-                                                                    <?= $row2['amortization_no'];?>
+                                                                    <?= $row2['amortization_no'] .' - '. $row2['amortization_id'];?>
                                                                 </td>
                                                                 <td>
                                                                     $ <?= number_format($quota, 2); ?>

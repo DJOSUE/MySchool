@@ -173,13 +173,19 @@ class Reports extends EduAppGT
     {
         $this->isLogin();
         $end_date = date("Y-m-d");
+        $program_id = '';
+        $auto_payment = 0;
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST')
         {            
-            $end_date = html_escape($this->input->post('end_date'));
+            $end_date   = html_escape($this->input->post('end_date'));
+            $program_id = html_escape($this->input->post('program_id'));
+            $auto_payment = $this->input->post('auto_payment'); 
         }
 
-        $page_data['end_date']      = $end_date;
+        $page_data['end_date']      = $end_date;        
+        $page_data['program_id']    = $program_id;
+        $page_data['auto_payment']  = $auto_payment;
         $page_data['page_name']     = 'accounting_collection_management';
         $page_data['page_title']    = getPhrase('collection_management');
         $page_data['fancy_path']    = $this->fancy_path;

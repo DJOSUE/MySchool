@@ -175,6 +175,13 @@
         $this->db->where('payment_id =', $value['payment_id']);
         $this->db->where('transaction_type =', '5');
         $transfer += $this->db->get('payment_transaction')->row()->amount;
+
+        // Get Payments Worker id = 6
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('transaction_type =', '6');
+        $worker += $this->db->get('payment_transaction')->row()->amount;
         
     }
 
@@ -182,7 +189,7 @@
 
     // $card += $card_fee;
 
-    $total_payment = ($cash + $card + $check + $venmo + $transfer);
+    $total_payment = ($cash + $card + $check + $venmo + $transfer + $worker);
 
     $total_validation = ($total_income != $total_payment) ? 'style="color: red"' : '';
 ?>
@@ -420,8 +427,13 @@ td {
                                                                 <?= $currency.' '.number_format($books, 2);?>
                                                             </span>
                                                         </td>
-                                                        <td colspan="2">
-
+                                                        <td>
+                                                            Worker
+                                                        </td>
+                                                        <td>
+                                                            <span class="currency">
+                                                                <?= $currency.' '.number_format($worker, 2);?>
+                                                            </span>
                                                         </td>
                                                     </tr>
                                                     <tr>

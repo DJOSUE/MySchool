@@ -169,6 +169,13 @@
         $this->db->where('payment_id =', $value['payment_id']);
         $this->db->where('transaction_type =', '5');
         $transfer += $this->db->get('payment_transaction')->row()->amount;
+
+        // Get Payments Transfer id = 6
+        $this->db->reset_query();
+        $this->db->select_sum('amount');
+        $this->db->where('payment_id =', $value['payment_id']);
+        $this->db->where('transaction_type =', '6');
+        $worker += $this->db->get('payment_transaction')->row()->amount;
         
     }
 
@@ -176,7 +183,7 @@
 
     $card += $card_fee;
 
-    $total_payment = ($cash + $card + $check + $venmo + $transfer);
+    $total_payment = ($cash + $card + $check + $venmo + $transfer + $worker);
 
     if($assigned_to != '')
         $cashier_name = $this->crud->get_name($assigned_to_type, $assigned_to);
@@ -396,8 +403,13 @@
                                                                 <?= $currency.' '.number_format($books, 2);?>
                                                             </span>
                                                         </td>
-                                                        <td colspan="2">
-
+                                                        <td>
+                                                            Worker
+                                                        </td>
+                                                        <td>
+                                                            <span class="currency">
+                                                                <?= $currency.' '.number_format($worker, 2);?>
+                                                            </span>
                                                         </td>
                                                     </tr>
                                                     <tr>

@@ -6,6 +6,8 @@
     $this->db->where_in('status_id', array(DEFAULT_AMORTIZATION_PENDING, DEFAULT_AMORTIZATION_PARTIAL));
     $this->db->group_by('agreement_id');
     $agreements = $this->db->get('agreement_amortization')->result_array();
+
+    $programs = $this->studentModel->get_programs();
 ?>
 
 <?php include $view_path.'_data_table_dependency.php';?>
@@ -25,14 +27,41 @@
                     <div class="tab-content">
                         <?= form_open(base_url() . 'reports/accounting_collection_management/');?>
                         <div class="row">
-                            <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                            <div class="col col-xl-2 col-lg-4 col-md-4 col-sm-8 col-8">
                                 <div class="form-group label-floating is-select"  style="background-color: #fff;">
                                     <label class="control-label"><?php echo getPhrase('end_date');?></label>
                                     <div class="form-group date-time-picker">
-                                        <input type="text" autocomplete="off" class="datepicker-here"
-                                            data-position="bottom left" data-language='en' name="end_date"
+                                        <input type="date" autocomplete="off" name="end_date"
                                             id="end_date" value="<?=$end_date;?>">
 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                                <div class="form-group label-floating is-select">
+                                    <label class="control-label">
+                                        <?= getPhrase('student_type');?>
+                                    </label>
+                                    <div class="select">
+                                        <select name="program_id">
+                                            <option value=""><?= getPhrase('select');?></option>
+                                            <?php foreach($programs as $row): ?>
+                                            <option value="<?= $row['program_id'];?>"
+                                                <?php if($program_id == $row['program_id']) echo "selected";?>>
+                                                <?= $row['name'];?></option>
+                                            <?php endforeach;?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sx-2">
+                                <div class="description-toggle">
+                                    <div class="description-toggle-content">
+                                        <div class="h6"><?= getPhrase('auto_payment');?></div>
+                                    </div>
+                                    <div class="togglebutton">
+                                        <label><input name="auto_payment" value="1" type="checkbox"
+                                                <?php if($auto_payment == 1) echo "checked";?>></label>
                                     </div>
                                 </div>
                             </div>
@@ -70,25 +99,36 @@
                                                 foreach ($agreements as $item):
 
                                                     $agreement_id = $item['agreement_id'];
+                                                    
                                                     $this->db->reset_query();
                                                     $this->db->where('agreement_id', $agreement_id);
+                                                    if($program_id != '')
+                                                    {
+                                                        $this->db->where('program_id', $program_id);
+                                                    }
+                                                    if($auto_payment == 1)
+                                                    {
+                                                        $this->db->where('automatic_payment', $auto_payment);
+                                                    }
                                                     $agreement = $this->db->get('v_agreement')->row_array();
 
-                                                    $student_id = $agreement['student_id'];                                                    
-
-                                                    $program = $this->studentModel->get_student_program_info($student_id);
-                                                    $collection_profile = $this->studentModel->get_student_collection_profile($student_id);
-                                                    $due = $this->studentModel->get_student_installments_due($student_id, $end_date, $agreement_id);
-
-                                                    $this->db->reset_query();        
-                                                    $this->db->where('agreement_id', $agreement_id);
-                                                    $card = $this->db->get('agreement_card')->row_array();
+                                                    $student_id = $agreement['student_id']; 
                                                     
-                                                    $has_card = $card['card_holder'] == '' ? false : true ;
-                                                    $automatic_payment =intval($agreement['automatic_payment']) == 0 ? false : true;  
+                                                    if($student_id != ''):
+                                                        
+                                                        // -$program = $this->studentModel->get_student_program_info($student_id);
+                                                        $collection_profile = $this->studentModel->get_student_collection_profile($student_id);
+                                                        $due = $this->studentModel->get_student_installments_due($student_id, $end_date, $agreement_id);
 
-                                                    $student_url = '/'.$account_type.'/student_payments/'.$agreement['student_id'];
-                                                    $card_info_url = base_url().'modal/popup/modal_agreement_card_info/'.$item['agreement_id'];
+                                                        $this->db->reset_query();        
+                                                        $this->db->where('agreement_id', $agreement_id);
+                                                        $card = $this->db->get('agreement_card')->row_array();
+                                                        
+                                                        $has_card = $card['card_holder'] == '' ? false : true ;
+                                                        $automatic_payment =intval($agreement['automatic_payment']) == 0 ? false : true;  
+
+                                                        $student_url = '/'.$account_type.'/student_payments/'.$agreement['student_id'];
+                                                        $card_info_url = base_url().'modal/popup/modal_agreement_card_info/'.$item['agreement_id'];
 
                                                 ?>
                                                 <tr class="text-center">
@@ -102,10 +142,10 @@
                                                         <?= $collection_profile['name'];?>
                                                     </td>
                                                     <td>
-                                                        <?= $program['name'];?>
+                                                        <?= $agreement['program_name'];?>
                                                     </td>
                                                     <td>
-                                                        <a class="grey" href="<?=$student_url?>">
+                                                        <a class="grey" href="<?=$student_url?>" target="_blank">
                                                             <?= $agreement['first_name'] .' '. $agreement['last_name'];?>
                                                         </a>                                                        
                                                     </td>
@@ -137,6 +177,7 @@
                                                     </td>
                                                     
                                                 </tr>
+                                                <?php endif; ?>
                                                 <?php endforeach;?>
                                             </tbody>
                                         </table>
@@ -168,3 +209,4 @@ var table = $('#dvData').DataTable({
 $("select[name='dvData_length']" ).addClass('select-page');;
 
 </script>
+
