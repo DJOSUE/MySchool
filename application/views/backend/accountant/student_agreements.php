@@ -61,7 +61,7 @@
                                                                 <th><?= getPhrase('date');?></th>
                                                                 <th><?= getPhrase('amount');?></th>
                                                                 <th># <?= getPhrase('payments');?></th>
-                                                                <th><?= getPhrase('card_info');?></th>
+                                                                <th><?= getPhrase('automatic_payment');?></th>
                                                                 <th><?= getPhrase('program_type');?></th>
                                                                 <th><?= getPhrase('payment_date');?></th>
                                                                 <th><?= getPhrase('year');?></th>
@@ -114,6 +114,13 @@
                                                                         <i
                                                                             class="os-icon picons-thin-icon-thin-0023_calendar_month_day_planner_events"></i>
                                                                     </a>
+                                                                    <a href="javascript:void(0);" class="grey"
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        data-original-title="<?= getPhrase('add_edit_card');?>"
+                                                                        onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_agreement_card_edit/<?=$value['agreement_id'].'/'.$student_id;?>');">
+                                                                        <i
+                                                                            class="os-icon picons-thin-icon-thin-0407_credit_card"></i>
+                                                                    </a>
                                                                     <a href="/PrintDocument/print_agreement/<?=base64_encode($value['agreement_id']);?>"
                                                                         class="grey" data-toggle="tooltip"
                                                                         data-placement="top"
@@ -137,6 +144,7 @@
                                                                         <i
                                                                             class="os-icon picons-thin-icon-thin-0002_write_pencil_new_edit"></i>
                                                                     </a>
+
                                                                     <!-- <a class="grey" data-toggle="tooltip"
                                                                         data-placement="top" class="danger"
                                                                         data-original-title="<?= getPhrase('delete');?>"

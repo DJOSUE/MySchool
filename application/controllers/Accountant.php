@@ -566,6 +566,9 @@ class Accountant extends EduAppGT
             case 'update':
                 $this->agreement->add_addendum($agreement_id);
                 break;
+            case 'card':
+                $this->agreement->agreement_card($agreement_id);
+                break;
         }
 
         $this->session->set_flashdata('flash_message', getPhrase('successfully_added'));        

@@ -13,15 +13,18 @@
     $this->db->where('archive_id', $agreement_archive->archive_id);
     $this->db->where('status_id <>', '1');
     $amortizations_archive = $this->db->get('archive_agreement_amortization')->result_array();
-
+    
+    $count = 0;
     $array = [];
     foreach($amortizations_archive as  $value){
+        $count++;
         array_push($array, $value['amortization_no']);
     }
-
+    
     $this->db->reset_query();
     $this->db->where('agreement_id', $agreement_id);
-    $this->db->where_not_in('amortization_no', $array);
+    if($count > 0)
+        $this->db->where_not_in('amortization_no', $array);
     $amortizations = $this->db->get('agreement_amortization')->result_array();
 
     $date = date_create($agreement_info['updated_at']);

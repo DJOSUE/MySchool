@@ -686,9 +686,48 @@ class Agreement extends School
                 $this->crud->save_log($table, $action, $amortization_id, $new_data_amortization);
             }
         }
+    }
 
+    public function agreement_card($agreement_card_id = '')
+    {
+        $data_card['agreement_id']      = html_escape($this->input->post('agreement_id'));
+        $data_card['type_card_id']      = html_escape($this->input->post('type_card_id'));
+        $data_card['card_holder']       = html_escape($this->input->post('card_holder'));
+        $data_card['card_number']       = get_encrypt(html_escape($this->input->post('card_number')));
+        $data_card['expiration_date']   = get_encrypt(html_escape($this->input->post('expiration_date')));
+        $data_card['security_code']     = get_encrypt(html_escape($this->input->post('security_code')));
+        $data_card['zip_code']          = get_encrypt(html_escape($this->input->post('zip_code')));
 
+        if($agreement_card_id == 0 || $agreement_card_id == '')
+        {
+            $this->db->insert('agreement_card', $data_card);
 
+            $table      = 'agreement_card';
+            $action     = 'insert';
+            $table_id  = $this->db->insert_id();
+            $this->crud->save_log($table, $action, $table_id, $data_card);   
+        }
+        else
+        {
+            $this->db->reset_query();
+            $this->db->where('agreement_card_id', $agreement_card_id);
+            $this->db->update('agreement_card', $data_card);
+
+            $table      = 'agreement';
+            $action     = 'update';        
+            $this->crud->save_log($table, $action, $agreement_card_id, $data_card); 
+        }
+        
+        //Update the automate payment 
+        $data['automatic_payment'] = html_escape($this->input->post('automatic_payment'));
+
+        $this->db->reset_query();
+        $this->db->where('agreement_id', $data_card['agreement_id']);
+        $this->db->update('agreement', $data);
+
+        $table      = 'agreement';
+        $action     = 'update';        
+        $this->crud->save_log($table, $action, $data_card['agreement_id'], $data);
 
     }
 }
