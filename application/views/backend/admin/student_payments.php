@@ -209,15 +209,21 @@
                                                                     //Due date
                                                                     if($row2['due_date'] < date("Y-m-d") && $status_id != 0)
                                                                     {
-                                                                        $color_due = "danger";
+                                                                        $late_fee_paid = 0;
+                                                                        $this->db->reset_query();
+                                                                        $this->db->select_sum('amount');
+                                                                        $this->db->where('amortization_id =', $amortization_id);
+                                                                        $this->db->where('concept_type', CONCEPT_LATE_FEE_ID);
+                                                                        $late_fee_paid = floatval($this->db->get('payment_details')->row()->amount);
 
                                                                         $earlier = new DateTime($row2['due_date']);
                                                                         $later = new DateTime(date("Y-m-d"));
 
                                                                         $diff = $later->diff($earlier)->format("%a");
 
-                                                                        if($diff >= LATE_FEE_DAYS )
+                                                                        if($diff >= LATE_FEE_DAYS && $late_fee_paid == 0 )
                                                                         {
+                                                                            $color_due = "danger";
                                                                             $overdue = 1;
                                                                         }
                                                                     }

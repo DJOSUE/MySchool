@@ -16,6 +16,7 @@
     $referral_by    = $data['referral_by'];
     $type_id        = $data['type_id'] ;
     $program_id     = $data['program_id'];
+    $sevis_number   = $data['sevis_number'];
 
 
 ?>
@@ -312,6 +313,14 @@
                                                                     </select>
                                                                     <small><span id="country_error"></span></small>
                                                                 </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                            <div class="form-group label-floating">
+                                                                <label
+                                                                    class="control-label"><?php echo getPhrase('sevis_number');?></label>
+                                                                <input class="form-control" name="sevis_number" id="sevis_number"
+                                                                    type="text" required="" value="<?=$sevis_number;?>">
                                                             </div>
                                                         </div>
                                                         <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
@@ -1018,6 +1027,7 @@ function validate_form_student_info() {
     var obj_ln = document.getElementById("last_name");
     var obj_em = document.getElementById("student_email");
     var obj_ph = document.getElementById("phone");
+    var obj_sn = document.getElementById("sevis_number");
     var obj_ad = document.getElementById("address");
     var obj_un = document.getElementById("user_student");
     var obj_pw = document.getElementById("password");
@@ -1042,6 +1052,10 @@ function validate_form_student_info() {
         valid = false;
         obj_ph.focus();
         $("#phone_error").html(text);
+    } else if (obj_sn.value == '') {
+        valid = false;
+        obj_sn.focus();
+        $("#sevis_number_error").html(text);
     } else if (obj_ad.value == '') {
         valid = false;
         obj_ad.focus();

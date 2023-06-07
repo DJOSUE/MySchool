@@ -28,7 +28,7 @@
 
     $polls_pages        = array('polls', 'view_poll', 'new_poll');
 
-    $system_pages       = array('system_settings', 'system_security', 'system_sms', 'system_email', 'system_translate', 'system_database');
+    $system_pages       = array('system_settings', 'system_security', 'system_sms', 'system_email', 'system_translate', 'system_database');    
 
     $helpdesk_pages     = array('dashboard', 'ticket_list', 'ticket_info');
 
@@ -42,6 +42,7 @@
 
     $advisor_report_pages  = array('advisor_dashboard');
     
+    $academic_settings_page = array('academic_settings', 'section', 'grade', 'semester', 'student_promotion', 'gpa', 'subjects', 'academic_settings_semester_enroll');
 
 ?>
 <div class="fixed-sidebar">
@@ -290,10 +291,10 @@
                 <?php endif;?>
                 <!-- Academic Settings Access -->
                 <?php if(has_permission('academic_settings_module')):?>
-                <li <?php if($page_name == 'academic_settings' || $page_name == 'section' || $page_name == 'grade' || $page_name == 'semester' || $page_name == 'student_promotion' || $page_name == 'units' || $page_name == 'gpa' || $page_name == 'subjects'):?>class="currentItem"
+                <li <?php if(in_array($page_name, $academic_settings_page)):?>class="currentItem"
                     <?php endif;?>>
                     <a href="<?php echo base_url();?>admin/academic_settings/" data-toggle="tooltip"
-                        data-placement="right" data-original-title="<?php echo getPhrase('academic_settings');?>">
+                        data-placement="right" data-original-title="<?php echo getPhrase('  ');?>">
                         <div class="left-menu-icon">
                             <i class="os-icon picons-thin-icon-thin-0006_book_writing_reading_read_manual"></i>
                         </div>
