@@ -39,7 +39,7 @@ class Notification extends School
         $this->crud->save_log($table, $action, $insert_id, $notify);
     }
 
-    function create_message($message, $user_id, $user_type, $url_encode)
+    function create_message($message, $user_id, $user_type, $url_encode = '')
     {
         $original_id = get_login_user_id();
         $original_type = get_account_type();

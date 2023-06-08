@@ -75,6 +75,29 @@ class Reports extends EduAppGT
         }
         
     }
+
+    function accounting_collection_dashboard()
+    {
+        $this->isLogin();
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST')
+        {   
+            $year_id        = $this->input->post('year_id');
+            $semester_id    = $this->input->post('semester_id');
+        }
+        else
+        {    
+            $year_id        = $this->runningYear;
+            $semester_id    = $this->runningSemester;
+        } 
+
+        $page_data['year_id']       = $year_id;
+        $page_data['semester_id']   = $semester_id;  
+        $page_data['page_name']     = 'accounting_collection_dashboard';
+        $page_data['page_title']    = getPhrase('collection_dashboard');
+        $page_data['fancy_path']    = $this->fancy_path;
+        $this->load->view('backend/reports/index', $page_data); 
+    }
     
     function accounting_daily_income()
     {     

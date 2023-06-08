@@ -1811,8 +1811,8 @@ class Crud extends School
         return $query->row_array();
     }
 
-     function create_post() 
-     {
+    function create_post() 
+    {
         $data['title'] = $this->input->post('title');
         $data['type'] = get_account_type();
         $data['description'] = $this->input->post('description');

@@ -962,7 +962,7 @@
             $this->db->where('section_id', $current_section_id);
             $this->db->where('year', $this->runningYear);
             $this->db->where('class_id', $current_class_id);
-            $current_subjects = $this->db->get('subject')->result_array();
+            $current_subjects = $this->db->get('v_subject')->result_array();
         
             $current_subject_ids = array();
             $future_subject_ids = array();
@@ -974,14 +974,6 @@
             }
     
             $result = array_diff($current_subject_ids, $future_subject_ids);
-
-            // echo '<pre>';
-            // var_dump($current_class_id);
-            // echo '<hr/>';
-            // var_dump($current_section_id);
-            // echo '<hr/>';
-            // var_dump($result);
-            // echo '</pre>';
 
             if(($current_class_id != $future_class_id || $current_section_id != $future_section_id) || count($result) > 0)
             {
@@ -1024,7 +1016,6 @@
                     $this->db->where('subject_id', $current_subject_id);
                     $this->db->where('year', $this->runningYear);
                     $this->db->where('semester_id', $this->runningSemester);
-
                     
                     $action     = 'update';
                     $update_id  = $student_id.'-'.$current_class_id.'-'.$current_section_id.'-'.$current_subject_id;
@@ -1043,20 +1034,39 @@
                         $this->crud->save_log($table, $action, $update_id, $data1);
                     }
                     
+                    //Send Notification
+                    $this->db->reset_query();
+                    $this->db->where('subject_id', $future_subject_id);
+                    $future_subject_info = $this->db->get('v_subject')->row_array();
+
+                    $student        = $this->crud->get_name('student',$student_id);
+                    $new_teacher    = $this->crud->get_name('teacher',$item['teacher_id']);
+                    $teacher_name   = $item['teacher_name'];
+                    $new_teacher    = $future_subject_info['teacher_name'];                    
+
+                    $message_remove = "Dear $teacher_name, We wanted to inform you that $student has been transferred to a different class.";
+                    $message_add    = "Dear $new_teacher, We wanted to inform you that $student has been transferred to your class. <br/>";
+                    $message_add   .= "Class Name: ".$future_subject_info['class_name']."<br/>";
+                    $message_add   .= "Schedule: ".$future_subject_info['section_name']."<br/>";
+                    $message_add   .= "Subject: ".$future_subject_info['name']."<br/>";
+
+                    // $message, $user_id, $user_type, $url_encode
+                    $this->notification->create_message($message_remove, $item['teacher_id'], 'teacher');
+
+                    $this->notification->create_message($message_add, $future_subject_info['teacher_id'], 'teacher');
+
+
                 }
 
                 $this->session->set_flashdata( 'flash_message', getPhrase( 'successfully_updated' ) );
             }
             else 
             {
-                
                 $this->session->set_flashdata( 'flash_message', getPhrase( 'error' ) );
-                echo '<pre>';
-                var_dump($current_class_id);
-
-                var_dump($future_class_id);
-                
-                echo '</pre>';
+                // echo '<pre>';
+                // var_dump($current_class_id);
+                // var_dump($future_class_id);                
+                // echo '</pre>';
             }
     
             $this->crud->clear_cache();
