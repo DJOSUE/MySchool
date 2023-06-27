@@ -111,6 +111,9 @@
                             <thead>
                                 <tr class="text-center">
                                     <th>
+                                        <?= getPhrase('id');?>
+                                    </th>
+                                    <th>
                                         <?= getPhrase('class');?>
                                     </th>
                                     <th>
@@ -126,6 +129,9 @@
                                         <?= getPhrase('teacher');?>
                                     </th>
                                     <th>
+                                        # <?= getPhrase('classroom');?>
+                                    </th>
+                                    <th>
                                         # <?= getPhrase('students');?>
                                     </th>
                                 </tr>
@@ -133,6 +139,9 @@
                             <tbody>
                                 <?php foreach($classes as $item):?>
                                 <tr class="text-center">
+                                    <td>
+                                        <?=$item['subject_id']?>
+                                    </td>
                                     <td>
                                         <?=$item['class_name']?>
                                     </td>
@@ -147,6 +156,9 @@
                                     </td>
                                     <td>
                                         <?=$item['teacher_name']?>
+                                    </td>
+                                    <td>
+                                        <?=$item['classroom']?>
                                     </td>
                                     <td>
                                         <?=$this->academic->countStudentsSubject($item['class_id'], $item['section_id'], $item['subject_id']);?>

@@ -31,7 +31,7 @@
 				            </div>
 				            <?php 
                                 $this->db->order_by('id', 'desc');
-                                $notifications = $this->db->get_where('notification', array('user_id' => $this->session->userdata('login_user_id'), 'user_type' => $this->session->userdata('login_type')));
+                                $notifications = $this->db->get_where('notification', array('user_id' => get_login_user_id(), 'user_type' => get_account_type()));
                                 if($notifications->num_rows() > 0):?>
 				            <ul class="notification-list">
     				            <?php foreach($notifications->result_array() as $notify):?>

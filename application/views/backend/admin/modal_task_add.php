@@ -115,6 +115,18 @@
             </div>
         </div>
         <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('due_date');?></label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <!-- <div class="input-group-addon">
+                        <i class="picons-thin-icon-thin-0003_write_pencil_new_edit"></i>
+                    </div> -->
+                    <input type='date' 
+                        name="due_date" data-multiple-dates-separator="/" value="<?= $task['due_date'];?>" />
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
             <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('file');?></label>
             <div class="col-sm-9">
                 <div class="input-group">

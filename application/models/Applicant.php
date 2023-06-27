@@ -16,16 +16,27 @@ class Applicant extends School
 
     function register()
     {
-        $data['created_by']     = $this->session->userdata('login_user_id');
+        $data['created_by']     = get_login_user_id();
         $data['first_name']     = ucfirst(html_escape($this->input->post('first_name')));
         $data['last_name']      = ucfirst(html_escape($this->input->post('last_name')));
         $data['birthday']       = html_escape($this->input->post('datetimepicker'));
         $data['email']          = html_escape($this->input->post('email'));
         $data['phone']          = html_escape($this->input->post('phone'));
         $data['gender']         = html_escape($this->input->post('gender'));
-        $data['address']        = html_escape($this->input->post('address'));
         $data['country_id']     = html_escape($this->input->post('country_id'));
         $data['type_id']        = html_escape($this->input->post('type_id'));
+
+        if(!empty($this->input->post('address')))
+            $data['address']        = html_escape($this->input->post('address'));
+        
+        if(!empty($this->input->post('city')))
+            $data['city']           = html_escape($this->input->post('city'));
+
+        if(!empty($this->input->post('state')))
+            $data['state']          = html_escape($this->input->post('state'));
+
+        if(!empty($this->input->post('postal_code')))
+            $data['postal_code']    = html_escape($this->input->post('postal_code'));
 
         $type_info = $this->applicant->get_type_info($data['type_id']);
         $data['program_id']        = $type_info['program_id'];
@@ -55,7 +66,7 @@ class Applicant extends School
         }
         else
         {
-            $data['assigned_to']    = $this->session->userdata('login_user_id');
+            $data['assigned_to']    = get_login_user_id();
         }
         
        
@@ -68,8 +79,9 @@ class Applicant extends School
 
 
         // create an interaction
-        $account_type   =   get_table_user($this->session->userdata('role_id'));
-        $user_name  = $this->crud->get_name($account_type, $this->session->userdata('login_user_id'));  
+        $account_type   =   get_table_user(get_role_id());
+        $user_name  = $this->crud->get_name($account_type, get_login_user_id()); 
+         
         $_POST['applicant_id']  = $insert_id;
 
         if($data['is_imported'])
@@ -90,7 +102,7 @@ class Applicant extends School
             $data_task['category_id']   = DEFAULT_TASK_FOLLOW_UP_CATEGORY;
             $data_task['status_id']     = DEFAULT_TASK_FOLLOW_UP_STATUS;
             $data_task['priority_id']   = DEFAULT_TASK_FOLLOW_UP_PRIORITY;
-            $data_task['description']   = getPhrase('follow_up_message');
+            $data_task['description']   = html_escape($this->input->post('comments'));
             $data_task['title']         = getPhrase('follow_up_title');
             $data_task['due_date']      = html_escape($this->input->post('contact_date'));
             $data_task['user_type']     = 'applicant';
@@ -102,9 +114,17 @@ class Applicant extends School
         return $insert_id;
     }
 
+    function get_applicant_info($applicant_id)
+    {
+        $this->db->reset_query();
+        $this->db->where_in('applicant_id', $applicant_id);
+        $query = $this->db->get('v_applicants')->row_array();
+        return $query;
+    }
+
     function update($applicant_id)
     {
-        $data['updated_by']     = $this->session->userdata('login_user_id');
+        $data['updated_by']     = get_login_user_id();
 
         $assigned_to_old = $this->db->get_where('v_applicants' , array('applicant_id' => $applicant_id) )->row()->assigned_to;
         $assigned_to_new = $this->input->post('assigned_to');
@@ -134,6 +154,15 @@ class Applicant extends School
         if(!empty($this->input->post('address')))
             $data['address']        = html_escape($this->input->post('address'));
         
+        if(!empty($this->input->post('city')))
+            $data['city']           = html_escape($this->input->post('city'));
+
+        if(!empty($this->input->post('state')))
+            $data['state']          = html_escape($this->input->post('state'));
+
+        if(!empty($this->input->post('postal_code')))
+            $data['postal_code']    = html_escape($this->input->post('postal_code'));
+
         if(!empty($this->input->post('country_id')))
             $data['country_id']     = html_escape($this->input->post('country_id'));
         
@@ -176,7 +205,7 @@ class Applicant extends School
 
         if($assigned_to_new != '' && ($assigned_to_new != $assigned_to_old))
         {
-            $user_name  = $this->crud->get_name('admin', $this->session->userdata('login_user_id'));
+            $user_name  = $this->crud->get_name('admin', get_login_user_id());
             $assigned_name  = $this->crud->get_name('admin', $assigned_to_new);
 
             // Create a new interaction
@@ -230,7 +259,7 @@ class Applicant extends School
 
     function update_status($applicant_id, $status_id)
     {
-        $data['updated_by']     = $this->session->userdata('login_user_id');
+        $data['updated_by']     = get_login_user_id();
         $data['status']   = $status_id;
         $this->db->where('applicant_id', $applicant_id);
         $this->db->update('applicant', $data);
@@ -247,7 +276,7 @@ class Applicant extends School
 
     function add_interaction_update_status($applicant_id, $status_id)
     {
-        $user_name  = $this->crud->get_name('admin', $this->session->userdata('login_user_id'));
+        $user_name  = $this->crud->get_name('admin', get_login_user_id());
         $status_info = $this->get_applicant_status_info($status_id);
 
         // Create a new interaction
@@ -260,11 +289,11 @@ class Applicant extends School
     function add_interaction($type = '')
     {
         $md5 = md5(date('d-m-Y H:i:s'));
-        $account_type   =   get_table_user($this->session->userdata('role_id'));
+        $account_type   =   get_table_user(get_role_id());
 
         if($type != 'automatic')
         {
-            $data['created_by']         = $this->session->userdata('login_user_id');
+            $data['created_by']         = get_login_user_id();
             $data['created_by_type']    = $account_type;
         }
         else
@@ -275,6 +304,7 @@ class Applicant extends School
 
         $data['applicant_id'] = $this->input->post('applicant_id');
         $data['comment']      = html_escape($this->input->post('comment'));
+        $data['modality_id']  = html_escape($this->input->post('modality_id'));
 
         if($_FILES['applicant_file']['name'] != '')
         {
@@ -433,6 +463,78 @@ class Applicant extends School
         $this->db->where('applicant_id', $applicant_id);
         $query = $this->db->get('applicant_interaction')->result_array();;
         
+        return $query;
+    }
+
+    function applicants_bulk_assignation()
+    {        
+        $array = [];
+        if(!empty($_POST['check_applicant_ids'])) {
+            foreach($_POST['check_applicant_ids'] as $value){
+                array_push($array, $value);
+            }
+
+            $data['assigned_to']    = html_escape($this->input->post('assigned_to'));
+            $this->db->reset_query();
+            $this->db->where_in('applicant_id', $array);
+            $this->db->update('applicant', $data);
+    
+            $data['ids']    = implode(", ",$array);
+            $table          = 'applicant';
+            $action         = 'update';        
+            $this->crud->save_log($table, $action, 0, $data);
+
+            return true;
+        }
+
+        return false;
+        
+    }
+
+    function applicant_total_by_date($start_date ,$end_date)
+    {
+        $array = $this->user->get_advisor_array();
+
+        $this->db->reset_query();
+        $this->db->select('created_by, created_by_name, count(applicant_id) as total');
+        $this->db->where('created_at >=', $start_date);
+        $this->db->where('created_at <=', $end_date);
+        $this->db->where_in('created_by', $array);        
+        $this->db->group_by('created_by');
+        $this->db->order_by('total');
+        $query = $this->db->get('v_applicants')->result_array();
+        return $query;
+    }
+
+    function student_total_by_date($start_date ,$end_date)
+    {
+        $array = $this->user->get_advisor_array();
+
+        $this->db->reset_query();
+        $this->db->select('assigned_to, assigned_to_name, count(applicant_id) as total');
+        $this->db->where('created_at >=', $start_date);
+        $this->db->where('created_at <=', $end_date);
+        $this->db->where('status', '3');
+        $this->db->where_in('assigned_to', $array);        
+        $this->db->group_by('assigned_to');
+        $this->db->order_by('total');
+        $query = $this->db->get('v_applicants')->result_array();
+        return $query;
+    }
+
+    function student_total_by_update_date($start_date ,$end_date)
+    {
+        $array = $this->user->get_advisor_array();
+
+        $this->db->reset_query();
+        $this->db->select('assigned_to, assigned_to_name, count(applicant_id) as total');
+        $this->db->where('updated_at >=', $start_date);
+        $this->db->where('updated_at <=', $end_date);
+        $this->db->where('status', '3');
+        $this->db->where_in('assigned_to', $array);        
+        $this->db->group_by('assigned_to');
+        $this->db->order_by('total');
+        $query = $this->db->get('v_applicants')->result_array();
         return $query;
     }
     

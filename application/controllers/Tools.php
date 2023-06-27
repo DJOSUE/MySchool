@@ -60,7 +60,7 @@
         function isLogin()
         {
             $array      = ['admin', 'teacher', 'student', 'parent', 'accountant', 'librarian'];
-            $login_type = $this->session->userdata('login_type');
+            $login_type = get_account_type();
             
             if (!in_array($login_type, $array))
             {
@@ -192,7 +192,6 @@
                 echo '<option value="' . $row['student_id'] . '">' . $row['full_name'] . '</option>';
             }
         }
-        
 
         //Get Students by sectionId function of the current semester.
         function get_class_students($section_id = '')
@@ -209,35 +208,56 @@
             }
         }
 
-/******* Test **************/        
-        //Get Students by sectionId function of the current semester.
-        function get_pass_student_class($class_id, $year = "", $semester_id = "")
+        function update_subject($subject_id, $return_url = '')
         {
+            $this->isLogin();
+            $this->academic->updateCourse($subject_id);
+            $class_id = $this->db->get_where('subject', array('subject_id' => $subject_id))->row()->class_id;
+            $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+            redirect(base_url() . 'teacher/cursos/'.base64_encode($class_id)."/", 'refresh');
+        }
+
+        function run_agent($token = '', $data = '')
+        {
+            // 87878b73a13af46d24edf62640b80ca2d20c1d95
+
+            if ($token == DEFAULT_TOKEN_AGENT) {
+                
+                $agent_name = base64_decode($data);
+                echo $agent_name;
+
+                switch ($agent_name) {
+                    case 'payment_reminder':
+                        // cGF5bWVudF9yZW1pbmRlcg
+                        $this->agent->payment_reminder();
+                        break;
+                        
+                    case 'late_payment_reminder':
+                        // bGF0ZV9wYXltZW50X3JlbWluZGVy
+                        $this->agent->late_payment_reminder();
+                        break;
+                }
+            }            
+        }
+
+        // test 
+        // function can_request($year, $semester_id, $request_type, $student_id)
+        // {
+        //     $this->request->can_request($year, $semester_id, $request_type, $student_id);
+        // }
+
+        // function ticket_notification($ticket_code)
+        // {
+        //     $this->ticket->send_notification($ticket_code, 'add_comment', 2);            
+        // }
+
+        function last_enrollment($student_id)
+        {
+            $result = $this->studentModel->get_student_last_enrollment($student_id);
+
             echo '<pre>';
-            var_dump($this->academic->get_pass_student_class($class_id, $year, $semester_id));
+            var_dump($result);
             echo '</pre>';
-        }
 
-        function accept_request($request_id, $user_type, $message = "")
-        {
-            // $this->notification->teacher_student_request('absence_approved_teacher', $user_name,$teacher_id, 'teacher', '', $request_info['start_date'], $request_info['end_date']);                    
-
-            $this->request->accept_request($request_id, $user_type, $message);
-        }
-
-        function get_last_student_code()
-        {
-            $last_student_code = $this->studentModel->get_last_student_code();
-
-            echo '<pre>';
-            var_dump($last_student_code);
-            echo '</pre>'; 
-        }
-
-        function request_approved($user_id, $user_type, $request_type)
-        {
-            // $this->notification->teacher_student_request('absence_approved_teacher', $user_name,$teacher_id, 'teacher', '', $request_info['start_date'], $request_info['end_date']);                    
-
-            $this->mail->request_approved($user_id, $user_type, $request_type);
         }
     }

@@ -1,8 +1,20 @@
 <?php
 
     $running_year = $this->crud->getInfo('running_year');
-    $user_id = $this->session->userdata('login_user_id');
+    $user_id = get_login_user_id();
 
+    if($start_date != '')
+    {
+        $this->db->where('created_at >=', $start_date);       
+    }
+    if($end_date != '')
+    {        
+        $this->db->where('created_at <=', $end_date);
+    }
+    if($advisor_id != '')
+    {
+        $this->db->where('created_by', $advisor_id);
+    }   
     if($country_id != '')
     {
         $this->db->where('country_id', $country_id);
@@ -15,10 +27,6 @@
     {
         $this->db->where('status', $status_id);
     }
-    else
-    {
-        $this->db->where('status <>', '3');
-    }
     if($name != '')
     {
         $this->db->like('full_name' , str_replace("%20", " ", $name));
@@ -30,46 +38,18 @@
     if($assigned_me == 1)
     {
         $this->db->where('assigned_to' , $user_id);
-    }  
+    }    
     $student_query = $this->db->get('v_applicants');
     $students = $student_query->result_array();
-
     
 ?>
-<style>
-    th {
-        cursor: pointer;
-    }
-</style>
+<?php include  $view_path.'_data_table_dependency.php';?>
 <div class="content-w">
     <?php include 'fancy.php';?>
     <div class="header-spacer"></div>
     <div class="conty">
         <div class="os-tabs-w menu-shad">
-            <div class="os-tabs-controls">
-                <ul class="navs navs-tabs upper">
-                    <li class="navs-item">
-                        <a class="navs-links" href="<?= base_url();?>admin/admission_dashboard/">
-                            <i class="os-icon picons-thin-icon-thin-0482_gauge_dashboard_empty"></i>
-                            <span><?= getPhrase('dashboard');?></span></a>
-                    </li>
-                    <li class="navs-item">
-                        <a class="navs-links active" href="<?= base_url();?>admin/admission_applicants/">
-                            <i class="os-icon picons-thin-icon-thin-0093_list_bullets"></i>
-                            <span><?= getPhrase('applicants');?></span></a>
-                    </li>
-                    <li class="navs-item">
-                        <a class="navs-links" href="<?= base_url();?>admin/admission_new_applicant/">
-                            <i class="os-icon picons-thin-icon-thin-0716_user_profile_add_new"></i>
-                            <span><?= getPhrase('new_applicant');?></span></a>
-                    </li>
-                    <li class="navs-item">
-                        <a class="navs-links" href="<?= base_url();?>admin/admission_new_student/">
-                            <i class="os-icon picons-thin-icon-thin-0706_user_profile_add_new"></i>
-                            <span><?= getPhrase('new_student');?></span></a>
-                    </li>
-                </ul>
-            </div>
+            <? include 'admission__nav.php';?>
         </div><br>
         <div class="container-fluid">
             <div class="content-i">
@@ -132,13 +112,12 @@
                                                         <option value=""><?= getPhrase('select');?></option>
                                                         <?php
                                                         $status = $this->db->get('v_applicant_status')->result_array();
-                                                        foreach($status as $row):
-                                                            if($row['status_id'] != 3):
+                                                        foreach($status as $row):                                                            
                                                     ?>
                                                         <option value="<?= $row['status_id'];?>"
                                                             <?php if($status_id == $row['status_id']) echo "selected";?>>
                                                             <?= $row['name'];?></option>
-                                                        <?php endif; endforeach;?>
+                                                        <?php endforeach;?>
                                                     </select>
                                                 </div>
                                             </div>
@@ -154,11 +133,54 @@
                                                         foreach($tags as $tag):
                                                             
                                                     ?>
-                                                        <option value = "<?= $tag['tag_id'];?>"
+                                                        <option value="<?= $tag['tag_id'];?>"
                                                             <?php if($tag_id == $tag['tag_id']) echo "selected";?>>
                                                             <?= $tag['name'];?></option>
                                                         <?php  endforeach;?>
                                                     </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="form-group label-floating is-select">
+                                                <label class="control-label"><?= getPhrase('advisor');?></label>
+                                                <div class="select">
+                                                    <select name="advisor_id">
+                                                        <option value=""><?= getPhrase('select');?></option>
+                                                        <?php
+                                                        $tags = $this->user->get_advisor();
+                                                        foreach($tags as $tag):
+                                                            
+                                                    ?>
+                                                        <option value="<?= $tag['admin_id'];?>"
+                                                            <?php if($advisor_id == $tag['admin_id']) echo "selected";?>>
+                                                            <?= $tag['first_name'].' '.$tag['last_name'];?></option>
+                                                        <?php  endforeach;?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="form-group label-floating is-select"
+                                                style="background-color: #fff;">
+                                                <label class="control-label"><?= getPhrase('start_date');?></label>
+                                                <div class="form-group date-time-picker">
+                                                    <input type="text" autocomplete="off" class="datepicker-here"
+                                                        data-position="bottom left" data-language='en' name="start_date"
+                                                        id="start_date" value="<?=$start_date?>">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="form-group label-floating is-select"
+                                                style="background-color: #fff;">
+                                                <label class="control-label"><?= getPhrase('end_date');?></label>
+                                                <div class="form-group date-time-picker">
+                                                    <input type="text" autocomplete="off" class="datepicker-here"
+                                                        data-position="bottom left" data-language='en' name="end_date"
+                                                        id="end_date" value="<?=$end_date?>">
+
                                                 </div>
                                             </div>
                                         </div>
@@ -173,10 +195,15 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div>                                        
                                         <div class="col-sm-2">
                                             <div class="form-group">
-                                                <button class="btn btn-success btn-upper" style="margin-top:20px"
+                                                <button class="btn btn-success btn-upper"
                                                     type="submit"><span><?= getPhrase('search');?></span></button>
+                                                <a href="/admin/admission_applicants_assignation/"
+                                                    class="btn btn-info btn-upper">Bulk assignment
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -188,18 +215,9 @@
                         <div class="row">
                             <div class="table-responsive">
                                 <?php
-                                    if($student_query->num_rows() > 0):
-                                    ?>
-                                <a href="#" id="btnExport" data-toggle="tooltip" data-placement="top"
-                                    data-original-title="<?= getPhrase('download');?>">
-                                    <button class="btn btn-info btn-sm btn-rounded">
-                                        <i class="picons-thin-icon-thin-0123_download_cloud_file_sync"
-                                            style="font-weight: 300; font-size: 25px;"></i>
-                                    </button>
-                                </a>
-                                <br/>
-                                <br/>
-                                <table class="table table-padded" id="dvData">
+                                if($student_query->num_rows() > 0):
+                                ?>
+                                <table class="table table-padded" id="dvData" style="width: 100%;">
                                     <thead>
                                         <tr>
                                             <th class="text-center"><?= getPhrase('first_name')?></th>
@@ -311,8 +329,7 @@
                                                     <i class="os-icon picons-thin-icon-thin-0151_plus_add_new"></i>
                                                 </a>
                                                 <a href="javascript:void(0);" class="grey" data-toggle="tooltip"
-                                                    data-placement="top"
-                                                    data-original-title="<?= getPhrase('edit');?>"
+                                                    data-placement="top" data-original-title="<?= getPhrase('edit');?>"
                                                     onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_admission_edit_applicant/<?=$row['applicant_id'];?>');">
                                                     <i
                                                         class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new"></i>
@@ -341,34 +358,19 @@
     </div>
 </div>
 <script type="text/javascript">
-    $('th').click(function () {
-        var table = $(this).parents('table').eq(0)
-        var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
-        this.asc = !this.asc
-        if (!this.asc) { rows = rows.reverse() }
-        for (var i = 0; i < rows.length; i++) { table.append(rows[i]) }
-    })
-    function comparer(index) {
-        return function (a, b) {
-            var valA = getCellValue(a, index), valB = getCellValue(b, index)
-            return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
-        }
-    }
-    function getCellValue(row, index) { return $(row).children('td').eq(index).text() }
-</script>
-<script>
-$("#btnExport").click(function(e) {
-    var reportName = '<?= getPhrase('applicants').'_'.date('d-m-Y');?>';
-    var a = document.createElement('a');
-    var data_type = 'data:application/vnd.ms-excel;charset=utf-8';
-    var table_html = $('#dvData')[0].outerHTML;
-    table_html = table_html.replace(/<tfoot[\s\S.]*tfoot>/gmi, '');
-    var css_html =
-        '<style>td {border: 0.5pt solid #c0c0c0} .tRight { text-align:right} .tLeft { text-align:left} </style>';
-    a.href = data_type + ',' + encodeURIComponent('<html><head>' + css_html + '</' + 'head><body>' +
-        table_html + '</body></html>');
-    a.download = reportName + '.xls';
-    a.click();
-    e.preventDefault();
-});
+    var table = $('#dvData').DataTable({
+    dom: 'Blifrtp',
+    scrollX: true,
+    lengthMenu: [
+        [10, 20, 50, -1],
+        [10, 20, 50, "All"]
+    ],
+    pageLength: 20,
+    buttons: [{
+        extend: 'excelHtml5',
+        text: '<i class="picons-thin-icon-thin-0123_download_cloud_file_sync" style="font-size: 20px;"></i>',
+        titleAttr: 'Export to Excel'
+    }]
+    });
+    $("select[name='dvData_length']" ).addClass('select-page');
 </script>

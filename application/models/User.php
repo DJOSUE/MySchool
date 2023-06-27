@@ -16,7 +16,7 @@ class User extends School
     
     public function getAccountantInfo()
     {
-        $info = $this->db->get_where('accountant', array('accountant_id' => $this->session->userdata('login_user_id')))->result_array();
+        $info = $this->db->get_where('accountant', array('accountant_id' => get_login_user_id()))->result_array();
         return $info;
     }
     
@@ -112,6 +112,10 @@ class User extends School
         $this->db->where('librarian_id', $librarianId);
         $this->db->update('librarian', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/librarian_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'librarian';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $librarianId, $data);
     }
     
     public function deleteLibrarian($librarianId)
@@ -120,6 +124,10 @@ class User extends School
         $this->db->where('librarian_id', $librarianId);
         $this->db->update('librarian', $data);
         // $this->db->delete('librarian');
+
+        $table      = 'librarian';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $librarianId, $data);
     }
     
     public function createAccountant()
@@ -171,6 +179,10 @@ class User extends School
         $this->db->where('accountant_id', $accountantId);
         $this->db->update('accountant', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/accountant_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'accountant';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $accountantId, $data);
     }
     
     public function deleteAccountant($accountantId)
@@ -179,6 +191,9 @@ class User extends School
         $this->db->where('accountant_id', $accountantId);
         $this->db->update('accountant', $data);
         // $this->db->delete('accountant');
+        $table      = 'accountant';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $accountantId, $data);
     }
     
     public function createAdmin()
@@ -240,6 +255,10 @@ class User extends School
         $this->db->where('admin_id', $adminId);
         $this->db->update('admin', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/admin_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'admin';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $adminId, $data);
     }
     
     public function deleteAdmin($adminId)
@@ -247,6 +266,10 @@ class User extends School
         $data['status']   = 0;
         $this->db->where('admin_id', $adminId);
         $this->db->update('admin', $data);
+
+        $table      = 'admin';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $adminId, $data);
     }
 
     public function acceptTeacher($teacherId)
@@ -325,6 +348,10 @@ class User extends School
         $this->db->where('teacher_id', $teacherId);
         $this->db->update('teacher', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/teacher_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'teacher';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $teacherId, $data);
     }
     
     public function deleteTeacher($teacherId)
@@ -333,6 +360,10 @@ class User extends School
         $this->db->where('teacher_id', $teacherId);
         $this->db->update('teacher', $data);
         // $this->db->delete('teacher');
+
+        $table      = 'teacher';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $teacherId, $data);
     }
     
     public function createParent()
@@ -388,6 +419,10 @@ class User extends School
         $this->db->where('parent_id' , $parentId);
         $this->db->update('parent' , $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/parent_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'parent';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $parentId, $data);
     }
     
     
@@ -424,6 +459,10 @@ class User extends School
         $this->db->where('parent_id' , $parentId);
         $this->db->update('parent', $data);
         // $this->db->delete('parent');
+
+        $table      = 'parent';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, $parentId, $data);
     }
     
     public function updateCurrentAdmin()
@@ -446,9 +485,13 @@ class User extends School
         if($this->input->post('password') != ""){
             $data['password'] = sha1($this->input->post('password'));   
         }
-        $this->db->where('admin_id', $this->session->userdata('login_user_id'));
+        $this->db->where('admin_id', get_login_user_id());
         $this->db->update('admin', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/admin_image/' . md5(date('d-m-y H:i:s')).str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'admin';
+        $action     = 'update';
+        $this->crud->save_log($table, $action, get_login_user_id(), $data);
     }
     
     public function removeGoogle()
@@ -459,11 +502,15 @@ class User extends School
         $data['g_picture'] = "";
         $data['link'] = "";
         $data['g_email'] = "";  
-        $this->db->where($this->session->userdata('login_type').'_id', $this->session->userdata('login_user_id'));
-        $this->db->update($this->session->userdata('login_type'), $data);
+        $this->db->where(get_account_type().'_id', get_login_user_id());
+        $this->db->update(get_account_type(), $data);
         unset($_SESSION['token']);
         unset($_SESSION['userData']);
         $this->crud->googleRevokeToken();
+
+        $table      = get_account_type();
+        $action     = 'update';
+        $this->crud->save_log($table, $action, get_login_user_id(), $data);
     }
     
     public function removeFacebook()
@@ -475,8 +522,12 @@ class User extends School
         $data['femail']     = "";
         unset($_SESSION['access_token']);
         unset($_SESSION['userData']);
-        $this->db->where($this->session->userdata('login_type').'_id', $this->session->userdata('login_user_id'));
-        $this->db->update($this->session->userdata('login_type'), $data);
+        $this->db->where(get_account_type().'_id', get_login_user_id());
+        $this->db->update(get_account_type(), $data);
+
+        $table      = get_account_type();
+        $action     = 'update';
+        $this->crud->save_log($table, $action, get_login_user_id(), $data);
     }
     
     public function rejectStudent($studentId)
@@ -504,7 +555,7 @@ class User extends School
         $bytes = random_bytes(20);
         $password_token = bin2hex($bytes);
 
-        $user_name  = $this->crud->get_name('admin', $this->session->userdata('login_user_id'));
+        $user_name  = $this->crud->get_name('admin', get_login_user_id());
 
         //Generate the student_code if is blank
 
@@ -537,19 +588,31 @@ class User extends School
         $data['password']          = sha1($this->input->post('password'));
         $data['password_token']    = $password_token;
         $data['address']           = $this->input->post('address');
+        
+        if(!empty($this->input->post('city')))
+            $data['city']          = html_escape($this->input->post('city'));
+
+        if(!empty($this->input->post('state')))
+            $data['state']         = html_escape($this->input->post('state'));
+
+        if(!empty($this->input->post('postal_code')))
+            $data['postal_code']   = html_escape($this->input->post('postal_code'));
+        
         $data['country_id']        = $this->input->post('country_id');
         $data['transport_id']      = $this->input->post('transport_id');
         $data['program_id']        = $this->input->post('program_id');
-        $data['created_by']        = $this->session->userdata('login_user_id');
+        $data['created_by']        = get_login_user_id();
 
         if($_FILES['userfile']['name'] != ''){
             $data['image']             = $md5.str_replace(' ', '', $_FILES['userfile']['name']);   
         }
 
-        if($this->input->post('account') != '1'){
+        if($this->input->post('account') != '1')
+        {
             $data['parent_id']        = $this->input->post('parent_id');    
         } 
-        else if($this->input->post('account') == '1'){
+        else if($this->input->post('account') == '1')
+        {
             $data3['first_name']      = $this->input->post('parent_first_name');
             $data3['last_name']       = $this->input->post('parent_last_name');
             $data3['gender']          = $this->input->post('parent_gender');
@@ -648,6 +711,7 @@ class User extends School
 
         $level          = $this->academic->get_class_name($this->input->post('class_id'));
         $section_name   = $this->academic->get_section_name($this->input->post('section_id'));
+        $modality       = $this->academic->get_modality_name($this->input->post('modality_id'));
 
         // Update the Applicant status
         if($applicant_id > 0)
@@ -655,13 +719,13 @@ class User extends School
             $this->applicant->update_status($applicant_id, 3);
 
             //Create a automatic interaction            
-            $_POST['comment']       = $user_name.' convert the applicant to student and registered in the '.$level.' level, '.$section_name.' schedule.';
+            $_POST['comment']       = $user_name.' convert the applicant to student and registered in the '.$level.' level, '.$section_name.' schedule, modality: '.$modality;
             $this->studentModel->add_interaction($student_id, 'automatic');
         }
         else
         {
             //Create a automatic interaction            
-            $_POST['comment']       = $user_name.' register this student and registered in the '.$level.' level, '.$section_name.' schedule.';
+            $_POST['comment']       = $user_name.' register this student and registered in the '.$level.' level, '.$section_name.' schedule, modality: '.$modality;
             $this->studentModel->add_interaction($student_id, 'automatic');
         }
 
@@ -759,6 +823,9 @@ class User extends School
     
     public function updateStudent($studentId)
     {
+
+        $student_info = $this->crud->get_student_info_by_id($studentId);
+
         $md5 = md5(date('d-m-Y H:i:s'));
         $data['first_name']      = $this->input->post('first_name');
         $data['last_name']       = $this->input->post('last_name');
@@ -788,12 +855,54 @@ class User extends School
         }
         $data['parent_id']         = $this->input->post('parent_id');
         $data['student_session']   = $this->input->post('student_session');
-        $data['updated_by']        = $this->session->userdata('login_user_id');
+        $data['updated_by']        = get_login_user_id();
+
+        if(!empty($this->input->post('city')))
+            $data['city']          = html_escape($this->input->post('city'));
+
+        if(!empty($this->input->post('state')))
+            $data['state']         = html_escape($this->input->post('state'));
+
+        if(!empty($this->input->post('postal_code')))
+            $data['postal_code']   = html_escape($this->input->post('postal_code'));
+            
+
+        if(!empty($this->input->post('financial')))
+            $data['financial']   = html_escape($this->input->post('financial'));
+
+        if(!empty($this->input->post('collection')))
+            $data['collection']   = html_escape($this->input->post('collection'));
+
 
         $this->db->where('student_id', $studentId);
         $this->db->update('student', $data);
+
+        $table      = 'student';
+        $action     = 'update';        
+        $this->crud->save_log($table, $action, $studentId, $data);
         
         move_uploaded_file($_FILES['userfile']['tmp_name'], PATH_STUDENT_IMAGE . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        // Create automate interaction
+        $dif = array_diff($student_info, $data);
+
+        if(count($dif) > 0)
+        {
+            // Create Interaction         
+            $user_id        = get_login_user_id();
+            $user_table     = get_table_user(get_role_id());
+            $user_name      = $this->crud->get_name($user_table, $user_id);
+            
+            $data_interaction['created_by']         = DEFAULT_USER;
+            $data_interaction['created_by_type']    = DEFAULT_TABLE;
+            $data_interaction['student_id']         = $studentId;
+            // $data_interaction['comment']            = $user_name." registered in the ". $level." level, ".$section_name.' schedule, modality: '.$modality;
+    
+            foreach ($dif as $key => $value) {
+                # code...
+            } 
+            $this->studentModel->add_interaction_data($data_interaction);
+        }
     }
     
     public function updateCurrentStudent()
@@ -811,14 +920,18 @@ class User extends School
         if($_FILES['userfile']['size'] > 0){
             $data['image']     = $md5.str_replace(' ', '', $_FILES['userfile']['name']);
         }
-        $this->db->where('student_id', $this->session->userdata('login_user_id'));
+        $this->db->where('student_id', get_login_user_id());
         $this->db->update('student', $data);
 
         move_uploaded_file($_FILES['userfile']['tmp_name'], PATH_STUDENT_IMAGE . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'student';
+        $action     = 'update';        
+        $this->crud->save_log($table, $action, get_login_user_id(), $data);
     }
 
     public function updateAvatar($table){
-        $user_id = $this->session->userdata('login_user_id');
+        $user_id = get_login_user_id();
         if(isset($_POST["image"]))
         {
             $md5        = md5(date('d-m-Y H:i:s'));
@@ -837,6 +950,9 @@ class User extends School
             $this->db->update($table, $data_update);
 
             file_put_contents($destination, $data);
+            
+            $action     = 'update';        
+            $this->crud->save_log($table, $action, $user_id, $data);
         }
     }
     
@@ -861,6 +977,10 @@ class User extends School
         $this->db->where('student_id', $studentId);
         $this->db->update('student', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], PATH_STUDENT_IMAGE . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'student';
+        $action     = 'update';        
+        $this->crud->save_log($table, $action, $studentId, $data);
     }
     
     public function downloadExcel()
@@ -922,9 +1042,13 @@ class User extends School
         if($_FILES['userfile']['name'] != ""){
             $data['image']    = $md5.str_replace(' ', '', $_FILES['userfile']['name']);
         }
-        $this->db->where('accountant_id', $this->session->userdata('login_user_id'));
+        $this->db->where('accountant_id', get_login_user_id());
         $this->db->update('accountant', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/accountant_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'accountant';
+        $action     = 'update';        
+        $this->crud->save_log($table, $action, get_login_user_id(), $data);
     }
     
     public function updateCurrentLibrarian()
@@ -940,9 +1064,13 @@ class User extends School
         if($_FILES['userfile']['name'] != ""){
             $data['image']    = $md5.str_replace(' ', '', $_FILES['userfile']['name']);
         }
-        $this->db->where('librarian_id', $this->session->userdata('login_user_id'));
+        $this->db->where('librarian_id', get_login_user_id());
         $this->db->update('librarian', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/librarian_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'librarian';
+        $action     = 'update';        
+        $this->crud->save_log($table, $action, get_login_user_id(), $data);
     }
     
     public function createPublicTeacherAccount()
@@ -1096,9 +1224,13 @@ class User extends School
         if($this->input->post('password') != ""){
          $data['password']      = sha1($this->input->post('password'));   
         }
-        $this->db->where('teacher_id', $this->session->userdata('login_user_id'));
+        $this->db->where('teacher_id', get_login_user_id());
         $this->db->update('teacher', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/teacher_image/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        $table      = 'teacher';
+        $action     = 'update';        
+        $this->crud->save_log($table, $action, get_login_user_id(), $data);
     }
 
     public function updatePasswordUser($table, $password, $user_id){
@@ -1112,13 +1244,16 @@ class User extends School
 
         $this->db->where($table.'_id', $user_id);
         $this->db->update($table, $data_update);
+        
+        $action     = 'update';        
+        $this->crud->save_log($table, $action, $user_id, $data_update);
     }
 
     function add_interaction()
     {
         $md5 = md5(date('d-m-Y H:i:s'));
 
-        $data['created_by'] = $this->session->userdata('login_user_id');
+        $data['created_by'] = get_login_user_id();
         $data['comment']    = html_escape($this->input->post('comment'));
 
         if($_FILES['applicant_file']['name'] != '')
@@ -1167,6 +1302,90 @@ class User extends School
         return $query;        
     }
 
+    function get_advisor_array()
+    {
+        $this->db->reset_query();
+        $this->db->select('admin_id, first_name, last_name');
+        $this->db->where('status', '1');
+        $this->db->where('owner_status', '3');
+        $this->db->order_by('first_name');
+        $query = $this->db->get('admin')->result_array();        
+
+        
+        $array = [];
+        foreach($query as $item)
+        {
+            array_push($array, $item['admin_id']);
+        }
+
+        return $array;
+    }
+
+    function get_accounters()
+    {
+        $this->db->reset_query();
+        $this->db->select('accountant_id, first_name, last_name');
+        $this->db->where('status', '1');
+        $this->db->order_by('first_name');
+        $query = $this->db->get('accountant')->result_array();        
+        return $query;        
+    }
+
+    function get_legal_office()
+    {
+        $this->db->reset_query();
+        $this->db->select('admin_id, first_name, last_name');
+        $this->db->where('status', '1');
+        $this->db->where('owner_status', '8');
+        $this->db->order_by('first_name');
+        $query = $this->db->get('admin')->result_array();        
+        return $query;
+    }
+
+    function get_cashiers($user_id = "", $user_type = "")
+    {
+        // $user['user_id'] == $row['assigned_to'] ? 'selected': '';
+
+        $assigned_to = $user_type.'|'.$user_id;
+        
+        $this->db->reset_query();
+        $this->db->select("admin_id as user_id, 'admin' as user_type, first_name, last_name");
+        $this->db->where('status', '1');
+        $this->db->where_in('owner_status', array('3', '8'));        
+        $this->db->order_by('first_name', 'ASC');
+        $advisors = $this->db->get('admin')->result_array();
+
+        $dropbox = '<optgroup label="'.getPhrase('advisors').'">';
+        foreach($advisors as $item)
+        {
+            $value = $item['user_type'].'|'.$item['user_id'];
+            $name  = $item['first_name'].' '.$item['last_name'];
+            $selected = $assigned_to == $value ? 'selected' : '';
+
+            $dropbox .= '<option value="'.$value.'" '.$selected.'>'.$name.'</option>';            
+        }
+        
+        $this->db->reset_query();
+        $this->db->select("accountant_id as user_id, 'accountant' as user_type, first_name, last_name");
+        $this->db->where('status', '1');
+        $this->db->where_in('role_id', array('4', '14', '15'));
+        $this->db->order_by('first_name', 'ASC');
+        $finances  = $this->db->get('accountant')->result_array();
+
+        $dropbox .= '<optgroup label="'.getPhrase('finances').'">';
+        foreach($finances as $item)
+        {
+            $value = $item['user_type'].'|'.$item['user_id'];
+            $name  = $item['first_name'].' '.$item['last_name'];
+            $selected = $assigned_to == $value ? 'selected' : '';
+            
+            $dropbox .= '<option value="'.$value.'" '.$selected.'>'.$name.'</option>'; 
+        }
+        
+        return $dropbox;
+        
+    }
+
     function get_teachers()
     {
         $this->db->reset_query();
@@ -1192,32 +1411,19 @@ class User extends School
         return $students;  
     }
 
-    function get_accounters()
-    {
-        $this->db->reset_query();
-        $this->db->select('accountant_id, first_name, last_name');
-        $this->db->where('status', '1');
-        $this->db->order_by('first_name');
-        $query = $this->db->get('accountant')->result_array();        
-        return $query;        
-    }
-
-    function get_cashiers()
-    {
-        
-    }
-
-    public function download_Excel_birthdays($month = 1)
+    public function download_Excel_birthdays($month = 0)
     {        
         $objPHPExcel = new PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
         $objPHPExcel->getActiveSheet()->setCellValue('A1', getPhrase('name'));
         $objPHPExcel->getActiveSheet()->setCellValue('B1', getPhrase('birthday'));
         $objPHPExcel->getActiveSheet()->setCellValue('C1', getPhrase('type'));
-        $objPHPExcel->getActiveSheet()->setCellValue('D1', getPhrase('class'));
-        $objPHPExcel->getActiveSheet()->setCellValue('E1', getPhrase('schedule'));
+        $objPHPExcel->getActiveSheet()->setCellValue('D1', getPhrase('class'));   
+        $objPHPExcel->getActiveSheet()->setCellValue('E1', getPhrase('modality'));     
+        $objPHPExcel->getActiveSheet()->setCellValue('F1', getPhrase('schedule'));
+        $objPHPExcel->getActiveSheet()->setCellValue('G1', getPhrase('teacher'));
 
-        $a = 2; $b =2; $c =2; $d =2; $e =2;
+        $a = 2; $b =2; $c =2; $d =2; $e =2; $f =2; $g =2;
 
         $array_users = array();
 
@@ -1226,53 +1432,63 @@ class User extends School
         $this->db->reset_query();
         $this->db->select("admin_id as user_id, 'office' as type_user, first_name, last_name, birthday");
         $this->db->where('status', 1);
+        if($month != 0)
+            $this->db->where('MONTH(birthday)', $month);
         $query_admin = $this->db->get('admin')->result_array();
         
         $this->db->reset_query();
         $this->db->select("teacher_id as user_id, 'teacher' as type_user, first_name, last_name, birthday");
         $this->db->where('status', 1);
+        if($month != 0)
+            $this->db->where('MONTH(birthday)', $month);
         $query_teacher = $this->db->get('teacher')->result_array();
         
         $this->db->reset_query();
         $this->db->select("accountant_id as user_id, 'office' as type_user, first_name, last_name, birthday");
         $this->db->where('status', 1);
+        if($month != 0)
+            $this->db->where('MONTH(birthday)', $month);
         $query_accountant = $this->db->get('accountant')->result_array();
 
         $this->db->reset_query();
         $this->db->select("student_id as user_id, 'student' as type_user, first_name, last_name, birthday");
         $this->db->where('student_session', 1);
+        if($month != 0)
+            $this->db->where('MONTH(birthday)', $month);
         $query_student = $this->db->get('student')->result_array();
                 
         foreach($query_admin as $item)
         {
-            $name           = $item['first_name'] .' '. $item['first_name'];
-            $array_admin    = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => '', 'schedule' => '');
+            $name           = $item['first_name'] .' '. $item['last_name'];
+            $array_admin    = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => '', 'modality' => '', 'schedule' => '', 'teacher' => '');
             array_push($array_users, $array_admin);
         }
 
         foreach($query_teacher as $item)
         {
-            $name       = $item['first_name'] .' '. $item['first_name'];
-            $array_item = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => '', 'schedule' => '');
+            $name       = $item['first_name'] .' '. $item['last_name'];
+            $array_item = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => '', 'modality' => '', 'schedule' => '', 'teacher' => '');
             array_push($array_users, $array_item);
         }
 
         foreach($query_accountant as $item)
         {
-            $name       = $item['first_name'] .' '. $item['first_name'];
-            $array_item = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => '', 'schedule' => '');
+            $name       = $item['first_name'] .' '. $item['last_name'];
+            $array_item = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => '', 'modality' => '', 'schedule' => '', 'teacher' => '');
             array_push($array_users, $array_item);
         }
 
         foreach($query_student as $item)
         {
-            $name       = $item['first_name'] .' '. $item['first_name'];
+            $name       = $item['first_name'] .' '. $item['last_name'];
             $enrolment  = $this->academic->get_student_enrollment($item['user_id']);
             $class      = $enrolment[0]['class_name'];
+            $modality   = $enrolment[0]['modality_name'];
             $schedule   = $enrolment[0]['section_name'];
+            $teacher    = $enrolment[0]['teacher_name'];
             if($schedule !=  '')
             {
-                $array_item = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => $class, 'schedule' => $schedule);
+                $array_item = array('name' => $name, 'user_id' => $item['user_id'], 'type_user' => $item['type_user'], 'birthday' => $item['birthday'], 'class' => $class, 'modality' => $modality, 'schedule' => $schedule, 'teacher' => $teacher);
                 array_push($array_users, $array_item);
             }
         }
@@ -1283,7 +1499,9 @@ class User extends School
             $objPHPExcel->getActiveSheet()->setCellValue('B'.$b++, $row['birthday']);
             $objPHPExcel->getActiveSheet()->setCellValue('C'.$c++, $row['type_user']);
             $objPHPExcel->getActiveSheet()->setCellValue('D'.$d++, $row['class']);
-            $objPHPExcel->getActiveSheet()->setCellValue('E'.$e++, $row['schedule']);            
+            $objPHPExcel->getActiveSheet()->setCellValue('E'.$e++, $row['modality']);
+            $objPHPExcel->getActiveSheet()->setCellValue('F'.$f++, $row['schedule']);
+            $objPHPExcel->getActiveSheet()->setCellValue('G'.$g++, $row['teacher']);   
         }
         $objPHPExcel->getActiveSheet()->setTitle(getPhrase('students'));
     
@@ -1301,3 +1519,4 @@ class User extends School
         $objWriter->save('php://output');        
     }
 }
+

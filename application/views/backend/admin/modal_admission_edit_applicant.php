@@ -1,6 +1,13 @@
 <?php 
     $edit_data		=	$this->db->get_where('v_applicants' , array('applicant_id' => $param2) )->result_array();
     foreach ($edit_data as $row):
+
+        $css_assigned_to = "";
+        $allow_re_assigned = has_permission('re_assigned_applicant');
+        if(!$allow_re_assigned)
+        {
+            $css_assigned_to = 'style="display:none"';
+        }
 ?>
 <div class="modal-body">
     <div class="modal-header" style="background-color:#00579c">
@@ -12,19 +19,20 @@
         </span>
         <?php echo form_open(base_url() . 'admin/applicant/update/'.$row['applicant_id'] , array('enctype' => 'multipart/form-data'));?>
         <input type="hidden" name="applicant_id" value="<?= $row['applicant_id']?>">
-        <div class="form-group row">
+        <div class="form-group row" <?=$css_assigned_to?>>
             <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('assigned_to');?></label>
             <div class="col-sm-6">
                 <div class="input-group">
                     <div class="select">
-                        <select name="assigned_to" style="width: 150px;">
+                        <select name="assigned_to" style="width: 300px;">
                             <option value=""><?= getPhrase('select');?></option>
-                            <?php $advisors = $this->db->get_where('admin', array('status' => 1, 'owner_status' => '3'))->result_array();
+                            <?php $advisors = $this->user->get_advisor();
+                            //db->get_where('admin', array('status' => 1, 'owner_status' => '3'))->result_array();
                             foreach($advisors as $advisor):
                             ?>
                             <option value="<?= $advisor['admin_id']?>"
                                 <?= $advisor['admin_id'] == $row['assigned_to'] ? 'selected': ''; ?>>
-                                <?= $advisor['first_name']?>
+                                <?= $advisor['first_name'] .' '. $advisor['last_name']?>
                             </option>
                             <?php endforeach;?>
                         </select>
@@ -32,7 +40,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" >
             <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('status');?></label>
             <div class="col-sm-6">
                 <div class="input-group">

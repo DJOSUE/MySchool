@@ -1,5 +1,5 @@
 <?php 
-    $reports = $this->db->get_where('student_report', array('student_id' => $this->session->userdata('login_user_id'), 'report_code' => $code))->result_array();
+    $reports = $this->db->get_where('student_report', array('student_id' => get_login_user_id(), 'report_code' => $code))->result_array();
     foreach($reports as $row):
 ?>
     <div class="content-w">

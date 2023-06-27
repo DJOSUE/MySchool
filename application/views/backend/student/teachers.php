@@ -2,7 +2,7 @@
     $running_year = $this->crud->getInfo('running_year');
     $running_semester = $this->crud->getInfo('running_semester');
 
-    $student_id     = $this->session->userdata('login_user_id');
+    $student_id     = get_login_user_id();
     $class_id       = $this->db->get_where('enroll', array('student_id' => $student_id, 'year' => $running_year, 'semester_id' => $running_semester))->row()->class_id;
     $section_id     = $this->db->get_where('enroll', array('student_id' => $student_id,  'year' => $running_year, 'semester_id' => $running_semester))->row()->section_id;
 ?>

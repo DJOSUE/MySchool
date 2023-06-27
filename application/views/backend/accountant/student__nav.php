@@ -45,6 +45,14 @@
                                     <?= getPhrase('update_information');?>
                                 </a>
                             </li>
+                            <li <?= $page_name == 'student_agreements' ? 'class="menu-left-selected-icon"' : ''?>>
+                                <i class="picons-thin-icon-thin-0133_arrow_right_next"
+                                    style="font-size:20px;"></i> &nbsp;&nbsp;&nbsp;
+                                <a
+                                    href="<?= base_url();?>accountant/student_agreements/<?= $student_id;?>/">
+                                    <?= getPhrase('student_agreements');?>
+                                </a>
+                            </li>
                             <li <?= $page_name == 'student_grades' ? 'class="menu-left-selected-icon"' : ''?>>
                                 <i class="picons-thin-icon-thin-0133_arrow_right_next"
                                     style="font-size:20px"></i> &nbsp;&nbsp;&nbsp;

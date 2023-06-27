@@ -27,7 +27,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                <?php $reports = $this->db->get_where('student_report', array('student_id' => $this->session->userdata('login_user_id')))->result_array();
+                                                <?php $reports = $this->db->get_where('student_report', array('student_id' => get_login_user_id()))->result_array();
 			                                        foreach($reports as $row):
 			                                    ?>
                                                     <tr>

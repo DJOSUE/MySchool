@@ -9,7 +9,7 @@
         <div class="chat-content-w mCustomScrollbar">
             <div class="chat-content">
                 <?php
-                    $current_user = $this->session->userdata('login_type') . '-' . $this->session->userdata('login_user_id');
+                    $current_user = get_account_type() . '-' . get_login_user_id();
                     $messages = $this->db->get_where('group_message', array('group_message_thread_code' => $current_message_thread_code))->result_array();
                     foreach ($messages as $row):
                     $sender = explode('-', $row['sender']);

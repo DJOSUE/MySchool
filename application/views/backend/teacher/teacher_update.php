@@ -1,6 +1,6 @@
 <?php 
 	$social_login = $this->crud->getInfo('social_login');
-    $teacher_id = $this->session->userdata('login_user_id');
+    $teacher_id = get_login_user_id();
     $info = $this->db->get_where('teacher', array('teacher_id' => $teacher_id))->result_array();
     foreach($info as $row):
 ?>

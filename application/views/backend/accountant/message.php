@@ -22,7 +22,7 @@
           				    <div class="tab-pane active" id="chats">
                         		<div class="user-list">
                     		    <?php 
-                    		        $current_user = $this->session->userdata('login_type') . '-' . $this->session->userdata('login_user_id');
+                    		        $current_user = get_account_type() . '-' . get_login_user_id();
                           		    $message_threads = $this->crud->getChat();
                           		    foreach ($message_threads as $row):
                             	    if ($row['sender'] == $current_user)

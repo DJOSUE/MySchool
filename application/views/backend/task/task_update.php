@@ -5,7 +5,7 @@
     $tasks = $task_query->result_array();
 
     $fancy_path         =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/'.$account_type.'/';
-    $account_type       =   get_table_user($this->session->userdata('role_id'));
+    $account_type       =   get_table_user(get_role_id());
     $userList = $this->task->get_user_list();
 ?>
 <div class="content-w">

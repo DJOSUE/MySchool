@@ -69,12 +69,12 @@
                                                                                 $this->db->select_sum('amount');
                                                                                 $this->db->where('year' , $running_year);
                                                                                 $this->db->where('semester_id', $running_semester);
-                                                                                $payments = $this->db->get('invoice')->row(); 
+                                                                                $payments = $this->db->get('agreement_amortization')->row(); 
                                                                                 echo number_format($payments->amount, 2);?>
                                                                             </h1>
                                                                             <div class="author-content">
                                                                                 <div class="country"><b>
-                                                                                        <?= getPhrase('total_expense');?></b>
+                                                                                        <?= getPhrase('total_due');?></b>
                                                                                 </div>
                                                                             </div>
                                                                         </div>

@@ -2,13 +2,11 @@
     $status_info = $this->studentModel->get_status_info($row['student_session']);
     $program_info = $this->studentModel->get_program_info($row['program_id']);
 ?>
-<div class="up-head-w"
-    style="background-image:url(<?= base_url();?>public/uploads/bglogin.jpg)">
+<div class="up-head-w" style="background-image:url(<?= base_url();?>public/uploads/bglogin.jpg)">
     <div class="up-main-info">
         <div class="user-avatar-w">
             <div class="user-avatar">
-                <img alt=""
-                    src="<?= $this->crud->get_image_url('student', $row['student_id']);?>"
+                <img alt="" src="<?= $this->crud->get_image_url('student', $row['student_id']);?>"
                     style="background-color:#fff;">
             </div>
         </div>
@@ -16,10 +14,8 @@
             <?= $row['last_name'];?></h3>
         <h5 class="up-sub-header">@<?= $row['username'];?></h5>
     </div>
-    <svg class="decor" width="842px" height="219px" viewBox="0 0 842 219"
-        preserveAspectRatio="xMaxYMax meet" version="1.1"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink">
+    <svg class="decor" width="842px" height="219px" viewBox="0 0 842 219" preserveAspectRatio="xMaxYMax meet"
+        version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <g transform="translate(-381.000000, -362.000000)" fill="#FFFFFF">
             <path class="decor-path"
                 d="M1223,362 L1223,581 L381,581 C868.912802,575.666667 1149.57947,502.666667 1223,362 Z">
@@ -32,7 +28,8 @@
         <div class="col-lg-6">
             <div class="value-pair">
                 <div><?= getPhrase('status');?>:</div>
-                <div class="value badge-status badge-pill badge-primary" style="background-color: <?=$status_info['color']?>;">
+                <div class="value badge-status badge-pill badge-primary"
+                    style="background-color: <?=$status_info['color']?>;">
                     <?= $status_info['name'];?>
                 </div>
             </div>
@@ -52,6 +49,29 @@
                     <?= $row['student_code']?>.
                 </div>
             </div>
+        </div>
+        <div class="col-lg-6">
+            <?php 
+            $financial = $this->studentModel->get_student_financial_profile($row['student_id']);
+            $collection = $this->studentModel->get_student_collection_profile($row['student_id']);
+            ?>
+            <?php if($financial != ''):?>
+            <div class="value-pair">
+                <div><?= getPhrase('financial_categorization');?>:</div>
+                <div class="value">
+                    <img class="nav-icon" src="/public/uploads/icons/<?=$financial;?>.png">
+                </div>          
+            </div>
+            <?php endif;?>
+            <?php if($collection):?>
+            <div class="value-pair">
+                <div><?= getPhrase('collection_profile');?>:</div>
+                <div class="value badge-status badge-pill badge-primary"
+                    style="background-color: <?=$collection['color']?>;">
+                    <?= $collection['name'];?>
+                </div>       
+            </div>
+            <?php endif;?>
         </div>
     </div>
 </div>

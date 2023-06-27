@@ -3,6 +3,7 @@
     foreach($student_info as $row): 
         $status_info = $this->studentModel->get_status_info($row['student_session']);
         $program_info = $this->studentModel->get_program_info($row['program_id']);
+        $collection_profiles = $this->studentModel->get_collection_profiles();
 ?>
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -88,7 +89,7 @@
                                                 <label
                                                     class="control-label"><?= getPhrase('country_of_birth');?></label>
                                                 <div class="select">
-                                                    <select name="country_id" required="">
+                                                    <select name="country_id">
                                                         <option value=""><?= getPhrase('select');?></option>
                                                         <?php
                                                         $countries = $this->db->get('countries')->result_array();
@@ -268,6 +269,45 @@
                                             <div class="form-group">
                                                 <label class="control-label"><?= getPhrase('photo');?></label>
                                                 <input class="form-control" placeholder="" name="userfile" type="file">
+                                            </div>
+                                        </div>
+                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label"><?= getPhrase('financial_categorization');?></label>
+                                                <br />
+                                                <label>
+                                                    <input type="radio" name="financial" value="green"
+                                                        <?= $row['financial'] == 'green' ? 'checked' : '';?> />
+                                                    <span>Green</span>
+                                                </label> &nbsp; &nbsp;
+                                                <label>
+                                                    <input type="radio" name="financial" value="yellow"
+                                                        <?= $row['financial'] == 'yellow' ? 'checked' : '';?> />
+                                                    <span>Yellow</span>
+                                                </label> &nbsp; &nbsp;
+                                                <label>
+                                                    <input type="radio" name="financial" value="red"
+                                                        <?= $row['financial'] == 'red' ? 'checked' : '';?> />
+                                                    <span>Red</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label"><?= getPhrase('collection_profile');?></label>
+                                                <br />
+                                                <?php foreach($collection_profiles as $item):?>
+                                                <label>
+                                                    <input type="radio" name="collection"
+                                                        value="<?= $item['collection_id']?>"
+                                                        <?= $item['collection_id'] == $row['collection'] ? 'checked' : '';?> />
+                                                    <span>
+                                                        <?=$item['name'];?>
+                                                    </span>
+                                                </label> &nbsp; &nbsp; &nbsp; &nbsp;
+                                                <?php endforeach;?>
                                             </div>
                                         </div>
                                         <div class="col col-lg-12 col-md-12 col-sm-12 col-12">

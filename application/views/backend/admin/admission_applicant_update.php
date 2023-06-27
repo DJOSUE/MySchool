@@ -1,12 +1,19 @@
 <?php 
-    $user_id = $this->session->userdata('login_user_id');
+    $user_id = get_login_user_id();
     $applicant_info = $this->db->get_where('applicant' , array('applicant_id' => $applicant_id))->result_array(); 
     $allow_actions = is_student($applicant_id);
     foreach($applicant_info as $row): 
         $tags_applicant = json_decode($row['tags'], true)['tags_id'];
         $status_info = $this->applicant->get_applicant_status_info($row['status']);
         $type_info = $this->applicant->get_type_info($row['type_id']);
-        $birthday = date('m/d/Y', strtotime($row['birthday']));
+        $birthday = date('Y-m-d', strtotime($row['birthday']));
+
+        $css_assigned_to = "";
+        $allow_re_assigned = has_permission('re_assigned_applicant');
+        if(!$allow_re_assigned)
+        {
+            $css_assigned_to = 'style="display:none"';
+        }
         
 ?>
 <div class="content-w">
@@ -52,7 +59,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12" <?=$css_assigned_to;?>>
                                                         <div class="form-group label-floating is-select" style="border-color: #000 !important;">
                                                             <label class="control-label"><?= getPhrase('assigned_to');?></label>
                                                             <div class="select">
@@ -142,11 +149,33 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12"></div>
                                                     <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                         <div class="form-group label-floating">
                                                             <label class="control-label"><?= getPhrase('address');?></label>
                                                             <input class="form-control" name="address"
                                                                 value="<?= $row['address'];?>" type="text">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class="form-group label-floating">
+                                                            <label class="control-label"><?= getPhrase('city');?></label>
+                                                            <input class="form-control" name="city"
+                                                                value="<?= $row['city'];?>" type="text">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class="form-group label-floating">
+                                                            <label class="control-label"><?= getPhrase('state');?></label>
+                                                            <input class="form-control" name="state"
+                                                                value="<?= $row['state'];?>" type="text">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <div class="form-group label-floating">
+                                                            <label class="control-label"><?= getPhrase('postal_code');?></label>
+                                                            <input class="form-control" name="postal_code"
+                                                                value="<?= $row['postal_code'];?>" type="text">
                                                         </div>
                                                     </div>
                                                 </div>

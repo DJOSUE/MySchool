@@ -1,7 +1,7 @@
 <?php 
     $system_name        =	$this->crud->getInfo('system_name');
 	$system_title       =	$this->crud->getInfo('system_title');
-    $account_type       =   $this->session->userdata('login_type'); 
+    $account_type       =   get_account_type(); 
     $path_files         =   $_SERVER['DOCUMENT_ROOT']."/application/views/backend/";
     $path_navigation    =   $path_files.$account_type."/navigation.php";
     $path_fancy         =   $path_files.$account_type."/fancy.php";

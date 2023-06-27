@@ -1,6 +1,27 @@
-<?php if($page_name == 'calendar'):?>
+    <?php if($page_name == 'calendar'):?>
         <script src='<?php echo base_url();?>public/style/fullcalendar/lib/main.js'></script>
     <?php endif;?>
+    <script>
+        $('.currency').keyup(function() {
+            var val = $(this).val();
+            if (isNaN(val)) {
+                val = val.replace(/[^0-9\.]/g, '');
+                if (val.split('.').length > 2)
+                    val = val.replace(/\.+$/, "");
+            }
+            $(this).val(val);
+        });
+
+        $('.only-numbers').keyup(function() {
+            var val = $(this).val();
+            if (isNaN(val)) {
+                val = val.replace(/[^0-9\.]/g, '');
+                if (val.split('.').length > 2)
+                    val = val.replace(/\.+$/, "");
+            }
+            $(this).val(val);
+        });
+    </script>
     <script src="<?php echo base_url();?>public/style/js/picker.js"></script>
     <script src="<?php echo base_url();?>public/style/js/picker.en.js"></script>
     <script src="<?php echo base_url();?>public/style/cms/bower_components/bootstrap-clockpicker/bootstrap-clockpicker.min.js"></script>

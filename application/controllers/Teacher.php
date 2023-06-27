@@ -93,7 +93,7 @@ class Teacher extends EduAppGT
     //Index function.
     public function index()
     {
-        if($this->session->userdata('teacher_login') != 1) 
+        if(get_teacher_login() != 1) 
         {
             redirect(base_url(), 'refresh');
         }else{
@@ -383,7 +383,7 @@ class Teacher extends EduAppGT
         $subject = $this->db->get_where('subject' , array('class_id' => $class_id))->result_array();
         foreach ($subject as $row) 
         {
-            if ($this->session->userdata('login_user_id') == $row['teacher_id'])
+            if (get_login_user_id() == $row['teacher_id'])
             {
             echo '<option value="' . $row['subject_id'] . '">' . $row['name'] . '</option>';
             }
@@ -404,7 +404,7 @@ class Teacher extends EduAppGT
     {
         $this->isTeacher();
         $id = $this->input->post('class_id');
-        $teacher_id = $this->session->userdata('login_user_id');
+        $teacher_id = get_login_user_id();
 
         if ($id == '')
         {
@@ -434,7 +434,7 @@ class Teacher extends EduAppGT
             $page = $this->academic->getClassCurrentUnit($ex[0]);
         }
         
-        $this->academic->uploadMarks($datainfo, $page);
+        // $this->academic->uploadMarks($datainfo, $page);
 
         if($this->useDailyMarks){
             $page_data['unit_id'] = $page;
@@ -540,14 +540,28 @@ class Teacher extends EduAppGT
     //Marks update function.
     function marks_update($unit_id = '' , $class_id = '' , $section_id = '' , $subject_id = '', $date = '')
     {
+
+        // echo '<pre>';
+        // var_dump($_POST['daily_mark_student']);
+        // echo '</pre>';
+
         $this->isTeacher();
         if($this->useDailyMarks)
-            $info = $this->academic->updateDailyMarks($unit_id, $class_id, $section_id, $subject_id, $date);
+            $info = $this->academic->updateCreateDailyMarks($unit_id, $class_id, $section_id, $subject_id, $date);
         else
             $info = $this->academic->updateMarks($unit_id, $class_id, $section_id, $subject_id);
 
         $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-        redirect(base_url().'teacher/subject_upload_marks/'.$info.'/'.$unit_id.'/' , 'refresh');
+
+        if($unit_id > 0)
+        {
+            redirect(base_url().'teacher/subject_upload_marks/'.$info.'/'.$unit_id.'/' , 'refresh');
+        }
+        else
+        {
+            redirect(base_url().'teacher/subject_upload_marks/'.$info.'/' , 'refresh');
+        }
+        
     }
     
     //Subject marks function.
@@ -1257,7 +1271,7 @@ class Teacher extends EduAppGT
     //Check teacher session function.
     function isTeacher()
     {
-        if ($this->session->userdata('teacher_login') != 1) 
+        if (get_teacher_login() != 1) 
         {
             redirect(base_url(), 'refresh');
         }
@@ -1333,7 +1347,7 @@ class Teacher extends EduAppGT
     // Time Sheet
     function time_sheet( $param1 = '', $param2 = '' ) {
 
-        if ( $this->session->userdata( 'teacher_login' ) != 1 ) {
+        if ( get_teacher_login() != 1 ) {
             redirect( base_url(), 'refresh' );
         }
 

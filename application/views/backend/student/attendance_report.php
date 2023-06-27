@@ -152,17 +152,17 @@
                                                 <tbody>
                                                     <tr>
                                                         <td><img alt=""
-                                                                src="<?php echo $this->crud->get_image_url($this->session->userdata('login_type'), $this->session->userdata('login_user_id'));?>"
+                                                                src="<?php echo $this->crud->get_image_url(get_account_type(), get_login_user_id());?>"
                                                                 width="20px"
                                                                 style="border-radius:20px;margin-right:5px;">
-                                                            <?php echo $this->crud->get_name('student', $this->session->userdata('login_user_id')); ?>
+                                                            <?php echo $this->crud->get_name('student', get_login_user_id()); ?>
                                                         </td>
                                                         <?php
                                                             $status = 0;
                                                             for ($i = 1; $i <= $days; $i++) {
                                                             $timestamp = strtotime($i . '-' . $month . '-' . $year);
                                                             $this->db->group_by('timestamp');
-                                                            $attendance = $this->db->get_where('attendance', array('section_id' => $ex[1], 'class_id' => $ex[0], 'subject_id' => $ex[2], 'year' => $year, 'timestamp' => $timestamp, 'student_id' => $this->session->userdata('login_user_id')))->result_array();
+                                                            $attendance = $this->db->get_where('attendance', array('section_id' => $ex[1], 'class_id' => $ex[0], 'subject_id' => $ex[2], 'year' => $year, 'timestamp' => $timestamp, 'student_id' => get_login_user_id()))->result_array();
                                                             foreach ($attendance as $row1): $month_dummy = date('d', $row1['timestamp']);
                                                             if ($i == $month_dummy) $status = $row1['status'];
                                                             endforeach; ?>

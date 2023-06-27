@@ -22,7 +22,7 @@
           				        <div class="tab-pane active" id="chats">
                     		        <div class="user-list">
                     		        <?php 
-                     			        $current_user = $this->session->userdata('login_type') . '-' . $this->session->userdata('login_user_id');
+                     			        $current_user = get_account_type() . '-' . get_login_user_id();
                           		        $this->db->where('sender', $current_user);
                           		        $this->db->or_where('reciever', $current_user);
                           		        $message_threads = $this->db->get('message_thread')->result_array();

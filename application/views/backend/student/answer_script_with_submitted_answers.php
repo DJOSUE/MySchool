@@ -6,7 +6,7 @@
     $questions = $this->db->get_where('question_bank', array('online_exam_id' => $param2))->result_array();
     $answers = "answers";
     $total_marks = 0;
-    $submitted_answer_script_details = $this->db->get_where('online_exam_result', array('online_exam_id' => $param2, 'student_id' => $this->session->userdata('login_user_id')))->row_array();
+    $submitted_answer_script_details = $this->db->get_where('online_exam_result', array('online_exam_id' => $param2, 'student_id' => get_login_user_id()))->row_array();
     $submitted_answer_script = json_decode($submitted_answer_script_details['answer_script'], true);
     foreach ($questions as $question)
     $total_marks += $question['mark'];

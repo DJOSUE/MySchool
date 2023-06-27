@@ -1,0 +1,47 @@
+
+.image {
+    background-image: url('/public/style/print/images/cc_3.png');
+    background-repeat: round;
+    height: 804px;
+    
+}
+
+.s1 {
+    color: #213366;
+    font-family: "Pinyon Script", serif;
+    font-style: italic;
+    font-weight: normal;
+    text-decoration: none;
+    font-size: 40pt;
+    text-align: center;
+}
+
+.s2 {
+    color: #213366;
+    font-family: "Pinyon Script", serif;
+    font-style: italic;
+    font-weight: normal;
+    text-decoration: none;
+    font-size: 60pt;
+    text-align: center;
+}
+
+h1 {
+    color: #C00;
+    font-family: "Montserrat Black";
+    font-style: normal;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 14pt;
+}
+
+p {
+    color: #999;
+    font-family: "Montserrat SemiBold";
+    font-style: normal;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 16pt;
+    margin: 0pt;
+}
+

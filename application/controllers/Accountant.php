@@ -373,7 +373,7 @@ class Accountant extends EduAppGT
     //Check session function.
     function isAccountant()
     {
-        if ($this->session->userdata('accountant_login') != 1)
+        if (get_accountant_login() != 1)
         {
             redirect(site_url('login'), 'refresh');
         }
@@ -419,7 +419,7 @@ class Accountant extends EduAppGT
             $this->session->set_flashdata('flash_message', getPhrase('successfully_updated'));
         }
 
-        redirect(base_url().'admin/time_card/', 'refresh');
+        redirect(base_url().'accountant/time_card/', 'refresh');
     }
 
     // Time Sheet
@@ -455,11 +455,14 @@ class Accountant extends EduAppGT
 
         $this->payment->create_payment($user_id, $user_type);
 
+        $this->session->set_flashdata('flash_message', getPhrase('successfully_added'));
+        
         $page_data['student_id'] =  $user_id;
         $page_data['page_name']  = 'student_payments';
         $page_data['page_title'] =  getPhrase('student_payments');
+
+        redirect(base_url().'accountant/student_payments/'.$user_id, 'refresh');        
         
-        $this->load->view('backend/index', $page_data);
     }
 
     function payment_invoice($payment_id)
@@ -479,11 +482,25 @@ class Accountant extends EduAppGT
     
     function student($param1 = '', $param2 = '', $param3 = '')
     {
-        if ($param1 == 'do_update') 
-        {
-            $this->user->updateStudent($param2);
-            $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
-            redirect(base_url() . 'accountant/student_profile/'. $param2.'/', 'refresh');
+        switch ($param1) {
+            case 'do_update':
+                $this->user->updateStudent($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_updated'));
+                redirect(base_url() . 'accountant/student_profile/'. $param2.'/', 'refresh');
+                break;
+            case 'agreement':
+                $agreement_id = $this->agreement->create_agreement_accountant($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_created'));
+                redirect(base_url() . 'accountant/student_agreements/'. $param2.'/', 'refresh');
+                break;
+            case 'delete_agreement':
+                $agreement_id = $this->agreement->delete_agreement($param2);
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                redirect(base_url() . 'accountant/student_agreements/'. $param3.'/', 'refresh');
+                break;
+            default:
+                # code...
+                break;
         }
     }
 
@@ -508,6 +525,56 @@ class Accountant extends EduAppGT
         $this->load->view('backend/index', $page_data);
     }
             
+    //Student Enrollments function.
+    function student_agreements($student_id, $param1='') 
+    {
+        $this->isAccountant();           
+        $page_data['page_name']  = 'student_agreements';
+        $page_data['page_title'] =  getPhrase('student_agreements');
+        $page_data['student_id'] =  $student_id;
+        // $page_data['class_id']   =  $class_id;
+        $this->load->view('backend/index', $page_data);
+    }
+
+    //Student Enrollments function.
+    function student_new_agreement($student_id, $param1='') 
+    {
+        $this->isAccountant();           
+        $page_data['page_name']  = 'student_new_agreement';
+        $page_data['page_title'] =  getPhrase('student_new_agreement');
+        $page_data['student_id'] =  $student_id;
+        // $page_data['class_id']   =  $class_id;
+        $this->load->view('backend/index', $page_data);
+    }
+
+    function student_agreement_addendum($agreement_id, $student_id)
+    {
+        $this->isAccountant();           
+        $page_data['page_name']  = 'student_agreement_addendum';
+        $page_data['page_title'] =  getPhrase('agreement_addendum');
+        $page_data['agreement_id'] =  base64_decode($agreement_id);
+        $page_data['student_id'] =  $student_id;
+        $this->load->view('backend/index', $page_data);
+    }
+
+    function agreement($action, $param1 = '', $param2 = '')
+    {
+        $agreement_id = base64_decode($param1); 
+        $student_id = base64_decode($param2);
+         
+        switch ($action) {
+            case 'update':
+                $this->agreement->add_addendum($agreement_id);
+                break;
+            case 'card':
+                $this->agreement->agreement_card($agreement_id);
+                break;
+        }
+
+        $this->session->set_flashdata('flash_message', getPhrase('successfully_added'));        
+        redirect(base_url() . 'accountant/student_agreements/'.$student_id, 'refresh');
+    }
+
     function student_grades($student_id, $param1='')
     {
         $this->isAccountant();
@@ -588,6 +655,9 @@ class Accountant extends EduAppGT
         
         $this->load->view('backend/index', $page_data);
     }
+
+
+
 /***** Applicant Module ******************************************************************************************************************************/
     function applicant_profile($applicant_id, $param1='')
     {
@@ -642,7 +712,7 @@ class Accountant extends EduAppGT
             if($cashier_all)
                 $cashier_id = html_escape($this->input->post('cashier_id'));
             else
-                $cashier_id = "accountant:".$this->session->userdata('login_user_id');
+                $cashier_id = "accountant:".get_login_user_id();
         }
         else
         {
@@ -654,7 +724,7 @@ class Accountant extends EduAppGT
             else
             {
                 $date = "";
-                $cashier_id = "accountant:".$this->session->userdata('login_user_id');
+                $cashier_id = "accountant:".get_login_user_id();
             }
         }
 

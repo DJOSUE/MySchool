@@ -1,5 +1,5 @@
 <?php   
-    $query = $this->db->get_where('deliveries', array('id' => $delivery_id, 'student_id' => $this->session->userdata('login_user_id')));
+    $query = $this->db->get_where('deliveries', array('id' => $delivery_id, 'student_id' => get_login_user_id()));
     $homework_code = $query->row()->homework_code;
     $running_year = $this->crud->getInfo('running_year');
     $current_homework = $this->db->get_where('homework' , array('homework_code' => $homework_code))->result_array();
@@ -123,7 +123,7 @@
 				                                <a class="btn btn-rounded btn-sm btn-danger" style="color:white"><?php echo getPhrase('unrated');?></a>
 				                            <?php endif;?>
 				                            <?php if($query->num_rows() > 0):?>
-				                                <a class="btn btn-rounded btn-sm btn-primary" style="color:white"><?php $mark =$this->db->get_where('deliveries', array('homework_code' => $homework_code, 'student_id' => $this->session->userdata('login_user_id')))->row()->mark; if($mark > 0) echo $mark; else echo getPhrase('waiting_mark');?></a>
+				                                <a class="btn btn-rounded btn-sm btn-primary" style="color:white"><?php $mark =$this->db->get_where('deliveries', array('homework_code' => $homework_code, 'student_id' => get_login_user_id()))->row()->mark; if($mark > 0) echo $mark; else echo getPhrase('waiting_mark');?></a>
 				                            <?php endif;?>
 				                            </td>
 			                            </tr>
@@ -131,7 +131,7 @@
 				                            <th><b><?php echo getPhrase('teacher_comment');?></b>:</th>
 				                            <td>
 				                                <?php if($query->num_rows() > 0):?>
-				                                <?php echo $this->db->get_where('deliveries', array('homework_code' => $homework_code, 'student_id' => $this->session->userdata('login_user_id')))->row()->teacher_comment;?>
+				                                <?php echo $this->db->get_where('deliveries', array('homework_code' => $homework_code, 'student_id' => get_login_user_id()))->row()->teacher_comment;?>
 				                                <?php endif;?>
 				                            </td>
 			                            </tr>

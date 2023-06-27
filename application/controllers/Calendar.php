@@ -66,7 +66,7 @@
         }
         
         function getEvents(){
-            if($this->session->userdata('login_type') == '')
+            if(get_account_type() == '')
             {
                 exit;
             }

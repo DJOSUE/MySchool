@@ -1,5 +1,5 @@
 <?php 
-    $fancy_count = $this->db->get_where('notification', array('user_id' => $this->session->userdata('login_user_id'), 'user_type' => $this->session->userdata('login_type'), 'status' => '0'));
+    $fancy_count = $this->db->get_where('notification', array('user_id' => get_login_user_id(), 'user_type' => get_account_type(), 'status' => '0'));
     $fancy_number = $this->crud->count_unread_messages();
     $fc_info = base64_decode($class_id);
     $fc_info_data = base64_decode($data); $fc_ex = explode("-", $fc_info_data);
@@ -186,6 +186,10 @@
         <?php echo form_close();?>
         <div class="control-block">
             <div class="control-icon more has-items">
+                <i class="picons-thin-icon-thin-0309_support_help_talk_call"
+                    onclick="showAjaxModal('<?= base_url();?>modal/popup_helpdesk/modal_ticket_add/');"></i>
+            </div>
+            <div class="control-icon more has-items">
                 <i class="picons-thin-icon-thin-0275_chat_message_comment_bubble_typing"></i>
                 <?php if($fancy_number > 0):?><div class="label-avatar bg-success"><?php echo $fancy_number;?></div>
                 <?php endif;?>
@@ -193,7 +197,7 @@
                     <div class="mCustomScrollbar" data-mcs-theme="dark">
                         <ul class="notification-list chat-message">
                             <?php 
-                                $fancy_current_user = $this->session->userdata('login_type') . '-' . $this->session->userdata('login_user_id');
+                                $fancy_current_user = get_account_type() . '-' . get_login_user_id();
                                 $fancy_message_threads = $this->crud->getFancyChat();
                                 foreach ($fancy_message_threads as $fancy_rows):
                                 if ($fancy_rows['sender'] == $fancy_current_user)
@@ -269,7 +273,7 @@
             <div class="author-page author vcard inline-items more">
                 <div class="author-thumb">
                     <img alt="author"
-                        src="<?php echo $this->crud->get_image_url('admin', $this->session->userdata('login_user_id'));?>"
+                        src="<?php echo $this->crud->get_image_url('admin', get_login_user_id());?>"
                         class="avatar bg-white" width="32px">
                     <div class="more-dropdown more-with-triangle">
                         <div class="mCustomScrollbar" data-mcs-theme="dark">
@@ -298,7 +302,7 @@
                 </div>
                 <a href="javascript:void(0);" class="author-name fn">
                     <div class="author-title">
-                        <?php echo $this->crud->get_name('admin', $this->session->userdata('login_user_id'));?> <svg
+                        <?php echo $this->crud->get_name('admin', get_login_user_id());?> <svg
                             class="olymp-dropdown-arrow-icon">
                             <use
                                 xlink:href="<?php echo base_url();?>public/style/olapp/svg-icons/sprites/icons.svg#olymp-dropdown-arrow-icon">
@@ -307,11 +311,9 @@
                     </div>
                     <span class="author-subtitle">
                         <?php 
-                            $account_type = $this->session->userdata('role_id');
-
-                            echo $this->system->get_role_name($account_type);
+                            $role_id = get_role_id();
+                            echo $this->system->get_role_name($role_id);
                         ?>
-                        
                     </span>
                 </a>
             </div>
@@ -321,6 +323,14 @@
 <header class="header header-responsive" id="site-header-responsive">
     <div class="header-content-wrapper">
         <ul class="nav nav-tabs mobile-app-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#helpdesk" role="tab">
+                    <div class="control-icon has-items">
+                        <i class="picons-thin-icon-thin-0309_support_help_talk_call"
+                        onclick="showAjaxModal('<?= base_url();?>modal/popup_helpdesk/modal_ticket_add/');"></i>
+                    </div>
+                </a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#chat" role="tab">
                     <div class="control-icon has-items">
@@ -344,7 +354,7 @@
                     <div class="author-page author vcard inline-items more top16">
                         <div class="author-thumb imgs">
                             <img alt="author"
-                                src="<?php echo $this->crud->get_image_url($this->session->userdata('login_type'), $this->session->userdata('login_user_id'));?>"
+                                src="<?php echo $this->crud->get_image_url(get_account_type(), get_login_user_id());?>"
                                 class="avatar bg-white" width="35px">
                         </div>
                     </div>
@@ -353,11 +363,13 @@
         </ul>
     </div>
     <div class="tab-content tab-content-responsive">
+        <div class="tab-pane " id="helpdesk" role="tabpanel">            
+        </div>
         <div class="tab-pane " id="chat" role="tabpanel">
             <div class="mCustomScrollbar" data-mcs-theme="dark">
                 <ul class="notification-list chat-message">
                     <?php 
-                        $fancy_current_user = $this->session->userdata('login_type') . '-' . $this->session->userdata('login_user_id');
+                        $fancy_current_user = get_account_type() . '-' . get_login_user_id();
                         $fancy_message_threads = $this->crud->getFancyChat();
                         foreach ($fancy_message_threads as $row1):
                         if ($row1['sender'] == $fancy_current_user)

@@ -2,8 +2,8 @@
     $running_year = $this->crud->getInfo('running_year');
     $running_semester = $this->crud->getInfo('running_semester');
     
-    $user = $this->session->userdata('login_type')."-".$this->session->userdata('login_user_id');
-    $teacher_id = $this->session->userdata('login_user_id');
+    $user = get_account_type()."-".get_login_user_id();
+    $teacher_id = get_login_user_id();
 
     $month_number = date('m');
 
@@ -106,17 +106,7 @@
                                     <select name="class_id" id="class_id" onchange="get_class_sections(this.value);">
                                         <option value=""><?= getPhrase('select');?></option>
                                         <?php 
-                                            // $cl = $this->db->get('class')->result_array();
-                                            $this->db->reset_query();
-                                            $this->db->select('class_id, class_name');
-                                            $this->db->from('v_subject');
-                                            $this->db->where('teacher_id', $teacher_id);
-                                            $this->db->where('year', $running_year);
-                                            $this->db->where('semester_id', $running_semester);
-
-                                            $this->db->group_by('class_id');
-                                            $cl =  $this->db->get()->result_array();
-                                            // $cl = $this->db->query("SELECT class_id, class_name FROM v_subject WHERE teacher_id = '$teacher_id' AND year = '$running_year' AND semester_id = '$running_semester' GROUP BY class_id")->result_array();
+                                            $cl = $this->crud->get_class_by_teacher($teacher_id);
                                             foreach($cl as $row):
                                         ?>
                                         <option value="<?= $row['class_id'];?>"><?= $row['class_name'];?>
@@ -173,7 +163,13 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="form-group label-floating">
+                                <label class="control-label"><?php echo getPhrase('reason');?>:</label>
+                                <textarea class="form-control" name="reason" rows="3"></textarea>
+                                <span class="material-input"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -213,7 +209,7 @@ function get_class_sections_subjects(section_id) {
     });
 }
 
-function get_subject_students(subject_id) {    
+function get_subject_students(subject_id) {
     $.ajax({
         url: '<?= base_url(); ?>tools/get_class_section_subject_students/' + subject_id,
         success: function(response) {

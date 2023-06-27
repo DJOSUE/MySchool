@@ -65,20 +65,7 @@
                                         <div class="up-controls">
                                             <div class="row">
                                                 <div class="col-lg-6">
-                                                    <div class="value-pair">
-                                                        <div><?= getPhrase('priority');?>:</div>
-                                                        <div class="value badge-status badge-pill badge-primary"
-                                                            style="background-color: <?= $priority_info['color']?>;">
-                                                            <?= $priority_info['name'];?>
-                                                        </div>
-                                                    </div>
-                                                    <div class="value-pair">
-                                                        <div><?= getPhrase('status_task');?>:</div>
-                                                        <div class="value badge-status badge-pill badge-primary"
-                                                            style="background-color: <?= $status_info['color']?>;">
-                                                            <?= $status_info['name'];?>
-                                                        </div>
-                                                    </div>
+                                                    
                                                     <div class="value-pair">
                                                         <div><?= getPhrase('type_user');?>:</div>
                                                         <div class="value badge-status badge-pill badge-primary">
@@ -111,8 +98,67 @@
                                         </div>
                                         <div class="ui-block">
                                             <div class="ui-block-title">
+                                                <h6 class="title"><?= getPhrase('personal_information');?>
+                                                </h6>
+
+                                            </div>
+                                            <div class="ui-block-content">
+                                                <div class="row">
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <ul class="widget w-personal-info item-block">
+                                                            <li>
+                                                                <span class="title"><?= getPhrase('name');?>:</span>
+                                                                <span class="text"><?= $user_info['first_name'];?>
+                                                                    <?= $user_info['last_name'];?></span>
+                                                            </li>
+                                                            <li>
+                                                                <span class="title"><?= getPhrase('email');?>:</span>
+                                                                <span class="text"><?= $user_info['email'];?></span>
+                                                            </li>
+                                                            <li>
+                                                                <span class="title"><?= getPhrase('address');?>:</span>
+                                                                <span class="text"><?= $user_info['address'];?></span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <ul class="widget w-personal-info item-block">
+                                                            <li>
+                                                                <span class="title"><?= getPhrase('phone');?>:</span>
+                                                                <span class="text"><?= $user_info['phone'];?></span>
+                                                            </li>
+                                                            <li>
+                                                                <span class="title"><?= getPhrase('birthday');?>:</span>
+                                                                <span class="text"><?= $user_info['birthday'];?></span>
+                                                            </li>
+                                                            <li>
+                                                                <span class="title"><?= getPhrase('gender');?>:</span>
+                                                                <span
+                                                                    class="text"><?= $this->crud->get_gender_user($user_info['gender']);?></span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="ui-block">
+                                            <div class="ui-block-title">
                                                 <h6 class="title"><?= getPhrase('task_information');?>
                                                 </h6>
+                                                <div class="value-pair">
+                                                        <div><?= getPhrase('priority');?>:</div>
+                                                        <div class="value badge-status badge-pill badge-primary"
+                                                            style="background-color: <?= $priority_info['color']?>;">
+                                                            <?= $priority_info['name'];?>
+                                                        </div>
+                                                    </div>
+                                                    <div class="value-pair">
+                                                        <div><?= getPhrase('status_task');?>:</div>
+                                                        <div class="value badge-status badge-pill badge-primary"
+                                                            style="background-color: <?= $status_info['color']?>;">
+                                                            <?= $status_info['name'];?>
+                                                        </div>
+                                                    </div>
                                             </div>
                                             <div class="ui-block-content">
                                                 <div class="row">
@@ -172,17 +218,13 @@
                                                         </ul>
                                                     </div>
                                                 </div>
-
                                                 <div class="row">
-                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                        <ul class="widget w-personal-info item-block">
-                                                            <li>
-                                                                <span
-                                                                    class="title"><?= getPhrase('description');?>:</span>
-                                                                <span class="text"><?= $description;?></span>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                                    <ul class="widget w-personal-info item-block">
+                                                        <li>
+                                                            <span class="title"><?= getPhrase('description');?>:</span>
+                                                            <span class="text"><?= $description;?></span>
+                                                        </li>
+                                                    </ul>
                                                 </div>
                                                 <?php if($row['task_file']):?>
                                                 <div class="row">
@@ -207,50 +249,6 @@
                                                     </div>
                                                 </div>
                                                 <? endif;?>
-                                            </div>
-                                        </div>
-                                        <div class="ui-block">
-                                            <div class="ui-block-title">
-                                                <h6 class="title"><?= getPhrase('personal_information');?>
-                                                </h6>
-                                            </div>
-                                            <div class="ui-block-content">
-                                                <div class="row">
-                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                        <ul class="widget w-personal-info item-block">
-                                                            <li>
-                                                                <span class="title"><?= getPhrase('name');?>:</span>
-                                                                <span class="text"><?= $user_info['first_name'];?>
-                                                                    <?= $user_info['last_name'];?></span>
-                                                            </li>
-                                                            <li>
-                                                                <span class="title"><?= getPhrase('email');?>:</span>
-                                                                <span class="text"><?= $user_info['email'];?></span>
-                                                            </li>
-                                                            <li>
-                                                                <span class="title"><?= getPhrase('address');?>:</span>
-                                                                <span class="text"><?= $user_info['address'];?></span>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                        <ul class="widget w-personal-info item-block">
-                                                            <li>
-                                                                <span class="title"><?= getPhrase('phone');?>:</span>
-                                                                <span class="text"><?= $user_info['phone'];?></span>
-                                                            </li>
-                                                            <li>
-                                                                <span class="title"><?= getPhrase('birthday');?>:</span>
-                                                                <span class="text"><?= $user_info['birthday'];?></span>
-                                                            </li>
-                                                            <li>
-                                                                <span class="title"><?= getPhrase('gender');?>:</span>
-                                                                <span
-                                                                    class="text"><?= $this->crud->get_gender_user($user_info['gender']);?></span>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
                                         <div class=" ui-block-title row" style="border-style: none;">

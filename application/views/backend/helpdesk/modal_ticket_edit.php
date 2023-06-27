@@ -17,7 +17,7 @@
         <h6 class="title" style="color:white"><?php echo getPhrase('edit_ticket');?></h6>
     </div>
     <div class="ui-block-content">
-        <?php echo form_open(base_url() . 'helpdesk/helpdesk_ticket/update/'.$ticket['ticket_id'], array('enctype' => 'multipart/form-data'));?>
+        <?php echo form_open(base_url() . 'helpdesk/ticket/update/'.$ticket['ticket_id'], array('enctype' => 'multipart/form-data'));?>
         <input type="hidden" name="ticket_id" value="<?= $ticket['ticket_id']?>">        
         <div class="form-group row">
             <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('status');?></label>

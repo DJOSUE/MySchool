@@ -8,14 +8,14 @@
     {
         $users_name = getPhrase('admin');
         $roles = $this->db->get_where('roles', array('status' => 1, 'table' => 'admin'))->result_array();
-        $admins = $this->db->get_where('admin', array('status' => '1', 'admin_id !=' => $this->session->userdata('login_user_id')))->result_array();        
+        $admins = $this->db->get_where('admin', array('status' => '1', 'admin_id !=' => get_login_user_id()))->result_array();        
     }
     else
     {
         $roles = $this->db->get_where('roles', array('role_id'=> $owner_status))->result_array();
         $users_name = $roles[0]['name'];
         
-        $admins = $this->db->get_where('admin', array('status' => '1', 'owner_status' => $owner_status, 'admin_id !=' => $this->session->userdata('login_user_id')))->result_array();
+        $admins = $this->db->get_where('admin', array('status' => '1', 'owner_status' => $owner_status, 'admin_id !=' => get_login_user_id()))->result_array();
     }
     
 

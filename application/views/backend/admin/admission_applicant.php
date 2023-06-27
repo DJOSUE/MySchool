@@ -1,5 +1,5 @@
 <?php 
-    $user_id = $this->session->userdata('login_user_id');
+    $user_id = get_login_user_id();
     $applicant_info = $this->db->get_where('applicant' , array('applicant_id' => $applicant_id))->result_array(); 
     $allow_actions = is_student($applicant_id);
     $is_international = is_international($applicant_id);
@@ -54,6 +54,18 @@
                                                             <li>
                                                                 <span class="title"><?= getPhrase('address');?>:</span>
                                                                 <span class="text"><?= $row['address'];?></span>
+                                                            </li>
+                                                            <li>
+                                                                <span class="title"><?= getPhrase('city');?>:</span>
+                                                                <span class="text"><?= $row['city'];?></span>
+                                                            </li>
+                                                            <li>
+                                                                <span class="title"><?= getPhrase('state');?>:</span>
+                                                                <span class="text"><?= $row['state'];?></span>
+                                                            </li>
+                                                            <li>
+                                                                <span class="title"><?= getPhrase('postal_code');?>:</span>
+                                                                <span class="text"><?= $row['postal_code'];?></span>
                                                             </li>
                                                             <li>
                                                                 <span class="title"><?= getPhrase('assigned_to');?>:</span>
@@ -423,7 +435,7 @@
                                                                 <?php 
                                                                 $this->db->reset_query();
                                                                 $this->db->where('applicant_id', $applicant_id);
-                                                                $this->db->order_by('created_at', 'ASC');
+                                                                $this->db->order_by('created_at', 'DESC');
                                                                 $interactions = $this->db->get('v_applicant_interaction')->result_array();
 
                                                                 foreach ($interactions as $item):

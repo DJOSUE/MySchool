@@ -2,8 +2,8 @@
     $running_year = $this->crud->getInfo('running_year');
     $running_semester = $this->crud->getInfo('running_semester');
     
-    $user = $this->session->userdata('login_type')."-".$this->session->userdata('login_user_id');
-    $teacher_id = $this->session->userdata('login_user_id');
+    $user = get_account_type()."-".get_login_user_id();
+    $teacher_id = get_login_user_id();
 ?>
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -128,17 +128,28 @@
                         </div>
                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                             <div class="form-group label-floating is-select">
-                                <label class="control-label"><?php echo getPhrase('class');?></label>
+                                <label class="control-label"><?php echo getPhrase('priority');?></label>
                                 <div class="select">
-                                    <select name="class_id"
-                                        onchange="get_class_sections(this.value); get_class_subject(this.value);">
+                                    <select name="priority" id="slct" required="">
                                         <option value=""><?php echo getPhrase('select');?></option>
+                                        <option value="baja"><?php echo getPhrase('low');?></option>
+                                        <option value="media"><?php echo getPhrase('medium');?></option>
+                                        <option value="alta"><?php echo getPhrase('high');?></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                            <div class="form-group label-floating is-select">
+                                <label class="control-label"><?= getPhrase('class');?></label>
+                                <div class="select">
+                                    <select name="class_id" id="class_id" onchange="get_class_sections(this.value);">
+                                        <option value=""><?= getPhrase('select');?></option>
                                         <?php 
-                                            // $cl = $this->db->get('class')->result_array();
-                                            $cl = $this->db->query("SELECT class_id, class_name FROM v_subject WHERE teacher_id = '$teacher_id' AND year = '$running_year' AND semester_id = '$running_semester' GROUP BY class_id")->result_array();
+                                            $cl = $this->crud->get_class_by_teacher($teacher_id);
                                             foreach($cl as $row):
                                         ?>
-                                        <option value="<?php echo $row['class_id'];?>"><?php echo $row['class_name'];?>
+                                        <option value="<?= $row['class_id'];?>"><?= $row['class_name'];?>
                                         </option>
                                         <?php endforeach;?>
                                     </select>
@@ -147,11 +158,22 @@
                         </div>
                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                             <div class="form-group label-floating is-select">
-                                <label class="control-label"><?php echo getPhrase('section');?></label>
+                                <label class="control-label"><?= getPhrase('section');?></label>
                                 <div class="select">
                                     <select name="section_id" id="section_selector_holder"
-                                        onchange="get_class_students(this.value);">
-                                        <option value=""><?php echo getPhrase('select');?></option>
+                                        onchange="get_class_sections_subjects(this.value);">
+                                        <option value=""><?= getPhrase('select');?></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                            <div class="form-group label-floating is-select">
+                                <label class="control-label"><?= getPhrase('subject');?></label>
+                                <div class="select">
+                                    <select name="subject_id" id="subject_selector_holder"
+                                        onchange="get_subject_students(this.value);">
+                                        <option value=""><?= getPhrase('select');?></option>
                                     </select>
                                 </div>
                             </div>
@@ -166,19 +188,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
-                            <div class="form-group label-floating is-select">
-                                <label class="control-label"><?php echo getPhrase('priority');?></label>
-                                <div class="select">
-                                    <select name="priority" id="slct" required="">
-                                        <option value=""><?php echo getPhrase('select');?></option>
-                                        <option value="baja"><?php echo getPhrase('low');?></option>
-                                        <option value="media"><?php echo getPhrase('medium');?></option>
-                                        <option value="alta"><?php echo getPhrase('high');?></option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
+                        
                         <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label class="control-label"><?php echo getPhrase('file');?></label>
@@ -208,18 +218,29 @@
 <script type="text/javascript">
 function get_class_sections(class_id) {
     $.ajax({
-        url: '<?php echo base_url();?>tools/get_class_section_by_teacher/' + class_id + '/<?=$teacher_id;?>',
+        url: '<?= base_url();?>tools/get_class_section_by_teacher/' + class_id + '/<?=$teacher_id;?>',
         success: function(response) {
             jQuery('#section_selector_holder').html(response);
         }
     });
 }
-</script>
 
-<script type="text/javascript">
-function get_class_students(class_id) {
+function get_class_sections_subjects(section_id) {
+
+    var class_id = document.getElementById("class_id").value;
+
     $.ajax({
-        url: '<?php echo base_url(); ?>tools/get_class_students/' + class_id,
+        url: '<?= base_url();?>tools/get_class_section_subject_by_teacher/' + class_id + '/' + section_id +
+            '/<?=$teacher_id;?>',
+        success: function(response) {
+            jQuery('#subject_selector_holder').html(response);
+        }
+    });
+}
+
+function get_subject_students(subject_id) {
+    $.ajax({
+        url: '<?= base_url(); ?>tools/get_class_section_subject_students/' + subject_id,
         success: function(response) {
             jQuery('#students_holder').html(response);
         }

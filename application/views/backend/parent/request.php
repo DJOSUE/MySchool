@@ -36,7 +36,7 @@
 		                                    <?php
                                         		$count = 1;
                                         		$this->db->order_by('request_id', 'desc');
-                                        		$requests = $this->db->get_where('student_request', array('parent_id' => $this->session->userdata('login_user_id')))->result_array();
+                                        		$requests = $this->db->get_where('student_request', array('parent_id' => get_login_user_id()))->result_array();
                                         		foreach ($requests as $row) {
                                         	?>   
                             				    <tr>

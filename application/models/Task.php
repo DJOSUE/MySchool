@@ -17,8 +17,8 @@ class Task extends School
         $this->load->library('excel');
         $this->load->library('session');
 
-        $this->user_id      = $this->session->userdata('login_user_id');
-        $this->user_type    = get_table_user($this->session->userdata('role_id'));
+        $this->user_id      = get_login_user_id();
+        $this->user_type    = get_table_user(get_role_id());
         if($this->user_type != "")
             $this->user_name    = $this->crud->get_name($this->user_type, $this->user_id);
     }
@@ -188,9 +188,9 @@ class Task extends School
     function create()
     {
         $code           = md5(date('d-m-Y H:i:s'));
-        $account_type   =   get_table_user($this->session->userdata('role_id'));
+        $account_type   =   get_table_user(get_role_id());
 
-        $data['created_by']      = $this->session->userdata('login_user_id');
+        $data['created_by']      = get_login_user_id();
         $data['created_by_type'] = $account_type;
         $data['title']           = html_escape($this->input->post('title'));
         $data['task_code']       = $code;
@@ -228,7 +228,7 @@ class Task extends School
         {
             // Get table  
             $data['assigned_to_type'] = 'admin';
-            $data['assigned_to'] =  $this->session->userdata('login_user_id');
+            $data['assigned_to'] =  get_login_user_id();
         }
         
         if($_FILES['task_file']['name'] != '')
@@ -253,9 +253,9 @@ class Task extends School
     function create_follow_up($data)
     {
         $code           = md5(date('d-m-Y H:i:s'));
-        $account_type   = get_table_user($this->session->userdata('role_id'));
+        $account_type   = get_table_user(get_role_id());
 
-        $data['created_by']      = $this->session->userdata('login_user_id');
+        $data['created_by']      = get_login_user_id();
         $data['created_by_type'] = $account_type;        
         $data['task_code']       = $code;
 
@@ -272,12 +272,12 @@ class Task extends School
 
     function update($task_id)
     {
-        $user_id    = $this->session->userdata('login_user_id');
-        $user_type  = get_table_user($this->session->userdata('role_id'));
+        $user_id    = get_login_user_id();
+        $user_type  = get_table_user(get_role_id());
         $user_name  = $this->crud->get_name($user_type, $user_id);
 
         $data['updated_by']         = $user_id;
-        $data['updated_by_type']    = get_table_user($this->session->userdata('role_id'));
+        $data['updated_by_type']    = get_table_user(get_role_id());
 
         $task_code = $this->db->get_where('task' , array('task_id' => $task_id) )->row()->task_code;
         $assigned_to_old = $this->get_current_assigned($task_code);
@@ -453,13 +453,13 @@ class Task extends School
     function add_message($task_code, $type = "")
     {
         $md5 = md5(date('d-m-Y H:i:s'));
-        $table_user = get_table_user($this->session->userdata('role_id'));
+        $table_user = get_table_user(get_role_id());
 
         $current_status = $this->db->get_where('task' , array('task_code' => $task_code))->row()->status_id;
         
         if($type != 'automatic')
         {
-            $data['sender_id']      = $this->session->userdata('login_user_id');        
+            $data['sender_id']      = get_login_user_id();        
             $data['sender_type']    = $table_user;
         }
         else
@@ -640,6 +640,23 @@ class Task extends School
         $this->db->reset_query();
         $this->db->select("admin_id as user_id, 'admin' as user_type, first_name, last_name");
         $this->db->where('status', '1');
+        $this->db->where_in('owner_status', array('8'));        
+        $this->db->order_by('first_name', 'ASC');
+        $legal = $this->db->get('admin')->result_array();
+
+        $dropbox .= '<optgroup label="'.getPhrase('legal_office').'">';
+        foreach($legal as $item)
+        {
+            $value = $item['user_type'].'|'.$item['user_id'];
+            $name  = $item['first_name'].' '.$item['last_name'];
+            $selected = $assigned_to == $value ? 'selected' : '';
+
+            $dropbox .= '<option value="'.$value.'" '.$selected.'>'.$name.'</option>';            
+        }
+
+        $this->db->reset_query();
+        $this->db->select("admin_id as user_id, 'admin' as user_type, first_name, last_name");
+        $this->db->where('status', '1');
         $this->db->where_in('owner_status', array('9'));
         $this->db->order_by('first_name', 'ASC');
         $managers = $this->db->get('admin')->result_array();
@@ -689,5 +706,251 @@ class Task extends School
         }
         
         return $dropbox;
-    }    
+    }
+
+
+    function get_cashier_list_dropbox($user_id = "", $user_type = "")
+    {
+        // $user['user_id'] == $row['assigned_to'] ? 'selected': '';
+
+        $assigned_to = $user_type.'|'.$user_id;
+        
+        $this->db->reset_query();
+        $this->db->select("admin_id as user_id, 'admin' as user_type, first_name, last_name");
+        $this->db->where('status', '1');
+        $this->db->where_in('owner_status', array('3'));        
+        $this->db->order_by('first_name', 'ASC');
+        $advisors = $this->db->get('admin')->result_array();
+
+        $dropbox = '<optgroup label="'.getPhrase('advisors').'">';
+        foreach($advisors as $item)
+        {
+            $value = $item['user_type'].'|'.$item['user_id'];
+            $name  = $item['first_name'].' '.$item['last_name'];
+            $selected = $assigned_to == $value ? 'selected' : '';
+
+            $dropbox .= '<option value="'.$value.'" '.$selected.'>'.$name.'</option>';            
+        }
+
+        $this->db->reset_query();
+        $this->db->select("admin_id as user_id, 'admin' as user_type, first_name, last_name");
+        $this->db->where('status', '1');
+        $this->db->where_in('owner_status', array('8'));        
+        $this->db->order_by('first_name', 'ASC');
+        $legal = $this->db->get('admin')->result_array();
+
+        $dropbox .= '<optgroup label="'.getPhrase('legal_office').'">';
+        foreach($legal as $item)
+        {
+            $value = $item['user_type'].'|'.$item['user_id'];
+            $name  = $item['first_name'].' '.$item['last_name'];
+            $selected = $assigned_to == $value ? 'selected' : '';
+
+            $dropbox .= '<option value="'.$value.'" '.$selected.'>'.$name.'</option>';            
+        }
+        
+        $this->db->reset_query();
+        $this->db->select("accountant_id as user_id, 'accountant' as user_type, first_name, last_name");
+        $this->db->where('status', '1');
+        $this->db->where_in('role_id', array('4', '14', '15'));
+        $this->db->order_by('first_name', 'ASC');
+        $finances  = $this->db->get('accountant')->result_array();
+
+        $dropbox .= '<optgroup label="'.getPhrase('finances').'">';
+        foreach($finances as $item)
+        {
+            $value = $item['user_type'].'|'.$item['user_id'];
+            $name  = $item['first_name'].' '.$item['last_name'];
+            $selected = $assigned_to == $value ? 'selected' : '';
+            
+            $dropbox .= '<option value="'.$value.'" '.$selected.'>'.$name.'</option>'; 
+        }
+        
+        return $dropbox;
+    }
+
+    function get_count($department_id = '', $category_id = '', $priority_id = '', $status_id = '', $text = '', $assigned_me = '', $due_date = '')
+    {
+        $user_id            = get_login_user_id();
+        $account_type       =   get_table_user(get_role_id());  
+
+        $this->db->reset_query();
+        $this->db->order_by('created_at', 'desc');
+        
+        if($department_id != '')
+        {
+            $array = $this->task->get_categories_where($department_id);
+            $this->db->where_in('category_id', $array);
+        }    
+        if($category_id != '')
+        {
+            $this->db->where('category_id', $category_id);
+        }
+        if($priority_id != '')
+        {
+            $this->db->where('priority_id', $priority_id);
+        }
+        if($status_id != '')
+        {   
+            $this->db->where('status_id', $status_id);
+        }
+        if($text != '')
+        {
+            $this->db->like('title' , str_replace("%20", " ", $text));
+        }
+        if($assigned_me == 1)
+        {
+            $this->db->where('assigned_to_type', $account_type);
+            $this->db->where('assigned_to' , $user_id);
+            
+        } 
+        if($due_date != '')
+        {
+            $this->db->where('due_date' , $due_date);
+        }
+        $query = $this->db->get("task");
+        return $query->num_rows();
+    }
+
+    function get_task_list($limit, $start, $department_id = '', $category_id = '', $priority_id = '', $status_id = '', $text = '', $assigned_me = '', $due_date = '')
+    {
+        $user_id            = get_login_user_id();
+        $account_type       =   get_table_user(get_role_id());  
+
+        $this->db->reset_query();
+        if($department_id != '')
+        {
+            $array = $this->task->get_categories_where($department_id);
+            $this->db->where_in('category_id', $array);
+        }
+    
+        if($category_id != '')
+        {
+            $this->db->where('category_id', $category_id);
+        }
+        if($priority_id != '')
+        {
+            $this->db->where('priority_id', $priority_id);
+        }
+        if($status_id != '')
+        {   
+            $this->db->where('status_id', $status_id);
+        }
+        if($text != '')
+        {
+            $this->db->like('title' , str_replace("%20", " ", $text));
+        }
+        if($assigned_me == 1)
+        {
+            $this->db->where('assigned_to_type', $account_type);
+            $this->db->where('assigned_to' , $user_id);
+            
+        } 
+        if($due_date != '')
+        {
+            $this->db->where('due_date' , $due_date);
+        } 
+        $this->db->order_by('created_at', 'desc');
+        $this->db->limit($limit, $start);
+        $query = $this->db->get("task")->result_array();
+        return $query ;
+    }
+
+    function export_task_list($data)
+    {
+
+        $user_id            =   get_login_user_id();
+        $account_type       =   get_table_user(get_role_id());    
+    
+        $this->db->reset_query();
+        $this->db->order_by('created_at', 'desc');
+    
+        if($data['department_id'] != '')
+        {
+            $array = $this->task->get_categories_where($data['department_id']);
+            $this->db->where_in('category_id', $array);
+        }
+    
+        if($data['category_id'] != '')
+        {
+            $this->db->where('category_id', $data['category_id']);
+        }
+        if($data['priority_id'] != '')
+        {
+            $this->db->where('priority_id', $data['priority_id']);
+        }
+        if($data['status_id'] != '')
+        {   
+            $this->db->where('status_id', $data['status_id']);
+        }
+        if($data['text'] != '')
+        {
+            $this->db->like('title' , str_replace("%20", " ", $data['text']));
+        }
+        if($data['assigned_me'] == 1)
+        {
+            $this->db->where('assigned_to_type', $account_type);
+            $this->db->where('assigned_to' , $user_id);
+            
+        } 
+        if($data['due_date'] != '')
+        {
+            $this->db->where('due_date' , $data['due_date']);
+        } 
+        $task_query = $this->db->get('task');
+        $tasks = $task_query->result_array();
+
+
+        $objPHPExcel = new PHPExcel();
+        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()->setCellValue('A1', getPhrase('title'));
+        $objPHPExcel->getActiveSheet()->setCellValue('B1', getPhrase('category'));
+        $objPHPExcel->getActiveSheet()->setCellValue('C1', getPhrase('user'));
+        $objPHPExcel->getActiveSheet()->setCellValue('D1', getPhrase('status'));
+        $objPHPExcel->getActiveSheet()->setCellValue('E1', getPhrase('priority'));
+        $objPHPExcel->getActiveSheet()->setCellValue('F1', getPhrase('due_date'));
+        $objPHPExcel->getActiveSheet()->setCellValue('G1', getPhrase('assigned_to'));
+        $objPHPExcel->getActiveSheet()->setCellValue('H1', getPhrase('created_by'));
+        $objPHPExcel->getActiveSheet()->setCellValue('I1', getPhrase('created_at'));
+        $objPHPExcel->getActiveSheet()->setCellValue('J1', getPhrase('updated_by'));
+        $objPHPExcel->getActiveSheet()->setCellValue('K1', getPhrase('updated_at'));
+        
+
+        $a = 2; $b =2; $c =2; $d =2; $e =2; $f =2; $g =2; $h =2; $i =2; $j =2; $k =2;
+
+        foreach($tasks as $row)
+        {            
+            $priority_info  = $this->task->get_priority_info($row['priority_id']);
+            $assigned_to    = trim($row['assigned_to_type'])    != '' ? $this->crud->get_name(trim($row['assigned_to_type']), $row['assigned_to']) : '';
+            $created_by     = trim($row['created_by_type'])     != '' ? $this->crud->get_name(trim($row['created_by_type']), $row['created_by']) : '';
+            $updated_by     = trim($row['updated_by_type'])     != '' ? $this->crud->get_name(trim($row['updated_by_type']), $row['updated_by']) : '';
+
+            $objPHPExcel->getActiveSheet()->setCellValue('A'.$a++, $row['title']);
+            $objPHPExcel->getActiveSheet()->setCellValue('B'.$b++, $this->task->get_category($row['category_id']));
+            $objPHPExcel->getActiveSheet()->setCellValue('C'.$c++, $this->crud->get_name($row['user_type'], $row['user_id']));
+            $objPHPExcel->getActiveSheet()->setCellValue('D'.$d++, $this->task->get_status($row['status_id']));
+            $objPHPExcel->getActiveSheet()->setCellValue('E'.$e++, $priority_info['name']);
+            $objPHPExcel->getActiveSheet()->setCellValue('F'.$f++, $row['due_date']);
+            $objPHPExcel->getActiveSheet()->setCellValue('G'.$g++, $assigned_to);
+            $objPHPExcel->getActiveSheet()->setCellValue('H'.$h++, $created_by);
+            $objPHPExcel->getActiveSheet()->setCellValue('I'.$i++, $row['created_at']);
+            $objPHPExcel->getActiveSheet()->setCellValue('J'.$j++, $updated_by);
+            $objPHPExcel->getActiveSheet()->setCellValue('K'.$k++, $row['updated_at']);
+        }
+
+        $objPHPExcel->getActiveSheet()->setTitle(getPhrase('tasks'));
+    
+        header("Pragma: public");
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Content-Type: application/force-download");
+        header("Content-Type: application/octet-stream");
+        header("Content-Type: application/download");
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="export_tasks_'.date('d-m-y').'.xlsx"');
+        header("Content-Transfer-Encoding: binary ");
+        $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel); 
+        $objWriter->setOffice2003Compatibility(true);
+        $objWriter->save('php://output');
+    }
 }

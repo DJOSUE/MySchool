@@ -16,6 +16,7 @@
     $referral_by    = $data['referral_by'];
     $type_id        = $data['type_id'] ;
     $program_id     = $data['program_id'];
+    $sevis_number   = $data['sevis_number'];
 
 
 ?>
@@ -269,6 +270,30 @@
                                                             </div>
                                                         </div>
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                            <div class="form-group label-floating">
+                                                                <label
+                                                                    class="control-label"><?php echo getPhrase('city');?></label>
+                                                                <input class="form-control" name="city" id="city"
+                                                                    type="text" value="<?=$city;?>">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                            <div class="form-group label-floating">
+                                                                <label
+                                                                    class="control-label"><?php echo getPhrase('state');?></label>
+                                                                <input class="form-control" name="state" id="state"
+                                                                    type="text" value="<?=$state;?>">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                            <div class="form-group label-floating">
+                                                                <label
+                                                                    class="control-label"><?php echo getPhrase('postal_code');?></label>
+                                                                <input class="form-control" name="postal_code" id="postal_code"
+                                                                    type="text" value="<?=$postal_code;?>">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                             <div class="form-group label-floating is-select">
                                                                 <label
                                                                     class="control-label"><?php echo getPhrase('country_of_birth');?></label>
@@ -288,6 +313,14 @@
                                                                     </select>
                                                                     <small><span id="country_error"></span></small>
                                                                 </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                            <div class="form-group label-floating">
+                                                                <label
+                                                                    class="control-label"><?php echo getPhrase('sevis_number');?></label>
+                                                                <input class="form-control" name="sevis_number" id="sevis_number"
+                                                                    type="text" required="" value="<?=$sevis_number;?>">
                                                             </div>
                                                         </div>
                                                         <div class="col col-lg-12 col-md-12 col-sm-12 col-12">
@@ -540,16 +573,26 @@
                                                 <div class="step-content" id="stepContent4" name="payment_info">
                                                     <div class="row">
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                            <div class="form-group label-floating">
+                                                            <div class="form-group label-floating is-select">
                                                                 <label class="control-label">
                                                                     <?= getPhrase('cost_tuition');?>
                                                                 </label>
                                                                 <input class="form-control" name="cost_tuition"
-                                                                    id="tuition" type="text" required="" readonly
-                                                                    value="0">
+                                                                    id="tuition" type="text" required=""
+                                                                    onfocusout="agreement_amount_total()">
                                                             </div>
                                                         </div>
+                                                        <div class=" col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        </div>
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                            <div class="form-group label-floating">
+                                                                <label class="control-label">
+                                                                    <?= getPhrase('enrol_fee');?>
+                                                                </label>
+                                                                <input class="form-control" name="fees" id="cost_fees"
+                                                                    value="0" onfocusout="agreement_amount_total()"
+                                                                    type="text">
+                                                            </div>
                                                         </div>
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                             <div class="form-group label-floating">
@@ -608,7 +651,8 @@
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                             <div class="description-toggle">
                                                                 <div class="description-toggle-content">
-                                                                    <div class="h6"><?= getPhrase('has_down_payment');?>
+                                                                    <div class="h6">
+                                                                        <?= getPhrase('has_down_payment');?>
                                                                     </div>
                                                                 </div>
                                                                 <div class="togglebutton">
@@ -684,7 +728,7 @@
                                                     <hr />
                                                     <div class="row" id="create_payment_div" style="display:none;">
                                                         <div class="row">
-                                                        <h3>Payment Transaction</h3>
+                                                            <h3>Payment Transaction</h3>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col" id="transactions">
@@ -855,7 +899,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="row" id="automatic_payment_div" style="display: none;">
+                                                    <div class="row" id="automatic_payment_div">
 
                                                         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
                                                             <div class="form-group label-floating is-select">
@@ -983,6 +1027,7 @@ function validate_form_student_info() {
     var obj_ln = document.getElementById("last_name");
     var obj_em = document.getElementById("student_email");
     var obj_ph = document.getElementById("phone");
+    var obj_sn = document.getElementById("sevis_number");
     var obj_ad = document.getElementById("address");
     var obj_un = document.getElementById("user_student");
     var obj_pw = document.getElementById("password");
@@ -1007,6 +1052,10 @@ function validate_form_student_info() {
         valid = false;
         obj_ph.focus();
         $("#phone_error").html(text);
+    } else if (obj_sn.value == '') {
+        valid = false;
+        obj_sn.focus();
+        $("#sevis_number_error").html(text);
     } else if (obj_ad.value == '') {
         valid = false;
         obj_ad.focus();
@@ -1217,7 +1266,8 @@ function get_class_section_subjects(section_id) {
     var modality_id = document.getElementById("modality_id").value;
 
     $.ajax({
-        url: '<?= base_url();?>admin/get_class_section_subjects_modality/' + class_id + '/' + section_id + '/' +
+        url: '<?= base_url();?>admin/get_class_section_subjects_modality/' + class_id + '/' + section_id +
+            '/' +
             year + '/' + semester + '/' + modality_id,
         success: function(response) {
             jQuery('#subject_selector_holder').html(response).selectpicker('refresh');
@@ -1229,6 +1279,9 @@ function validate_form_class() {
     var subjects = $("#subject_selector_holder").val();
     var program_type = $("#program_type_id option:selected").text().trim();
     var program_type_id = document.getElementById("program_type_id").value;
+
+    const input = document.getElementById('tuition');
+    const end = input.value.length;
 
     let length = subjects.length;
 
@@ -1254,7 +1307,8 @@ function validate_form_class() {
     if (valid) {
         get_tuition();
         document.getElementById('btnStepContent4').click();
-
+        input.setSelectionRange(end, end);
+        input.focus();
     }
 }
 
@@ -1274,25 +1328,24 @@ function get_tuition() {
 }
 
 function add_fees() {
-    let index       = 2
-    var nro         = document.getElementById("number_payments").value;
-    var amount      = parseFloat(document.getElementById("tuition").value);
+    let index = 2
+    var nro = document.getElementById("number_payments").value;
+    var tuition = parseFloat(document.getElementById("tuition").value);
     var downPayment = parseFloat(document.getElementById("amount_1").value);
-    var costs       = parseFloat(totalCost());
-    var discounts   = parseFloat(totalDiscount());
+    var costs = parseFloat(totalCost());
+    var discounts = parseFloat(totalDiscount());
 
-    var total = amount;
-
-    var quota = (amount / parseInt(nro));
+    var total = tuition + costs;
+    var quota = Math.round(tuition / parseInt(nro));
 
     if (nro == 1) {
-        document.getElementById('amount_1').value               = ((quota + costs) - discounts);
-        document.getElementById('amount_1').min                 = ((quota + costs) - discounts);
-        document.getElementById("payment_schedule").innerHTML   = "";
+        document.getElementById('amount_1').value = ((quota + costs) - discounts);
+        document.getElementById('amount_1').min = 1;
+        document.getElementById("payment_schedule").innerHTML = "";
     } else {
-        document.getElementById('amount_1').value               = (quota + costs);
-        document.getElementById('amount_1').min                 = (quota + costs);
-        document.getElementById("payment_schedule").innerHTML   = "";
+        document.getElementById('amount_1').value = (quota + costs);
+        document.getElementById('amount_1').min = 1;
+        document.getElementById("payment_schedule").innerHTML = "";
     }
 
     if (nro > 1) {
@@ -1308,13 +1361,61 @@ function add_fees() {
             html += '</div>'
             document.getElementById("payment_schedule").innerHTML += html;
         }
-        var name = "amount_" + (parseInt(index) - 1);
-        document.getElementById(name).value = (quota - discounts);
+
+        var last_index = parseInt(index) - 1;
+
+        var total_quota = (quota * (last_index - 1)) + costs;
+        var last_quota = ((total - total_quota) - discounts);
+
+        var name = "amount_" + last_index;
+        document.getElementById(name).value = last_quota;
     }
 
     validate_amount_1();
 
 }
+
+
+function add_fees_with_dow() {
+    let index = 2
+    var nro = document.getElementById("number_payments").value;
+    var amount = parseFloat(document.getElementById("tuition").value);
+    var downPayment = parseFloat(document.getElementById("amount_1").value);
+    var costs = parseFloat(totalCost());
+    var discounts = parseFloat(totalDiscount());
+
+    var total = amount - (downPayment - costs);
+    var quota = Math.round((total / (parseInt(nro) - 1)));
+
+    // document.getElementById('amount_1').value = (quota + costs);
+    document.getElementById("payment_schedule").innerHTML = "";
+
+    if (nro > 1) {
+        for (index; index <= nro; index++) {
+            let html = '<div class="col col-lg-6 col-md-6 col-sm-12 col-12">'
+            html += '    <div class="form-group label-floating">'
+            html += '        <label class="control-label">'
+            html += '            Payment ' + index
+            html += '        </label>'
+            html += '        <input class="form-control" name="amount_' + index + '"'
+            html += '            id="amount_' + index + '" value="' + quota + '"type="text" required="" readonly >'
+            html += '    </div>'
+            html += '</div>'
+            document.getElementById("payment_schedule").innerHTML += html;
+
+        }
+
+        var last_index = parseInt(index) - 1;
+
+        var total_quota = Math.round(quota * (last_index - 2))
+        var last_quota = Math.round((total - total_quota) - discounts)
+
+        var name = "amount_" + last_index;
+        document.getElementById(name).value = last_quota;
+    }
+
+}
+
 
 function agreement_amount_total() {
 
@@ -1327,7 +1428,7 @@ function agreement_amount_total() {
 
     document.getElementById('total_agreement').value = total;
     document.getElementById('amount_1').value = amount_1;
-    document.getElementById("amount_1").min = amount_1;
+    document.getElementById("amount_1").min = 1;
 
     add_fees();
 }
@@ -1372,12 +1473,12 @@ function totalDiscount() {
 
 
 function automatic_payment_enable_fields() {
-    var checked = document.getElementById("automatic_payment").checked;
+    // var checked = document.getElementById("automatic_payment").checked;
 
-    if (checked)
-        document.getElementById("automatic_payment_div").style.display = 'flex';
-    else
-        document.getElementById("automatic_payment_div").style.display = 'none';
+    // if (checked)
+    //     document.getElementById("automatic_payment_div").style.display = 'flex';
+    // else
+    //     document.getElementById("automatic_payment_div").style.display = 'none';
 }
 
 function validate_amount_1() {
@@ -1386,6 +1487,8 @@ function validate_amount_1() {
     if (checked) {
         var min = parseFloat(document.getElementById("amount_1").min);
         var amount = parseFloat(document.getElementById("amount_1").value);
+        var number_payments = parseInt(document.getElementById("number_payments").value);
+        var total_agreement = parseFloat(document.getElementById("total_agreement").value);
         var error = "";
 
         if (amount < min) {
@@ -1396,55 +1499,18 @@ function validate_amount_1() {
             document.getElementById("btn_save").disabled = false;
         }
 
-        add_fees_with_dow();
-        $("#amount_error").html(error);
-
-        document.getElementById("totalAmount").innerText = (amount);
-
-        payment_total();
-
-        reset_total_payment();
-    }
-}
-
-function add_fees_with_dow() {
-    let index = 2
-    var nro = document.getElementById("number_payments").value;
-    var amount = parseFloat(document.getElementById("tuition").value);
-    var downPayment = parseFloat(document.getElementById("amount_1").value);
-    var costs = parseFloat(totalCost());
-    var discounts = parseFloat(totalDiscount());
-
-    var total = amount - (downPayment - costs);
-    var quota = parseFloat((total / (parseInt(nro) - 1))).toFixed(2);
-
-    // document.getElementById('amount_1').value = (quota + costs);
-    document.getElementById("payment_schedule").innerHTML = "";
-
-    if (nro > 1) {
-        for (index; index <= nro; index++) {
-            let html = '<div class="col col-lg-6 col-md-6 col-sm-12 col-12">'
-            html += '    <div class="form-group label-floating">'
-            html += '        <label class="control-label">'
-            html += '            Payment ' + index
-            html += '        </label>'
-            html += '        <input class="form-control" name="amount_' + index + '"'
-            html += '            id="amount_' + index + '" value="' + quota + '"type="text" required="" readonly >'
-            html += '    </div>'
-            html += '</div>'
-            document.getElementById("payment_schedule").innerHTML += html;
-
+        if (number_payments == 1 && (amount < total_agreement || amount > total_agreement)) {
+            error = "<b style='color:#ff214f'>The amount must be equal to " + total_agreement + " </b>";
+            document.getElementById("btn_save").disabled = false;
         }
 
-        var last_index = parseInt(index) - 1;
+        add_fees_with_dow();
+        document.getElementById("totalAmount").innerText = (amount);
+        payment_total();
+        reset_total_payment();
 
-        var total_quota = parseFloat(quota * (last_index - 2)).toFixed(2);
-        var last_quota = parseFloat((total - total_quota) - discounts).toFixed(2);
-
-        var name = "amount_" + last_index;
-        document.getElementById(name).value = last_quota;
+        $("#amount_error").html(error);
     }
-
 }
 
 function payment_total() {
@@ -1496,11 +1562,19 @@ function update_total() {
 
     document.getElementById('remainingAmount').innerText = remainingAmount;
 
+    console.log(totalAmount);
 
-    if (totalPayment == subtotal) {
+    if (totalPayment == subtotal && totalAmount > 0)
+    {
         document.getElementById("btn_save").disabled = false;
         document.getElementById("payment_error").innerHTML = '';
-    } else {
+    } 
+    else if(totalAmount == 0)
+    {
+        document.getElementById("btn_save").disabled = true;
+    }
+    else 
+    {
         document.getElementById("btn_save").disabled = true;
         document.getElementById("payment_error").innerHTML =
             "<b style='color:#ff214f'>Validate that \"Remaining to Pay\" is 00.00</b>";

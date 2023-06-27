@@ -1,22 +1,36 @@
 <?php 
-
-    $class_name		 	= 	$this->db->get_where('class' , array('class_id' => $class_id))->row()->name;
-    $section_name       =   $this->db->get_where('section' , array('section_id' => $section_id))->row()->name;
-    $semester_name      =   $this->db->get_where('semesters' , array('semester_id' => $semester_id))->row()->name;
+    $student_info   = $this->db->get_where('student' , array('student_id' => $student_id))->row_array();
+    $semester_info  = $this->db->get_where('semester_enroll' , array('semester_id' => $semester_id, 'year' => $year))->row_array();
+    $level_info     = $this->academic->get_class_info($class_id);
 ?>
 
 <html>
 
-<header>
-    <link href="/public/uploads/print/agreement.css" media="all" rel="stylesheet">
-</header>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="/public/style/print/student_certificate.css" media="all" rel="stylesheet">
+</head>
 
-<body>
-    <h1>Student Certificate</h1>
-    <br/>
-    <h2><?=$section_name;?></h2>
-    <br/>
-    <h3><?=$semester_name;?></h3>
-    <br/>
-    
+<body class="" style="width: 11in; height: 8.5in;">
+    <div class="image">
+        <br/><br/><br/><br/><br/><br/>
+        <br/><br/><br/><br/><br/>
+        <p class="s1">
+            <?=$student_info['first_name'];?>
+        </p>
+        <p class="s1">
+            <?=$student_info['last_name']?>
+        </p>
+        <p style="padding-top: 10pt; text-align: center;">
+            has successfully completed the required 16 credit hours
+            <br/>
+            of study for <?=$level_info['name']?> and is therefore awarded this.
+        </p>
+        <br/>
+        <p style="padding-left: 0pt; padding-top: 50pt; text-align: center;">
+            Given this <?=$semester_info['end_date']?>
+        </p>
+        
+    </div>   
 </body>
+</html>

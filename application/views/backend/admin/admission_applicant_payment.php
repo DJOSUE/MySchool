@@ -1,5 +1,5 @@
 <?php 
-    $user_id = $this->session->userdata('login_user_id');
+    $user_id = get_login_user_id();
     $applicant_info = $this->db->get_where('applicant' , array('applicant_id' => $applicant_id))->result_array(); 
     $allow_actions = is_student($applicant_id);
     $is_international = is_international($applicant_id);
@@ -386,6 +386,7 @@ th {
                                                 $this->db->order_by('created_at' , 'desc');
                                                 $invoices = $this->db->get_where('payment', array('user_type' => 'applicant','user_id' => $row['applicant_id']))->result_array();
                                                 foreach($invoices as $row2): 
+                                                    $delete_url     = base_url().'payments/delete/'.base64_encode($row2['payment_id']).'/'.base64_encode('admin/admission_applicant_payment/'.$row['applicant_id']);
                                             ?>
                                                     <tr>
                                                         <td>
@@ -414,6 +415,24 @@ th {
                                                                     class="os-icon picons-thin-icon-thin-0043_eye_visibility_show_visible">
                                                                 </i>
                                                             </a>
+                                                            <?php if(has_permission('management_payments')):?>
+                                                            <!-- <a class="grey" href="javascript:void(0);"
+                                                                data-toggle="tooltip" data-toggle="tooltip"
+                                                                data-placement="top"
+                                                                data-original-title="<?= getPhrase('edit_invoice');?>"
+                                                                onclick="showAjaxModal('<?= base_url();?>modal/popup/modal_payment_invoice_update/<?= $row2['payment_id'].'/'.$return_url;?>');">
+                                                                <i
+                                                                    class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new">
+                                                                </i>
+                                                            </a> -->
+                                                            <a class="grey" data-toggle="tooltip" data-placement="top"
+                                                                data-original-title="<?= getPhrase('delete_invoice');?>"
+                                                                onClick="return confirm('<?= getPhrase('confirm_delete');?>')"
+                                                                href="<?= $delete_url;?>">
+                                                                <i
+                                                                    class="os-icon picons-thin-icon-thin-0056_bin_trash_recycle_delete_garbage_empty"></i>
+                                                            </a>
+                                                            <?php endif;?>
                                                         </td>
                                                     </tr>
                                                     <?php endforeach;?>
@@ -513,7 +532,7 @@ function apply_fee() {
     var sel = document.getElementById("card_type_2");
     var text = sel.options[sel.selectedIndex].text;
 
-    // if (text != 'Visa') {
+    if (text != 'Visa') {
     var total = ((parseFloat(amount) * 5) / 100);
     var totalFee = parseFloat(total) + parseFloat(amount);
 
@@ -524,11 +543,11 @@ function apply_fee() {
         var htmlFee = "<b style='color:#ff214f'> Total Card : $" + parseFloat(totalFee).toFixed(2) + "</b>";
         document.getElementById('total_fee').innerHTML = htmlFee;
     }
-    // } else {
-    //     document.getElementById('card_fee').innerText = ""
-    //     document.getElementById('total_fee').innerText = ""
-    //     document.getElementById('totalCardFee').innerText = '00.00';
-    // }
+    } else {
+        document.getElementById('card_fee').innerText = ""
+        document.getElementById('total_fee').innerText = ""
+        document.getElementById('totalCardFee').innerText = '00.00';
+    }
 
     update_total();
 }

@@ -2,7 +2,7 @@
 	$running_year       = $this->crud->getInfo('running_year');
     $running_semester   = $this->crud->getInfo('running_semester');
 
-    $teacher_id = $this->session->userdata('login_user_id');
+    $teacher_id = get_login_user_id();
 
     $students = $this->academic->get_students_by_teacher($teacher_id);
 
@@ -77,7 +77,7 @@
             	                                $count = 1;
 												$this->db->reset_query(); 
             	                                $this->db->order_by('request_id', 'desc');
-            	                                $requests = $this->db->get_where('teacher_request', array('teacher_id' => $this->session->userdata('login_user_id')))->result_array();
+            	                                $requests = $this->db->get_where('teacher_request', array('teacher_id' => get_login_user_id()))->result_array();
                 	                            foreach ($requests as $row):
         	                                ?>
                                             <tr>
@@ -99,7 +99,7 @@
                                                         style="color:white"><?= $row['title']; ?></a></td>
                                                 <td><?= $row['description']; ?></td>
                                                 <td><img alt=""
-                                                        src="<?= $this->crud->get_image_url('teacher', $this->session->userdata('login_user_id'));?>"
+                                                        src="<?= $this->crud->get_image_url('teacher', get_login_user_id());?>"
                                                         width="25px" style="border-radius: 10px;margin-right:5px;">
                                                     <?= $this->crud->get_name('teacher', $row['teacher_id']);?>
                                                 </td>

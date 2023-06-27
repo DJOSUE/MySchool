@@ -1,5 +1,5 @@
 <?php 
-    $user_id = $this->session->userdata('login_user_id');
+    $user_id = get_login_user_id();
     $student_info = $this->db->get_where('student' , array('student_id' => $student_id))->result_array(); 
     foreach($student_info as $row):
         $student_id = $row['student_id'];
@@ -45,6 +45,18 @@
                                                         <li>
                                                             <span class="title"><?= getPhrase('address');?>:</span>
                                                             <span class="text"><?= $row['address'];?></span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title"><?= getPhrase('city');?>:</span>
+                                                            <span class="text"><?= $row['city'];?></span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title"><?= getPhrase('state');?>:</span>
+                                                            <span class="text"><?= $row['state'];?></span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title"><?= getPhrase('postal_code');?>:</span>
+                                                            <span class="text"><?= $row['postal_code'];?></span>
                                                         </li>
                                                         <li>
                                                             <span class="title"><?= getPhrase('sevis');?>:</span>

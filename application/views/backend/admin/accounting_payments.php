@@ -2,16 +2,28 @@
     $running_year = $this->crud->getInfo('running_year');
     $running_semester = $this->crud->getInfo('running_semester'); 
 
+    $payment_type = $this->payment->get_transaction_types();
+    $income_type = $this->payment->get_income_types();
+
+    $cashier_all = has_permission('accounting_dashboard');
+    $advisor        = $this->user->get_advisor();
+    $accounters     = $this->user->get_accounters();
+
+
     $startDate  = date_format(date_create($start_date), "Y-m-d");
     $endDate    = date_format(date_create($end_date), "Y-m-d");
+    $this->db->reset_query(); 
+    if($cashier_id != "")
+    {
+        $ex = explode(':',$cashier_id);
 
-    $this->db->reset_query();    
+        $this->db->where('created_by', $ex['1']);
+        $this->db->where('created_by_type', $ex['0']);
+    }
     $this->db->where('invoice_date >=', $startDate);
     $this->db->where('invoice_date <=', $endDate);
     $payments = $this->db->get('payment')->result_array();
 
-    $payment_type = $this->payment->get_transaction_types();
-    $income_type = $this->payment->get_income_types();
 ?>
 <div class="content-w">
     <?php include 'fancy.php';?>
@@ -28,6 +40,28 @@
                     <div class="tab-content">
                         <?= form_open(base_url() . 'admin/accounting_payments/');?>
                         <div class="row">
+                            <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                                <div class="form-group label-floating is-select">
+                                    <label class="control-label">
+                                        <?= getPhrase('cashier');?>
+                                    </label>
+                                    <div class="select">
+                                        <select name="cashier_id" <?= $cashier_all == false ? 'disabled' : ''?>>
+                                            <option value=""><?= getPhrase('select');?></option>
+                                            <?php foreach($advisor as $row): ?>
+                                            <option value="admin:<?= $row['admin_id'];?>"
+                                                <?php if($cashier_id == ('admin:'.$row['admin_id'])) echo "selected";?>>
+                                                <?= $row['first_name'].' '.$row['last_name'];?></option>
+                                            <?php endforeach;?>
+                                            <?php foreach($accounters as $item): ?>
+                                            <option value="accountant:<?= $item['accountant_id'];?>"
+                                                <?php if($cashier_id == ('accountant:'.$item['accountant_id'])) echo "selected";?>>
+                                                <?= $item['first_name'].' '.$item['last_name'];?></option>
+                                            <?php endforeach;?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                 <div class="form-group label-floating is-select" style="background-color: #fff;">
                                     <label class="control-label"><?= getPhrase('start_date');?></label>
@@ -103,7 +137,7 @@
                                                         }
                                                         else
                                                         {
-                                                            $program = ucfirst($row['user_type']) .' - '.  $this->studentModel->get_applicant_program_name($row['user_id']);
+                                                            $program = ucfirst($row['user_type']) .' - '.  $this->applicant->get_applicant_program_name($row['user_id']);
                                                         }
 
                                                         

@@ -32,11 +32,11 @@
                                         </div>
                                         <?php if (file_exists('public/uploads/news_images/'.$news_code.'.jpg')):?>
                                         <hr>
-                                        <p><?= $this->crud->check_text($wall['description']);?></p>
                                         <div class="post-thumb">
                                             <img
                                                 src="<?= base_url();?>public/uploads/news_images/<?= $news_code;?>.jpg">
                                         </div>
+                                        <p><?= $this->crud->check_text($wall['description']);?></p>
                                         <?php else:?>
                                         <div class="wall-content">
                                             <p><?= $this->crud->check_text($wall['description']);?></p>
@@ -96,7 +96,7 @@
                                 $options = $this->db->get_where('polls', array('id' => $wall['news_id']))->row()->options;
                                 if($usrdb == 'accountant' || $usrdb == 'all'):
                                 $type = 'accountant';
-                                $id = $this->session->userdata('login_user_id');
+                                $id = get_login_user_id();
                                 $user = $type. "-".$id;
                                 $query = $this->db->get_where('poll_response', array('poll_code' => $poll_code, 'user' => $user));
                             ?>
@@ -306,6 +306,21 @@
                                         </div>
                                     </div>
                                     <div class="ui-block paddingtel">
+                                        <div class="pipeline white lined-success">
+                                            <div class="element-wrapper">
+                                                <h6 class="element-header"><?= getPhrase('policies');?></h6>
+                                            </div>
+                                            <div class="content">
+                                                <center>
+                                                    <a href="https://americanone-esl.com/document_pdf/catalogue.pdf"
+                                                        class="panel-btn" target="_blank">
+                                                        <?= getPhrase('catalogue');?>
+                                                    </a>
+                                                </center>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui-block paddingtel">
                                         <div class="ui-block-title">
                                             <h6 class="title"><?= getPhrase('chat_groups');?></h6>
                                         </div>
@@ -315,7 +330,7 @@
                                                     $group_messages = $this->db->get('group_message_thread')->result_array();
                                                     foreach ($group_messages as $row):
                                                     $members = json_decode($row['members']);
-                                                    if (in_array($this->session->userdata('login_type').'_'.$this->session->userdata('login_user_id'), $members)):
+                                                    if (in_array(get_account_type().'_'.get_login_user_id(), $members)):
                                                 ?>
                                             <li class="inline-items">
                                                 <div class="author-thumb">

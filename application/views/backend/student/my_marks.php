@@ -8,7 +8,7 @@
             <div class="content-box">
                 <div class="row">
                     <?php 
-        				$student_info = $this->db->get_where('enroll' , array('student_id' => $this->session->userdata('login_user_id') , 'year' => $running_year))->result_array();
+        				$student_info = $this->db->get_where('enroll' , array('student_id' => get_login_user_id() , 'year' => $running_year))->result_array();
     				    $exams = $this->db->get('units')->result_array();
     				    foreach ($student_info as $row1):
     				    foreach ($exams as $row2):
@@ -36,7 +36,7 @@
                                 			$subjects = $this->db->get_where('subject' , array('class_id' => $row1['class_id'], 'section_id' => $row1['section_id']))->result_array();
                             			    foreach ($subjects as $row3): 
                                  		    $obtained_mark_query = $this->db->get_where('mark' , array(
-                                    	    'subject_id' => $row3['subject_id'], 'unit_id' => $row2['unit_id'],'class_id' => $row1['class_id'], 'student_id' => $this->session->userdata('login_user_id'),'year' => $running_year));
+                                    	    'subject_id' => $row3['subject_id'], 'unit_id' => $row2['unit_id'],'class_id' => $row1['class_id'], 'student_id' => get_login_user_id(),'year' => $running_year));
                              			    if($obtained_mark_query->num_rows() > 0) 
                                 		    {
                                         		$marks = $obtained_mark_query->result_array();
@@ -50,19 +50,19 @@
                                                 <?php echo $this->crud->get_name('teacher', $row3['teacher_id']); ?>
                                             </td>
                                             <td>
-                                                <?php $mark = $this->db->get_where('mark' , array('subject_id' => $row3['subject_id'], 'unit_id' => $row2['unit_id'], 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labtotal;?>
+                                                <?php $mark = $this->db->get_where('mark' , array('subject_id' => $row3['subject_id'], 'unit_id' => $row2['unit_id'], 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labtotal;?>
                                                 <?php if($mark < $min || $mark == 0):?>
                                                 <a class="btn btn-rounded btn-sm btn-danger"
-                                                    style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $row3['subject_id'], 'unit_id' => $row2['unit_id'], 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labtotal == 0) echo '0'; else echo $mark;?></a>
+                                                    style="color:white"><?php if($this->db->get_where('mark' , array('subject_id' => $row3['subject_id'], 'unit_id' => $row2['unit_id'], 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labtotal == 0) echo '0'; else echo $mark;?></a>
                                                 <?php endif;?>
                                                 <?php if($mark >= $min):?>
                                                 <a class="btn btn-rounded btn-sm btn-info"
-                                                    style="color:white"><?php echo $this->db->get_where('mark' , array('subject_id' => $row3['subject_id'], 'unit_id' => $row2['unit_id'], 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labtotal;?></a>
+                                                    style="color:white"><?php echo $this->db->get_where('mark' , array('subject_id' => $row3['subject_id'], 'unit_id' => $row2['unit_id'], 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labtotal;?></a>
                                                 <?php endif;?>
                                             </td>
-                                            <td><?php echo $grade = $this->crud->get_grade($this->db->get_where('mark' , array('subject_id' => $row3['subject_id'], 'unit_id' => $row2['unit_id'], 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->labtotal);?>
+                                            <td><?php echo $grade = $this->crud->get_grade($this->db->get_where('mark' , array('subject_id' => $row3['subject_id'], 'unit_id' => $row2['unit_id'], 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->labtotal);?>
                                             </td>
-                                            <td><?php echo $this->db->get_where('mark' , array('subject_id' => $row3['subject_id'], 'unit_id' => $row2['unit_id'], 'student_id' => $this->session->userdata('login_user_id'), 'year' => $running_year))->row()->comment; ?>
+                                            <td><?php echo $this->db->get_where('mark' , array('subject_id' => $row3['subject_id'], 'unit_id' => $row2['unit_id'], 'student_id' => get_login_user_id(), 'year' => $running_year))->row()->comment; ?>
                                             </td>
                                             <?php $data = base64_encode($row1['class_id']."-".$row1['section_id']."-".$row3['subject_id']); ?>
                                             <td><a class="btn btn-rounded btn-sm btn-primary" style="color:white"
@@ -74,7 +74,7 @@
                                 </table>
                                 <div class="form-buttons-w text-right">
                                     <a target="_blank"
-                                        href="<?php echo base_url();?>student/marks_print_view/<?php echo base64_encode($this->session->userdata('login_user_id').'-'. $row2['unit_id']);?>/"><button
+                                        href="<?php echo base_url();?>student/marks_print_view/<?php echo base64_encode(get_login_user_id().'-'. $row2['unit_id']);?>/"><button
                                             class="btn btn-rounded btn-success" type="submit"><i
                                                 class="picons-thin-icon-thin-0333_printer"></i>
                                             <?php echo getPhrase('print');?></button></a>

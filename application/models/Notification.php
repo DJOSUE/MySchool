@@ -17,8 +17,8 @@ class Notification extends School
 
     function create($message_code, $user_id, $user_type, $url_encode)
     {
-        $original_id = $this->session->userdata('login_user_id');
-        $original_type = $this->session->userdata('login_type');
+        $original_id = get_login_user_id();
+        $original_type = get_account_type();
         $user_name = $this->crud->get_name($original_type, $original_id);
         $url = base64_decode($url_encode);
 
@@ -39,10 +39,33 @@ class Notification extends School
         $this->crud->save_log($table, $action, $insert_id, $notify);
     }
 
+    function create_message($message, $user_id, $user_type, $url_encode = '')
+    {
+        $original_id = get_login_user_id();
+        $original_type = get_account_type();
+        $url = base64_decode($url_encode);
+
+        $notify['notify']        = $message;
+        $notify['user_id']       = $user_id;
+        $notify['user_type']     = $user_type;
+        $notify['url']           = $url;
+        $notify['date']          = $this->crud->getDateFormat();
+        $notify['time']          = date('h:i A');
+        $notify['status']        = 0;
+        $notify['original_id']   = $original_id;
+        $notify['original_type'] = $original_type;
+        $this->db->insert('notification', $notify);
+        
+        $table      = 'notification';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $notify);
+    }
+
     function teacher_student_request($message_code, $student_name, $user_id, $user_type, $start_date, $end_date)
     {
-        $original_id = $this->session->userdata('login_user_id');
-        $original_type = $this->session->userdata('login_type');
+        $original_id = get_login_user_id();
+        $original_type = get_account_type();
 
         $user_name = $this->crud->get_name($original_type, $original_id);
         // $url = base64_decode($url_encode);
@@ -88,8 +111,8 @@ class Notification extends School
         }
         else
         {
-            $user_id    = $this->session->userdata('login_user_id');
-            $user_type  = get_table_user($this->session->userdata('role_id'));
+            $user_id    = get_login_user_id();
+            $user_type  = get_table_user(get_role_id());
 
             $this->db->where('user_id', $user_id);
             $this->db->where('user_type', $user_type);
@@ -102,8 +125,8 @@ class Notification extends School
 
     function create_email($message_code, $user_id, $user_type, $url_encode)
     {
-        $user_id = $this->session->userdata('login_user_id');
-        $user_type = $this->session->userdata('login_type');
+        $user_id = get_login_user_id();
+        $user_type = get_account_type();
         $user_name = $this->crud->get_name($user_type, $user_id);
         $url = base64_decode($url_encode);
 

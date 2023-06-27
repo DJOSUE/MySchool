@@ -127,11 +127,12 @@ class Ticket extends School
     {
         $code = md5(date('d-m-Y H:i:s'));
         $data['ticket_code']        = $code;
-        $data['created_by']         = $this->session->userdata('login_user_id');
-        $data['created_by_type']    = get_table_user($this->session->userdata('role_id'));
+        $data['created_by']         = get_login_user_id();
+        $data['created_by_type']    = get_table_user(get_role_id());
         $data['category_id']        = html_escape($this->input->post('category_id'));
         $data['status_id']          = html_escape($this->input->post('status_id'));
         $data['priority_id']        = html_escape($this->input->post('priority_id'));
+        $data['link']               = html_escape($this->input->post('link'));
         $data['description']        = html_escape($this->input->post('description'));
 
         if(!empty($this->input->post('assigned_to')))
@@ -150,7 +151,7 @@ class Ticket extends School
 
         if($this->ticket->is_ticket_closed($this->input->post('status_id')))
         {
-            $data['assigned_to'] =  $this->session->userdata('login_user_id');
+            $data['assigned_to'] =  get_login_user_id();
         }
         
         if($_FILES['ticket_file']['name'] != '')
@@ -174,13 +175,17 @@ class Ticket extends School
 
     function update($ticket_id)
     {
-        $data['updated_by']     = $this->session->userdata('login_user_id');
-        $data['updated_by_type']    = get_table_user($this->session->userdata('role_id'));
+        $data['updated_by']         = get_login_user_id();
+        $data['updated_by_type']    = get_table_user(get_role_id());
 
-        $ticket_code = $this->db->get_where('ticket' , array('ticket_id' => $ticket_id) )->row()->ticket_code;
-        $assigned_to_old = $this->db->get_where('ticket' , array('ticket_id' => $ticket_id) )->row()->assigned_to;
-        
+        $ticket_info = $this->db->get_where('ticket' , array('ticket_id' => $ticket_id) )->row();
+
+        $ticket_code = $ticket_info->ticket_code;
+        $assigned_to_old = $ticket_info->assigned_to;        
         $assigned_to_new = $this->input->post('assigned_to');
+
+        $status_id_old = $ticket_info->status_id;
+        $status_id_new = $this->input->post('status_id');
 
 
         if(!empty($this->input->post('title')))
@@ -222,7 +227,7 @@ class Ticket extends School
 
         if($assigned_to_new != '' && ($assigned_to_new != $assigned_to_old))
         {
-            $user_name  = $this->crud->get_name('admin', $this->session->userdata('login_user_id'));
+            $user_name  = $this->crud->get_name('admin', get_login_user_id());
             $assigned_name  = $this->crud->get_name('admin', $assigned_to_new);
 
             // Create a new interaction
@@ -231,12 +236,19 @@ class Ticket extends School
             
             $this->add_message($ticket_code);
         }
+
+        $update_status = $status_id_old != $status_id_new;
+        if($update_status)
+        {
+            $this->send_notification($ticket_code, 'change_status', $status_id_new);
+        } 
     }
 
     function update_status($ticket_code, $status_id)
     {
-        $data['updated_by']     = $this->session->userdata('login_user_id');
-        $data['status_id']   = $status_id;
+        $data['updated_by_type']    = get_table_user(get_role_id());
+        $data['updated_by']         = get_login_user_id();
+        $data['status_id']          = $status_id;
         $this->db->where('ticket_code', $ticket_code);
         $this->db->update('ticket', $data);
 
@@ -244,19 +256,20 @@ class Ticket extends School
         $action     = 'update';
         $this->crud->save_log($table, $action, $ticket_code, $data);
 
+        $this->send_notification($ticket_code, $status_id);
         return true;
     }
 
     function add_message($ticket_code, $type = "")
     {
         $md5 = md5(date('d-m-Y H:i:s'));
-        $table_user = get_table_user($this->session->userdata('role_id'));
+        $table_user = get_table_user(get_role_id());
 
         $current_status = $this->db->get_where('ticket' , array('ticket_code' => $ticket_code))->row()->status_id;
         
         if($type != 'automatic')
         {
-            $data['sender_id']      = $this->session->userdata('login_user_id');        
+            $data['sender_id']      = get_login_user_id();        
             $data['sender_type']    = $table_user;
         }
         else
@@ -311,6 +324,22 @@ class Ticket extends School
         return $ticket_info;        
     }
 
+    public function get_ticket_info($ticket_code)
+    {
+        $ticket_info = $this->db->get_where('ticket' , array('ticket_code' => $ticket_code) )->row_array();
+        return $ticket_info;        
+    }
+
+    public function get_ticket_interactions($ticket_id)
+    {
+        $this->db->reset_query();                                                
+        $this->db->order_by('created_at' , 'DESC');
+        $this->db->where('ticket_code', $ticket_id);
+        $interactions = $this->db->get('ticket_message')->result_array();
+
+        return $interactions;
+    }
+
     public function get_ticket_code($ticket_id)
     {
         $ticket_code = $this->db->get_where('ticket' , array('ticket_id' => $ticket_id) )->row()->ticket_code;
@@ -341,4 +370,68 @@ class Ticket extends School
         $applicant_query = $this->db->get('ticket');
         return $applicant_query->num_rows();
     }
+
+    function send_notification($ticket_code, $action, $status_id = '')
+    {
+        $message = "";
+
+        // Get Ticket Info 
+        $ticket_info = $this->get_ticket_info($ticket_code);
+        $subject     = $ticket_info['title'];
+
+        //Get Status info 
+        $status_name = $this->get_status_name($status_id);
+
+        // Validate if the sender is the create or the assigned
+        $login_user_id   = get_login_user_id();
+        $login_user_type = get_account_type();
+
+        $created_by_type = $ticket_info['created_by_type'];
+        $created_by = $ticket_info['created_by'];
+
+        $user_name   = $this->crud->get_name($login_user_type, $login_user_id);
+
+        if($login_user_id == $created_by && $login_user_type == $created_by_type)
+        {
+            $user_id = $ticket_info['assigned_to'];
+            $user_type = 'admin';
+        }
+        else
+        {
+            $user_id = $created_by;
+            $user_type = $created_by_type;
+        }
+
+        $message_status = "updated the status of";       // has commented 
+        $template = "@@user_name@@ @@comment_text@@@@status_text@@ your ticket about @@subject@@@@status_name@@.";
+
+        $parameter = array("@@user_name@@", "@@comment_text@@","@@status_text@@","@@subject@@", "@@status_name@@");
+        
+
+        switch ($action) {
+            case 'add_comment':         
+                if($status_id != '')
+                {
+                    $values   = array($user_name, "has commented", ' and '.$message_status, $subject, ' to '.$status_name);
+                }   
+                else
+                {
+                    $values   = array($user_name, "has commented", '', $subject, '');
+                }    
+                
+                $message = str_replace($parameter, $values, $template);
+                break; 
+            
+            case 'change_status':
+                $values   = array($user_name, '', $message_status, $subject, ' to '.$status_name);
+                $message = str_replace($parameter, $values, $template);
+                break;
+        }
+
+        $url_encode = base64_encode('helpdesk/ticket_info/'.$ticket_code);
+        $this->notification->create_message($message, $user_id, $user_type, $url_encode);
+
+        
+    }
+
 }

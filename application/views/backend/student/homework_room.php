@@ -3,7 +3,7 @@
     $current_homework = $this->db->get_where('homework' , array('homework_code' => $homework_code))->result_array();
     foreach ($current_homework as $row):
 ?>
-    <?php $query = $this->db->get_where('deliveries', array('homework_code' => $homework_code, 'student_id' => $this->session->userdata('login_user_id')));?>
+    <?php $query = $this->db->get_where('deliveries', array('homework_code' => $homework_code, 'student_id' => get_login_user_id()));?>
     <link href="<?php echo base_url();?>public/uploads/fonts/font-fileuploader.css" rel="stylesheet">
     <link href="<?php echo base_url();?>public/uploads/fonts/script.css" media="all" rel="stylesheet">
     <div class="content-w">
@@ -88,7 +88,7 @@
 			                    <p><b><?php echo getPhrase('your_submitted_files');?>:</b></p>
 			                    <ul>
 			                    <?php 
-			                        $qw = $this->db->get_where('homework_files', array('homework_code' => $homework_code,'student_id' => $this->session->userdata('login_user_id')))->result_array();
+			                        $qw = $this->db->get_where('homework_files', array('homework_code' => $homework_code,'student_id' => get_login_user_id()))->result_array();
 			                        foreach($qw as $fm):
 			                    ?>
 			                        <li><a href="<?php echo base_url();?>public/uploads/homework_delivery/<?php echo $fm['file'];?>" target="_blank"><?php echo $fm['file'];?></a> - <a href="<?php echo base_url();?>student/delivery/delete/<?php echo $fm['fhomework_file_id'];?>/<?php echo $homework_code;?>" onclick="return confirm('<?php echo getPhrase('confirm_delete');?>');"><i class="picons-thin-icon-thin-0056_bin_trash_recycle_delete_garbage_empty" title="delete"></i></a></li>			        
@@ -142,7 +142,7 @@
 				                                <a class="btn btn-rounded btn-sm btn-danger" style="color:white"><?php echo getPhrase('unrated');?></a>
 				                            <?php endif;?>
 				                            <?php if($query->num_rows() > 0):?>
-				                                <a class="btn btn-rounded btn-sm btn-primary" style="color:white"><?php $mark =$this->db->get_where('deliveries', array('homework_code' => $homework_code, 'student_id' => $this->session->userdata('login_user_id')))->row()->mark; if($mark > 0) echo $mark; else echo getPhrase('waiting_mark');?></a>
+				                                <a class="btn btn-rounded btn-sm btn-primary" style="color:white"><?php $mark =$this->db->get_where('deliveries', array('homework_code' => $homework_code, 'student_id' => get_login_user_id()))->row()->mark; if($mark > 0) echo $mark; else echo getPhrase('waiting_mark');?></a>
 				                            <?php endif;?>
 				                            </td>
 			                            </tr>
@@ -150,7 +150,7 @@
 				                            <th><b><?php echo getPhrase('teacher_comment');?></b>:</th>
 				                            <td>
 				                            <?php if($query->num_rows() > 0):?>
-				                                <?php echo $this->db->get_where('deliveries', array('homework_code' => $homework_code, 'student_id' => $this->session->userdata('login_user_id')))->row()->teacher_comment;?>
+				                                <?php echo $this->db->get_where('deliveries', array('homework_code' => $homework_code, 'student_id' => get_login_user_id()))->row()->teacher_comment;?>
 				                            <?php endif;?>
 				                            </td>
 			                            </tr>

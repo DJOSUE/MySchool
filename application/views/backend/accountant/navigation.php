@@ -1,17 +1,16 @@
 <?php 
-    $account_id = $this->session->userdata('login_user_id');
-    $role_id    = $this->session->userdata('role_id');
+    $account_id = get_login_user_id();
+    $role_id    = get_role_id();
 
     $admin_type = $role_id;// $this->db->get_where('admin', array('admin_id' => $admin_id))->row()->owner_status;
 
     // Array Pages
     $task_pages         = array('task_dashboard', 'task_list', 'task_info');
     $message_pages      = array('message', 'group');
-    $time_card_pages    = array('time_card', 'time_sheet', 'payment_period', 'worker_schedule', 'workers', 'worked_hours');    
-    $reports_pages      = array('reports_general','reports_students', 'reports_students_all', 'reports_attendance', 'reports_accounting', 'reports_tabulation', 'reports_tabulation_daily', 'report_marks');  
+    $time_card_pages    = array('time_card', 'time_sheet', 'payment_period', 'worker_schedule', 'workers', 'worked_hours');
     $calendar_pages     = array('calendar');
     $helpdesk_pages     = array('helpdesk_dashboard', 'helpdesk_ticket_list', 'helpdesk_ticket_info');
-    $payment_pages      = array('report_dashboard', 'students_payments', 'expense', 'new_payment');
+    $reports_pages      = array('accounting_dashboard', 'accounting_daily_income', 'accounting_payments', 'new_payment');
 
 ?>
 <div class="fixed-sidebar">
@@ -80,15 +79,26 @@
                     </a>
                 </li>
                 <?php endif;?>
-                <!-- Payments Access -->
-                <li <?= in_array($page_name, $payment_pages) ? 'class="currentItem"' : '';?>>
-                    <a href="<?php echo base_url();?>accountant/report_dashboard/" data-toggle="tooltip" data-placement="right"
-                        data-original-title="<?php echo getPhrase('accounting');?>">
+                <!-- Accounting Reports Access -->
+                <li <?= in_array($page_name, $reports_pages) ? 'class="currentItem"' : '';?>>
+                    <a href="<?php echo base_url();?>reports/accounting_dashboard/" data-toggle="tooltip" data-placement="right"
+                        data-original-title="<?php echo getPhrase('accounting_report');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0428_money_payment_dollar_bag_cash"></i>
                         </div>
                     </a>
                 </li>
+                <!-- Academic Reports Access -->
+                <?php if(has_permission('academic_report_module')):?>
+                <li <?php if(in_array($page_name, $academic_report_pages)):?>class="currentItem" <?php endif;?>>
+                    <a href="<?php echo base_url();?>reports/academic_dashboard/" data-toggle="tooltip"
+                        data-placement="right" data-original-title="<?php echo getPhrase('academic_reports');?>">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0375_screen_analytics_line_graph"></i>
+                        </div>
+                    </a>
+                </li>
+                <?php endif;?>
                 <!-- Calendar Access -->
                 <?php if(has_permission('calendar_module')):?>
                 <li <?= in_array($page_name, $calendar_pages) ? 'class="currentItem"' : '';?>>
@@ -100,21 +110,11 @@
                     </a>
                 </li>
                 <?php endif;?>
-                <!-- System Reports Access -->
-                <?php if(has_permission('accounting_module')):?>
-                <li <?php if(in_array($page_name, $reports_pages)):?>class="currentItem" <?php endif;?>>
-                    <a href="<?php echo base_url();?>accountant/reports_general/" data-toggle="tooltip"
-                        data-placement="right" data-original-title="<?php echo getPhrase('accounting_reports');?>">
-                        <div class="left-menu-icon">
-                            <i class="picons-thin-icon-thin-0378_analytics_presentation_statistics_graph"></i>
-                        </div>
-                    </a>
-                </li>
-                <?php endif;?>
+                
                 <!-- Helpdesk Access -->
                 <?php if(has_permission('helpdesk_module')):?>
                 <li <?php if(in_array($page_name, $helpdesk_pages)):?>class="currentItem" <?php endif;?>>
-                    <a href="<?php echo base_url();?>accountant/helpdesk_dashboard/" data-toggle="tooltip"
+                    <a href="<?php echo base_url();?>helpdesk/dashboard/" data-toggle="tooltip"
                         data-placement="right" data-original-title="<?php echo getPhrase('help_desk');?>">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0309_support_help_talk_call"></i>
@@ -167,11 +167,11 @@
                     </a>
                 </li>
                 <li>
-                    <a href="<?php echo base_url();?>accountant/payments/">
+                    <a href="<?php echo base_url();?>reports/accounting_dashboard/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0428_money_payment_dollar_bag_cash"></i>
                         </div>
-                        <span class="left-menu-title"><?php echo getPhrase('payments');?></span>
+                        <span class="left-menu-title"><?php echo getPhrase('accounting_reports');?></span>
                     </a>
                 </li>
                 <li>
@@ -237,11 +237,11 @@
                     </a>
                 </li>
                 <li>
-                    <a href="<?php echo base_url();?>accountant/payments/">
+                    <a href="<?php echo base_url();?>reports/accounting_dashboard/">
                         <div class="left-menu-icon">
                             <i class="picons-thin-icon-thin-0428_money_payment_dollar_bag_cash"></i>
                         </div>
-                        <span class="left-menu-title"><?php echo getPhrase('accounting');?></span>
+                        <span class="left-menu-title"><?php echo getPhrase('accounting_reports');?></span>
                     </a>
                 </li>
                 <li>

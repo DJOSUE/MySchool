@@ -1,5 +1,5 @@
 <?php
-    $info = $this->db->get_where('admin', array('admin_id' => $this->session->userdata('login_user_id')))->result_array();
+    $info = $this->db->get_where('admin', array('admin_id' => get_login_user_id()))->result_array();
 	$social_login = $this->crud->getInfo('social_login');
 	
     foreach($info as $row):

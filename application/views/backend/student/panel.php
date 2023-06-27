@@ -32,10 +32,10 @@
                                     </div>
                                     <?php if (file_exists('public/uploads/news_images/'.$news_code.'.jpg')):?>
                                     <hr>
-                                    <p><?= $this->crud->check_text($wall['description']);?></p>
                                     <div class="post-thumb">
                                         <img src="<?= base_url();?>public/uploads/news_images/<?= $news_code;?>.jpg">
                                     </div>
+                                    <p><?= $this->crud->check_text($wall['description']);?></p>
                                     <br>
                                     <?php else:?>
                                     <div class="wall-content">
@@ -100,7 +100,7 @@
                             <?php if($usrdb == 'student' || $usrdb == 'all'):?>
                             <?php 
                                 $type = 'student';
-                                $id = $this->session->userdata('login_user_id');
+                                $id = get_login_user_id();
                                 $user = $type. "-".$id;
                                 $query = $this->db->get_where('poll_response', array('poll_code' => $poll_code, 'user' => $user));
                             ?>
@@ -312,6 +312,36 @@
                                     </div>
                                 </div>
                                 <div class="ui-block paddingtel">
+                                    <div class="pipeline white lined-success">
+                                        <div class="element-wrapper">
+                                            <h6 class="element-header"><?= getPhrase('policies');?></h6>
+                                        </div>
+                                        <div class="content">
+                                            <center>
+                                                <a href="https://americanone-esl.com/document_pdf/catalogue.pdf"
+                                                    class="panel-btn" target="_blank">
+                                                    <?= getPhrase('catalogue');?>
+                                                </a>
+                                            </center>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui-block paddingtel">
+                                    <div class="pipeline white lined-success">
+                                        <div class="element-wrapper">
+                                            <h6 class="element-header">CEA</h6>
+                                        </div>
+                                        <div class="content">
+                                            <center>
+                                                <a href="https://cea-accredit.org/images/2022_docs_and_handbooks/Section_15_Complaints.pdf"
+                                                    class="panel-btn" target="_blank">
+                                                    Complaints
+                                                </a>
+                                            </center>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui-block paddingtel">
                                     <div class="widget w-create-fav-page">
                                         <div class="icons-block" style="margin-bottom: 10px;">
                                             <i class="picons-thin-icon-thin-0729_student_degree_science_university_school_graduate text-white"
@@ -335,7 +365,7 @@
                                                 $group_messages = $this->db->get('group_message_thread')->result_array();
                                                 foreach ($group_messages as $row):
                                                 $members = json_decode($row['members']);
-                                                if (in_array($this->session->userdata('login_type').'_'.$this->session->userdata('login_user_id'), $members)):
+                                                if (in_array(get_account_type().'_'.get_login_user_id(), $members)):
                                             ?>
                                         <li class="inline-items">
                                             <div class="author-thumb">

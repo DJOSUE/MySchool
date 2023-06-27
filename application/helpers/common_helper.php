@@ -20,7 +20,7 @@ if (!function_exists('has_permission'))
 		$CI->load->database();
 
         if (empty($role_id)) {
-            $role_id = $CI->session->userdata('role_id');
+            $role_id = get_role_id();
         }
 
         $CI->db->where('role_id', $role_id);
@@ -50,7 +50,7 @@ if (!function_exists('is_super_admin'))
 		$CI->load->database();
 
         if (empty($admin_id)) {
-            $admin_id = $CI->session->userdata('admin_id');
+            $admin_id = get_admin_id();
         }
         
         $admin = $CI->db->get_where('admin', array('admin_id' => $admin_id))->row();
@@ -280,8 +280,106 @@ if(!function_exists('get_month_name'))
     }
 }
 
+if(!function_exists('get_admin_id'))
+{
+    function get_admin_id() 
+    {
+        $CI	=&	get_instance();
+
+        return $CI->session->userdata('user_data')['admin_id'];
+    }
+}
+
+if(!function_exists('get_admin_login'))
+{
+    function get_admin_login() 
+    {
+        $CI	=&	get_instance();
+
+        return $CI->session->userdata('user_data')['admin_login'];
+    }
+}
+
+if(!function_exists('get_teacher_login'))
+{
+    function get_teacher_login() 
+    {
+        $CI	=&	get_instance();
+
+        return $CI->session->userdata('user_data')['teacher_login'];
+    }
+}
+
+if(!function_exists('get_student_login'))
+{
+    function get_student_login() 
+    {
+        $CI	=&	get_instance();
+
+        return $CI->session->userdata('user_data')['student_login'];
+    }
+}
+
+if(!function_exists('get_accountant_login'))
+{
+    function get_accountant_login() 
+    {
+        $CI	=&	get_instance();
+
+        return $CI->session->userdata('user_data')['accountant_login'];
+    }
+}
+
+if(!function_exists('get_account_type'))
+{
+    function get_account_type() 
+    {
+        $CI	=&	get_instance();
+
+        return $CI->session->userdata('user_data')['login_type'];
+    }
+}
+
+if(!function_exists('get_role_id'))
+{
+    function get_role_id() 
+    {
+        $CI	=&	get_instance();
+
+        return $CI->session->userdata('user_data')['role_id'];
+    }
+}
+
+if(!function_exists('get_login_user_id'))
+{
+    function get_login_user_id() 
+    {
+        $CI	=&	get_instance();
+
+        return $CI->session->userdata('user_data')['login_user_id'];
+    }
+}
+
+if(!function_exists('get_name_user_login'))
+{
+    function get_name_user_login() 
+    {
+        $CI	=&	get_instance();
+
+        return $CI->session->userdata('user_data')['name'];
+    }
+}
 
 
+if(!function_exists('get_program_id'))
+{
+    function get_program_id() 
+    {
+        $CI	=&	get_instance();
+
+        return $CI->session->userdata('user_data')['program_id'];
+    }
+}
 
 /**
  * 

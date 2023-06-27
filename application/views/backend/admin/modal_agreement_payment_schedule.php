@@ -1,13 +1,6 @@
 <div class="modal-body">
     <div class="ui-block-title" style="background-color:#00579c">
         <h6 class="title" style="color:white"><?php echo getPhrase('payment_schedule');?></h6>
-        <?php
-        
-        // echo '<pre>';
-        // var_dump($param2);
-        // echo '</pre>';
-        
-        ?>
     </div>
     <div class="ui-block-content">
         <div class="row">
@@ -27,9 +20,7 @@
                         $this->db->reset_query();                                                
                         $this->db->order_by('due_date' , 'ASC');
                         $this->db->where('agreement_id', $param2);
-                        $agreement = $this->db->get('agreement_amortization')->result_array();
-
-                        $next_agreement = $this->payment->get_next_amortization($student_id);
+                        $agreement = $this->db->get('agreement_amortization')->result_array();                        
 
                         foreach($agreement as $row2):
                             $allow_payment      = true;

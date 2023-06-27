@@ -1,8 +1,8 @@
 <?php 
-	// $period =  $this->db->get_where( 'settings', array( 'type' => 'running_period' ) )->row()->description;
-	// $running_year = $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;
-
-    $min                = floatval($this->crud->getInfo('minium_mark'));
+    $min        = floatval($this->crud->getInfo('minium_mark'));
+    $programs   = $this->db->get('program')->result_array();
+    $semesters  = $this->db->get('semesters')->result_array();
+    $classes    = $this->db->get_where('class', array('status' => 1))->result_array();
 ?>
 
 <link href="<?php echo base_url();?>public/style/print/report.css" media="all" rel="stylesheet">
@@ -47,7 +47,7 @@
                 <?= form_close();?>
                 <hr>
                 <?php if($year_id != ""):?>
-                <div>
+                <div id="pass">
                     <div class="row"><br><br>
 
                         <a href="#" id="btnExport"><button class="btn btn-info btn-sm btn-rounded"><i
@@ -72,8 +72,7 @@
                                             <?= getPhrase('pass_rates');?>
                                         </th>
                                         <?php 
-                                    $class_total = [];
-                                    $classes = $this->db->get_where('class', array('status' => 1))->result_array();                                
+                                    $class_total = [];                                                                    
                                     foreach ($classes as $class) :
                                         $data = array('total' => 0, 'pass' => 0);
                                         $class_total[$class['name']] = $data;
@@ -203,9 +202,70 @@
                     </div>
                 </div>
                 <hr>
-                <div>
+                <div id="type_total">
                     <div class="row"><br><br>
+                        <a href="#" id="btnExport_2">
+                            <button class="btn btn-info btn-sm btn-rounded">
+                                <i class="picons-thin-icon-thin-0123_download_cloud_file_sync"
+                                    style="font-weight: 300; font-size: 25px;"></i>
+                            </button>
+                        </a>
+                        <a href="#" id="print_2">
+                            <button class="btn btn-info btn-sm btn-rounded" onclick="printDiv('print_area_2');">
+                                <i class="picons-thin-icon-thin-0333_printer"
+                                    style="font-weight: 300; font-size: 25px;"></i>
+                            </button>
+                        </a>
+                    </div>
+                    <div class="row">
+                        <br><br>
+                        <div class="cuadro" id="print_area_2">
+                            <table cellpading="0" cellspacing="0" border="1"
+                                style="margin: 20px 0; width:100%; table-layout: fixed;overflow-wrap: break-word;"
+                                class="bg-white" id="dvData_2">
+                                <thead>
+                                    <tr class="text-center"
+                                        style="background-color: #a01a7a; color: #fff;text-align: center;">
+                                        <th>
 
+                                        </th>
+                                        <?php 
+                                        foreach($programs as $program):
+                                        ?>
+                                        <th>
+                                            <?= $program['name'];?>
+                                        </th>
+                                        <?php endforeach;?>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $semesters = $this->db->get('semesters')->result_array();                                    
+                                    foreach($semesters as $semester):
+                                        
+                                    ?>
+                                    <tr>
+                                        <td>
+                                            <?= $semester['name']?>
+                                        </td>
+                                        <?php 
+                                        foreach($programs as $program):
+                                        ?>
+                                        <td>
+
+                                            <?= $this->academic->get_total_student_type($program['program_id'], $year_id, $semester['semester_id']);?>
+                                        </td>
+                                        <?php endforeach;?>
+                                    </tr>
+                                    <?php endforeach;?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div id="finished">
+                    <div class="row"><br><br>
                         <a href="#" id="btnExport_2"><button class="btn btn-info btn-sm btn-rounded"><i
                                     class="picons-thin-icon-thin-0123_download_cloud_file_sync"
                                     style="font-weight: 300; font-size: 25px;"></i></button>
@@ -224,35 +284,48 @@
                                 <thead>
                                     <tr class="text-center"
                                         style="background-color: #a01a7a; color: #fff;text-align: center;">
-                                        <th>
-                                            
+                                        <th rowspan="2">
+
                                         </th>
-                                        <?php 
-                                        $programs = $this->db->get('program')->result_array();
-                                        foreach($programs as $program):
+                                        <?php                                         
+                                        foreach($semesters as $semester):
+                                        ?>
+                                        <th colspan="2">
+                                            <?= $semester['name'];?>
+                                        </th>
+                                        <?php endforeach;?>
+                                    </tr>
+                                    <tr class="text-center"
+                                        style="background-color: #a01a7a; color: #fff;text-align: center;">
+
+                                        <?php                                         
+                                        foreach($semesters as $semester):
                                         ?>
                                         <th>
-                                            <?= $program['name'];?>
+                                            Register
+                                        </th>
+                                        <th>
+                                            Finished
                                         </th>
                                         <?php endforeach;?>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $semesters = $this->db->get('semesters')->result_array();                                    
-                                    foreach($semesters as $semester):
-                                        
+                                    foreach($classes as $class):                                        
                                     ?>
-                                    <tr>
+                                    <tr class="text-center">
                                         <td>
-                                            <?= $semester['name']?> 
+                                            <?= $class['name']?>
                                         </td>
                                         <?php 
-                                        foreach($programs as $program):
+                                        foreach($semesters as $semester):
                                         ?>
                                         <td>
-                                        
-                                            <?= $this->academic->get_total_student_type($program['program_id'], $year_id, $semester['semester_id']);?>
+                                            <?= $this->academic->get_total_student_class($class['class_id'], $year_id, $semester['semester_id']);?>
+                                        </td>
+                                        <td>
+                                            <?= $this->academic->get_total_student_class_semester_finished( $class['class_id'], $year_id, $semester['semester_id']);?>
                                         </td>
                                         <?php endforeach;?>
                                     </tr>
@@ -260,6 +333,67 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+                <hr>
+                <div id="">
+                    <div class="row"><br><br>
+                        <a href="#" id="btnExport_2">
+                            <button class="btn btn-info btn-sm btn-rounded">
+                                <i class="picons-thin-icon-thin-0123_download_cloud_file_sync"
+                                    style="font-weight: 300; font-size: 25px;"></i>
+                            </button>
+                        </a>
+                        <a href="#" id="print_2">
+                            <button class="btn btn-info btn-sm btn-rounded" onclick="printDiv('print_area_2');"><i
+                                    class="picons-thin-icon-thin-0333_printer"
+                                    style="font-weight: 300; font-size: 25px;"></i>
+                            </button>
+                        </a>
+                    </div>
+                    <div class="row">
+                        <table cellpading="0" cellspacing="0" border="1"
+                            style="margin: 20px 0; width:100%; table-layout: fixed;overflow-wrap: break-word;"
+                            class="bg-white" id="dvData_2">
+                            <thead>
+                                <tr class="text-center"
+                                    style="background-color: #a01a7a; color: #fff;text-align: center;">
+                                    <th>Semester</th>
+                                    <th>Total Students</th>
+                                    <th>90% - 94%</th>
+                                    <th>95% - 96%</th>
+                                    <th>97% - 98%</th>
+                                    <th>99% - 100%</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php 
+                                foreach($semesters as $semester):
+                                    $total = $this->academic->get_total_student_semester($year_id, $semester['semester_id']);
+                                ?>
+                                <tr class="text-center">
+                                    <td>
+                                        <?=$semester['name']?>
+                                    </td>
+                                    <td>
+                                        <?=$total?>
+                                    </td>
+                                    <td>
+                                        <?=$this->academic->get_student_approved($year_id, $semester['semester_id'],90,94);?>
+                                    </td>
+                                    <td>
+                                        <?=$this->academic->get_student_approved($year_id, $semester['semester_id'],95,96);?>
+                                    </td>
+                                    <td>
+                                        <?=$this->academic->get_student_approved($year_id, $semester['semester_id'],97,98);?>
+                                    </td>
+                                    <td>
+                                        <?=$this->academic->get_student_approved($year_id, $semester['semester_id'],99,100);?>
+                                    </td>
+                                </tr>
+                                <?php endforeach;?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

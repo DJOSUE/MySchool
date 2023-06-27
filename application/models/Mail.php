@@ -377,7 +377,6 @@ class Mail extends School
 	function submit($to, $subject, $message, $type)
 	{
         $this->load->library('email');
-        // $this->load->library('encrypt');
         
         $from = get_settings('system_email');
         $fromName = get_settings('system_name');
@@ -401,7 +400,16 @@ class Mail extends School
         $this->email->set_mailtype("html");
         $this->email->set_newline("\r\n");
 
-        $this->email->to($to);
+        if(!IS_TESTING)
+        {
+            $email_to = $to;
+        }
+        else 
+        {
+            $email_to = DEFAULT_TESTING_EMAIL;
+        }
+        
+        $this->email->to($email_to);
         $this->email->from($from, $fromName);
         $this->email->subject($subject);
 
@@ -423,10 +431,7 @@ class Mail extends School
         
         $this->email->send();
 
-        // if (!$this->email->send()) 
-        // {
-        //     show_error($this->email->print_debugger());
-        // }
+        $this->insert_logs($email_to, $subject, $msg);        
 	}
 
     //Sent password to the new student
@@ -522,6 +527,49 @@ class Mail extends School
             $this->submit($email_to,$email_sub,$data,'notify');
         }
     }
+
+    //Send payment reminder.
+    function payment_reminder($user_name, $user_email, $email_code)
+    {
+        $email_template = $this->get_email_template($email_code);
+        $body           = $email_template['body'];
+        $subject        = $email_template['subject'];
     
+        $email_msg      = str_replace('[USER_NAME]' , $user_name , $body);
+        $email_to       = $user_email;
+        
+        $data = array(
+            'email_msg' => $email_msg
+        );
+        if($email_to != '')
+        {
+            $this->submit($email_to, $subject, $data, 'notify');
+        }
+    }
+
+    private function get_email_template($email_template)
+    {
+        $this->db->reset_query();
+        $this->db->where_in('task', $email_template);
+        $result = $this->db->get('email_template')->row_array();
+
+        return $result;
+    }
+    
+    private function insert_logs($email, $subject, $body)
+    {
+
+        $data['email'] = $email;
+        $data['subject'] = $subject;
+        $data['body'] = $body;
+
+        $this->db->insert('email_logs', $data);
+
+        $table      = 'email_logs';
+        $action     = 'insert';
+        $insert_id  = $this->db->insert_id();
+        $this->crud->save_log($table, $action, $insert_id, $data);
+    }
+
     //End of Mail.php
 }

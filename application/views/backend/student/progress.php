@@ -32,7 +32,7 @@
                             ?>
                              <?php 
                                 for($i = 0; $i < count($week_days); $i++):
-                                $arrs = $this->crud->get_timeline($week_days[$i],$this->session->userdata('login_user_id'));
+                                $arrs = $this->crud->get_timeline($week_days[$i],get_login_user_id());
                              ?>
                                 <div class="tasks-section">
                                     <div class="tasks-header-w" <?php $var_day = explode('-',$week_days[$i]); if($var_day[2] == date('d')):?>style="background: #a01a7a; border-radius: 12px; padding: 10px;"<?php endif;?>>
@@ -50,7 +50,7 @@
                                             //success, favorite, complete, warning
                                             foreach($arrs as $row):
                                         ?>
-                                            <li class="draggable-task <?php echo $this->crud->check_li_status($row['wall_type'],$row['homework_id'],$this->session->userdata('login_user_id'));?>">
+                                            <li class="draggable-task <?php echo $this->crud->check_li_status($row['wall_type'],$row['homework_id'],get_login_user_id());?>">
                                                 <div class="todo-task">
                                                     <?php if($row['wall_type'] == 'exam'):?>
                                                         <?php 

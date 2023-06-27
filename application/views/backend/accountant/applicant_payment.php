@@ -1,5 +1,5 @@
 <?php 
-    $user_id = $this->session->userdata('login_user_id');
+    $user_id = get_login_user_id();
     $applicant_info = $this->db->get_where('applicant' , array('applicant_id' => $applicant_id))->result_array(); 
     $allow_actions = is_student($applicant_id);
     $is_international = is_international($applicant_id);
@@ -380,7 +380,7 @@ th {
                                                         $this->db->order_by('created_at' , 'desc');
                                                         $invoices = $this->db->get_where('payment', array('user_type' => 'applicant','user_id' => $row['applicant_id']))->result_array();
                                                         foreach($invoices as $row2): 
-                                                            $delete_url     = base_url().'payments/delete/'.$row2['payment_id'].'/'.base64_encode('accountant/student_payments/'.$row['student_id']);
+                                                            $delete_url     = base_url().'payments/delete/'.base64_encode($row2['payment_id']).'/'.base64_encode('accountant/applicant_payment/'.$row['applicant_id']);
                                                             $invoice_url    = base_url().'accountant/payment_invoice/'.base64_encode($row2['payment_id']);
                                                             $return_url     = base64_encode('accountant/student_payments/'.$student_id.'/');
                                                     ?>
@@ -531,7 +531,7 @@ function apply_fee() {
     var sel = document.getElementById("card_type_2");
     var text = sel.options[sel.selectedIndex].text;
 
-    // if (text != 'Visa') {
+    if (text != 'Visa') {
     var total = ((parseFloat(amount) * 5) / 100);
     var totalFee = parseFloat(total) + parseFloat(amount);
 
@@ -542,11 +542,11 @@ function apply_fee() {
         var htmlFee = "<b style='color:#ff214f'> Total Card : $" + parseFloat(totalFee).toFixed(2) + "</b>";
         document.getElementById('total_fee').innerHTML = htmlFee;
     }
-    // } else {
-    //     document.getElementById('card_fee').innerText = ""
-    //     document.getElementById('total_fee').innerText = ""
-    //     document.getElementById('totalCardFee').innerText = '00.00';
-    // }
+    } else {
+        document.getElementById('card_fee').innerText = ""
+        document.getElementById('total_fee').innerText = ""
+        document.getElementById('totalCardFee').innerText = '00.00';
+    }
 
     update_total();
 }

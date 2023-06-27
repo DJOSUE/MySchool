@@ -1,0 +1,55 @@
+* {
+    margin: 0;
+    padding: 0;
+    text-indent: 0;
+}
+
+.image-best {
+    background-image: url('/public/style/print/images/bsmc.png');
+    background-repeat: round;
+    height: 100%;
+  }
+
+.image {
+    background-image: url('/public/style/print/images/smc_2.jpg');
+    background-repeat: round;
+    width: 1047px;
+    height: 100%;
+  }
+
+.s1 {
+    color: #213366;
+    font-family: "Palatino Linotype", serif;
+    font-style: italic;
+    font-weight: normal;
+    text-decoration: none;
+    font-size: 46pt;
+}
+
+.s2 {
+    color: #213366;
+    font-family: "Palatino Linotype", serif;
+    font-style: italic;
+    font-weight: normal;
+    text-decoration: none;
+    font-size: 35pt;
+}
+
+h1 {
+    color: #C00;
+    font-family: "Montserrat Black";
+    font-style: normal;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 14pt;
+}
+
+p {
+    color: #999;
+    font-family: "Montserrat SemiBold";
+    font-style: normal;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 12pt;
+    margin: 0pt;
+}

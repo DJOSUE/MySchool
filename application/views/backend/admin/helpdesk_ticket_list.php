@@ -4,7 +4,7 @@
 
     $this->db->reset_query();
 
-    $user_id = $this->session->userdata('login_user_id');
+    $user_id = get_login_user_id();
 
     if($category_id != '')
     {
@@ -288,13 +288,13 @@ th {
                                                 <a href="javascript:void(0);" class="grey" data-toggle="tooltip"
                                                     data-placement="top"
                                                     data-original-title="<?php echo getPhrase('add_interaction');?>"
-                                                    onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_ticket_add_message/<?= $row['ticket_code'].'/ticket_applicant/';?>');">
+                                                    onclick="showAjaxModal('<?php echo base_url();?>modal/popup_helpdesk/modal_ticket_add_message/<?= $row['ticket_code'];?>');">
                                                     <i class="os-icon picons-thin-icon-thin-0151_plus_add_new"></i>
                                                 </a>
                                                 <a href="javascript:void(0);" class="grey" data-toggle="tooltip"
                                                     data-placement="top"
                                                     data-original-title="<?php echo getPhrase('edit');?>"
-                                                    onclick="showAjaxModal('<?php echo base_url();?>modal/popup/modal_ticket_edit/<?=$row['ticket_code'].'/ticket_applicant/';?>');">
+                                                    onclick="showAjaxModal('<?php echo base_url();?>modal/popup_helpdesk/modal_ticket_edit/<?=$row['ticket_code'];?>');">
                                                     <i
                                                         class="os-icon picons-thin-icon-thin-0001_compose_write_pencil_new"></i>
                                                 </a>

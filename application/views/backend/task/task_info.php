@@ -5,7 +5,7 @@
     $tasks = $task_query->result_array();
 
     $fancy_path         =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/'.$account_type.'/';
-    $account_type       =   get_table_user($this->session->userdata('role_id'));
+    $account_type       =   get_table_user(get_role_id());
 
 ?>
 <style>
@@ -31,7 +31,7 @@ th {
                             $user_info      = $this->crud->get_user_info($row['user_type'], $row['user_id']);
                             $status_info    = $this->task->get_status_info($row['status_id']);
                             $priority_info  = $this->task->get_priority_info($row['priority_id']);
-                            $description    =   html_entity_decode(str_replace(array("\r", "\n"), '', $row['description']));
+                            $description    = html_entity_decode(str_replace(array("\r", "\n"), '', $row['description']));
                             $allow_actions  = $this->task->is_task_closed($row['status_id']);
                             // echo '<pre>';
                             // var_dump($row['user_type']);
@@ -114,106 +114,6 @@ th {
                                         </div>
                                         <div class="ui-block">
                                             <div class="ui-block-title">
-                                                <h6 class="title"><?= getPhrase('task_information');?>
-                                                </h6>
-                                            </div>
-                                            <div class="ui-block-content">
-                                                <div class="row">
-                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                        <ul class="widget w-personal-info item-block">
-                                                            <li>
-                                                                <span class="title"><?= getPhrase('title');?>:</span>
-                                                                <span class="text"><?= $row['title'];?></span>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                        <ul class="widget w-personal-info item-block">
-                                                            <li>
-                                                                <span class="title">
-                                                                    <?= getPhrase('assigned_to');?>:
-                                                                </span>
-                                                                <span class="text">
-                                                                <?= $row['assigned_to_type'] != "" ? $this->crud->get_name($row['assigned_to_type'],$row['assigned_to']) : '';?>
-                                                                </span>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                        <ul class="widget w-personal-info item-block">
-                                                            <li>
-                                                                <span class="title">
-                                                                    <?= getPhrase('department');?>:
-                                                                </span>
-                                                                <span class="text">
-                                                                    <?= $this->task->get_department_by_category($row['category_id']);?>
-                                                                </span>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                        <ul class="widget w-personal-info item-block">
-                                                            <li>
-                                                                <span class="title">
-                                                                    <?= getPhrase('category');?>:
-                                                                </span>
-                                                                <span class="text">
-                                                                    <?= $this->task->get_category($row['category_id']);?>
-                                                                </span>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                        <ul class="widget w-personal-info item-block">
-                                                            <li>
-                                                                <span class="title">
-                                                                    <?= getPhrase('due_date');?>:
-                                                                </span>
-                                                                <span class="text">
-                                                                    <?= $row['due_date'];?>
-                                                                </span>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-                                                        <ul class="widget w-personal-info item-block">
-                                                            <li>
-                                                                <span
-                                                                    class="title"><?= getPhrase('description');?>:</span>
-                                                                <span class="text"><?= $description;?></span>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <?php if($row['task_file']):?>
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <ul class="widget w-personal-info item-block">
-                                                            <li>
-                                                                <span class="title">
-                                                                    <?= getPhrase('file');?>:
-                                                                </span>
-                                                                <span class="text">
-                                                                    <a href="<?= base_url().PATH_TASK_FILES;?><?= $row['task_file'];?>"
-                                                                        class="grey" data-toggle="tooltip"
-                                                                        data-placement="top" target="_blank"
-                                                                        data-original-title="<?= getPhrase('view_file');?>">
-                                                                        <i
-                                                                            class="os-icon picons-thin-icon-thin-0075_document_file_paper_text_article_blog_template"></i>
-                                                                        <?= getPhrase('view_file');?>
-                                                                    </a>
-                                                                </span>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <? endif;?>
-                                            </div>
-                                        </div>
-                                        <div class="ui-block">
-                                            <div class="ui-block-title">
                                                 <h6 class="title"><?= getPhrase('personal_information');?>
                                                 </h6>
                                             </div>
@@ -256,6 +156,104 @@ th {
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="ui-block">
+                                            <div class="ui-block-title">
+                                                <h6 class="title"><?= getPhrase('task_information');?>
+                                                </h6>
+                                            </div>
+                                            <div class="ui-block-content">
+                                                <div class="row">
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <ul class="widget w-personal-info item-block">
+                                                            <li>
+                                                                <span class="title"><?= getPhrase('title');?>:</span>
+                                                                <span class="text"><?= $row['title'];?></span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <ul class="widget w-personal-info item-block">
+                                                            <li>
+                                                                <span class="title">
+                                                                    <?= getPhrase('assigned_to');?>:
+                                                                </span>
+                                                                <span class="text">
+                                                                    <?= $row['assigned_to_type'] != "" ? $this->crud->get_name($row['assigned_to_type'],$row['assigned_to']) : '';?>
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <ul class="widget w-personal-info item-block">
+                                                            <li>
+                                                                <span class="title">
+                                                                    <?= getPhrase('department');?>:
+                                                                </span>
+                                                                <span class="text">
+                                                                    <?= $this->task->get_department_by_category($row['category_id']);?>
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <ul class="widget w-personal-info item-block">
+                                                            <li>
+                                                                <span class="title">
+                                                                    <?= getPhrase('category');?>:
+                                                                </span>
+                                                                <span class="text">
+                                                                    <?= $this->task->get_category($row['category_id']);?>
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <ul class="widget w-personal-info item-block">
+                                                            <li>
+                                                                <span class="title">
+                                                                    <?= getPhrase('due_date');?>:
+                                                                </span>
+                                                                <span class="text">
+                                                                    <?= $row['due_date'];?>
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <ul class="widget w-personal-info item-block">
+                                                        <li>
+                                                            <span class="title"><?= getPhrase('description');?>:</span>
+                                                            <span class="text"><?= $description;?></span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <?php if($row['task_file']):?>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <ul class="widget w-personal-info item-block">
+                                                            <li>
+                                                                <span class="title">
+                                                                    <?= getPhrase('file');?>:
+                                                                </span>
+                                                                <span class="text">
+                                                                    <a href="<?= base_url().PATH_TASK_FILES;?><?= $row['task_file'];?>"
+                                                                        class="grey" data-toggle="tooltip"
+                                                                        data-placement="top" target="_blank"
+                                                                        data-original-title="<?= getPhrase('view_file');?>">
+                                                                        <i
+                                                                            class="os-icon picons-thin-icon-thin-0075_document_file_paper_text_article_blog_template"></i>
+                                                                        <?= getPhrase('view_file');?>
+                                                                    </a>
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <? endif;?>
+                                            </div>
+                                        </div>
+
                                         <div class=" ui-block-title row" style="border-style: none;">
                                             <div class="col-sm-4">
                                                 <div class="row" style="justify-content: flex-end;">

@@ -22,6 +22,25 @@
             </div>
         </div>
         <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for=""> <?php echo getPhrase('contact_modality');?></label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <div class="select">
+                        <select name="modality_id" required="" style="width: 150px;">
+                            <?php
+                        $modalities = $this->crud->get_interaction_modality();
+                        foreach($modalities as $modality):
+                        ?>
+                            <option value="<?= $modality['modality_id']?>">
+                                <?= $modality['name']?>
+                            </option>
+                            <?php endforeach;?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
             <label class="col-sm-3 col-form-label" for=""> <?= getPhrase('file');?></label>
             <div class="col-sm-9">
                 <div class="input-group">

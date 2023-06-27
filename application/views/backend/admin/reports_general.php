@@ -106,29 +106,29 @@
                                 </div>
                                 <div class="col-sm-6 text-center">
                                     <div class="up-main-info">
-                                        <!-- <div class="user-avatar-w">
+                                        <div class="user-avatar-w">
                                             <div class="user-avatar">
                                                 <img alt=""
-                                                    src="<?php //echo $this->crud->get_image_url('teacher', $this->db->get_where('class', array('class_id' => $class_id))->row()->teacher_id);?>"
+                                                    src="<?php echo $this->crud->get_image_url('teacher', $this->db->get_where('class', array('class_id' => $class_id))->row()->teacher_id);?>"
                                                     width="80">
                                             </div>
                                         </div>
                                         <h4 class="up-header">
-                                            <?php //echo $this->crud->get_name('teacher', $this->db->get_where('class', array('class_id' => $class_id))->row()->teacher_id);?>
+                                            <?php echo $this->crud->get_name('teacher', $this->db->get_where('class', array('class_id' => $class_id))->row()->teacher_id);?>
                                         </h4>
                                         <h6 class="up-sub-header">
                                             <div class="value badge badge-pill badge-success">
-                                                <?php //echo getPhrase('teacher');?></div>
-                                        </h6> -->
+                                                <?php echo getPhrase('teacher');?></div>
+                                        </h6>
                                     </div>
                                 </div>
                                 <hr>
-                                <!-- <div class="col-sm-6">
+                                <div class="col-sm-6">
                                     <div class="element-box">
                                         <h5 class="form-header"><?= getPhrase('gender');?></h5>
                                         <canvas id="myChart" width="100" height="100"></canvas>
                                     </div>
-                                </div> -->
+                                </div>
                                 <div class="col-sm-6">
                                     <div class="element-box">
                                         <div class="form-header">
@@ -202,7 +202,7 @@
     		}
     	}
     ?>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.umd.js"></script>
 <script type="text/javascript">
 function get_class_sections(class_id) {
     $.ajax({

@@ -1,10 +1,16 @@
 <?php 
     $system_name        =	$this->crud->getInfo('system_name');
 	$system_title       =	$this->crud->getInfo('system_title');
-    $account_type       =   $this->session->userdata('login_type'); 
+    $account_type       =   get_account_type(); 
     $backend_path       =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/';
     $views_path         =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/';
     
+    $page_array     = array('subject_dashboard', 'online_exams', 'homework', 'forum', 'study_material', 'upload_marks', 'meet', 'gamification');
+
+    $layout         = in_array($page_name, $message_pages) ? 'class="layout-w"' : '';
+
+    $view_path      =   $_SERVER['DOCUMENT_ROOT'].'/application/views/backend/';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,7 +46,7 @@
 </head>
 <body class="menu-position-side menu-side-left full-screen with-content-panel">
     <div class="with-side-panel">
-        <div class="<?php if($page_name != 'subject_dashboard' && $page_name != 'online_exams' && $page_name != 'homework' && $page_name != 'forum' && $page_name != 'study_material' && $page_name != 'upload_marks' && $page_name != 'meet' && $page_name != 'gamification'):?>layout-w<?php endif;?>">
+    <div <?php $layout;?>>
             <?php include $backend_path.$account_type.'/navigation.php';?>            
             <?php include $backend_path.'helpdesk/'.$page_name.'.php';?>
         </div>

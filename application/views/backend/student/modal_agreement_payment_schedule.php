@@ -29,16 +29,18 @@
                         $this->db->where('agreement_id', $param2);
                         $agreement = $this->db->get('agreement_amortization')->result_array();
 
-                        $next_agreement = $this->payment->get_next_amortization($student_id);
-
                         foreach($agreement as $row2):
                             $allow_payment      = true;
                             $overdue            = false;
                             $color_due          = 'primary';
                             $status_id          = $row2['status_id'];
                             $amount             = $row2['amount'];
+                            $materials          = $row2['materials'];
+                            $fees               = $row2['fees'];
                             $amortization_id    = $row2['amortization_id'];    
                             $status_info        = $this->payment->get_payment_schedule_status_info($row2['status_id']);
+
+                            $amount  = floatval($amount) + floatval($materials) + floatval($fees);
 
                             // Partial Payment
                             if($status_id == 2)

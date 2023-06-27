@@ -45,7 +45,7 @@
     $transfer = 0.00;
 
 
-    $this->db->reset_query();    
+    $this->db->reset_query();
     $this->db->where('invoice_date >=', $first_date);
     $this->db->where('invoice_date <=', $second_date);
     // $this->db->where('created_at <=', $second_date);

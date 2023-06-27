@@ -26,7 +26,7 @@
                             <ul class="navs navs-tabs upper">
                             <?php 
                                 $active1 = 0;
-                                $children_of_parent = $this->db->get_where('student' , array('parent_id' => $this->session->userdata('login_user_id')))->result_array();
+                                $children_of_parent = $this->db->get_where('student' , array('parent_id' => get_login_user_id()))->result_array();
                                 foreach ($children_of_parent as $row):
                                 $active1++;
                             ?>
@@ -40,7 +40,7 @@
                     <div class="tab-content">
                     <?php 
                         $active = 0;
-                        $children_of_parent = $this->db->get_where('student' , array('parent_id' => $this->session->userdata('login_user_id')))->result_array();
+                        $children_of_parent = $this->db->get_where('student' , array('parent_id' => get_login_user_id()))->result_array();
                         foreach ($children_of_parent as $row2):
                         $active++;
                     ?>

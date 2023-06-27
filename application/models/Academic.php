@@ -53,7 +53,7 @@ class Academic extends School
     public function setRead($code,$type,$subject_id)
     {
         $year = $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;
-        $userId    = $this->session->userdata('login_user_id');
+        $userId    = get_login_user_id();
         $check = $this->db->get_where('activity_read', array('student_id' => $userId, 'subject_activity_id' => $code,'activity_type' => $type, 'subject_id' => $subject_id, 'year' => $year));
         if($check->num_rows() == 0){
             $data['student_id']          = $userId;
@@ -84,7 +84,7 @@ class Academic extends School
     //Create Live Class.
     public function createLiveClass()
     {
-        $data['user_type']      = $this->session->userdata('login_type');
+        $data['user_type']      = get_account_type();
         $data['title']          = html_escape($this->input->post('title'));
         $data['liveType']       = $this->input->post('livetype');   
         if($this->input->post('livetype') == '2'){
@@ -102,7 +102,7 @@ class Academic extends School
         $data['class_id']       = $this->input->post('class_id');
         $data['subject_id']     = $this->input->post('subject_id');
         $data['section_id']     = $this->input->post('section_id');
-        $data['user_id']        = $this->session->userdata('login_user_id');
+        $data['user_id']        = get_login_user_id();
         $this->db->insert('live',$data);
 
         $table      = 'live';
@@ -254,10 +254,10 @@ class Academic extends School
         $data['class_id']       = $this->input->post('class_id');
         $data['file_name']      = $_FILES["file_name"]["name"];
         $data['section_id']     = $this->input->post('section_id');
-        $data['user']           = $this->session->userdata('login_type');
+        $data['user']           = get_account_type();
         $data['subject_id']     = $this->input->post('subject_id');
-        $data['uploader_type']  = $this->session->userdata('login_type');
-        $data['uploader_id']    = $this->session->userdata('login_user_id');
+        $data['uploader_type']  = get_account_type();
+        $data['uploader_id']    = get_login_user_id();
         $data['homework_code']  = substr(md5(rand(100000000, 200000000)), 0, 10);
         $this->db->insert('homework', $data);
 
@@ -269,8 +269,8 @@ class Academic extends School
         move_uploaded_file($_FILES["file_name"]["tmp_name"], "public/uploads/homework/" . $_FILES["file_name"]["name"]);
         $this->crud->send_homework_notify();
         $homework_code = $data['homework_code'];
-        $notify['notify'] = "<strong>".$this->crud->get_name($this->session->userdata('login_type'),$this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('new_homework_notify') ." <b>".html_escape($this->input->post('title'))."</b>";
-        $students = $this->db->get_where('enroll', array('class_id' => $this->input->post('class_id'), 'section_id' => $this->input->post('section_id'), 'year' => $this->runningYear))->result_array();
+        $notify['notify'] = "<strong>".$this->crud->get_name(get_account_type(),get_login_user_id())."</strong>". " ". getPhrase('new_homework_notify') ." <b>".html_escape($this->input->post('title'))."</b>";
+        $students = $this->db->get_where('enroll', array('class_id' => $this->input->post('class_id'), 'section_id' => $this->input->post('section_id'), 'subject_id' => $this->input->post('subject_id'), 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->result_array();
         foreach($students as $row)
         {
             $notify['user_id']       = $row['student_id'];
@@ -285,8 +285,8 @@ class Academic extends School
             $notify['year']          = $this->runningYear;
             $notify['semester_id']   = $this->runningSemester;
             $notify['subject_id']    = $this->input->post('subject_id');
-            $notify['original_id']   = $this->session->userdata('login_user_id');
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_id']   = get_login_user_id();
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
 
             $table      = 'notification';
@@ -303,7 +303,7 @@ class Academic extends School
         $data['description'] = html_escape($this->input->post('description'));
         $data['time_end']    = html_escape($this->input->post('time_end'));
         $data['date_end']    = html_escape($this->input->post('date_end'));
-        $data['user']        = $this->session->userdata('login_type');
+        $data['user']        = get_account_type();
         $data['status']      = $this->input->post('status');
         $data['type']        = $this->input->post('type');
         $this->db->where('homework_code', $homework_code);
@@ -352,15 +352,15 @@ class Academic extends School
         $update_id  = $this->input->post('id');
         $this->crud->save_log($table, $action, $update_id, $data);
 
-        $notify['notify']        = "<strong>". $this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong>". " ". getPhrase('homework_rated') ." <b>".$title.".</b>";
+        $notify['notify']        = "<strong>". $this->crud->get_name(get_account_type(), get_login_user_id())."</strong>". " ". getPhrase('homework_rated') ." <b>".$title.".</b>";
         $notify['user_id']       = $student_id;
         $notify['user_type']     = 'student';
         $notify['date']          = $this->crud->getDateFormat();
         $notify['time']          = date('h:i A');
         $notify['url']           = "student/homeworkroom/".$code;
         $notify['status']        = 0;
-        $notify['original_id']   = $this->session->userdata('login_user_id');
-        $notify['original_type'] = $this->session->userdata('login_type');
+        $notify['original_id']   = get_login_user_id();
+        $notify['original_type'] = get_account_type();
         $this->db->insert('notification', $notify);
 
         $table      = 'notification';
@@ -374,7 +374,7 @@ class Academic extends School
         $data['title']           = html_escape($this->input->post('title'));
         $data['description']     = html_escape($this->input->post('description'));
         $data['class_id']        = $this->input->post('class_id');
-        $data['type']            = $this->session->userdata('login_type');
+        $data['type']            = get_account_type();
         $data['section_id']      = $this->input->post('section_id');
         if($this->input->post('post_status') != "1"){
             $data['post_status'] = 0;
@@ -387,7 +387,7 @@ class Academic extends School
         $data['timestamp']       = $this->crud->getDateFormat().' '.date("H:iA");
         $data['subject_id']      = $this->input->post('subject_id');
         $data['file_name']       = $_FILES["userfile"]["name"];
-        $data['teacher_id']      = $this->session->userdata('login_user_id');
+        $data['teacher_id']      = get_login_user_id();
         $data['post_code']       = substr(md5(rand(100000000, 200000000)), 0, 10);
         $this->db->insert('forum', $data);
 
@@ -409,9 +409,9 @@ class Academic extends School
         }
         $data['title']           = html_escape($this->input->post('title'));
         $data['description']     = html_escape($this->input->post('description'));
-        $data['type']            = $this->session->userdata('login_type');
+        $data['type']            = get_account_type();
         $data['timestamp']       = $this->crud->getDateFormat().' '.date("H:iA");
-        $data['teacher_id']      = $this->session->userdata('login_user_id');
+        $data['teacher_id']      = get_login_user_id();
         $this->db->where('post_code', $code);
         $this->db->update('forum', $data);
 
@@ -423,7 +423,7 @@ class Academic extends School
     
     public function createMaterial()
     {
-        $data['type']              = $this->session->userdata('login_type');
+        $data['type']              = get_account_type();
         $data['timestamp']         = strtotime(date("Y-m-d H:i:s"));
         $data['title']             = html_escape($this->input->post('title'));
         $data['description']       = html_escape($this->input->post('description'));
@@ -436,7 +436,7 @@ class Academic extends School
         $data['class_id']          = $this->input->post('class_id');
         $data['subject_id']        = $this->input->post('subject_id');
         $data['section_id']        = $this->input->post('section_id');
-        $data['teacher_id']        = $this->session->userdata('login_user_id');
+        $data['teacher_id']        = get_login_user_id();
         $data['year']              = $this->runningYear;
         $data['semester_id']       = $this->runningSemester;
         $this->db->insert('document',$data);
@@ -448,8 +448,8 @@ class Academic extends School
 
         move_uploaded_file($_FILES["file_name"]["tmp_name"], "public/uploads/document/" . str_replace(" ", "",$_FILES["file_name"]["name"]));
         
-        $notify['notify'] = "<strong>".$this->crud->get_name($this->session->userdata('login_type'), $this->session->userdata('login_user_id'))."</strong> ". " ".getPhrase('study_material_notify');
-        $students = $this->db->get_where('enroll', array('class_id' => $this->input->post('class_id'),'section_id' => $this->input->post('section_id'), 'year' => $this->runningYear))->result_array();
+        $notify['notify'] = "<strong>".$this->crud->get_name(get_account_type(), get_login_user_id())."</strong> ". " ".getPhrase('study_material_notify');
+        $students = $this->db->get_where('enroll', array('class_id' => $this->input->post('class_id'), 'section_id' => $this->input->post('section_id'), 'subject_id' => $this->input->post('subject_id'), 'year' => $this->runningYear, 'semester_id' => $this->runningSemester))->result_array();
         foreach($students as $row)
         {
             $notify['user_id']       = $row['student_id'];
@@ -463,8 +463,8 @@ class Academic extends School
             $notify['class_id']      = $this->input->post('class_id');
             $notify['section_id']    = $this->input->post('section_id');
             $notify['subject_id']    = $this->input->post('subject_id');
-            $notify['original_id']   = $this->session->userdata('login_user_id');
-            $notify['original_type'] = $this->session->userdata('login_type');
+            $notify['original_id']   = get_login_user_id();
+            $notify['original_type'] = get_account_type();
             $this->db->insert('notification', $notify);
 
             $table      = 'notification';
@@ -515,9 +515,9 @@ class Academic extends School
     public function createOnlineExam()
     {
         $data['publish_date']       = date('Y-m-d H:i:s');
-        $data['uploader_type']      = $this->session->userdata('login_type');
+        $data['uploader_type']      = get_account_type();
         $data['wall_type']          = "exam";
-        $data['uploader_id']        = $this->session->userdata('login_user_id');
+        $data['uploader_id']        = get_login_user_id();
         $data['upload_date']        = $this->crud->getDateFormat().' '.date('H:iA');
         $data['password']           = html_escape($this->input->post('password'));
         $data['show_random']        = $this->input->post('show_random');
@@ -646,9 +646,20 @@ class Academic extends School
         if($_FILES['userfile']['size'] > 0){
             $data['icon']   = $md5.str_replace(' ', '', $_FILES['userfile']['name']);
         }
-        $data['name']       = html_escape($this->input->post('name'));
-        $data['about']      = html_escape($this->input->post('about'));
-        $data['teacher_id'] = $this->input->post('teacher_id');
+
+        if(!empty($this->input->post('name')))
+            $data['name']               = html_escape($this->input->post('name'));
+        if(!empty($this->input->post('about')))
+            $data['about']              = html_escape($this->input->post('about'));
+        if(!empty($this->input->post('modality_id')))
+            $data['modality_id']        = html_escape($this->input->post('modality_id'));
+        if(!empty($this->input->post('subject_capacity')))
+            $data['subject_capacity']   = html_escape($this->input->post('subject_capacity'));
+        if(!empty($this->input->post('classroom')))
+            $data['classroom']          = html_escape($this->input->post('classroom'));
+        if(!empty($this->input->post('teacher_id')))
+            $data['teacher_id']         = $this->input->post('teacher_id');
+        
         $this->db->where('subject_id', $courseId);
         $this->db->update('subject', $data);
         move_uploaded_file($_FILES['userfile']['tmp_name'], 'public/uploads/subject_icon/' . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
@@ -804,7 +815,7 @@ class Academic extends School
         $data['student_id']  = $this->input->post('student_id');
         $data['class_id']    = $this->input->post('class_id');
         $data['section_id']  = $this->input->post('section_id');
-        $data['user_id']     = $this->session->userdata('login_type')."-".$this->session->userdata('login_user_id');
+        $data['user_id']     = get_account_type()."-".get_login_user_id();
         $data['title']       = html_escape($this->input->post('title'));
         $data['description'] = html_escape($this->input->post('description'));
         $data['file']        = $_FILES["file_name"]["name"];
@@ -812,9 +823,9 @@ class Academic extends School
         $data['priority']    = $this->input->post('priority');
         $data['status']      = 0;
         $data['code']        = substr(md5(rand(0, 1000000)), 0, 7);
-        $this->db->insert('reports', $data);
+        $this->db->insert('student_behavior', $data);
 
-        $table      = 'reports';
+        $table      = 'student_behavior';
         $action     = 'insert';
         $insert_id  = $this->db->insert_id();
         $this->crud->save_log($table, $action, $insert_id, $data);
@@ -847,8 +858,8 @@ class Academic extends School
         $data['report_code'] = $this->input->post('report_code');
         $data['message']     = html_escape($this->input->post('message'));
         $data['date']        = $this->crud->getDateFormat();
-        $data['sender_type'] = $this->session->userdata('login_type');
-        $data['sender_id']   = $this->session->userdata('login_user_id');
+        $data['sender_type'] = get_account_type();
+        $data['sender_id']   = get_login_user_id();
         $this->db->insert('report_response', $data);
 
         $table      = 'report_response';
@@ -874,8 +885,8 @@ class Academic extends School
         $notify['date']          = $this->crud->getDateFormat();
         $notify['time']          = date('h:i A');
         $notify['status']        = 0;
-        $notify['original_id']   = $this->session->userdata('login_user_id');
-        $notify['original_type'] = $this->session->userdata('login_type');
+        $notify['original_id']   = get_login_user_id();
+        $notify['original_type'] = get_account_type();
         $this->db->insert('notification', $notify);
 
         $table      = 'notification';
@@ -890,8 +901,8 @@ class Academic extends School
         $notify2['date']          = $this->crud->getDateFormat();
         $notify2['time']          = date('h:i A');
         $notify2['status']        = 0;
-        $notify2['original_id']   = $this->session->userdata('login_user_id');
-        $notify2['original_type'] = $this->session->userdata('login_type');
+        $notify2['original_id']   = get_login_user_id();
+        $notify2['original_type'] = get_account_type();
         $this->db->insert('notification', $notify2);
 
         $table      = 'notification';
@@ -1132,6 +1143,122 @@ class Academic extends School
         return $info;
     }
     
+
+    public function updateCreateDailyMarks($unit_id, $class_id, $section_id, $subject_id, $date)
+    {
+        $this->db->reset_query();
+        $this->db->where('class_id', $class_id);
+        $this->db->where('section_id', $section_id);
+        $this->db->where('subject_id', $subject_id);        
+        $this->db->where('year', $this->runningYear);
+        $this->db->where('semester_id', $this->runningSemester);
+        $query = $this->db->get('enroll')->result_array();
+
+        $marks = $_POST['daily_mark_student'];
+
+        foreach($query as $student)
+        {
+            $student_id     = $student['student_id'];
+            $student_mark   = $marks[$student_id];
+            $mark_daily_id  = $this->academic->get_daily_mark_id($student_id, $class_id, $section_id, $subject_id, $date, $unit_id);
+
+            // Calc
+                $count          = 0;
+                $obtained_marks = 0;
+                
+                $labouno        = $student_mark['lab_uno'];
+                $labodos        = $student_mark['lab_dos'];
+                $labotres       = $student_mark['lab_tres'];
+                $labocuatro     = $student_mark['lab_cuatro'];
+                $labocinco      = $student_mark['lab_cinco'];
+                $laboseis       = $student_mark['lab_seis'];
+                $labosiete      = $student_mark['lab_siete'];
+                $laboocho       = $student_mark['lab_ocho'];
+                $labonueve      = $student_mark['lab_nueve'];
+                $labodiez       = $student_mark['lab_diez'];
+                $comment        = $student_mark['comment'];
+
+                // Validate values
+                if($labouno     == '' ) { $labouno      = '-'; } 
+                if($labodos     == '' ) { $labodos      = '-'; }  
+                if($labotres    == '' ) { $labotres     = '-'; }  
+                if($labocuatro  == '' ) { $labocuatro   = '-'; }  
+                if($labocinco   == '' ) { $labocinco    = '-'; }
+                if($laboseis    == '' ) { $laboseis     = '-'; } 
+                if($labosiete   == '' ) { $labosiete    = '-'; }  
+                if($laboocho    == '' ) { $laboocho     = '-'; }  
+                if($labonueve   == '' ) { $labonueve    = '-'; }  
+                if($labodiez    == '' ) { $labodiez     = '-'; }
+
+                // Calculate the average 
+                if(is_numeric($labouno)     && $labouno != '-' ) { $count++; } 
+                if(is_numeric($labodos)     && $labodos != '-' ) { $count++; }  
+                if(is_numeric($labotres)    && $labotres != '-' ) { $count++; }  
+                if(is_numeric($labocuatro)  && $labocuatro != '-' ) { $count++; }  
+                if(is_numeric($labocinco)   && $labocinco != '-') { $count++; }
+                if(is_numeric($laboseis)    && $laboseis != '-' ) { $count++; } 
+                if(is_numeric($labosiete)   && $labosiete != '-' ) { $count++; }  
+                if(is_numeric($laboocho)    && $laboocho != '-' ) { $count++; }  
+                if(is_numeric($labonueve)   && $labonueve != '-' ) { $count++; }  
+                if(is_numeric($labodiez)    && $labodiez != '-') { $count++; }
+
+                $labototal      = (int)$labouno + (int)$labodos + (int)$labotres + (int)$labocuatro + (int)$labocinco + (int)$laboseis + (int)$labosiete + (int)$laboocho + (int)$labonueve + (int)$labodiez;
+                
+                if($count > 0)
+                    $obtained_marks = round(($labototal / $count), $this->roundPrecision);
+                else 
+                    $obtained_marks = '-';
+            
+
+            // Data
+            $data['unit_id']        = $unit_id;
+            $data['class_id']       = $class_id;
+            $data['section_id']     = $section_id;
+            $data['subject_id']     = $subject_id;
+            $data['year']           = $this->runningYear;
+            $data['semester_id']    = $this->runningSemester;
+            $data['mark_date']      = $date;
+            $data['student_id']     = $student_id;
+
+            $data['mark_obtained']  = $obtained_marks;
+            $data['labuno']         = $labouno;
+            $data['labdos']         = $labodos;
+            $data['labtres']        = $labotres;
+            $data['labcuatro']      = $labocuatro;
+            $data['labcinco']       = $labocinco;
+            $data['labseis']        = $laboseis;
+            $data['labsiete']       = $labosiete;
+            $data['labocho']        = $laboocho;
+            $data['labnueve']       = $labonueve;
+            $data['labdiez']        = $labodiez;
+            $data['labtotal']       = $labototal;
+            $data['comment']        = $comment;
+        
+            if($mark_daily_id > 0)
+            {
+                $this->db->where('mark_daily_id' , $mark_daily_id);
+                $this->db->update('mark_daily' , $data);
+
+                $table      = 'mark_daily';
+                $action     = 'update';
+                $update_id  = $mark_daily_id;
+                $this->crud->save_log($table, $action, $update_id, $data);
+            }
+            else
+            {
+                $this->db->insert('mark_daily' , $data);
+                
+                $table      = 'mark_daily';
+                $action     = 'insert';
+                $insert_id  = $this->db->insert_id();
+                $this->crud->save_log($table, $action, $insert_id, $data);
+            }
+        }
+        
+        $info = base64_encode($class_id.'-'.$section_id.'-'.$subject_id);
+        return $info;
+    }
+
     public function updateDailyMarksBatch($datainfo, $student_id, $unit_id, $mark_date)
     {
         $info = base64_decode( $datainfo );
@@ -1356,7 +1483,7 @@ class Academic extends School
         
     }
 
-    public function uploadMarks($datainfo,$examId)
+    public function uploadMarks($datainfo, $examId)
     {
         $info = base64_decode($datainfo);
         $ex = explode('-', $info);
@@ -1413,7 +1540,80 @@ class Academic extends School
             }
         }
     }
-    
+
+    public function get_daily_mark_id($student_id, $class_id, $section_id, $subject_id, $date, $unit_id)
+    {        
+        $this->db->reset_query();
+        $this->db->select('mark_daily_id');
+        $this->db->where('student_id', $student_id);
+        $this->db->where('class_id', $class_id);
+        $this->db->where('section_id', $section_id);
+        $this->db->where('subject_id', $subject_id);
+        $this->db->where('unit_id', $unit_id);
+        $this->db->where('mark_date', $date);
+        $this->db->where('year', $this->runningYear);
+        $this->db->where('semester_id', $this->runningSemester);        
+        $query = $this->db->get('mark_daily')->row_array();
+        return intval($query['mark_daily_id']);                
+    }
+
+
+    public function createMarks($datainfo, $examId, $date)
+    {
+        $info = base64_decode($datainfo);
+        $ex = explode('-', $info);
+
+        $data['unit_id']        = $examId;
+        $data['class_id']       = $ex[0];
+        $data['section_id']     = $ex[1];
+        $data['subject_id']     = $ex[2];
+        $data['year']           = $this->runningYear;
+        $data['semester_id']    = $this->runningSemester;
+
+        $students = $this->db->get_where('enroll' , array('class_id' => $data['class_id'] , 'section_id' => $data['section_id'] , 'subject_id' => $data['subject_id'] ,'year' => $data['year']))->result_array();
+        
+        foreach($students as $row) 
+        {
+            if($this->useDailyMarks)
+            {
+                $verify_data = array('unit_id' => $data['unit_id'], 'class_id' => $data['class_id'], 'section_id' => $data['section_id'],
+                                    'student_id' => $row['student_id'],'subject_id' => $data['subject_id'], 'year' => $data['year'], 'mark_date' => $date);
+                $query = $this->db->get_where('mark_daily' , $verify_data);
+
+                if($query->num_rows() < 1) 
+                {   
+                    $data['mark_date']  = $date;
+                    $data['student_id'] = $row['student_id'];
+                    
+                    $this->db->insert('mark_daily' , $data);
+
+                    $table      = 'mark_daily';
+                    $action     = 'insert';
+                    $insert_id  = $this->db->insert_id();
+                    $this->crud->save_log($table, $action, $insert_id, $data);
+                }
+            }
+            else
+            {
+                $verify_data = array('unit_id' => $data['unit_id'], 'class_id' => $data['class_id'], 'section_id' => $data['section_id'],
+                                    'student_id' => $row['student_id'],'subject_id' => $data['subject_id'], 'year' => $data['year']);
+                $query = $this->db->get_where('mark' , $verify_data);
+
+                if($query->num_rows() < 1) 
+                {   
+                    $data['student_id'] = $row['student_id'];
+                    
+                    $this->db->insert('mark' , $data);
+
+                    $table      = 'mark';
+                    $action     = 'insert';
+                    $insert_id  = $this->db->insert_id();
+                    $this->crud->save_log($table, $action, $insert_id, $data);
+                }
+            }
+        }
+    }
+
     public function submitExam($online_exam_id)
     {
         $answer_script = array();
@@ -1464,7 +1664,7 @@ class Academic extends School
     function requestStudentBook()
     {
         $data['book_id']            = $this->input->post('book_id');
-        $data['student_id']         = $this->session->userdata('login_user_id');
+        $data['student_id']         = get_login_user_id();
         $data['issue_start_date']   = html_escape(strtotime($this->input->post('start')));
         $data['issue_end_date']     = html_escape(strtotime($this->input->post('end')));
         $this->db->insert('book_request', $data);
@@ -1485,7 +1685,7 @@ class Academic extends School
         
         $data['homework_code']   = $homeworkCode;
         $name = substr(md5(rand(0, 1000000)), 0, 7).$_FILES["file_name"]["name"];
-        $data['student_id']      = $this->session->userdata('login_user_id');
+        $data['student_id']      = get_login_user_id();
         $data['date']            = $this->crud->getDateFormat().' '.date('H:i');
         $data['class_id']        = $this->input->post('class_id');
         $data['section_id']      = $this->input->post('section_id');
@@ -1511,7 +1711,7 @@ class Academic extends School
         {
             $insert_data['file']          = $datax['files'][$i]['name'];
             $insert_data['homework_code'] = $homeworkCode;
-            $insert_data['student_id']    = $this->session->userdata('login_user_id');
+            $insert_data['student_id']    = get_login_user_id();
             $insert_data['delivery_id']   = $delivery;
             $this->db->insert('homework_files', $insert_data); 
 
@@ -1526,7 +1726,7 @@ class Academic extends School
     public function sendTextHomework($homeworkCode)
     {
         $data['homework_code']    = $homeworkCode;
-        $data['student_id']       = $this->session->userdata('login_user_id');
+        $data['student_id']       = get_login_user_id();
         $data['date']             = $this->crud->getDateFormat().' '.date('H:i');
         $data['class_id']         = $this->input->post('class_id');
         $data['section_id']       = $this->input->post('section_id');
@@ -1597,7 +1797,7 @@ class Academic extends School
         {
             $insert_data['file']          = $datax['files'][$i]['name'];
             $insert_data['homework_code'] = $homeworkCode;
-            $insert_data['student_id']    = $this->session->userdata('login_user_id');
+            $insert_data['student_id']    = get_login_user_id();
             $insert_data['delivery_id']   = $id;
             $this->db->insert('homework_files', $insert_data);
 
@@ -1799,6 +1999,21 @@ class Academic extends School
         return $subject;
     }
 
+    function get_subjects_by_modality_section($year = '', $semester_id = '', $modality, $section_name)
+    {   
+        $year       =   $year == '' ? $this->runningYear : $year;
+        $semester_id =   $semester_id == '' ? $this->runningSemester : $semester_id;
+
+        $this->db->reset_query();
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $this->db->where('modality_id', $modality);
+        $this->db->where('section_name', $section_name);
+        $subject = $this->db->get('v_subject')->result_array();
+        
+        return $subject;
+    }
+
     function get_subject_by_modality($class_id, $section_id, $modality, $year = '', $semester_id = '')
     {   
         $year       =   $year == '' ? $this->runningYear : $year;
@@ -1874,22 +2089,22 @@ class Academic extends School
         }
 
         // Change the status to be Active
-
         $data_student['student_session'] = 1;
         $this->db->where('student_id', $student_id);
         $this->db->update('student', $data_student);  
 
         // Create Interaction         
-        $user_id        = $this->session->userdata('login_user_id');
-        $user_table     = get_table_user($this->session->userdata('role_id'));
+        $user_id        = get_login_user_id();
+        $user_table     = get_table_user(get_role_id());
         $user_name      = $this->crud->get_name($user_table, $user_id);
         $level          = $this->academic->get_class_name($this->input->post('class_id'));
         $section_name   = $this->academic->get_section_name($this->input->post('section_id'));
+        $modality       = $this->academic->get_modality_name($this->input->post('modality_id'));
         
         $data_interaction['created_by']         = DEFAULT_USER;
         $data_interaction['created_by_type']    = DEFAULT_TABLE;
         $data_interaction['student_id']         = $student_id;
-        $data_interaction['comment']            = $user_name." registered in the ". $level." level, ".$section_name.' schedule.';
+        $data_interaction['comment']            = $user_name." registered in the ". $level." level, ".$section_name.' schedule, modality: '.$modality;
 
         $this->studentModel->add_interaction_data($data_interaction);
 
@@ -1934,6 +2149,18 @@ class Academic extends School
         $name  = $this->db->get('semesters')->row()->name;
 
         return $name;
+    }
+
+    function get_sections($year, $semester_id)
+    {   
+        $this->db->reset_query();
+        $this->db->select('name');
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $this->db->group_by('name');
+        $query  = $this->db->get('section')->result_array();
+
+        return $query;
     }
 
     function get_section_name($section_id)
@@ -2112,7 +2339,7 @@ class Academic extends School
         
         return $query;
     }
-
+    
     public function get_classes()
     {
         $this->db->reset_query();
@@ -2210,7 +2437,7 @@ class Academic extends School
             $data['semester_id']    = $this->input->post('semester_id');
             $data['start_date']     = $this->input->post('date_start');
             $data['end_date']       = $this->input->post('date_end');
-            $data['created_by']     = $this->session->userdata('login_user_id');
+            $data['created_by']     = get_login_user_id();
 
             $this->db->insert('semester_enroll', $data);
 
@@ -2264,6 +2491,7 @@ class Academic extends School
                             $dataSubject['year']        = $year;
                             $dataSubject['section_id']  = $section_id;
                             $dataSubject['modality_id'] = $modality_id;
+                            $dataSubject['subject_capacity']  = DEFAULT_CAPACITY;
 
                             $this->db->insert('subject', $dataSubject);
         
@@ -2321,7 +2549,8 @@ class Academic extends School
         $data['section_id']     = $this->input->post('section_id');
         $data['subject_id']     = $this->input->post('subject_id');
         $data['month']          = $this->input->post('month');
-        $data['created_by']     = $this->session->userdata('login_user_id');
+        $data['reason']         = $this->input->post('reason');
+        $data['created_by']     = get_login_user_id();
 
         $this->db->insert('student_month', $data);
 
@@ -2353,12 +2582,13 @@ class Academic extends School
         $this->crud->save_log($table, $action, $student_month_id, $data);
     }
 
-    function student_month_has_best($month)
+    function student_month_has_best($month, $section_name)
     {
         $this->db->reset_query();
         $this->db->where('year', $this->runningYear);
         $this->db->where('semester_id', $this->runningSemester);    
         $this->db->where('month', $month);
+        $this->db->where('section_name', $section_name);
         $this->db->where('is_best', '1');
         $query = $this->db->get('v_student_month');
 
@@ -2368,9 +2598,7 @@ class Academic extends School
         }
         else{
             return false;
-        }
-
-        
+        }        
     }
 
     function get_student_month_by_student($student_id)
@@ -2464,10 +2692,10 @@ class Academic extends School
     function get_student_enrollment($student_id)
     {
         $this->db->reset_query();
-        $this->db->select('class_id, class_name, section_id, section_name, year, semester_id, semester_name');
+        $this->db->select('class_id, class_name, section_id, section_name, year, semester_id, semester_name, modality_name, teacher_name');
         $this->db->where('year', $this->runningYear);
         $this->db->where('semester_id', $this->runningSemester);
-        $this->db->from('v_enroll');
+        $this->db->from('v_enrollment');
         $this->db->where('student_id', $student_id);
         $this->db->group_by('class_id, section_id');
         $enrollments =  $this->db->get()->result_array(); 
@@ -2552,6 +2780,49 @@ class Academic extends School
         
     }
 
+    function get_student_approved($year = "", $semester_id = "", $p_start, $p_end)
+    {        
+        $year           =   $year == ""         ? $this->runningYear        : $year;
+        $semester_id    =   $semester_id == ""  ? $this->runningSemester    : $semester_id;        
+
+        $this->db->reset_query();
+        $this->db->select('year, semester_id, class_id, section_id, student_id');
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $this->db->where('program_id is NOT NULL', NULL, FALSE);
+        $this->db->group_by(array('year', 'semester_id', 'class_id', 'section_id', 'student_id'));     
+        $query = $this->db->get('v_enrollment')->result_array();
+
+        $pass = 0;
+
+        foreach ($query as $item) 
+        {
+            $grade = $this->get_student_grades($item['student_id'], $year, $semester_id);
+
+            if($grade['mark'] >= $p_start && $grade['mark'] <= $p_end)
+                $pass++;
+        }
+
+        return $pass;        
+    }
+
+    function get_total_student_semester($year = "", $semester_id = "")
+    {        
+        $year           =   $year == ""         ? $this->runningYear        : $year;
+        $semester_id    =   $semester_id == ""  ? $this->runningSemester    : $semester_id;
+
+        $this->db->reset_query();
+        $this->db->select('year, semester_id, class_id, section_id, student_id');
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);
+        $this->db->where('program_id is NOT NULL', NULL, FALSE);
+        $this->db->group_by(array('year', 'semester_id', 'class_id', 'section_id', 'student_id'));     
+        $query = $this->db->get('v_enrollment');
+
+        $students = $query->num_rows();
+        return $students;
+    }
+
     function get_total_student_type($program_id, $year = "", $semester_id = "")
     {
         $year           =   $year == ""         ? $this->runningYear        : $year;
@@ -2569,13 +2840,30 @@ class Academic extends School
         return $students;
     }
 
+    function get_total_student_class_semester_finished($class_id, $year = "", $semester_id = "")
+    {
+        $year           =   $year == ""         ? $this->runningYear        : $year;
+        $semester_id    =   $semester_id == ""  ? $this->runningSemester    : $semester_id;
+
+        $this->db->reset_query();
+        $this->db->select('year, semester_id, class_id, section_id, student_id');
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);    
+        $this->db->where('class_id', $class_id);
+        $this->db->group_by(array('year', 'semester_id', 'class_id', 'section_id', 'student_id'));
+        $query = $this->db->get('v_mark_daily_final_exam');
+
+        $students = $query->num_rows();
+        return $students;
+    }
+
     function get_classes_by_semester($year = "", $semester_id = "")
     {
         $year           =   $year == ""         ? $this->runningYear        : $year;
         $semester_id    =   $semester_id == ""  ? $this->runningSemester    : $semester_id;
 
         $this->db->reset_query();
-        $this->db->select('class_id, class_name, section_id, section_name, subject_id, name, modality_id, teacher_name');
+        $this->db->select('class_id, class_name, section_id, section_name, subject_id, name, modality_id, teacher_name, classroom');
         $this->db->where('year', $year);
         $this->db->where('semester_id', $semester_id);
         $this->db->group_by(array('class_id', 'section_id', 'subject_id', 'modality_id'));
@@ -2584,4 +2872,35 @@ class Academic extends School
         return $result;
     }
 
+    public function delete_student_enrollment($student_id, $year, $semester_id)
+    {
+        $this->db->reset_query();
+        $this->db->where('student_id', $student_id);
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);     
+        $this->db->delete('enroll');
+
+        $table      = 'enroll';
+        $action     = 'delete';
+        $table_id   = $student_id;
+        $this->crud->save_log($table, $action, $table_id, array($student_id, $year, $semester_id));  
+    }
+
+    public function get_student_list_by_subject($class_id, $section_id, $subject_id, $year = '', $semester_id = '')
+    {        
+        $year           =   $year == ''        ? $this->runningYear        : $year;
+        $semester_id    =   $semester_id == '' ? $this->runningSemester    : $semester_id;
+
+        $this->db->reset_query();        
+        $this->db->from('v_enrollment');
+        $this->db->where('class_id', $class_id);
+        $this->db->where('section_id', $section_id);
+        $this->db->where('subject_id', $subject_id);
+        $this->db->where('year', $year);
+        $this->db->where('semester_id', $semester_id);           
+        $this->db->order_by('full_name');
+        $students =  $this->db->get()->result_array(); 
+
+        return $students;  
+    }
 }

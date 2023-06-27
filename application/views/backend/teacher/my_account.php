@@ -1,7 +1,7 @@
 <?php
-    $teacher_id = $this->session->userdata('login_user_id');
+    $teacher_id = get_login_user_id();
 	$social_login = $this->crud->getInfo('social_login');
-    $info = $this->db->get_where('teacher', array('teacher_id' => $this->session->userdata('login_user_id')))->result_array();
+    $info = $this->db->get_where('teacher', array('teacher_id' => get_login_user_id()))->result_array();
     foreach($info as $row):
 ?>
 <div class="content-w">

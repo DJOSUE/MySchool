@@ -198,6 +198,38 @@ table.credit-card td {
 
 table.credit-card td.line
 {
-    border-bottom: solid 1px;
+    border-bottom: solid 1pt;
     padding-bottom: 10px !important;
+}
+
+table.checklist {
+    border: 1px solid #000000;
+    border-collapse: collapse;
+}
+
+table.checklist td,
+table.checklist th {
+    border: 1px solid #000000;
+    padding: 5px;
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.blank-page {
+    height: 8.5in;
+}
+/* Create two equal columns that floats next to each other */
+.column {
+    float: left;
+    width: 50%;    
+}
+  
+  /* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
 }

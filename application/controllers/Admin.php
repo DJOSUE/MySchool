@@ -355,10 +355,10 @@
             $this->load->view('backend/index', $page_data);
         }
 
-        function birthdays_export()
+        function birthdays_export($param1 = '')
         {
             $this->isAdmin();
-            $data = $this->user->download_Excel_birthdays();                       
+            $data = $this->user->download_Excel_birthdays($param1);                       
         }
 
         //Manage Librarians function.
@@ -962,7 +962,7 @@
             $this->db->where('section_id', $current_section_id);
             $this->db->where('year', $this->runningYear);
             $this->db->where('class_id', $current_class_id);
-            $current_subjects = $this->db->get('subject')->result_array();
+            $current_subjects = $this->db->get('v_subject')->result_array();
         
             $current_subject_ids = array();
             $future_subject_ids = array();
@@ -974,14 +974,6 @@
             }
     
             $result = array_diff($current_subject_ids, $future_subject_ids);
-
-            // echo '<pre>';
-            // var_dump($current_class_id);
-            // echo '<hr/>';
-            // var_dump($current_section_id);
-            // echo '<hr/>';
-            // var_dump($result);
-            // echo '</pre>';
 
             if(($current_class_id != $future_class_id || $current_section_id != $future_section_id) || count($result) > 0)
             {
@@ -1024,7 +1016,6 @@
                     $this->db->where('subject_id', $current_subject_id);
                     $this->db->where('year', $this->runningYear);
                     $this->db->where('semester_id', $this->runningSemester);
-
                     
                     $action     = 'update';
                     $update_id  = $student_id.'-'.$current_class_id.'-'.$current_section_id.'-'.$current_subject_id;
@@ -1043,20 +1034,54 @@
                         $this->crud->save_log($table, $action, $update_id, $data1);
                     }
                     
+                    //Send Notification
+                    $this->db->reset_query();
+                    $this->db->where('subject_id', $future_subject_id);
+                    $future_subject_info = $this->db->get('v_subject')->row_array();
+
+                    $student        = $this->crud->get_name('student',$student_id);
+                    $new_teacher    = $this->crud->get_name('teacher',$item['teacher_id']);
+                    $teacher_name   = $item['teacher_name'];
+                    $new_teacher    = $future_subject_info['teacher_name'];                    
+
+                    $message_remove = "Dear $teacher_name, We wanted to inform you that $student has been transferred to a different class.";
+                    $message_add    = "Dear $new_teacher, We wanted to inform you that $student has been transferred to your class. <br/>";
+                    $message_add   .= "Class Name: ".$future_subject_info['class_name']."<br/>";
+                    $message_add   .= "Schedule: ".$future_subject_info['section_name']."<br/>";
+                    $message_add   .= "Subject: ".$future_subject_info['name']."<br/>";
+
+                    // $message, $user_id, $user_type, $url_encode
+                    $this->notification->create_message($message_remove, $item['teacher_id'], 'teacher');
+
+                    $this->notification->create_message($message_add, $future_subject_info['teacher_id'], 'teacher');
+
+                    // Create Interaction         
+                    $user_id        = get_login_user_id();
+                    $user_table     = get_table_user(get_role_id());
+                    $user_name      = $this->crud->get_name($user_table, $user_id);
+                    $level          = $future_subject_info['class_name'];
+                    $section_name   = $future_subject_info['section_name'];
+                    $modality       = $this->academic->get_modality_name($this->input->post('modality_id'));
+                    
+                    $data_interaction['created_by']         = DEFAULT_USER;
+                    $data_interaction['created_by_type']    = DEFAULT_TABLE;
+                    $data_interaction['student_id']         = $student_id;
+                    $data_interaction['comment']            = $user_name." change the student to: ". $level." level, ".$section_name.' schedule, modality: '.$modality;
+
+                    $this->studentModel->add_interaction_data($data_interaction);
+
+
                 }
 
                 $this->session->set_flashdata( 'flash_message', getPhrase( 'successfully_updated' ) );
             }
             else 
             {
-                
                 $this->session->set_flashdata( 'flash_message', getPhrase( 'error' ) );
-                echo '<pre>';
-                var_dump($current_class_id);
-
-                var_dump($future_class_id);
-                
-                echo '</pre>';
+                // echo '<pre>';
+                // var_dump($current_class_id);
+                // var_dump($future_class_id);                
+                // echo '</pre>';
             }
     
             $this->crud->clear_cache();
@@ -1879,6 +1904,14 @@
                 $data = base64_encode($param2.'-'.$agreement_id.'-'.'student_enrollments');
                 redirect(base_url() . 'admin/student_download_agreement/'.$data, 'refresh');
             }
+            if($param1 == 'delete_agreement')
+            {
+                $agreement_id = $this->agreement->delete_agreement($param2);
+
+
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
+                redirect(base_url() . 'admin/student_enrollments/'. base64_decode($param3).'/', 'refresh');             
+            }
         }
 
         function student_download_agreement($param1)
@@ -2013,7 +2046,7 @@
             {
                 $this->academic->deleteCourse($param2);
                 $this->session->set_flashdata('flash_message' , getPhrase('successfully_deleted'));
-                redirect(base_url() . 'admin/academic_settings_subjects/', 'refresh');
+                redirect(base_url() . 'admin/academic_settings_semester_enroll/', 'refresh');
             }
         }
         
@@ -2903,7 +2936,7 @@
 
             $hasPermissions = 0;
 
-            $role_id = $this->session->userdata( 'role_id' );
+            $role_id = get_role_id();
             $type = '';
             
             //validate if the user has the right to do
@@ -2942,36 +2975,42 @@
 
                 if ( $param1 == 'admin' ) {
 
-                    $this->unset_admin();
-                    $this->session->set_userdata('admin_login', '1');
-                    $this->session->set_userdata('role_id', $row->owner_status);
-                    $this->session->set_userdata('admin_id', $row->admin_id);
-                    $this->session->set_userdata('login_user_id', $row->admin_id);
-                    $this->session->set_userdata('name', $row->first_name);
-                    $this->session->set_userdata('login_type', 'admin');
+                    $user_data['admin_login']   = '1';
+                    $user_data['role_id']       = $row->owner_status;
+                    $user_data['admin_id']      = $row->admin_id;
+                    $user_data['login_user_id'] = $row->admin_id;
+                    $user_data['name']          = $row->first_name;
+                    $user_data['login_type']    = 'admin';
+        
+                    $this->session->set_userdata('user_data', $user_data);
                     redirect(base_url() . 'admin/panel/', 'refresh');
                 }
                 if ( $param1 == 'teacher' ) {
 
                     $this->unset_admin();
-                    $this->session->set_userdata('role_id', '5');
-                    $this->session->set_userdata('teacher_login', '1');
-                    $this->session->set_userdata('teacher_id', $row->teacher_id);
-                    $this->session->set_userdata('login_user_id', $row->teacher_id);
-                    $this->session->set_userdata('name', $row->first_name);
-                    $this->session->set_userdata('login_type', 'teacher');
+                    $user_data['teacher_login'] = '1';
+                    $user_data['role_id']       = '5';
+                    $user_data['program_id']    = '0';
+                    $user_data['teacher_id']    = $row->teacher_id;
+                    $user_data['login_user_id'] = $row->teacher_id;
+                    $user_data['name']          = $row->first_name;
+                    $user_data['login_type']    = 'teacher';
+                    $this->session->set_userdata('user_data', $user_data);
 
                     redirect(base_url() . 'teacher/panel/', 'refresh');
                 }
                 if ( $param1 == 'student' ){
                     $this->unset_admin();
-                    $this->session->set_userdata('role_id', '6');
-                    $this->session->set_userdata('program_id', $row->program_id);
-                    $this->session->set_userdata('student_login', '1');
-                    $this->session->set_userdata('student_id', $row->student_id);
-                    $this->session->set_userdata('login_user_id', $row->student_id);
-                    $this->session->set_userdata('name', $row->first_name);
-                    $this->session->set_userdata('login_type', 'student');
+
+                    $user_data['student_login'] = '1';
+                    $user_data['role_id']       = '6';
+                    $user_data['program_id']    = $row->program_id;
+                    $user_data['student_id']    = $row->student_id;
+                    $user_data['login_user_id'] = $row->student_id;
+                    $user_data['name']          = $row->first_name;
+                    $user_data['login_type']    = 'student';
+                    $this->session->set_userdata('user_data', $user_data);
+
                     redirect(base_url() . 'student/panel/', 'refresh');
                 }
                 if ( $param1 == 'parent' ){
@@ -2988,12 +3027,14 @@
                 if ( $param1 == 'accountant' ){
                     
                     $this->unset_admin();
-                    $this->session->set_userdata('role_id', $row->role_id);
-                    $this->session->set_userdata('accountant_login', '1');
-                    $this->session->set_userdata('accountant_id', $row->accountant_id);
-                    $this->session->set_userdata('login_user_id', $row->accountant_id);
-                    $this->session->set_userdata('name', $row->first_name);
-                    $this->session->set_userdata('login_type', 'accountant');
+                    $user_data['accountant_login'] = '1';
+                    $user_data['role_id']       = $row->role_id;
+                    $user_data['accountant_id']    = $row->accountant_id;
+                    $user_data['login_user_id'] = $row->accountant_id;
+                    $user_data['name']          = $row->first_name;
+                    $user_data['login_type']    = 'accountant';
+                    $this->session->set_userdata('user_data', $user_data);
+                    
                     redirect(base_url() . 'accountant/panel/', 'refresh');
                 }
                 if ( $param1 == 'librarian' ){
@@ -3041,6 +3082,11 @@
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $date = html_escape($this->input->post('date'));
                 $cashier_id = html_escape($this->input->post('cashier_id'));
+
+                if($cashier_id == '')
+                {
+                    $cashier_id = "admin|".get_login_user_id();
+                }
             }
             else
             {
@@ -3052,7 +3098,7 @@
                 else
                 {
                     $date = date("Y-m-d");
-                    $cashier_id = "admin:".$this->session->userdata('login_user_id');
+                    $cashier_id = "admin|".get_login_user_id();
                 }
             }
     
@@ -3074,13 +3120,16 @@
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $start_date = html_escape($this->input->post('start_date'));
                 $end_date   = html_escape($this->input->post('end_date'));
+                $cashier_id = html_escape($this->input->post('cashier_id'));
             }
             else
             {
                 $start_date = date_format($objDate, "m/d/Y");
                 $end_date   = date_format(date_add($objDate, $interval), "m/d/Y");
+                $cashier_id = "";
             }
             
+            $page_data['cashier_id'] = $cashier_id;
             $page_data['start_date'] = $start_date;
             $page_data['end_date']   = $end_date;
             $page_data['page_name']  = 'accounting_payments';
@@ -3184,10 +3233,43 @@
 
             if($user_type === 'applicant')
             {
-                $return_url = 'admin/admission_applicant/'.$user_id;
+                $return_url = 'admin/admission_applicant_payment/'.$user_id;
             }
 
             $this->session->set_flashdata('flash_message', getPhrase('successfully_added'));
+            
+            redirect(base_url() . $return_url, 'refresh');
+        }
+
+        function student_payment_edit($studentId, $paymentId)
+        {
+            $this->isAdmin();
+
+            $student_id = base64_decode($studentId);
+            $payment_id = base64_decode($paymentId);
+
+            $page_data['student_id'] =  $student_id;
+            $page_data['payment_id'] =  $payment_id;            
+            $page_data['page_name']  = 'student_payment_edit';
+            $page_data['page_title'] =  getPhrase('student_payment_edit');
+            
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function payment_update($paymentId, $user_id, $user_type)
+        {
+            $payment_id = base64_decode($paymentId);
+
+            $this->payment->update_payment_info($payment_id);
+
+            $return_url = 'admin/student_payments/'.$user_id;
+
+            if($user_type === 'applicant')
+            {
+                $return_url = 'admin/admission_applicant/'.$user_id;
+            }
+
+            $this->session->set_flashdata('flash_message', getPhrase('successfully_updated'));
             
             redirect(base_url() . $return_url, 'refresh');
         }
@@ -3247,13 +3329,16 @@
             if($_SERVER['REQUEST_METHOD'] === 'POST')
             {   
                 $month_id  = $this->input->post('month_id');
+                $section_id  = $this->input->post('section_id');
             }
             else
             {    
                 $month_id  = "";
+                $section_id  = "";
             }
 
             $page_data['month_id']      = $month_id;
+            $page_data['section_id']    = $section_id;
             $page_data['page_name']     = 'student_month_dashboard';
             $page_data['page_title']    =  getPhrase('student_month_dashboard');
             $this->load->view('backend/index', $page_data);
@@ -3341,6 +3426,128 @@
                 $type_id     = $array[0];
                 $assigned_me = 0;
                 $tag_id      = "";
+                $advisor_id  = "";
+                $start_date  = "";
+                $end_date    = "";
+            }
+            else
+            {
+                $name        = "";
+                $country_id  = "";
+                $status_id   = "";
+                $type_id     = "";
+                $assigned_me = 1;
+                $tag_id      = "";
+                $advisor_id  = "";
+                $start_date  = "";
+                $end_date    = "";
+            }
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') 
+            {
+                $country_id  = $this->input->post('country_id');
+                $status_id   = $this->input->post('status_id');
+                $type_id     = $this->input->post('type_id');
+                $name        = $this->input->post('name');
+                $search      = true;
+                $assigned_me = $this->input->post('assigned_me'); 
+                $tag_id      = $this->input->post('tag_id');
+                $advisor_id  = $this->input->post('advisor_id'); 
+                $start_date  = $this->input->post('start_date'); 
+                $end_date    = $this->input->post('end_date'); 
+                
+            }
+
+            $page_data['country_id']  = $country_id;
+            $page_data['status_id']   = $status_id;
+            $page_data['type_id']     = $type_id;
+            $page_data['search']      = $search;
+            $page_data['name']        = $name;
+            $page_data['assigned_me'] = $assigned_me;
+            $page_data['tag_id']      = $tag_id;
+            $page_data['advisor_id']  = $advisor_id;
+            $page_data['start_date']  = $start_date;
+            $page_data['end_date']    = $end_date;
+            $page_data['page_name']   = 'admission_applicants';
+            $page_data['page_title']  =  getPhrase('admission_applicants');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function admission_converted($param1 = '')
+        {
+            $this->isAdmin('admission_module');
+
+            if($param1 != '')
+            {
+                $array      = explode('|',base64_decode($param1));
+                
+                $name        = "";
+                $country_id  = "";
+                $status_id   = APPLICANT_CONVERTED_STATUS_ID;
+                $type_id     = $array[0];
+                $assigned_me = 0;
+                $tag_id      = "";
+                $advisor_id  = "";
+                $start_date  = "";
+                $end_date    = "";
+            }
+            else
+            {
+                $name        = "";
+                $country_id  = "";
+                $status_id   = APPLICANT_CONVERTED_STATUS_ID;
+                $type_id     = "";
+                $assigned_me = 1;
+                $tag_id      = "";
+                $advisor_id  = "";
+                $start_date  = "";
+                $end_date    = "";
+            }
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') 
+            {
+                $country_id  = $this->input->post('country_id');
+                $status_id   = APPLICANT_CONVERTED_STATUS_ID;
+                $type_id     = $this->input->post('type_id');
+                $name        = $this->input->post('name');
+                $search      = true;
+                $assigned_me = $this->input->post('assigned_me'); 
+                $tag_id      = $this->input->post('tag_id');
+                $advisor_id  = $this->input->post('advisor_id'); 
+                $start_date  = $this->input->post('start_date'); 
+                $end_date    = $this->input->post('end_date'); 
+                
+            }
+
+            $page_data['country_id']  = $country_id;
+            $page_data['status_id']   = $status_id;
+            $page_data['type_id']     = $type_id;
+            $page_data['search']      = $search;
+            $page_data['name']        = $name;
+            $page_data['assigned_me'] = $assigned_me;
+            $page_data['tag_id']      = $tag_id;
+            $page_data['advisor_id']  = $advisor_id;
+            $page_data['start_date']  = $start_date;
+            $page_data['end_date']    = $end_date;
+            $page_data['page_name']   = 'admission_converted';
+            $page_data['page_title']  =  getPhrase('admission_converted');
+            $this->load->view('backend/index', $page_data);
+        }
+
+        function admission_applicants_assignation($param1 = '')
+        {
+            $this->isAdmin('admission_module');
+
+            if($param1 != '')
+            {
+                $array      = explode('|',base64_decode($param1));
+                
+                $name        = "";
+                $country_id  = "";
+                $status_id   = $array[1];
+                $type_id     = $array[0];
+                $assigned_me = 0;
+                $tag_id      = "";
             }
             else
             {
@@ -3370,9 +3577,29 @@
             $page_data['name']        = $name;
             $page_data['assigned_me'] = $assigned_me;
             $page_data['tag_id']      = $tag_id;
-            $page_data['page_name']   = 'admission_applicants';
-            $page_data['page_title']  =  getPhrase('admission_applicants');
+            $page_data['page_name']   = 'admission_applicants_assignation';
+            $page_data['page_title']  =  getPhrase('admission_applicants_assignation');
             $this->load->view('backend/index', $page_data);
+        }
+
+        function admission_applicants_assignation_save()
+        {
+            $this->isAdmin('admission_module_management');
+
+            $result = $this->applicant->applicants_bulk_assignation();
+            
+            if($result)
+            {
+                $this->session->set_flashdata('flash_message' , getPhrase('successfully_added'));
+                redirect(base_url() . 'admin/admission_applicants/', 'refresh');
+            }
+            else
+            {
+                $this->session->set_flashdata('flash_error_message' , 'Select one or more applicants');
+                redirect(base_url() . 'admin/admission_applicants_assignation/', 'refresh');
+            }
+            
+            
         }
 
         //Create Student function.
@@ -4340,8 +4567,175 @@
             $page_data['due_date']      = $due_date;
             $page_data['assigned_me']   = $assigned_me;
             $page_data['page_name']     = 'task_list';
-            $page_data['page_title']    =  getPhrase('task_list');
+            $page_data['page_title']    = getPhrase('task_list');
             $this->load->view('backend/index', $page_data);
+        }
+
+        function task_list_new($page = '')
+        {
+            $this->isAdmin('task_module');
+
+            if($page == 'clear')
+            {
+                $page = 0;
+                $data['department_id'] = "";
+                $data['category_id']   = "";
+                $data['priority_id']   = "";
+                $data['status_id']     = DEFAULT_TASK_OPEN_STATUS;
+                $data['text']          = "";
+                $data['search']        = "";
+                $data['due_date']      = "";
+                $data['assigned_me']   = 1;
+                $this->session->set_userdata($data);
+            }
+
+            if($page == '')
+                $page = 0;
+
+            if($_SERVER['REQUEST_METHOD'] === 'POST')
+            {   
+                $department_id  = $this->input->post('department_id');
+                $category_id    = $this->input->post('category_id');
+                $priority_id    = $this->input->post('priority_id');
+                $status_id      = $this->input->post('status_id');
+                $text           = $this->input->post('title');
+                $due_date       = $this->input->post('due_date');
+                $assigned_me    = $this->input->post('assigned_me');
+
+                $data['department_id'] = $department_id;
+                $data['category_id']   = $category_id;
+                $data['priority_id']   = $priority_id;
+                $data['status_id']     = $status_id;
+                $data['text']          = $text;
+                $data['search']        = $search;
+                $data['due_date']      = $due_date;
+                $data['assigned_me']   = $assigned_me;
+
+                $this->session->set_userdata($data);
+            }
+            else
+            {
+                $department_id  = $this->session->userdata('department_id');
+                $category_id    = $this->session->userdata('category_id');
+                $priority_id    = $this->session->userdata('priority_id');
+                $status_id      = $this->session->userdata('status_id');
+                $text           = $this->session->userdata('text');
+                $due_date       = $this->session->userdata('due_date');
+                $assigned_me    = $this->session->userdata('assigned_me');
+
+                $data['department_id'] = $department_id;
+                $data['category_id']   = $category_id;
+                $data['priority_id']   = $priority_id;
+                $data['status_id']     = $status_id;
+                $data['text']          = $text;
+                $data['search']        = $search;
+                $data['due_date']      = $due_date;
+                $data['assigned_me']   = $assigned_me;
+            }
+
+            $total_rows = $this->task->get_count($department_id, $category_id, $priority_id, $status_id, $text, $assigned_me, $due_date);
+            $per_page   = DEFAULT_ROWS_PAGE;
+
+            $config = array();
+                $config["base_url"] = base_url() . "admin/task_list/";
+                $config["total_rows"] = $total_rows;
+                $config["per_page"] = $per_page;
+                $config["uri_segment"] = 3;
+
+                $config['use_page_numbers'] = TRUE;
+                $config['page_query_string'] = FALSE;
+                
+                $config['query_string_segment'] = '';
+                
+                $config['full_tag_open'] = '<ul class="pagination justify-content-end">';
+                $config['full_tag_close'] = '</ul>';
+                $config['attributes'] = ['class' => 'page-link'];
+                
+                $config['first_link'] = '&laquo; First';
+                $config['first_tag_open'] = '<li class="page-item">';
+                $config['first_tag_close'] = '</li>';
+                
+                $config['last_link'] = 'Last &raquo;';
+                $config['last_tag_open'] = '<li class="page-item">';
+                $config['last_tag_close'] = '</li>';
+                
+                $config['next_link'] = 'Next &rarr;';
+                $config['next_tag_open'] = '<li class="page-item">';
+                $config['next_tag_close'] = '</li>';
+                
+                $config['prev_link'] = '&larr; Prev';
+                $config['prev_tag_open'] = '<li class="page-item">';
+                $config['prev_tag_close'] = '</li>';
+                
+                $config['cur_tag_open'] = '<li class="page-item active"><a href="#" class="page-link">';
+                $config['cur_tag_close'] = '<span class="sr-only">(current)</span></a></li>';
+                $config['num_tag_open'] = '<li class="page-item">';
+                $config['num_tag_close'] = '</li>';
+            
+                $config['anchor_class'] = 'follow_link';
+
+            $this->pagination->initialize($config);
+
+            // Row position
+            if($page != 0){
+                $page = ($page-1) * $config["per_page"];
+            }
+
+            $page_data['search']        =   $data;
+            $page_data['links']         =   $this->pagination->create_links();
+            $page_data['task_list']     =   $this->task->get_task_list($per_page, $page, $department_id,$category_id,$priority_id,$status_id,$text,$assigned_me,$due_date);
+            $page_data['page_name']     =   'task_list_pagination';            
+            $page_data['page_title']    =   getPhrase('task_list');
+            $this->load->view('backend/index', $page_data);
+
+        }
+
+        function task_list_export()
+        {
+            $this->isAdmin('task_module');
+
+            if($_SERVER['REQUEST_METHOD'] === 'POST')
+            {   
+                $department_id  = $this->input->post('department_id');
+                $category_id    = $this->input->post('category_id');
+                $priority_id    = $this->input->post('priority_id');
+                $status_id      = $this->input->post('status_id');
+                $text           = $this->input->post('title');
+                $due_date       = $this->input->post('due_date');
+                $assigned_me    = $this->input->post('assigned_me');
+
+                $data['department_id'] = $department_id;
+                $data['category_id']   = $category_id;
+                $data['priority_id']   = $priority_id;
+                $data['status_id']     = $status_id;
+                $data['text']          = $text;
+                $data['search']        = $search;
+                $data['due_date']      = $due_date;
+                $data['assigned_me']   = $assigned_me;
+
+                $this->session->set_userdata($data);
+            }
+            else
+            {
+                $department_id  = $this->session->userdata('department_id');
+                $category_id    = $this->session->userdata('category_id');
+                $priority_id    = $this->session->userdata('priority_id');
+                $status_id      = $this->session->userdata('status_id');
+                $text           = $this->session->userdata('text');
+                $due_date       = $this->session->userdata('due_date');
+                $assigned_me    = $this->session->userdata('assigned_me');
+
+                $data['department_id'] = $department_id;
+                $data['category_id']   = $category_id;
+                $data['priority_id']   = $priority_id;
+                $data['status_id']     = $status_id;
+                $data['text']          = $text;
+                $data['search']        = $search;
+                $data['due_date']      = $due_date;
+                $data['assigned_me']   = $assigned_me;
+            }
+
+            $result = $this->task->export_task_list($data);   
         }
 
         function task_applicant()
@@ -4563,7 +4957,20 @@
         function request_dashboard($param1 = '', $param2 = '')
         {
             $this->isAdmin('request_module');
-            
+
+            if($_SERVER['REQUEST_METHOD'] === 'POST')
+            {   
+                $year_id        = $this->input->post('year_id');
+                $semester_id    = $this->input->post('semester_id');
+            }
+            else
+            {    
+                $year_id        = $this->runningYear;
+                $semester_id    = $this->runningSemester;
+            } 
+
+            $page_data['year_id']       = $year_id;
+            $page_data['semester_id']   = $semester_id;   
             $page_data['page_name']    = 'request_dashboard';
             $page_data['page_title']   = getPhrase('request_dashboard');
             $this->load->view('backend/index', $page_data);
@@ -5130,19 +5537,13 @@
 
         // unset Admin cookies
         function unset_admin(){
-            $this->session->unset_userdata('admin_login');
-            $this->session->unset_userdata('role_id');
-            $this->session->unset_userdata('admin_id');
-            $this->session->unset_userdata('login_user_id');
-            $this->session->unset_userdata('name');
-            $this->session->unset_userdata('login_type');
-            $this->session->unset_userdata('program_id');
+            $this->session->unset_userdata('user_data');
         }
 
         //Check Admin session and access. 
         function isAdmin($permission_for = '')
         {
-            if ($this->session->userdata('admin_login') != 1 )
+            if (get_admin_login() != 1 )
             {
                 $this->session->set_userdata('last_page', current_url());
                 redirect(base_url(), 'refresh');
@@ -5273,14 +5674,14 @@
         }
 
         //Get subjects by classId and sectionId of the current semester.
-        function get_class_section_subjects_for_update($student_id = '', $class_id = '', $section_id = '')
+        function get_class_section_subjects_for_update($student_id = '', $class_id = '', $section_id = '', $modality_id = '')
         {
             $running_year = $this->runningYear;
             $running_semester = $this->runningSemester;
 
             $student_enroll = $this->db->get_where('v_enroll', array('student_id' => $student_id, 'year' => $running_year, 'semester_id' => $running_semester ))->result_array(); 
 
-            $subjects = $this->db->get_where( 'v_subject', array( 'class_id' => $class_id, 'section_id' => $section_id  ) )->result_array();
+            $subjects = $this->db->get_where( 'v_subject', array( 'class_id' => $class_id, 'section_id' => $section_id, 'modality_id' => $modality_id ) )->result_array();
             $html = "";
             $count = 0;
     
