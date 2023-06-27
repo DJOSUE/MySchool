@@ -69,37 +69,15 @@
                                                                                 <?= $currency; ?>
                                                                                 <?php 
                                                                                 $this->db->reset_query();
-                                                                                $this->db->select_sum('amount');
+                                                                                $this->db->select_sum('total');
                                                                                 $this->db->where('year' , $running_year);
                                                                                 $this->db->where('semester_id', $running_semester);
-                                                                                $payments = $this->db->get('invoice')->row(); 
-                                                                                echo number_format($payments->amount, 2);?>
+                                                                                $total_forecast = $this->db->get('v_agreement ')->row()->total; 
+                                                                                echo number_format($total_forecast, 2);?>
                                                                             </h1>
                                                                             <div class="author-content">
                                                                                 <div class="country"><b>
-                                                                                        <?= getPhrase('total_expense');?></b>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                                                            <div class="ui-block list" data-mh="friend-groups-item"
-                                                                >
-                                                                <div class="friend-item friend-groups">
-                                                                    <div class="friend-item-content">
-                                                                        <div class="friend-avatar">
-                                                                            <br><br>
-                                                                            <i class="picons-thin-icon-thin-0406_money_dollar_euro_currency_exchange_cash"
-                                                                                style="font-size:45px; color: #f4af08 ;"></i>
-                                                                            <h1 style="font-weight:bold;">
-                                                                                <?php $this->db->where('status', 'pending'); echo $this->db->count_all_results('invoice');?>
-                                                                            </h1>
-                                                                            <div class="author-content">
-                                                                                <div class="country"><b>
-                                                                                        <?= getPhrase('pending_payments');?></b>
+                                                                                        <?= getPhrase('total_forecast');?></b>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -122,6 +100,28 @@
                                                                             <div class="author-content">
                                                                                 <div class="country"><b>
                                                                                         <?= getPhrase('completed_payments');?></b>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                                                            <div class="ui-block list" data-mh="friend-groups-item"
+                                                                >
+                                                                <div class="friend-item friend-groups">
+                                                                    <div class="friend-item-content">
+                                                                        <div class="friend-avatar">
+                                                                            <br><br>
+                                                                            <i class="picons-thin-icon-thin-0406_money_dollar_euro_currency_exchange_cash"
+                                                                                style="font-size:45px; color: #f4af08 ;"></i>
+                                                                            <h1 style="font-weight:bold;">
+                                                                                <?php $this->db->where('status', 'pending'); echo $this->db->count_all_results('invoice');?>
+                                                                            </h1>
+                                                                            <div class="author-content">
+                                                                                <div class="country"><b>
+                                                                                        <?= getPhrase('pending_payments');?></b>
                                                                                 </div>
                                                                             </div>
                                                                         </div>

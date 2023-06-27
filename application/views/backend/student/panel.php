@@ -32,10 +32,10 @@
                                     </div>
                                     <?php if (file_exists('public/uploads/news_images/'.$news_code.'.jpg')):?>
                                     <hr>
-                                    <p><?= $this->crud->check_text($wall['description']);?></p>
                                     <div class="post-thumb">
                                         <img src="<?= base_url();?>public/uploads/news_images/<?= $news_code;?>.jpg">
                                     </div>
+                                    <p><?= $this->crud->check_text($wall['description']);?></p>
                                     <br>
                                     <?php else:?>
                                     <div class="wall-content">

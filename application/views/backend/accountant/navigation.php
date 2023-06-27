@@ -88,6 +88,17 @@
                         </div>
                     </a>
                 </li>
+                <!-- Academic Reports Access -->
+                <?php if(has_permission('academic_report_module')):?>
+                <li <?php if(in_array($page_name, $academic_report_pages)):?>class="currentItem" <?php endif;?>>
+                    <a href="<?php echo base_url();?>reports/academic_dashboard/" data-toggle="tooltip"
+                        data-placement="right" data-original-title="<?php echo getPhrase('academic_reports');?>">
+                        <div class="left-menu-icon">
+                            <i class="picons-thin-icon-thin-0375_screen_analytics_line_graph"></i>
+                        </div>
+                    </a>
+                </li>
+                <?php endif;?>
                 <!-- Calendar Access -->
                 <?php if(has_permission('calendar_module')):?>
                 <li <?= in_array($page_name, $calendar_pages) ? 'class="currentItem"' : '';?>>

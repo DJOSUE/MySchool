@@ -2099,11 +2099,12 @@ class Academic extends School
         $user_name      = $this->crud->get_name($user_table, $user_id);
         $level          = $this->academic->get_class_name($this->input->post('class_id'));
         $section_name   = $this->academic->get_section_name($this->input->post('section_id'));
+        $modality       = $this->academic->get_modality_name($this->input->post('modality_id'));
         
         $data_interaction['created_by']         = DEFAULT_USER;
         $data_interaction['created_by_type']    = DEFAULT_TABLE;
         $data_interaction['student_id']         = $student_id;
-        $data_interaction['comment']            = $user_name." registered in the ". $level." level, ".$section_name.' schedule.';
+        $data_interaction['comment']            = $user_name." registered in the ". $level." level, ".$section_name.' schedule, modality: '.$modality;
 
         $this->studentModel->add_interaction_data($data_interaction);
 

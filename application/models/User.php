@@ -607,10 +607,12 @@ class User extends School
             $data['image']             = $md5.str_replace(' ', '', $_FILES['userfile']['name']);   
         }
 
-        if($this->input->post('account') != '1'){
+        if($this->input->post('account') != '1')
+        {
             $data['parent_id']        = $this->input->post('parent_id');    
         } 
-        else if($this->input->post('account') == '1'){
+        else if($this->input->post('account') == '1')
+        {
             $data3['first_name']      = $this->input->post('parent_first_name');
             $data3['last_name']       = $this->input->post('parent_last_name');
             $data3['gender']          = $this->input->post('parent_gender');
@@ -709,6 +711,7 @@ class User extends School
 
         $level          = $this->academic->get_class_name($this->input->post('class_id'));
         $section_name   = $this->academic->get_section_name($this->input->post('section_id'));
+        $modality       = $this->academic->get_modality_name($this->input->post('modality_id'));
 
         // Update the Applicant status
         if($applicant_id > 0)
@@ -716,13 +719,13 @@ class User extends School
             $this->applicant->update_status($applicant_id, 3);
 
             //Create a automatic interaction            
-            $_POST['comment']       = $user_name.' convert the applicant to student and registered in the '.$level.' level, '.$section_name.' schedule.';
+            $_POST['comment']       = $user_name.' convert the applicant to student and registered in the '.$level.' level, '.$section_name.' schedule, modality: '.$modality;
             $this->studentModel->add_interaction($student_id, 'automatic');
         }
         else
         {
             //Create a automatic interaction            
-            $_POST['comment']       = $user_name.' register this student and registered in the '.$level.' level, '.$section_name.' schedule.';
+            $_POST['comment']       = $user_name.' register this student and registered in the '.$level.' level, '.$section_name.' schedule, modality: '.$modality;
             $this->studentModel->add_interaction($student_id, 'automatic');
         }
 
@@ -820,6 +823,9 @@ class User extends School
     
     public function updateStudent($studentId)
     {
+
+        $student_info = $this->crud->get_student_info_by_id($studentId);
+
         $md5 = md5(date('d-m-Y H:i:s'));
         $data['first_name']      = $this->input->post('first_name');
         $data['last_name']       = $this->input->post('last_name');
@@ -876,6 +882,27 @@ class User extends School
         $this->crud->save_log($table, $action, $studentId, $data);
         
         move_uploaded_file($_FILES['userfile']['tmp_name'], PATH_STUDENT_IMAGE . $md5.str_replace(' ', '', $_FILES['userfile']['name']));
+
+        // Create automate interaction
+        $dif = array_diff($student_info, $data);
+
+        if(count($dif) > 0)
+        {
+            // Create Interaction         
+            $user_id        = get_login_user_id();
+            $user_table     = get_table_user(get_role_id());
+            $user_name      = $this->crud->get_name($user_table, $user_id);
+            
+            $data_interaction['created_by']         = DEFAULT_USER;
+            $data_interaction['created_by_type']    = DEFAULT_TABLE;
+            $data_interaction['student_id']         = $studentId;
+            // $data_interaction['comment']            = $user_name." registered in the ". $level." level, ".$section_name.' schedule, modality: '.$modality;
+    
+            foreach ($dif as $key => $value) {
+                # code...
+            } 
+            $this->studentModel->add_interaction_data($data_interaction);
+        }
     }
     
     public function updateCurrentStudent()

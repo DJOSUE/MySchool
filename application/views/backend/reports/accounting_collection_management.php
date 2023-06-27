@@ -156,7 +156,7 @@
                                                         <?= $due['number'];?>
                                                     </td>
                                                     <td>
-                                                        <?= $currency.' '.number_format($due['amount'], 2);?>
+                                                        <?= number_format($due['amount'], 2);?>
                                                     </td>
                                                     <td>
                                                         <?= $automatic_payment ? 'Yes' : 'No' ;?>

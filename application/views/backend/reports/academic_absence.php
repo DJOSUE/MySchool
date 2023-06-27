@@ -70,6 +70,7 @@
                                             <thead>
                                                 <tr>
                                                     <th class="orderby"><?= getPhrase('student');?></th>
+                                                    <th class="orderby"><?= getPhrase('program');?></th>
                                                     <th class="orderby"><?= getPhrase('phone');?></th>
                                                     <th class="orderby"><?= getPhrase('email');?></th>
                                                     <th class="orderby"><?= getPhrase('class');?></th>
@@ -100,11 +101,18 @@
                                                         $this->db->group_by('student_id, class_id, section_id, subject_id, date');
                                                         $this->db->order_by('first_name');
                                                         $dates = $this->db->get('v_mark_daily')->result_array();
+
+                                                        // Get Student program
+
+                                                        $program_name = $this->studentModel->get_student_program_name($row['student_id']);
                                                         
                                                 ?>
                                                 <tr>
                                                     <td>
                                                         <?=  $row['first_name'] .''. $row['last_name']; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?=  $program_name ?>
                                                     </td>
                                                     <td>
                                                         <?=  $row['phone'] ?>

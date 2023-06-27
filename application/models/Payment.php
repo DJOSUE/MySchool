@@ -980,7 +980,8 @@ class Payment extends School
             // All Payments                                                             
             $this->db->reset_query();
             $this->db->select_sum('amount');
-            $this->db->where('amortization_id =', $amortization_id);                
+            $this->db->where('amortization_id =', $amortization_id);
+            $this->db->where('concept_type !=', CONCEPT_LATE_FEE_ID);                
             $paid = $this->db->get('payment_details')->row()->amount;
 
             // calculate the pending 

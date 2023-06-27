@@ -132,7 +132,7 @@
                                                         <?= $value['agreement_date'];?>
                                                     </td>
                                                     <td>
-                                                        $<?= number_format($amount, 2);?>
+                                                        <?= number_format($amount, 2);?>
                                                     </td>
                                                     <td>
                                                         <?= $value['number_payments'];?>

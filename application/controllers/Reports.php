@@ -76,7 +76,7 @@ class Reports extends EduAppGT
         
     }
 
-    function accounting_collection_dashboard()
+    function accounting_collection()
     {
         $this->isLogin();
 
@@ -93,8 +93,8 @@ class Reports extends EduAppGT
 
         $page_data['year_id']       = $year_id;
         $page_data['semester_id']   = $semester_id;  
-        $page_data['page_name']     = 'accounting_collection_dashboard';
-        $page_data['page_title']    = getPhrase('collection_dashboard');
+        $page_data['page_name']     = 'accounting_collection';
+        $page_data['page_title']    = getPhrase('collection');
         $page_data['fancy_path']    = $this->fancy_path;
         $this->load->view('backend/reports/index', $page_data); 
     }

@@ -1055,6 +1055,21 @@
 
                     $this->notification->create_message($message_add, $future_subject_info['teacher_id'], 'teacher');
 
+                    // Create Interaction         
+                    $user_id        = get_login_user_id();
+                    $user_table     = get_table_user(get_role_id());
+                    $user_name      = $this->crud->get_name($user_table, $user_id);
+                    $level          = $future_subject_info['class_name'];
+                    $section_name   = $future_subject_info['section_name'];
+                    $modality       = $this->academic->get_modality_name($this->input->post('modality_id'));
+                    
+                    $data_interaction['created_by']         = DEFAULT_USER;
+                    $data_interaction['created_by_type']    = DEFAULT_TABLE;
+                    $data_interaction['student_id']         = $student_id;
+                    $data_interaction['comment']            = $user_name." change the student to: ". $level." level, ".$section_name.' schedule, modality: '.$modality;
+
+                    $this->studentModel->add_interaction_data($data_interaction);
+
 
                 }
 

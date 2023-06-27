@@ -8,6 +8,15 @@
                             </a>
                         </li>
                         <?php endif;?>
+                        <?php if(has_permission('collection_management')):?>
+                        <li class="navs-item">
+                            <a class="navs-links <?= $page_name == 'accounting_collection' ? 'active' : ''?>"
+                                href="<?php echo base_url();?>reports/accounting_collection/">
+                                <i class="os-icon picons-thin-icon-thin-0426_money_payment_dollars_coins_cash"></i>
+                                <span><?php echo getPhrase('collection');?></span>
+                            </a>
+                        </li>
+                        <?php endif;?>  
                         <li class="navs-item">
                             <a class="navs-links <?= $page_name == 'accounting_daily_income' ? 'active' : ''?>"
                                 href="<?= base_url();?>reports/accounting_daily_income/">

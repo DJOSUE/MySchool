@@ -107,8 +107,14 @@ class StudentModel extends School
         return $query;
     }
 
-    function add_interaction_data($data)
+    function add_interaction_data($data, $isAutomatic = false)
     {
+        if($isAutomatic)
+        {
+            $data['created_by']         = DEFAULT_USER;
+            $data['created_by_type']    = DEFAULT_TABLE;
+        }
+
         $this->db->insert('student_interaction', $data);
 
         $table      = 'student_interaction';
